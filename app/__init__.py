@@ -1,4 +1,5 @@
 from flask import Flask, render_template, url_for
+from forms import GeneralInformation, SpouseInformation, PrimaryAddress
 app = Flask(__name__)
 
 @app.route('/')
@@ -9,7 +10,14 @@ def main():
 # Add basic information about a LLH Member.
 @app.route('/basic-info')
 def basic_info():
-    return render_template('base.html')
+    form1 = GeneralInformation()
+    form2 = SpouseInformation()
+    form3 = PrimaryAddress()
+    return render_template('basic_info.html', 
+    title='Basic Member Information', 
+    GeneralInfo = form1, 
+    SpouseInfo = form2, 
+    PrimaryAddress = form3)
 
 
 # Search for an existing service request.

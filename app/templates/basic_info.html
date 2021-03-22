@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% block content %}
+<form class="basic-member-information" method="POST" action="">
+  <div class="general-information"></div>
+
+  <div class="spouse-information">
+    <div class="field">
+      <label>First Name</label>
+      <input type="text" name="first-name" placeholder="First Name" />
+    </div>
+    <div class="field">
+      <label>Last Name</label>
+      <input type="text" name="last-name" placeholder="Last Name" />
+    </div>
+  </div>
+
+  <div class="primary-address"></div>
+  <button class="ui button" type="submit">Submit</button>
+</form>
+{% endblock content %}
