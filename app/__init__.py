@@ -1,4 +1,5 @@
 from flask import Flask, render_template, url_for
+from form import TransportationRequestForm
 app = Flask(__name__)
 
 @app.route('/')
@@ -19,6 +20,7 @@ def search_request():
 
 
 # Create a new service request.
-@app.route('/create-request')
+@app.route('/create-request', methods=['GET', 'POST'])
 def create_request():
-    return render_template('create_request.html')
+    form = TransportationRequestForm()
+    return render_template('create_request.html', title='Transportation Request', form=form)
