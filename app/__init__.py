@@ -21,4 +21,4 @@ def search_request():
 # Create a new service request.
 @app.route('/create-request')
 def create_request():
-    return render_template('base.html')
+    return render_template('create_request.html')
