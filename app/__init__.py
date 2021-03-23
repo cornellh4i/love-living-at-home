@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for
-from form import TransportationRequestForm
+from .form import TransportationRequestForm
 app = Flask(__name__)
+app.config['SECRET_KEY'] = "80c8e30eb8d2a5d311d46cb59145d961"
 
 @app.route('/')
 def main():

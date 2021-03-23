@@ -7,9 +7,10 @@ from wtforms.fields import (
     StringField,
     SubmitField,
     RadioField,
-    SelectField
+    SelectField,
+    TextAreaField
 )
-from wtforms.fields.html5 import EmailField, DateField, TextAreaField, TimeField
+from wtforms.fields.html5 import EmailField, DateField, TimeField
 from wtforms.validators import (
     Email,
     EqualTo,
@@ -17,8 +18,8 @@ from wtforms.validators import (
     Length,
 )
 
-from app import db
-from app.models import Role, User
+# from app import db
+# from app.models import Role, User
 
 
 class TransportationRequestForm(FlaskForm):
