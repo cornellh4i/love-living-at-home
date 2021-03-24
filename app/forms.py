@@ -1,35 +1,41 @@
-from flask_wtf from FlaskForm
-from wtforms import StringField, DateField, SelectField, TextAreaField, RadioField, IntegerField
+from flask_wtf import FlaskForm
+from wtforms import StringField, SelectField, TextAreaField, RadioField, IntegerField, widgets
+from wtforms.fields.html5 import DateField
 from wtforms.validators import Length, InputRequired
+class FieldsRequiredForm(FlaskForm):
+    """Require all fields to have content. This works around the bug that WTForms radio
+    fields don't honor the `DataRequired` or `InputRequired` validators.
+    """
+
+    class Meta:
+        def render_field(self, field, render_kw):
+            render_kw.setdefault('required', True)
+            return super().render_field(field, render_kw)
+
 
 class GeneralInformation(FlaskForm):
     member_number = StringField('Member Number',
-                                validators=[ InputRequired(), Length(min=1, max=30)])
-    salutations=["Sir", "Mrs", "Ms", "Mr"]
+                                validators=[ InputRequired(), Length(min=1, max=5, message="hello world")])
+    salutations=["","Sir", "Mrs", "Ms", "Mr"]
     salutation = SelectField("Salutation", choices = salutations)
     first_name = StringField('First Name',
                                 validators=[InputRequired(), Length(min=1, max=30)])
     middle_initial = StringField('Middle Initial',
                                 validators=[Length(min=0, max=1)])
-    last_name = StringField('Last Name'
+    last_name = StringField('Last Name',
                                 validators=[InputRequired(), Length(min=1, max=30)])
     #maybe use select field here
-    gender = RadioField(u"Gender", choices=[("male", "Male"), ('female', "Female")])
-    birthday = DateField('Birthday', format='%Y-%m-%d')
+    gender = SelectField("Gender", validators=[InputRequired()],choices=[("male", "Male"), ('female', "Female")])
+    birthday = DateField('Birthday', format="%Y-%m-%d")
     preferred_name = StringField('Preferred Name',
                                 validators=[Length(min=1,max=30)])
-    mailing_name = String('Mailing Name',
+    mailing_name = StringField('Mailing Name',
                                 validators=[Length(min=1, max=30)])
 
 class SpouseInformation(FlaskForm):
     first_name = StringField('First Name', validators=[Length(min=1, max=30)])
     last_name = StringField('Last Name', validators=[Length(min=1, max=30)])
 
-/** 
-* TODO: 
-* - find an array of all timezones
-* - find an array of all timezones 
-*/
 class PrimaryAddress(FlaskForm):
     countries = ['United States', 'Afghanistan', 'Albania', 'Algeria', 
     'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antarctica', 
@@ -81,7 +87,7 @@ class PrimaryAddress(FlaskForm):
     address2 = TextAreaField('Address 2', validators = [Length(max = 200)])
     city = TextAreaField('City', validators = [Length(max = 200)])
 
-    states = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", 
+    states = ["", "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", 
           "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
           "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
           "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
@@ -91,10 +97,10 @@ class PrimaryAddress(FlaskForm):
     zip_code = TextAreaField('Zip Code', validators = [Length(max = 45)])
     
 
-    time_zones = ["a", "b", "c"]
-    time_zone = SelectField('Time Zone', choices = time_zones)
+    time_zones = ["Eastern Time (US & Canada) (UTC-05:00)", "b", "c"]
+    time_zone = SelectField('Timezone', choices = time_zones)
 
-    metro_areas = ["a", "b", "c"]
+    metro_areas = ["<SELECT>", "a", "b", "c"]
     metro_area = SelectField('Metro Area', choices = metro_areas)
     home_phone = IntegerField(widget = widgets.Input(input_type = "tel"))
     

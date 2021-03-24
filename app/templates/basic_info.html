@@ -1,19 +1,104 @@
 {% extends "base.html" %} {% block content %}
 <form class="basic-member-information" method="POST" action="">
-  <div class="general-information"></div>
-
-  <div class="spouse-information">
+  <div class="header">
+    {{ GeneralInfo.hidden_tag()}}
+    <h4>General Information</h4>
     <div class="field">
-      <label>First Name</label>
-      <input type="text" name="first-name" placeholder="First Name" />
+      <label> {{ GeneralInfo.member_number.label}}</label>
+      {{GeneralInfo.member_number}} *
     </div>
     <div class="field">
-      <label>Last Name</label>
-      <input type="text" name="last-name" placeholder="Last Name" />
+      <label> {{ GeneralInfo.salutation.label}}</label>
+      {{GeneralInfo.salutation}}
+    </div>
+    <div class="field">
+      <label> {{ GeneralInfo.first_name.label}}</label>
+      {{GeneralInfo.first_name}} *
+    </div>
+    <div class="field">
+      <label> {{ GeneralInfo.middle_initial.label}}</label>
+      {{GeneralInfo.middle_initial}}
+    </div>
+    <div class="field">
+      <label> {{ GeneralInfo.last_name.label}}</label>
+      {{GeneralInfo.last_name}} *
+    </div>
+    <div class="field">
+      <label> {{ GeneralInfo.gender.label}}</label>
+      {{GeneralInfo.gender}} *
+    </div>
+    <div class="field">
+      <label> {{ GeneralInfo.birthday.label}}</label>
+      {{GeneralInfo.birthday}}
+    </div>
+    <div class="field">
+      <label> {{ GeneralInfo.preferred_name.label}}</label>
+      {{GeneralInfo.preferred_name}}
+    </div>
+    <div class="field">
+      <label> {{ GeneralInfo.mailing_name.label}}</label>
+      {{GeneralInfo.mailing_name}}
+    </div>
+    <small class="recommendation">
+      Enter the name of the individual as you would prefer it to appear on
+      mailing labels, or leave it blank and the system will automatically
+      provide a suggested default.
+    </small>
+  </div>
+
+  <div class="header">
+    {{ SpouseInfo.hidden_tag() }}
+    <h4>Spouse Information</h4>
+    <div class="field">
+      <label> {{ SpouseInfo.first_name.label }} </label>
+      {{ SpouseInfo.first_name }}
+    </div>
+    <div class="field">
+      <label> {{ SpouseInfo.last_name.label }} </label>
+      {{ SpouseInfo.first_name }}
     </div>
   </div>
 
-  <div class="primary-address"></div>
+  <div class="header">
+    {{ PrimaryAddress.hidden_tag() }}
+    <h4>Primary Address</h4>
+    <div class="field">
+      <label> {{ PrimaryAddress.country.label}}</label>
+      {{PrimaryAddress.country}}
+    </div>
+    <div class="field">
+      <label> {{ PrimaryAddress.address1.label}}</label>
+      {{PrimaryAddress.address1}}
+    </div>
+    <div class="field">
+      <label> {{ PrimaryAddress.address2.label}}</label>
+      {{PrimaryAddress.address2}}
+    </div>
+    <div class="field">
+      <label> {{ PrimaryAddress.city.label}}</label>
+      {{PrimaryAddress.city}}
+    </div>
+    <div class="field">
+      <label> {{ PrimaryAddress.state.label}}</label>
+      {{PrimaryAddress.state}}
+    </div>
+    <div class="field">
+      <label> {{ PrimaryAddress.zip_code.label}}</label>
+      {{PrimaryAddress.zip_code}}
+    </div>
+    <div class="field">
+      <label> {{ PrimaryAddress.time_zone.label}}</label>
+      {{PrimaryAddress.time_zone}}
+    </div>
+    <div class="field">
+      <label> {{ PrimaryAddress.metro_area.label}}</label>
+      {{PrimaryAddress.metro_area}}
+    </div>
+    <div class="field">
+      <label> {{ PrimaryAddress.home_phone.label}}</label>
+      {{PrimaryAddress.home_phone}}
+    </div>
+  </div>
   <button class="ui button" type="submit">Submit</button>
 </form>
 {% endblock content %}
