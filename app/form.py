@@ -9,25 +9,27 @@ from wtforms.fields import (
 from wtforms.fields.html5 import IntegerField
 
 class SearchRequestForm(FlaskForm):
-  request_type = SelectField('Request Type', choices = 
-  ['Check All', 'Transportation Request', 'Member\'s Home Request'
-  'Contractor Referral', 'Office Time Request'])
 
-  request_status = SelectField('Request Status', choices = 
-  ['Check All', 'Requested', 'Open Referral', 'Pending',
-   'Confirmed', 'Completed', 'Cancelled'])
+  request_type = SelectMultipleField('Request Type', choices = [(0,'Check All'),
+   (1,'Transportation Request'), (2,'Member\'s Home Request'),
+   (3,'Contractor Referral'), (4,'Office Time Request')])
 
-  service_category = SelectField('Service Category', choices =
-  ['Check All', 'Coronavirus Community Support', 'Professional Home/Garden Service',
-   'Professional In-Home Support', 'Technical Support', 
-   'Transportation', 'Village Admin', 'Volunteer Home/Garden Service',
-   'Volunteer In-Home Support'])
 
-  provider_type = SelectField('Provider Type', choices = 
-  ['Check All', 'Non-Member Volunteer', 'Member Volunteer', 'Contractor'])
+  request_status = SelectMultipleField('Request Status', choices = 
+  [(0, 'Check All'), (1, 'Requested'), (2, 'Open Referral'), (3, 'Pending'),
+   (4, 'Confirmed'), (5, 'Completed'), (6, 'Cancelled')])
 
-  service_req_from = IntegerField('Service Req # from')
-  service_req_to = IntegerField('to')
+  service_category = SelectMultipleField('Service Category', choices =
+  [(0, 'Check All'), (1, 'Coronavirus Community Support'), (2, 'Professional Home/Garden Service'),
+   (3, 'Professional In-Home Support'), (4, 'Technical Support'), 
+   (5, 'Transportation'), (6, 'Village Admin'), (7, 'Volunteer Home/Garden Service'),
+   (8, 'Volunteer In-Home Support')])
+
+  provider_type = SelectMultipleField('Provider Type', choices = 
+  [(0, 'Check All'), (1, 'Non-Member Volunteer'), (2, 'Member Volunteer'), (3, 'Contractor')])
+
+  service_req_from = IntegerField('Service Req # from', default=0)
+  service_req_to = IntegerField('to', default=0)
 
   priority = RadioField('High priority', choices=['Yes', 'No', 'Both'])
   show = RadioField('Show', choices=['Undated', 'Dated', 'Both'])

@@ -9,7 +9,7 @@
         <div class="dropdown">
           <div class="field">
             <label> {{form.request_type.label}}</label>
-            {{ form.request_type }}
+            {{ form.request_type(size=5, class='form-control',  multiple="multiple") }}
           </div>
           <div class="field">
             <label> {{form.request_status.label}}</label>
