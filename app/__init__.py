@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for
-from form import SearchRequestForm
+from .form import SearchRequestForm
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '579asldfi38042njfadf'
