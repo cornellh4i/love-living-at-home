@@ -3,9 +3,12 @@
 <div class="content-section">
   <form method="POST" action="">
     {{ form.hidden_tag() }}
-    <legend class="border-bottom mb-4">Search Request</legend>
+    <h3>Search Request</h3>
+
     <fieldset class="form-group">
       <div class="ui form">
+        
+        <!--Dropdown components-->
         <div class="dropdown">
           <div class="field" >
             <label> {{form.request_type.label}}</label>
@@ -24,6 +27,7 @@
             {{ form.provider_type(size=4, class='form-control',  multiple="multiple") }}
           </div>
         </div>
+
         <div class="field">
           <label> {{form.priority.label}}</label>
           {{form.priority}}
@@ -40,8 +44,11 @@
           <label>{{ form.service_req_to.label}}</label>
           {{ form.service_req_to }}
         </div>
+
       </div>
     </fieldset>
+
+    <!--Reset and Search Buttons-->
     <div class="form-group">
       {{ form.reset(class="btn btn-outline-info") }}
     </div>
@@ -51,151 +58,3 @@
   </form>
 </div>
 {% endblock content %}
-
-
-
-
-<!--    <div class="form example" data-tag="select" data-use-content="true">
-        <div class="ui form">
-          <div class="field">
-            <label>Request Type</label>
-            <select multiple class="ui dropdown">
-                <option value="">Select Request Type</option>
-                <option value="0">Transportation Request</option>
-                <option value="1">Member's Home Request</option>
-                <option value="2">Contractor Referral</option>
-                <option value="3">Office Time Request</option>
-            </select>
-            </div>
-        </div>
-    </div>
-
-    <div class="form example" data-tag="select" data-use-content="true">
-        <div class="ui form">
-          <div class="field">
-            <label>Service Category</label>
-            <select multiple class="ui dropdown">
-                <option value="">Select Service Category</option>
-                <option value="0">Coronavirus Community Support</option>
-                <option value="1">Professional Home/Garden Services</option>
-                <option value="2">Professional In-Home Support</option>
-                <option value="3">Technical Support</option>
-                <option value="4">Transportation</option>
-                <option value="5">Village Admin</option>
-                <option value="6">Volunteer Home/Garden Service</option>
-                <option value="7">Volunteer In-Home Support</option>
-            </select>
-            </div>
-        </div>
-    </div>
-
-    <div class="form example" data-tag="select" data-use-content="true">
-        <div class="ui form">
-            <div class="field">
-            <label>Request Status</label>
-            <select multiple class="ui dropdown">
-                <option value="">Select Request Status</option>
-                <option value="0">Requested</option>
-                <option value="1">Open Referral</option>
-                <option value="2">Pending</option>
-                <option value="3">Confirmed</option>
-                <option value="4">Completed</option>
-                <option value="5">Cancelled</option>
-            </select>
-            </div>
-        </div>
-    </div>
-
-    <div class="form example" data-tag="select" data-use-content="true">
-        <div class="ui form">
-            <div class="field">
-            <label>Provider Type</label>
-            <select multiple class="ui dropdown">
-                <option value="">Select Provider Type</option>
-                <option value="0">Non-Member Volunteer</option>
-                <option value="1">Member Volunteer</option>
-                <option value="2">Contractor</option>
-            </select>
-            </div>
-        </div>
-    </div>  
-    
-    <div class=“inline fields”>
-        <label for=“priority”>High Priority</label>
-        <div class=“field”>
-          <div class=“ui radio checkbox”>
-            <input type=“radio” name=“priority” checked=“” tabindex=“0" class=“hidden”>
-            <label>Yes</label>
-          </div>
-        </div>
-        <div class=“field”>
-          <div class=“ui radio checkbox”>
-            <input type=“radio” name=“priority” tabindex=“0" class=“hidden”>
-            <label>No</label>
-          </div>
-        </div>
-        <div class=“field”>
-          <div class=“ui radio checkbox”>
-            <input type=“radio” name=“priority” tabindex=“0" class=“hidden”>
-            <label>Both</label>
-          </div>
-        </div>
-    </div>
-
-    <div class=“inline fields”>
-        <label for=“show”>Show</label>
-        <div class=“field”>
-          <div class=“ui radio checkbox”>
-            <input type=“radio” name=“show” checked=“” tabindex=“0” class=“hidden”>
-            <label>Undated</label>
-          </div>
-        </div>
-        <div class=“field”>
-          <div class=“ui radio checkbox”>
-            <input type=“radio” name=“show” tabindex=“0” class=“hidden”>
-            <label>Dated</label>
-          </div>
-        </div>
-        <div class=“field”>
-          <div class=“ui radio checkbox”>
-            <input type=“radio” name=“show” tabindex=“0” class=“hidden”>
-            <label>Both</label>
-          </div>
-        </div>
-    </div>
-
-    <div class=“ui form”>
-        <div class=“field”>
-          <label>Service Req # from</label>
-          <input type=“text”>
-        </div>
-      </div>
-      <div class=“ui form”>
-        <div class=“field”>
-          <label>to</label>
-          <input type=“text”>
-        </div>
-      </div>
-    </div>
-
-    
-
-    <div class="content-section">
-        <form method="POST" action="">
-            <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
-            </div>
-        </form>
-    </div>
-
-    <div class="border-top pt-3">
-        <small class="text-muted">
-        <a class="ml-2" href="{{ url_for('search-request') }}">Reset</a>
-        </small>
-    </div>
-    <div class="border-top pt-3">
-        <small class="text-muted">
-        <a class="ml-2" href="{{ url_for('search-request') }}">Search</a>
-        </small>
-    </div>
-    -->
