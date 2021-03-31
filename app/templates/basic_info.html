@@ -1,43 +1,61 @@
 {% extends "base.html" %} {% block content %}
 <form class="basic-member-information" method="POST" action="">
-  <div class="header">
-    {{ GeneralInfo.hidden_tag()}}
-    <h4>General Information</h4>
+  <div class="header" style="margin-bottom: 10px">
+    {{ form.hidden_tag()}}
+    <h4 class="ui dividing header">General Information</h4>
     <div class="field">
-      <label> {{ GeneralInfo.member_number.label}}</label>
-      {{GeneralInfo.member_number}} *
+      <label> {{ form.member_number.label}}</label>
+      {{form.member_number}} * {% if form.member_number.errors %}
+      <div class="ui error message">{{ form.member_number.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ GeneralInfo.salutation.label}}</label>
-      {{GeneralInfo.salutation}}
+      <label> {{ form.salutation.label}}</label>
+      {{form.salutation}} {% if form.salutation.errors %}
+      <div class="ui error message">{{ form.salutation.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ GeneralInfo.first_name.label}}</label>
-      {{GeneralInfo.first_name}} *
+      <label> {{ form.first_name.label}}</label>
+      {{form.first_name}} * {% if form.first_name.errors %}
+      <div class="ui error message">{{ form.first_name.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ GeneralInfo.middle_initial.label}}</label>
-      {{GeneralInfo.middle_initial}}
+      <label> {{ form.middle_initial.label}}</label>
+      {{form.middle_initial}} {% if form.middle_initial.errors %}
+      <div class="ui error message">{{ form.middle_initial.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ GeneralInfo.last_name.label}}</label>
-      {{GeneralInfo.last_name}} *
+      <label> {{ form.last_name.label}}</label>
+      {{form.last_name}} * {% if form.last_name.errors %}
+      <div class="ui error message">{{ form.last_name.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ GeneralInfo.gender.label}}</label>
-      {{GeneralInfo.gender}} *
+      <label> {{ form.gender.label}}</label>
+      {{form.gender}} * {% if form.gender.errors %}
+      <div class="ui error message">{{ form.gender.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ GeneralInfo.birthday.label}}</label>
-      {{GeneralInfo.birthday}}
+      <label> {{ form.birthday.label}}</label>
+      {{form.birthday}} {% if form.birthday.errors %}
+      <div class="ui error message">{{ form.birthday.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ GeneralInfo.preferred_name.label}}</label>
-      {{GeneralInfo.preferred_name}}
+      <label> {{ form.preferred_name.label}}</label>
+      {{form.preferred_name}} {% if form.preferred_name.errors %}
+      <div class="ui error message">{{ form.preferred_name.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ GeneralInfo.mailing_name.label}}</label>
-      {{GeneralInfo.mailing_name}}
+      <label> {{ form.mailing_name.label}}</label>
+      {{form.mailing_name}} {% if form.mailing_name.errors %}
+      <div class="ui error message">{{ form.mailing_name.errors}}</div>
+      {% endif %}
     </div>
     <small class="recommendation">
       Enter the name of the individual as you would prefer it to appear on
@@ -46,59 +64,79 @@
     </small>
   </div>
 
-  <div class="header">
-    {{ SpouseInfo.hidden_tag() }}
-    <h4>Spouse Information</h4>
+  <div class="header" style="margin-bottom: 10px">
+    <h4 class="ui dividing header">Spouse Information</h4>
     <div class="field">
-      <label> {{ SpouseInfo.first_name.label }} </label>
-      {{ SpouseInfo.first_name }}
+      <label> {{ form.spouse_first_name.label }} </label>
+      {{ form.spouse_first_name }} {% if form.spouse_first_name.errors %}
+      <div class="ui error message">{{ form.spouse_first_name.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ SpouseInfo.last_name.label }} </label>
-      {{ SpouseInfo.first_name }}
+      <label> {{ form.spouse_last_name.label }} </label>
+      {{ form.spouse_last_name }} {% if form.spouse_last_name.errors %}
+      <div class="ui error message">{{ form.spouse_last_name.errors}}</div>
+      {% endif %}
     </div>
   </div>
 
-  <div class="header">
-    {{ PrimaryAddress.hidden_tag() }}
-    <h4>Primary Address</h4>
+  <div class="header" style="margin-bottom: 10px">
+    <h4 class="ui dividing header">Primary Address</h4>
     <div class="field">
-      <label> {{ PrimaryAddress.country.label}}</label>
-      {{PrimaryAddress.country}}
+      <label> {{ form.country.label}}</label>
+      {{form.country}} {% if form.country.errors %}
+      <div class="ui error message">{{ form.country.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ PrimaryAddress.address1.label}}</label>
-      {{PrimaryAddress.address1}}
+      <label> {{ form.address1.label}}</label>
+      {{form.address1}} {% if form.address1.errors %}
+      <div class="ui error message">{{ form.address1.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ PrimaryAddress.address2.label}}</label>
-      {{PrimaryAddress.address2}}
+      <label> {{ form.address2.label}}</label>
+      {{form.address2}} {% if form.address2.errors %}
+      <div class="ui error message">{{ form.address2.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ PrimaryAddress.city.label}}</label>
-      {{PrimaryAddress.city}}
+      <label> {{ form.city.label}}</label>
+      {{form.city}} {% if form.city.errors %}
+      <div class="ui error message">{{ form.city.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ PrimaryAddress.state.label}}</label>
-      {{PrimaryAddress.state}}
+      <label> {{ form.state.label}}</label>
+      {{form.state}} {% if form.state.errors %}
+      <div class="ui error message">{{ form.state.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ PrimaryAddress.zip_code.label}}</label>
-      {{PrimaryAddress.zip_code}}
+      <label> {{ form.zip_code.label}}</label>
+      {{form.zip_code}} {% if form.zip_code.errors %}
+      <div class="ui error message">{{ form.zip_code.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ PrimaryAddress.time_zone.label}}</label>
-      {{PrimaryAddress.time_zone}}
+      <label> {{ form.time_zone.label}}</label>
+      {{form.time_zone}} {% if form.time_zone.errors %}
+      <div class="ui error message">{{ form.time_zone.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ PrimaryAddress.metro_area.label}}</label>
-      {{PrimaryAddress.metro_area}}
+      <label> {{ form.metro_area.label}}</label>
+      {{form.metro_area}} {% if form.metro_area.errors %}
+      <div class="ui error message">{{ form.metro_area.errors}}</div>
+      {% endif %}
     </div>
     <div class="field">
-      <label> {{ PrimaryAddress.home_phone.label}}</label>
-      {{PrimaryAddress.home_phone}}
+      <label> {{ form.home_phone.label}}</label>
+      {{form.home_phone}} {% if form.home_phone.errors %}
+      <div class="ui error message">{{ form.home_phone.errors}}</div>
+      {% endif %}
     </div>
   </div>
-  <button class="ui button" type="submit">Submit</button>
+  <div>{{ form.submit(class = "ui button") }}</div>
 </form>
 {% endblock content %}

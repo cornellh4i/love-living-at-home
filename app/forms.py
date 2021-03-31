@@ -1,13 +1,13 @@
-from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, TextAreaField, RadioField, IntegerField, widgets
+from wtforms.validators import Length, InputRequired, Optional
 from wtforms.fields.html5 import DateField
-from wtforms.validators import Length, InputRequired
+from flask_wtf import FlaskForm
+from wtforms import StringField, SelectField, TextAreaField, RadioField, IntegerField, widgets, SubmitField
 
 
-class GeneralInformation(FlaskForm):
+class BasicMemberInformation(FlaskForm):
     member_number = StringField('Member Number',
                                 validators=[InputRequired(),
-                                            Length(min=1, max=5, message="hello world")])
+                                            Length(min=1, max=30)])
     salutations = ["", "Sir", "Mrs", "Ms", "Mr"]
     salutation = SelectField("Salutation", choices=salutations)
     first_name = StringField('First Name',
@@ -18,19 +18,18 @@ class GeneralInformation(FlaskForm):
                             validators=[InputRequired(), Length(min=1, max=30)])
     gender = SelectField("Gender", validators=[InputRequired()], choices=[
                          ("male", "Male"), ('female', "Female")])
-    birthday = DateField('Birthday', format="%Y-%m-%d")
+    birthday = DateField('Birthday', format="%Y-%m-%d",
+                         validators=[Optional()])
     preferred_name = StringField('Preferred Name',
-                                 validators=[Length(min=1, max=30)])
+                                 validators=[Optional(), Length(min=1, max=30)])
     mailing_name = StringField('Mailing Name',
-                               validators=[Length(min=1, max=30)])
+                               validators=[Optional(), Length(min=1, max=30)])
 
+    spouse_first_name = StringField(
+        'First Name', validators=[Optional(), Length(min=1, max=30)])
+    spouse_last_name = StringField(
+        'Last Name', validators=[Optional(), Length(min=1, max=30)])
 
-class SpouseInformation(FlaskForm):
-    first_name = StringField('First Name', validators=[Length(min=1, max=30)])
-    last_name = StringField('Last Name', validators=[Length(min=1, max=30)])
-
-
-class PrimaryAddress(FlaskForm):
     countries = ['United States', 'Afghanistan', 'Albania', 'Algeria',
                  'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antarctica',
                  'Antigua And Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia',
@@ -77,9 +76,11 @@ class PrimaryAddress(FlaskForm):
                  'Western Sahara', 'Yemen', 'Yugoslavia', 'Zaire', 'Zambia', 'Zimbabwe']
 
     country = SelectField('Country', choices=countries)
-    address1 = TextAreaField('Address 1', validators=[Length(max=200)])
-    address2 = TextAreaField('Address 2', validators=[Length(max=200)])
-    city = TextAreaField('City', validators=[Length(max=200)])
+    address1 = TextAreaField('Address 1', validators=[
+                             Optional(), Length(max=200)])
+    address2 = TextAreaField('Address 2', validators=[
+                             Optional(), Length(max=200)])
+    city = TextAreaField('City', validators=[Optional(), Length(max=200)])
 
     states = ["", "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA",
               "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
@@ -88,11 +89,17 @@ class PrimaryAddress(FlaskForm):
               "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
 
     state = SelectField('State', choices=states)
-    zip_code = TextAreaField('Zip Code', validators=[Length(max=45)])
+    zip_code = TextAreaField('Zip Code', validators=[
+                             Optional(), Length(max=45)])
 
     time_zones = ["Eastern Time (US & Canada) (UTC-05:00)", "b", "c"]
-    time_zone = SelectField('Timezone', choices=time_zones)
+    time_zone = SelectField(
+        'Timezone', choices=time_zones, validators=[Optional()])
 
     metro_areas = ["<SELECT>", "a", "b", "c"]
-    metro_area = SelectField('Metro Area', choices=metro_areas)
-    home_phone = IntegerField(widget=widgets.Input(input_type="tel"))
+    metro_area = SelectField(
+        'Metro Area', choices=metro_areas, validators=[Optional()])
+    home_phone = IntegerField(widget=widgets.Input(
+        input_type="tel"), validators=[Optional()])
+
+    submit = SubmitField("Submit")

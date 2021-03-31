@@ -1,7 +1,6 @@
-from flask import Flask, render_template, url_for
-from .forms import GeneralInformation, SpouseInformation, PrimaryAddress
+from flask import Flask, render_template, url_for, redirect
+from .forms import BasicMemberInformation
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'ff44bd981ac737ac4264f7104fa68c2d1a6be086cb1a8c334d03617dd5d7039a'
 
 
 @app.route('/')
@@ -10,16 +9,14 @@ def main():
 
 
 # Add basic information about a LLH Member.
-@app.route('/basic-info')
+@app.route('/basic-info', methods=['GET', 'POST'])
 def basic_info():
-    form1 = GeneralInformation()
-    form2 = SpouseInformation()
-    form3 = PrimaryAddress()
+    form = BasicMemberInformation()
+    if form.validate_on_submit():
+        return redirect(url_for('main'))
     return render_template('basic_info.html',
                            title='Basic Member Information',
-                           GeneralInfo=form1,
-                           SpouseInfo=form2,
-                           PrimaryAddress=form3)
+                           form=form)
 
 
 # Search for an existing service request.
