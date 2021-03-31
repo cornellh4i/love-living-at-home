@@ -1,0 +1,10 @@
+from flask_sqlalchemy import SQLAlchemy
+from flask import current_app
+
+from .. import db
+
+
+class AvailabilityStatus(db.Model):
+    id = db.Column(db.Integer, db.ForeignKey(
+        'volunteer_availability.availability_status_id'), nullable=False)
+    name = db.Column(db.String(64), nullable=False)
