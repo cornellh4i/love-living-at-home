@@ -10,3 +10,5 @@ class ProvidedService(db.Model):
         nullable=False)
     volunteer_status = db.Column(db.String(80), nullable=false)
     
+    def __repr__(self):
+        return f"ProvidedService('{self.volunteer_status}')"

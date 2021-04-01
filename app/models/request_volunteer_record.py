@@ -13,4 +13,7 @@ class RequestVolunteerRecord(db.Model):
     staff_member_id = db.Column(db.Integer, db.ForeignKey('staffer.id'),
         nullable=False)
     updated_datetime = db.Column(db.DateTime, nullable = false)
+
+    def __repr__(self):
+        return f"RequestVolunteerRecord('{self.updated_datetime}')"
     
