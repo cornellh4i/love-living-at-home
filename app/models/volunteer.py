@@ -25,3 +25,6 @@ class Volunteer(db.model):
   preferred_contact_method_id = db.Column(db.Integer(), db.ForeginKey("contact_method.id"), nullable=False)
   preferred_contact_method = db.relationship("ContactMethod", backref="volunteers")
   general_notes = db.Column(db.String(255), nullable=False)
+
+  def __repr__(self):
+        return f"Volunteer('{self.first_name}', '{self.last_name}')"
