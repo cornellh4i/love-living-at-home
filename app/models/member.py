@@ -13,7 +13,6 @@ class Member(db.Model):
     gender = db.Column(db.String(64), nullable=False)
     birthdate = db.Column(db.Date, nullable=False)
     preferred_name = db.Column(db.String(64))
-    # idk which ones to make nullable
     address_id = db.Column(db.Integer)
     phone_number = db.Column(db.String(64))
     email_address = db.Column(db.String(64), nullable=False)
@@ -23,5 +22,8 @@ class Member(db.Model):
     requests = db.relationship(
         'Request', backref='member', lazy='dynamic')
     # data might be sent the other way
-    vol_address_id = db.relationship(
-        'Volunteer', backref='volunteer_id', lazy='dynamic')
+    volunteer = db.relationship(
+        'Volunteer', backref='member', lazy='dynamic')
+
+    def __repr__(self):
+        return f"Member('{self.member_number}', '{self.first_name}' , '{self.last_name}','{self.email_address}')"

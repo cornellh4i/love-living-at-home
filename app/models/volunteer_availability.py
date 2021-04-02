@@ -12,6 +12,9 @@ class VolunteerAvailability(db.Model):
     time_period_id = db.Column(db.Integer, unique=True, nullable=False)
     availability_status_id = db.Column(db.Integer, unique=True, nullable=False)
     time_period = db.relationship(
-        'TimePeriod', backref='time_period', lazy=True)
+        'TimePeriod', backref='volunteer_availability', lazy=True)
     availability_status = db.relationship(
-        'AvailabilityStatus', backref='availability_status', lazy=True)
+        'AvailabilityStatus', backref='volunteer_availability', lazy=True)
+
+    def __repr__(self):
+        return f"VolunteerAvailability('{self.day}')"
