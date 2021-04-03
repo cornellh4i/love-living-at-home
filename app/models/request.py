@@ -32,7 +32,7 @@ class Request(db.Model):
   service_category = db.relationship("Service Category", backref="request", lazy = True)
   service_id = db.Column(db.Integer, nullable = False, db.ForeignKey('Service.id')
   service = db.relationship("Service", backref="request", lazy = True)
-  starting_address_id = db.Column(db.Integer, nullable = False, db.ForeignKey('address.id'))
+  starting_address_id = db.Column(db.Integer, nullable = False, db.ForeignKey('Address.id'))
   starting_address = db.relationship("Starting Address", backref="request", lazy = True)
   destination_address_id = db.Column(db.Integer, nullable = False, db.ForeignKey('ContactMethod.id'))
   destination_address = db.relationship("Destination Address", backref="request", lazy = True)
