@@ -1,10 +1,8 @@
 from flask import current_app
-from flask_login import AnonymousUserMixin, UserMixin
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from itsdangerous import BadSignature, SignatureExpired
-from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import datetime
 
-from .. import db, login_manager
+
+from .. import db
 
 from service.py import Service
 from service_category.py import ServiceCategory
