@@ -196,3 +196,11 @@ def update_editor_contents():
     db.session.commit()
 
     return 'OK', 200
+
+@admin.route('/search-request', methods=['POST','GET'])
+@login_required
+@admin_required
+def search_request():
+    form = SearchRequestForm()
+    return render_template('admin/search_request.html', title = 'Search Request', form = form)
+)
