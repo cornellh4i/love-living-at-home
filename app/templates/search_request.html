@@ -7,24 +7,24 @@
 
     <fieldset class="form-group">
       <div class="ui form">
-        
+
         <!--Dropdown components-->
         <div class="dropdown">
-          <div class="field" >
+          <div class="field">
             <label> {{form.request_type.label}}</label>
-            {{ form.request_type(size=5, class='form-control',  multiple="multiple") }}
+            {{ form.request_type(size=5, class='form-control', multiple="multiple") }}
           </div>
-          <div class="field" >
+          <div class="field">
             <label> {{form.request_status.label}}</label>
-            {{ form.request_status(size=7, class='form-control',  multiple="multiple") }}
+            {{ form.request_status(size=7, class='form-control', multiple="multiple") }}
           </div>
           <div class="field">
             <label> {{form.service_category.label}}</label>
-            {{ form.service_category(size=9, class='form-control',  multiple="multiple") }}
+            {{ form.service_category(size=9, class='form-control', multiple="multiple") }}
           </div>
           <div class="field">
             <label> {{form.provider_type.label}}</label>
-            {{ form.provider_type(size=4, class='form-control',  multiple="multiple") }}
+            {{ form.provider_type(size=4, class='form-control', multiple="multiple") }}
           </div>
         </div>
 
@@ -48,6 +48,7 @@
       </div>
     </fieldset>
 
+    <!-- comment -->
     <!--Reset and Search Buttons-->
     <div class="form-group">
       {{ form.reset(class="btn btn-outline-info") }}
