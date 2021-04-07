@@ -14,5 +14,5 @@ class Address(db.Model):
     country = db.Column(db.String(64), nullable=False)
 
     def __repr__(self):
-        return f"Address('{self.street_address}',
-                         '{self.city}', '{self.state}', '{self.country}')"
+        return(f"Address('{self.street_address}',\
+                         '{self.city}', '{self.state}', '{self.country}')")
