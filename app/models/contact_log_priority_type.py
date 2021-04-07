@@ -11,4 +11,4 @@ class ContactLogPriorityType(db.Model):
     
 
     def __repr__(self):
-        return f"contact log priority types( '{self.name}')"
+        return f"contact log priority type( '{self.name}')"

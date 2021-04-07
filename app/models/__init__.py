@@ -8,7 +8,7 @@ from .miscellaneous import *  # noqa
 
 from .address import *
 from .availability_status import *
-from .contact_log_priority_types import *
+from .contact_log_priority_type import *
 from .contact_method import *
 from .member import *
 from .provided_service import *
