@@ -1,7 +1,7 @@
 from flask import current_app
 from .. import db
 
-class Volunteer(db.model):
+class Volunteer(db.Model):
   __tablename__ = "volunteers"
   id = db.Column(db.Integer, primary_key=True)
   first_name = db.Column(db.String(80), nullable=False)
