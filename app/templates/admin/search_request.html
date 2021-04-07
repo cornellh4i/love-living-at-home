@@ -28,34 +28,43 @@
           </div>
         </div>
 
-        <div class="field">
+        <div class = "field">
+          <label> {{form.requesting_member.label}}</label>
+          {{form.requesting_member}}
+        </div>
+        <div class = "field">
+          <label> {{form.service_provider.label}}</label>
+          {{form.service_provider}}
+        </div>
+
+        <!-- <div class="field">
           <label> {{form.priority.label}}</label>
           {{form.priority}}
-        </div>
-        <div class="field">
+        </div> -->
+        <!-- <div class="field">
           <label> {{form.show.label}}</label>
           {{form.show}}
-        </div>
-        <div class="form-group">
+        </div> -->
+        <!-- <div class="form-group">
           <label> {{form.service_req_from.label}} </label>
           {{ form.service_req_from }}
         </div>
         <div class="form-group">
           <label>{{ form.service_req_to.label}}</label>
           {{ form.service_req_to }}
-        </div>
+        </div> -->
 
       </div>
     </fieldset>
 
     <!-- comment -->
     <!--Reset and Search Buttons-->
-    <div class="form-group">
+    <!-- <div class="form-group">
       {{ form.reset(class="btn btn-outline-info") }}
     </div>
     <div class="form-group">
       {{ form.search(class="btn btn-outline-info") }}
-    </div>
+    </div> -->
   </form>
 </div>
 {% endblock content %}
