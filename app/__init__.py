@@ -30,7 +30,7 @@ def create_app(config):
     config_name = config
 
     if not isinstance(config, str):
-        config_name = os.getenv('FLASK_CONFIG', 'default')
+        config_name = os.getenv('FLASK_CONFIG', 'testing')
 
     app.config.from_object(Config[config_name])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -45,6 +45,9 @@ def create_app(config):
     csrf.init_app(app)
     compress.init_app(app)
     RQ(app)
+
+    with app.app_context():
+        db.create_all()
 
     # Register Jinja template functions
     from .utils import register_template_utils
