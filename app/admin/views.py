@@ -16,6 +16,7 @@ from app.admin.forms import (
     ChangeUserEmailForm,
     InviteUserForm,
     NewUserForm,
+    TransportationRequestForm
 )
 from app.decorators import admin_required
 from app.email import send_email
@@ -196,3 +197,10 @@ def update_editor_contents():
     db.session.commit()
 
     return 'OK', 200
+
+# Create a new service request.
+@admin.route('/create-request', methods=['GET', 'POST'])
+@admin_required
+def create_request():
+    form = TransportationRequestForm()
+    return render_template('admin/transportation_request.html', title='Transportation Request', form=form)

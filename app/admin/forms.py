@@ -19,6 +19,8 @@ from wtforms.validators import (
 
 from app import db
 from app.models import Role, User
+from datetime import datetime
+
 
 
 class ChangeUserEmailForm(FlaskForm):
@@ -78,14 +80,15 @@ class NewUserForm(InviteUserForm):
 
 
 class TransportationRequestForm(FlaskForm):
+    date_created = DateField('Date Created', format = '%Y-%M-%D', default = datetime.today, readonly)
     requested_date = DateField('Requested Date',
         validators=[InputRequired()], format='%Y-%M-%D')
     initial_pickup = TimeField('Inital Pickup', format='%H:%M')
     appointment = TimeField('Appointment', format='%H:%M')
     return_pickup = TimeField('Return Pickup', format='%H:%M')
     drop_off = TimeField('Drop Off', format='%H:%M')
-    time_flexible = RadioField('Is Date/Time Flexible?', choices=[('Yes',''),('No','')])
-    priority =RadioField('High priority?', choices=[('Yes',''),('No','')])
+    time_flexible = RadioField('Is Date/Time Flexible?', choices=[('Yes','Yes'),('No','No')])
+    priority =RadioField('High priority?', choices=[('Yes','Yes'),('No','No')])
     description=TextAreaField('Short description')
     service_category = SelectField('Service Category', choices = [('Yes',''),('No','')])
     service = SelectField('Service', choices = [('Yes',''),('No','')])
