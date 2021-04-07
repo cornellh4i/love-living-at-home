@@ -1,6 +1,8 @@
 from flask import Flask, render_template, url_for
-from .form import SearchRequestForm
+from .form import TransportationRequestForm, SearchRequestForm
+
 app = Flask(__name__)
+app.config['SECRET_KEY'] = "80c8e30eb8d2a5d311d46cb59145d961"
 
 app.config['SECRET_KEY'] = '579asldfi38042njfadf'
 
@@ -23,9 +25,10 @@ def search_request():
 
 
 # Create a new service request.
-@app.route('/create-request')
+@app.route('/create-request', methods=['GET', 'POST'])
 def create_request():
-    return render_template('base.html')
+    form = TransportationRequestForm()
+    return render_template('create_request.html', title='Transportation Request', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)
