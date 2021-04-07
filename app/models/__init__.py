@@ -17,9 +17,11 @@ from .request_status import *
 from .request_type import *
 from .request_volunteer_record import *
 from .request_volunteer_status import *
-from .request import *
+
 from .service_category import *
 from .service import *
+
+from .request import *
 from .time_period import *
 from .visibility import *
 from .volunteer_availability import *

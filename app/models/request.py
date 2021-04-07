@@ -3,13 +3,7 @@ from datetime import datetime
 
 
 from .. import db
-
-from service.py import Service
-from service_category.py import ServiceCategory
-from request_type.py import RequestType
-from request_status.py import RequestStatus
-from request_duration_type.py import RequestDurationType
-from contact_log_priority_type.py import ContactLogPriorityType
+from . import Service, ServiceCategory, RequestType, RequestStatus, RequestDurationType, ContactLogPriorityType
 
 class Request(db.Model):
   __tablename__ = 'request'

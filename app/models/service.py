@@ -2,7 +2,7 @@ from flask import current_app
 from .. import db
 from flask_sqlalchemy import SQLAlchemy
 
-from service_category.py import ServiceCategory
+from . import ServiceCategory
 
 class Service(db.Model):
     __tablename__ = 'services'
