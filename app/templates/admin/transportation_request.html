@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="./../../static/styles/transportation_request.css">
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
     <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
@@ -29,19 +30,28 @@
 
     {{ f.render_form_field(form.requested_date) }}
 
-    {{ f.render_form_field(form.initial_pickup) }}
-    {{ f.render_form_field(form.return_pickup) }}
-
-    {{ f.render_form_field(form.appointment) }}
-    {{ f.render_form_field(form.drop_off) }}
-    {{ f.render_form_field(form.time_flexible) }}
+    <div class="left-container">
+      {{ f.render_form_field(form.initial_pickup) }}
+      {{ f.render_form_field(form.appointment) }}
+      {{ f.render_form_field(form.return_pickup) }}
+    </div>
+    
+    <div class="right-container">
+      {{ f.render_form_field(form.time_flexible) }}
+      {{ f.render_form_field(form.return_pickup) }}
+      {{ f.render_form_field(form.drop_off) }}
+    </div>
 
     {{ f.render_form_field(form.description) }}
-    {{ f.render_form_field(form.service_category) }}
-    {{ f.render_form_field(form.service) }}
 
-    {{ f.render_form_field(form.starting_location) }}
-    {{ f.render_form_field(form.destination) }}
+    <div class="left-container">
+      {{ f.render_form_field(form.service_category) }}
+      {{ f.render_form_field(form.starting_location) }}
+    </div>
+    <div class="right-container">
+      {{ f.render_form_field(form.service) }}
+      {{ f.render_form_field(form.destination) }}
+    </div>
 
 
     {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
