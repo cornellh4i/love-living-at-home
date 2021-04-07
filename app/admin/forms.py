@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+#from flask_table import Table, Col
 from wtforms.validators import Length, InputRequired, Optional
 from wtforms import ValidationError, SelectMultipleField, widgets
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
@@ -87,6 +88,19 @@ class MultiCheckboxField(SelectMultipleField):
     option_widget = widgets.CheckboxInput()
 
 
+# class ItemTable(Table):
+    #name = Col('Name')
+    #description = Col('Description')
+
+# Get some objects
+
+
+class Item(object):
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+
+
 class MemberManager(FlaskForm):
     first_name = StringField(
         'First name', validators=[InputRequired(),
@@ -105,86 +119,37 @@ class MemberManager(FlaskForm):
     pronoun = StringField("Pronoun", validators=[
         InputRequired(), Length(min=1, max=30)])
 
-    # countries = ['United States', 'Afghanistan', 'Albania', 'Algeria',
-    #  'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antarctica',
-    #  'Antigua And Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia',
-    #  'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados',
-    #  'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia',
-    #  'Bosnia And Herzegowina', 'Botswana', 'Bouvet Island', 'Brazil',
-    #  'Brunei Darussalam', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia',
-    #  'Cameroon', 'Canada', 'Cape Verde', 'Cayman Islands', 'Central African Rep',
-    #  'Chad', 'Chile', 'China', 'Christmas Island', 'Cocos Islands', 'Colombia',
-    #  'Comoros', 'Congo', 'Cook Islands', 'Costa Rica', 'Cote D`ivoire', 'Croatia',
-    #  'Cuba', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica',
-    #  'Dominican Republic', 'East Timor', 'Ecuador', 'Egypt', 'El Salvador',
-    #  'Equatorial Guinea', 'Eritrea', 'Estonia', 'Ethiopia',
-    #  'Falkland Islands (Malvinas)', 'Faroe Islands', 'Fiji',
-    #  'Finland', 'France', 'French Guiana', 'French Polynesia',
-    #  'French S. Territories', 'Gabon', 'Gambia', 'Georgia',
-    #  'Germany', 'Ghana', 'Gibraltar', 'Greece', 'Greenland',
-    #  'Grenada', 'Guadeloupe', 'Guam', 'Guatemala', 'Guinea',
-    #  'Guinea-bissau', 'Guyana', 'Haiti', 'Honduras', 'Hong Kong',
-    #  'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq',
-    #  'Ireland', 'Israel', 'Italy', 'Jamaica', 'Japan', 'Jordan',
-    #  'Kazakhstan', 'Kenya', 'Kiribati', 'Korea (North)', 'Korea (South)',
-    #  'Kuwait', 'Kyrgyzstan', 'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia',
-    #  'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Macau', 'Macedonia',
-    #  'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta',
-    #  'Marshall Islands', 'Martinique', 'Mauritania', 'Mauritius', 'Mayotte',
-    #  'Mexico', 'Micronesia', 'Moldova', 'Monaco', 'Mongolia', 'Montserrat',
-    #  'Morocco', 'Mozambique', 'Myanmar', 'Namibia', 'Nauru', 'Nepal',
-    #  'Netherlands', 'Netherlands Antilles', 'New Caledonia', 'New Zealand',
-    #  'Nicaragua', 'Niger', 'Nigeria', 'Niue', 'Norfolk Island',
-    #  'Northern Mariana Islands', 'Norway', 'Oman', 'Pakistan', 'Palau',
-    #  'Panama', 'Papua New Guinea', 'Paraguay', 'Peru', 'Philippines', 'Pitcairn',
-    #  'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'Reunion', 'Romania',
-    #  'Russian Federation', 'Rwanda', 'Saint Kitts And Nevis', 'Saint Lucia',
-    #  'St Vincent/Grenadines', 'Samoa',
-    #  'San Marino', 'Sao Tome', 'Saudi Arabia', 'Senegal', 'Seychelles', 'Sierra Leone',
-    #  'Singapore', 'Slovakia', 'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa',
-    #  'Spain', 'Sri Lanka', 'St. Helena', 'St.Pierre', 'Sudan', 'Suriname', 'Swaziland',
-    #  'Sweden', 'Switzerland', 'Syrian Arab Republic', 'Taiwan', 'Tajikistan', 'Tanzania',
-    #  'Thailand', 'Togo', 'Tokelau', 'Tonga', 'Trinidad And Tobago', 'Tunisia', 'Turkey',
-    #  'Turkmenistan', 'Tuvalu', 'Uganda', 'Ukraine', 'United Arab Emirates',
-    #  'United Kingdom', 'Uruguay', 'Uzbekistan', 'Vanuatu', 'Vatican City State',
-    #  'Venezuela', 'Viet Nam', 'Virgin Islands (British)', 'Virgin Islands (U.S.)',
-    #  'Western Sahara', 'Yemen', 'Yugoslavia', 'Zaire', 'Zambia', 'Zimbabwe']
     countries = [('united_states', 'United States'), ('b', "B"), ('c', 'C')]
-    # states = ["", "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA",
-    #   "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
-    #   "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
-    #   "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
-    #   "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
     states = [('none', ""), ("ny", "NY")]
     time_zones = [("est", "Eastern Time (US & Canada) (UTC-05:00)"),
                   ("b", "B"), ("c", "C")]
     metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
 
     primary_country = SelectField('Country', choices=countries)
-    primary_address1 = TextAreaField('Address 1', validators=[
+    primary_address1 = StringField('Address 1', validators=[
         Optional(), Length(max=200)])
-    primary_address2 = TextAreaField('Address 2', validators=[
+    primary_address2 = StringField('Address 2', validators=[
         Optional(), Length(max=200)])
-    primary_city = TextAreaField(
+    primary_city = StringField(
         'City', validators=[Optional(), Length(max=200)])
     primary_state = SelectField('State', choices=states)
-    primary_zip_code = TextAreaField('Zip Code', validators=[
+    primary_zip_code = StringField('Zip Code', validators=[
         Optional(), Length(max=45)])
     primary_time_zone = SelectField(
         'Timezone', choices=time_zones, validators=[Optional()])
     primary_metro_area = SelectField(
         'Metro Area', choices=metro_areas, validators=[Optional()])
-    primary_phone = IntegerField('Phone', widget=widgets.Input(
+    primary_phone = IntegerField('Phone Number', widget=widgets.Input(
         input_type="tel"), validators=[Optional()])
 
     secondary_as_primary_checkbox = BooleanField(
         'Use this address instead of the primary address', validators=[Optional()])
     secondary_country = SelectField('Country', choices=countries)
-    secondary_address1 = TextAreaField('Address 1', validators=[
+    secondary_address1 = StringField('Address 1', validators=[
         Optional(), Length(max=200)])
-    secondary_address2 = TextAreaField('Address 2', validators=[
+    secondary_address2 = StringField('Address 2', validators=[
         Optional(), Length(max=200)])
-    secondary_city = TextAreaField(
+    secondary_city = StringField(
         'City', validators=[Optional(), Length(max=200)])
     secondary_state = SelectField('State', choices=states)
     secondary_zip_code = TextAreaField('Zip Code', validators=[
@@ -193,15 +158,27 @@ class MemberManager(FlaskForm):
         'Timezone', choices=time_zones, validators=[Optional()])
     secondary_metro_area = SelectField(
         'Metro Area', choices=metro_areas, validators=[Optional()])
-    secondary_phone = IntegerField('Phone', widget=widgets.Input(
+    secondary_phone = IntegerField('Phone Number', widget=widgets.Input(
         input_type="tel"), validators=[Optional()])
 
     phone_number = IntegerField('Phone Number', widget=widgets.Input(
         input_type="tel"), validators=[Optional()])
     cell_number = IntegerField('Cell Phone Number', widget=widgets.Input(
         input_type="tel"), validators=[Optional()])
-
     email = EmailField(
+        'Email', validators=[InputRequired(),
+                             Length(1, 64),
+                             Email()])
+
+    emergency_contact_name = StringField(
+        'Contact Name', validators=[InputRequired(),
+                                    Length(1, 64)])
+    emergency_contact_relationship = StringField(
+        'Relationship', validators=[Optional(),
+                                    Length(1, 64)])
+    emergency_contact_phone_number = IntegerField('Phone Number', widget=widgets.Input(
+        input_type="tel"), validators=[Optional()])
+    emergency_contact_email = EmailField(
         'Email', validators=[InputRequired(),
                              Length(1, 64),
                              Email()])
@@ -236,7 +213,7 @@ class VolunteerManager(FlaskForm):
         InputRequired(), Length(min=1, max=30)])
     preferred_name = StringField('Preferred Name',
                                  validators=[Optional(), Length(min=1, max=30)])
-    primary_address1 = TextAreaField('Address', validators=[
+    primary_address1 = StringField('Address', validators=[
         InputRequired(), Length(max=200)])
     # now under contact info
     home_phone = IntegerField(widget=widgets.Input(
@@ -245,9 +222,22 @@ class VolunteerManager(FlaskForm):
         'Email', validators=[InputRequired(),
                              Length(1, 64),
                              Email()])
+    items = [Item('Name1', 'Description1'),
+             Item('Name2', 'Description2'),
+             Item('Name3', 'Description3')]
+    # items = ItemModel.query.all() use this for database
+    #table = ItemTable(items)
     # What is another way to say Services willing to do
-    files = [("", ""), ("", "a"), ("", "b"), ("", "c")]
+    files = [("alarm", "Alarm/Locks/Security"), ("bill", "Bill Paying/Paperwork"),
+             ("auto", "Auto Repair"), ("remote", "Coronavirus Remote Assistance")]
     services = MultiCheckboxField('Services willing to do', choices=files)
+    times = [("morning 8-11", "Morning 8-11"), ("morning 11-2", "Lunchtime 11-2"),
+             ("afternoon 2-5", "Afternoon 2-5"), ("evening 5-8", "Evening 5-8"), ("night 8-midnight", "Night 8-Midnight")]
+    availability_time = MultiCheckboxField('Availability Time', choices=times)
+    days = [("monday", "Monday"), ("tuesday", "Tuesday"), ("wednesday", "Wednesday"), ("thursday",
+                                                                                       "Thursday"), ("friday", "Friday"), ("saturday", "Saturday"), ("sunday", "Sunday")]
+    availability_day = MultiCheckboxField(
+        'Availability Day', choices=days)
     vettings = TextAreaField("Vettings", validators=[Optional()])
     # make a history of completed and pending services
     notes = TextAreaField("Notes for Office Staff", validators=[Optional()])

@@ -220,6 +220,7 @@ def invite_volunteer():
     """Invites a user to create a volunteer account"""
     form = VolunteerManager()
     if form.validate_on_submit():
+
         # user = User(
         #    first_name=form.first_name.data,
         #    last_name=form.last_name.data,
@@ -231,7 +232,7 @@ def invite_volunteer():
         # db.session.add(user)
         # db.session.commit()
 
-        flash('Volunteer {} successfully invited'.format(user.first_name()),
+        flash('Volunteer {} successfully invited'.format(form.first_name.data),
               'form-success')
     return render_template('admin/volunteer_manager.html', form=form)
 
@@ -243,7 +244,7 @@ def invite_contractor():
     """Page for contactor management."""
     form = ContractorManager()
     if form.validate_on_submit():
-        return redirect(url_for('main'))
         flash('Contractor {} successfully invited'.format(form.organization_name.data),
               'form-success')
+        return redirect(url_for('admin.index'))
     return render_template('admin/contractor_manager.html', form=form)
