@@ -21,7 +21,24 @@ from app import db
 from app.models import Role, User
 from datetime import datetime
 
+serviceCategories = [('Select', 'Select'),
+('Coronavirus Community Support', 'Coronavirus Community Support'),
+('Transportation', 'Transportation')]
 
+covidServices = [('General Errands', 'General Errands'), 
+('Grocery Shopping', 'Grocery Shopping'),
+('Prescription Pickup', 'Prescription Pickup')]
+
+transportationServices = [('Select','Select'),('Event Carpool', 'Event Carpool'),
+('hack4impact test service', 'hack4impact test service'),
+('Long Dist Non-Med Professional', 'Long Dist Non-Med Professional'),
+('Long Dist. Med Professional', 'Long Dist Med Professional'),
+('Vol Driver Family/Friend Visit','Vol Driver Family/Friend Visit'),
+('Vol Driver LLH Programs/Events', 'Vol Driver LLH Programs/Events'),
+('Vol Driver Local Medical Appt', 'Vol Driver Local Medical Appt'),
+('Vol Driver Shopping/Errands', 'Vol Driver Shopping/Errands'),
+('Vol Driver Local Bus/Airport', 'Vol Driver Local Bus/Airport'),
+('Vol Driver Misc. Trip', 'Vol Driver Misc. Trip')]
 
 class ChangeUserEmailForm(FlaskForm):
     email = EmailField(
@@ -80,7 +97,7 @@ class NewUserForm(InviteUserForm):
 
 
 class TransportationRequestForm(FlaskForm):
-    date_created = DateField('Date Created', format = '%Y-%M-%D', default = datetime.today, readonly)
+    date_created = DateField('Date Created', format = '%Y-%M-%D', default = datetime.today)
     requested_date = DateField('Requested Date',
         validators=[InputRequired()], format='%Y-%M-%D')
     initial_pickup = TimeField('Inital Pickup', format='%H:%M')
@@ -90,8 +107,9 @@ class TransportationRequestForm(FlaskForm):
     time_flexible = RadioField('Is Date/Time Flexible?', choices=[('Yes','Yes'),('No','No')])
     priority =RadioField('High priority?', choices=[('Yes','Yes'),('No','No')])
     description=TextAreaField('Short description')
-    service_category = SelectField('Service Category', choices = [('Yes',''),('No','')])
-    service = SelectField('Service', choices = [('Yes',''),('No','')])
+    service_category = SelectField('Service Category', choices = serviceCategories)
+    covidService = SelectField('Service', choices = covidServices)
+    transportationService = SelectField('Service', choices = transportationServices)
     starting_location = StringField('Starting Location')
     destination = StringField('Destination')
 

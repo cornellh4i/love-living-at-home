@@ -38,7 +38,18 @@
 
     {{ f.render_form_field(form.description) }}
     {{ f.render_form_field(form.service_category) }}
-    {{ f.render_form_field(form.service) }}
+
+    {% if form.service_category.data == 'Coronavirus Community Support' %}
+
+    {{ f.render_form_field(form.covidService) }}
+
+    {% endif %}
+
+    {% if form.service_category.data == 'Transportation' %}
+
+    {{ f.render_form_field(form.transportationService) }}
+
+    {% endif %}
 
     {{ f.render_form_field(form.starting_location) }}
     {{ f.render_form_field(form.destination) }}
