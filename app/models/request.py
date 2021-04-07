@@ -6,7 +6,6 @@ from .. import db
 from . import Service, ServiceCategory, RequestType, RequestStatus, RequestDurationType, ContactLogPriorityType
 
 class Request(db.Model):
-  __tablename__ = 'request'
   id = db.Column(db.Integer, primary_key = True)
   type_id = db.Column(db.Integer, db.ForeignKey('RequestType.id'), nullable = False)
   type = db.relationship("Type", backref="request", lazy = True)

@@ -2,7 +2,6 @@ from flask import current_app
 from .. import db
 
 class RequestVolunteerRecord(db.Model):
-    __tablename__ = 'request_volunteer_records'
     id = db.Column(db.Integer, primary_key=True)
     request_id = db.Column(db.Integer, db.ForeignKey('request.id'),
         nullable=False)
