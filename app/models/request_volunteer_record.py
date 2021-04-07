@@ -7,7 +7,7 @@ class RequestVolunteerRecord(db.Model):
         nullable=False)
     volunteer_id = db.Column(db.Integer, db.ForeignKey('volunteer.id'),
         nullable=False)
-    status_id = db.Column(db.Integer, db.ForeignKey('status.id'),
+    status_id = db.Column(db.Integer, db.ForeignKey('request_volunteer_status.id'),
         nullable=False)
     staffer_id = db.Column(db.Integer, db.ForeignKey('staffer.id'),
         nullable=False)
