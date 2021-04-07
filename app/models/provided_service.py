@@ -8,7 +8,7 @@ class ProvidedService(db.Model):
         nullable=False)
     volunteer_id = db.Column(db.Integer, db.ForeignKey('volunteer.id'),
         nullable=False)
-    volunteer_status = db.Column(db.String(80), nullable=false)
+    volunteer_status = db.Column(db.String(80), nullable=False)
     
     def __repr__(self):
         return f"ProvidedService('{self.volunteer_status}')"
