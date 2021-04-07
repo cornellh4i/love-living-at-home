@@ -5,68 +5,64 @@
 {% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="./../../static/styles/transportation_request.css">
+{% set flashes = {
+  'error': get_flashed_messages(category_filter=['form-error']),
+  'warning': get_flashed_messages(category_filter=['form-check-email']),
+  'info': get_flashed_messages(category_filter=['form-info']),
+  'success': get_flashed_messages(category_filter=['form-success'])
+  } %}
+
+{{ f.begin_form(form, flashes) }}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
-
     <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
       <i class="caret left icon"></i>
       Back to dashboard
     </a>
-    <h2 class="header">
+    <h2 class="ui center aligned header">
       Trasportation Request Form
     </h2>
 
-    {% set flashes = {
-    'error': get_flashed_messages(category_filter=['form-error']),
-    'warning': get_flashed_messages(category_filter=['form-check-email']),
-    'info': get_flashed_messages(category_filter=['form-info']),
-    'success': get_flashed_messages(category_filter=['form-success'])
-    } %}
-
-    {{ f.begin_form(form, flashes) }}
-
-
     {{ f.render_form_field(form.date_created) }}
-
-    {{ f.render_form_field(form.requested_date) }}
-
-    <div class="left-container">
-      {{ f.render_form_field(form.initial_pickup) }}
-      {{ f.render_form_field(form.appointment) }}
-      {{ f.render_form_field(form.return_pickup) }}
+  </div>
+  <div class="twelve wide column">
+    <div class="ui two column stackable grid">
+      <div class="six wide column">
+        {{ f.render_form_field(form.requested_date) }}
+        {{ f.render_form_field(form.initial_pickup) }}
+        {{ f.render_form_field(form.appointment) }}
+      </div>
+      <div class="right floated six wide column">
+        {{ f.render_form_field(form.time_flexible) }}
+        {{ f.render_form_field(form.return_pickup) }}
+        {{ f.render_form_field(form.drop_off) }}
+      </div>
     </div>
-
-    <div class="right-container">
-      {{ f.render_form_field(form.time_flexible) }}
-      {{ f.render_form_field(form.return_pickup) }}
-      {{ f.render_form_field(form.drop_off) }}
-    </div>
-
+  </div>
+    
+  <div class="twelve wide column">
     {{ f.render_form_field(form.description) }}
+  </div>
 
-
-
-    <div class="left-container">
-      {{ f.render_form_field(form.service_category) }}
-      {{ f.render_form_field(form.starting_location) }}
+  <div class="twelve wide column">
+    <div class="ui two column stackable grid">
+      <div class="six wide column">
+        {{ f.render_form_field(form.service_category) }}
+        {{ f.render_form_field(form.starting_location) }}
+      </div>
+      <div class="right floated six wide column">
+        {% if form.service_category.data == 'Coronavirus Community Support' %}
+        {{ f.render_form_field(form.covidService) }}
+        {% endif %}
+        {% if form.service_category.data == 'Transportation' %}
+        {{ f.render_form_field(form.transportationService) }}
+        {% endif %}
+        {{ f.render_form_field(form.destination) }}
+      </div>
     </div>
-    <div class="right-container">
-      {% if form.service_category.data == 'Coronavirus Community Support' %}
+  </div>
 
-      {{ f.render_form_field(form.covidService) }}
-
-      {% endif %}
-
-      {% if form.service_category.data == 'Transportation' %}
-
-      {{ f.render_form_field(form.transportationService) }}
-
-      {% endif %}
-      {{ f.render_form_field(form.destination) }}
-    </div>
-
-
+  <div class="twelve wide column">
     {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
     {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
     {{ f.form_message(flashes['info'], header='Information', class='info') }}
@@ -75,8 +71,7 @@
     {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
     {{ f.render_form_field(field) }}
     {% endfor %}
-
-    {{ f.end_form() }}
   </div>
 </div>
+{{ f.end_form() }}
 {% endblock %}
