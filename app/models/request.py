@@ -18,7 +18,7 @@ class Request(db.Model):
   appointment_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow().time())
   return_pickup_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow().time())
   drop_off_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow().time())
-  is_date_time_flexible = db.Column(db.Boolean, nullable = False, lazy = True)
+  is_date_time_flexible = db.Column(db.Boolean, nullable = False)
   short_description = db.Column(db.Text, nullable = False)
   service_category_id = db.Column(db.Integer, db.ForeignKey('ServiceCategory.id'), nullable = False)
   service_category = db.relationship("Service Category", backref="request", lazy = True)
