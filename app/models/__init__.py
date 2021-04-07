@@ -15,6 +15,8 @@ from .provided_service import *
 from .request_duration_type import *
 from .request_status import *
 from .request_type import *
+
+from .staffer import *
 from .request_volunteer_record import *
 from .request_volunteer_status import *
 
