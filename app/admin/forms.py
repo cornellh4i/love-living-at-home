@@ -25,7 +25,8 @@ serviceCategories = [('Select', 'Select'),
 ('Coronavirus Community Support', 'Coronavirus Community Support'),
 ('Transportation', 'Transportation')]
 
-covidServices = [('General Errands', 'General Errands'), 
+covidServices = [('Select','Select'),
+    ('General Errands', 'General Errands'), 
 ('Grocery Shopping', 'Grocery Shopping'),
 ('Prescription Pickup', 'Prescription Pickup')]
 

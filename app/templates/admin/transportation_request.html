@@ -6,11 +6,11 @@
 
 {% block content %}
 {% set flashes = {
-  'error': get_flashed_messages(category_filter=['form-error']),
-  'warning': get_flashed_messages(category_filter=['form-check-email']),
-  'info': get_flashed_messages(category_filter=['form-info']),
-  'success': get_flashed_messages(category_filter=['form-success'])
-  } %}
+'error': get_flashed_messages(category_filter=['form-error']),
+'warning': get_flashed_messages(category_filter=['form-check-email']),
+'info': get_flashed_messages(category_filter=['form-info']),
+'success': get_flashed_messages(category_filter=['form-success'])
+} %}
 
 {{ f.begin_form(form, flashes) }}
 <div class="ui stackable centered grid container">
@@ -39,7 +39,7 @@
       </div>
     </div>
   </div>
-    
+
   <div class="twelve wide column">
     {{ f.render_form_field(form.description) }}
   </div>
@@ -48,15 +48,13 @@
     <div class="ui two column stackable grid">
       <div class="six wide column">
         {{ f.render_form_field(form.service_category) }}
+
+        {{ f.render_form_field(form.covidService) }}
+        {{ f.render_form_field(form.transportationService) }}
+
         {{ f.render_form_field(form.starting_location) }}
       </div>
       <div class="right floated six wide column">
-        {% if form.service_category.data == 'Coronavirus Community Support' %}
-        {{ f.render_form_field(form.covidService) }}
-        {% endif %}
-        {% if form.service_category.data == 'Transportation' %}
-        {{ f.render_form_field(form.transportationService) }}
-        {% endif %}
         {{ f.render_form_field(form.destination) }}
       </div>
     </div>
