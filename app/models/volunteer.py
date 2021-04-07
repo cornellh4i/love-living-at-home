@@ -2,7 +2,7 @@ from flask import current_app
 from .. import db
 
 class Volunteer(db.Model):
-  __tablename__ = "volunteers"
+  __tablename__ = "volunteer"
   id = db.Column(db.Integer, primary_key=True)
   first_name = db.Column(db.String(80), nullable=False)
   last_name = db.Column(db.String(80), nullable=False)
@@ -17,12 +17,12 @@ class Volunteer(db.Model):
   job_title = db.Column(db.String(80), nullable=False)
   type_id = db.Column(db.Integer(), db.ForeignKey("volunteer_type.id"), nullable=False)
   volunteer_type = db.relationship("VolunteerType", backref="volunteers")
-  visibility_id = db.Column(db.Integer(), db.ForeginKey("visibility.id"), nullable=False)
+  visibility_id = db.Column(db.Integer(), db.ForeignKey("visibility.id"), nullable=False)
   visibility = db.relationship("Visibility", backref="volunteers")
   last_service_date = db.Column(db.Date(), nullable=False)
   rating = db.Column(db.Integer(), nullable=False)
-  is_fully_vetted = db.Column(db.Boolean(), Nullable=False)
-  preferred_contact_method_id = db.Column(db.Integer(), db.ForeginKey("contact_method.id"), nullable=False)
+  is_fully_vetted = db.Column(db.Boolean(), nullable=False)
+  preferred_contact_method_id = db.Column(db.Integer(), db.ForeignKey("contact_method.id"), nullable=False)
   preferred_contact_method = db.relationship("ContactMethod", backref="volunteers")
   general_notes = db.Column(db.String(255), nullable=False)
 
