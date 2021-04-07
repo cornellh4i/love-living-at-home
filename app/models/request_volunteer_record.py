@@ -10,7 +10,7 @@ class RequestVolunteerRecord(db.Model):
         nullable=False)
     status_id = db.Column(db.Integer, db.ForeignKey('status.id'),
         nullable=False)
-    staff_member_id = db.Column(db.Integer, db.ForeignKey('staffer.id'),
+    staffer_id = db.Column(db.Integer, db.ForeignKey('staffer.id'),
         nullable=False)
     updated_datetime = db.Column(db.DateTime, nullable = false)
 
