@@ -1,7 +1,7 @@
 from flask import current_app
 from .. import db
 
-class ContactMethod(db.model):
+class ContactMethod(db.Model):
   __tablename__ = "contact_methods"
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(80), nullable=False)
