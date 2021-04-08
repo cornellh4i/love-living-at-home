@@ -1,70 +1,77 @@
-{% extends "base.html" %}
+{% extends "layouts/base.html" %}
+{% import 'macros/form_macros.html' as f %}
+
 {% block content %}
+
 <div class="content-section">
   <form method="POST" action="">
     {{ form.hidden_tag() }}
-    <h3>Search Request</h3>
+    <h2 class="header">Search Criteria</h2>
+
+    {% set flashes = {
+    'error': get_flashed_messages(category_filter=['form-error']),
+    'warning': get_flashed_messages(category_filter=['form-check-email']),
+    'info': get_flashed_messages(category_filter=['form-info']),
+    'success': get_flashed_messages(category_filter=['form-success'])
+    } %}
+
+    {{ f.begin_form(form, flashes) }}
 
     <fieldset class="form-group">
       <div class="ui form">
-
         <!--Dropdown components-->
         <div class="dropdown">
-          <div class="field">
-            <label> {{form.request_type.label}}</label>
-            {{ form.request_type(size=5, class='form-control', multiple="multiple") }}
+          <div class="ui two column stackable grid">
+            <div class="left floated six wide column">
+              <div class="field">
+                <label> {{form.request_type.label}}</label>
+                {{ form.request_type(size=5, class='form-control', multiple="multiple") }}
+              </div>
+              <div class="field">
+                <label> {{form.request_status.label}}</label>
+                {{ form.request_status(size=7, class='form-control', multiple="multiple") }}
+              </div>
+            </div>
+
           </div>
-          <div class="field">
-            <label> {{form.request_status.label}}</label>
-            {{ form.request_status(size=7, class='form-control', multiple="multiple") }}
-          </div>
-          <div class="field">
-            <label> {{form.service_category.label}}</label>
-            {{ form.service_category(size=9, class='form-control', multiple="multiple") }}
-          </div>
-          <div class="field">
-            <label> {{form.provider_type.label}}</label>
-            {{ form.provider_type(size=4, class='form-control', multiple="multiple") }}
+
+          <div class="ui two column stackable grid">
+            <div class="right floated six wide column">
+              <div class="field">
+                <label> {{form.service_category.label}}</label>
+                {{ form.service_category(size=9, class='form-control', multiple="multiple") }}
+              </div>
+              <div class="field">
+                <label> {{form.provider_type.label}}</label>
+                {{ form.provider_type(size=4, class='form-control', multiple="multiple") }}
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class = "field">
-          <label> {{form.requesting_member.label}}</label>
-          {{form.requesting_member}}
-        </div>
-        <div class = "field">
-          <label> {{form.service_provider.label}}</label>
-          {{form.service_provider}}
+        <div class="ui two column stackable grid">
+          <div class="right floated six wide column">
+            <select class="ui search dropdown">
+              <div class="field">
+                <label> {{form.requesting_member.label}}</label>
+                {{form.requesting_member}}
+              </div>
+            </select>
+          </div>
         </div>
 
-        <!-- <div class="field">
-          <label> {{form.priority.label}}</label>
-          {{form.priority}}
-        </div> -->
-        <!-- <div class="field">
-          <label> {{form.show.label}}</label>
-          {{form.show}}
-        </div> -->
-        <!-- <div class="form-group">
-          <label> {{form.service_req_from.label}} </label>
-          {{ form.service_req_from }}
+        <div class="ui two column stackable grid">
+          <div class="left floated six wide column">
+            <select class="ui search dropdown">
+              <div class="field">
+                <label> {{form.service_provider.label}}</label>
+                {{form.service_provider}}
+              </div>
+            </select>
+          </div>
         </div>
-        <div class="form-group">
-          <label>{{ form.service_req_to.label}}</label>
-          {{ form.service_req_to }}
-        </div> -->
-
       </div>
     </fieldset>
-
-    <!-- comment -->
-    <!--Reset and Search Buttons-->
-    <!-- <div class="form-group">
-      {{ form.reset(class="btn btn-outline-info") }}
-    </div>
-    <div class="form-group">
-      {{ form.search(class="btn btn-outline-info") }}
-    </div> -->
   </form>
 </div>
 {% endblock content %}

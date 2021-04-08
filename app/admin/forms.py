@@ -104,11 +104,11 @@ class SearchRequestForm(FlaskForm):
     service_provider = StringField("Service Provider", validators=[InputRequired(),
                                   Length(1, 64)])
 
-    """service_req_from = IntegerField('Service Req # from', default=0)
-    service_req_to = IntegerField('to', default=0)
+    # """service_req_from = IntegerField('Service Req # from', default=0)
+    # service_req_to = IntegerField('to', default=0)
 
-    priority = RadioField('High priority', choices=['Yes', 'No', 'Both'])
-    show = RadioField('Show', choices=['Undated', 'Dated', 'Both'])
+    # priority = RadioField('High priority', choices=['Yes', 'No', 'Both'])
+    # show = RadioField('Show', choices=['Undated', 'Dated', 'Both'])
 
-    search = SubmitField('Search')
-    reset = SubmitField('Reset')"""
+    # search = SubmitField('Search')
+    # reset = SubmitField('Reset')"""

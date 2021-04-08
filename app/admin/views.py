@@ -16,6 +16,7 @@ from app.admin.forms import (
     ChangeUserEmailForm,
     InviteUserForm,
     NewUserForm,
+    SearchRequestForm
 )
 from app.decorators import admin_required
 from app.email import send_email
@@ -203,4 +204,3 @@ def update_editor_contents():
 def search_request():
     form = SearchRequestForm()
     return render_template('admin/search_request.html', title = 'Search Request', form = form)
-)
