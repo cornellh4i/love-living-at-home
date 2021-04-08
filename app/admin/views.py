@@ -220,18 +220,6 @@ def invite_volunteer():
     """Invites a user to create a volunteer account"""
     form = VolunteerManager()
     if form.validate_on_submit():
-
-        # user = User(
-        #    first_name=form.first_name.data,
-        #    last_name=form.last_name.data,
-        #    gender=form.gender.data,
-        #    pronoun=form.pronoun.data,
-        #    preferred_name=form.preferred_name.data,
-        #    primary_address1=form.primary_address1.data)
-
-        # db.session.add(user)
-        # db.session.commit()
-
         flash('Volunteer {} successfully invited'.format(form.first_name.data),
               'form-success')
     return render_template('admin/volunteer_manager.html', form=form)

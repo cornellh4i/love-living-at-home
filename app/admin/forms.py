@@ -88,19 +88,6 @@ class MultiCheckboxField(SelectMultipleField):
     option_widget = widgets.CheckboxInput()
 
 
-# class ItemTable(Table):
-    #name = Col('Name')
-    #description = Col('Description')
-
-# Get some objects
-
-
-class Item(object):
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
-
-
 class MemberManager(FlaskForm):
     first_name = StringField(
         'First name', validators=[InputRequired(),
@@ -178,15 +165,15 @@ class MemberManager(FlaskForm):
                                     Length(1, 64)])
     emergency_contact_phone_number = IntegerField('Phone Number', widget=widgets.Input(
         input_type="tel"), validators=[Optional()])
-    emergency_contact_email = EmailField(
+    emergency_contact_email_address = EmailField(
         'Email', validators=[InputRequired(),
                              Length(1, 64),
                              Email()])
 
-    notes_volunteers = TextAreaField(
+    volunteer_notes = TextAreaField(
         'Notes for Volunteers', validators=[Optional(), Length(max=500)])
 
-    notes_office_staff = TextAreaField(
+    staffer_notes = TextAreaField(
         'Notes for Office Staff', validators=[Optional(), Length(max=500)])
 
     submit = SubmitField("Submit")
@@ -208,6 +195,7 @@ class VolunteerManager(FlaskForm):
                             validators=[InputRequired(), Length(min=1, max=30)])
     gender = SelectField("Gender", validators=[InputRequired()], choices=[
                          ("male", "Male"), ('female', "Female")])
+
     # make this a stringfield or select field?
     pronoun = StringField("Pronouns", validators=[
         InputRequired(), Length(min=1, max=30)])
@@ -215,6 +203,7 @@ class VolunteerManager(FlaskForm):
                                  validators=[Optional(), Length(min=1, max=30)])
     primary_address1 = StringField('Address', validators=[
         InputRequired(), Length(max=200)])
+
     # now under contact info
     home_phone = IntegerField(widget=widgets.Input(
         input_type="tel"), validators=[InputRequired()])
@@ -225,8 +214,7 @@ class VolunteerManager(FlaskForm):
     items = [Item('Name1', 'Description1'),
              Item('Name2', 'Description2'),
              Item('Name3', 'Description3')]
-    # items = ItemModel.query.all() use this for database
-    #table = ItemTable(items)
+
     # What is another way to say Services willing to do
     files = [("alarm", "Alarm/Locks/Security"), ("bill", "Bill Paying/Paperwork"),
              ("auto", "Auto Repair"), ("remote", "Coronavirus Remote Assistance")]
@@ -239,6 +227,7 @@ class VolunteerManager(FlaskForm):
     availability_day = MultiCheckboxField(
         'Availability Day', choices=days)
     vettings = TextAreaField("Vettings", validators=[Optional()])
+
     # make a history of completed and pending services
     notes = TextAreaField("Notes for Office Staff", validators=[Optional()])
 
@@ -259,6 +248,7 @@ class ContractorManager(FlaskForm):
         input_type="tel"), validators=[Optional()])
     email = EmailField('Email', validators=[
                        InputRequired(), Length(1, 64), Email()])
+
     # Is there a better way to record availability in one variable
     times = [("morning 8-11", "Morning 8-11"), ("morning 11-2", "Lunchtime 11-2"),
              ("afternoon 2-5", "Afternoon 2-5"), ("evening 5-8", "Evening 5-8"), ("night 8-midnight", "Night 8-Midnight")]
