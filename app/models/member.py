@@ -21,9 +21,6 @@ class Member(db.Model):
     staffer_notes = db.Column(db.Text)
     requests = db.relationship(
         'Request', backref='member', lazy='dynamic')
-    # data might be sent the other way
-    volunteer = db.relationship(
-        'Volunteer', backref='member', lazy='dynamic')
 
     def __repr__(self):
         return f"Member('{self.member_number}', '{self.first_name}' , '{self.last_name}','{self.email_address}')"
