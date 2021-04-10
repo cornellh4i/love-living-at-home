@@ -3,11 +3,13 @@ from .. import db
 
 class Volunteer(db.Model):
   id = db.Column(db.Integer, primary_key=True)
+  ## Personal Information
   first_name = db.Column(db.String(80), nullable=False)
+  middle_initial = db.Column(db.String(5))
   last_name = db.Column(db.String(80), nullable=False)
+  preferred_name = db.Column(db.String(80))
   gender = db.Column(db.String(80), nullable=False)
   birthdate = db.Column(db.Date(), nullable=False)
-  preferred_name = db.Column(db.String(80))
 
   ## Contact Information
   address_id = db.Column(db.Integer(), db.ForeignKey("address.id"), nullable=False)
@@ -15,7 +17,7 @@ class Volunteer(db.Model):
   email_address = db.Column(db.String(80), nullable=False)
 
   ## Volunteer-Specific Information
-  type_id = db.Column(db.Integer(), db.ForeignKey("volunteer_type.id"), nullable=False)
+  type_id = db.Column(db.Integer(), db.ForeignKey("volunteer_type.id"), nullable=False) 
   last_service_date = db.Column(db.Date(), nullable=False) # Is this useful?
   rating = db.Column(db.Integer(), nullable=False)
   is_fully_vetted = db.Column(db.Boolean(), nullable=False)
@@ -84,15 +86,11 @@ class VolunteerAvailability(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     volunteer_id = db.Column(
         db.Integer, db.ForeignKey('volunteer.id'), nullable=False)
-    day = db.Column(db.String(20), nullable=False)
+    day_of_week = db.Column(db.String(20), nullable=False) # one of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     time_period_id = db.Column(db.Integer, db.ForeignKey('time_period.id'),
         unique=True, nullable=False)
     availability_status_id = db.Column(db.Integer, 
         db.ForeignKey('availability_status.id'), unique=True, nullable=False)
-    # time_period = db.relationship(
-    #     'TimePeriod', backref='volunteer_availability', lazy=True)
-    # availability_status = db.relationship(
-    #     'AvailabilityStatus', backref='volunteer_availability', lazy=True)
 
     def __repr__(self):
         return f"VolunteerAvailability('{self.day}')"
@@ -101,12 +99,43 @@ class AvailabilityStatus(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
 
+    @staticmethod
+    def insert_statuses():
+        statuses = [
+            'Most likely available', 
+            'Not available',
+            'Backup - might be available', 
+            'Call me if really desperate'
+        ]
+        for s in statuses:
+            availability_status = AvailabilityStatus.query.filter_by(name=s).first()
+            if availability_status is None:
+                availability_status = AvailabilityStatus(name=s)
+            db.session.add(availability_status)
+        db.session.commit()
+
     def __repr__(self):
         return f"AvailabilityStatus('{self.name}')"
 
 class TimePeriod(db.Model):
     id = db.Column(db.Integer, nullable=False, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
+
+    @staticmethod
+    def insert_time_periods():
+        time_periods = [
+            'Morning 8-11',
+            'Lunchtime 11-2',
+            'Afternoon 2-5',
+            'Evening 5-8',
+            'Night 8-Midnight'
+        ]
+        for tp in time_periods:
+            time_period = TimePeriod.query.filter_by(name=tp).first()
+            if time_period is None:
+                time_period = TimePeriod(name=tp)
+            db.session.add(time_period)
+        db.session.commit()
 
     def __repr__(self):
         return f"TimePeriod('{self.name}')"

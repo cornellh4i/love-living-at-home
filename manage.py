@@ -57,6 +57,7 @@ def add_fake_data(number_users):
     Adds fake data to the database.
     """
     User.generate_fake(count=number_users)
+    Volunteer.generate_fake(count=10)
 
 
 @manager.command
@@ -75,6 +76,12 @@ def setup_general():
     """Runs the set-up needed for both local development and production.
        Also sets up first admin user."""
     Role.insert_roles()
+    # Volunteer related setup
+    VolunteerType.insert_types()
+    AvailabilityStatus.insert_statuses()
+    TimePeriod.insert_time_periods()
+
+    # Set up first admin user
     admin_query = Role.query.filter_by(name='Administrator')
     if admin_query.first() is not None:
         if User.query.filter_by(email=Config.ADMIN_EMAIL).first() is None:
