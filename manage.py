@@ -85,6 +85,7 @@ def setup_general():
     RequestStatus.insert_statuses()
     RequestType.insert_types()
     ContactLogPriorityType.insert_types()
+    ServiceCategory.insert_categories()
     # Volunteer - Request setup
     RequestVolunteerStatus.insert_statuses()
 
