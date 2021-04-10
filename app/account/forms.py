@@ -10,7 +10,7 @@ from wtforms.fields import (
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import Email, EqualTo, InputRequired, Length
 
-from app.models import User
+from app.models import Staffer
 
 
 class LoginForm(FlaskForm):
@@ -44,7 +44,7 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
+        if Staffer.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered. (Did you mean to '
                                   '<a href="{}">log in</a> instead?)'.format(
                                     url_for('account.login')))
@@ -77,7 +77,7 @@ class ResetPasswordForm(FlaskForm):
     submit = SubmitField('Reset password')
 
     def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first() is None:
+        if Staffer.query.filter_by(email=field.data).first() is None:
             raise ValidationError('Unknown email address.')
 
 
@@ -115,5 +115,5 @@ class ChangeEmailForm(FlaskForm):
     submit = SubmitField('Update email')
 
     def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
+        if Staffer.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered.')

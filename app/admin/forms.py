@@ -15,7 +15,7 @@ from wtforms.validators import (
 )
 
 from app import db
-from app.models import Role, User
+from app.models import Role, Staffer
 
 
 class ChangeUserEmailForm(FlaskForm):
@@ -26,7 +26,7 @@ class ChangeUserEmailForm(FlaskForm):
     submit = SubmitField('Update email')
 
     def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
+        if Staffer.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered.')
 
 
@@ -58,11 +58,11 @@ class InviteUserForm(FlaskForm):
     submit = SubmitField('Invite')
 
     def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
+        if Staffer.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered.')
 
 
-class NewUserForm(InviteUserForm):
+class NewStafferForm(InviteUserForm):
     password = PasswordField(
         'Password',
         validators=[

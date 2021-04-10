@@ -15,11 +15,11 @@ from app.admin.forms import (
     ChangeAccountTypeForm,
     ChangeUserEmailForm,
     InviteUserForm,
-    NewUserForm,
+    NewStafferForm,
 )
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User
+from app.models import EditableHTML, Role, Staffer
 
 admin = Blueprint('admin', __name__)
 
@@ -32,24 +32,24 @@ def index():
     return render_template('admin/index.html')
 
 
-@admin.route('/new-user', methods=['GET', 'POST'])
+@admin.route('/new-staffer', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def new_user():
-    """Create a new user."""
-    form = NewUserForm()
+def new_staffer():
+    """Create a new staffer."""
+    form = NewStafferForm()
     if form.validate_on_submit():
-        user = User(
+        staffer = Staffer(
             role=form.role.data,
             first_name=form.first_name.data,
             last_name=form.last_name.data,
             email=form.email.data,
             password=form.password.data)
-        db.session.add(user)
+        db.session.add(staffer)
         db.session.commit()
-        flash('User {} successfully created'.format(user.full_name()),
+        flash('Staffer {} successfully created'.format(staffer.full_name()),
               'form-success')
-    return render_template('admin/new_user.html', form=form)
+    return render_template('admin/new_staffer.html', form=form)
 
 
 @admin.route('/invite-user', methods=['GET', 'POST'])
@@ -59,7 +59,7 @@ def invite_user():
     """Invites a new user to create an account and set their own password."""
     form = InviteUserForm()
     if form.validate_on_submit():
-        user = User(
+        user = Staffer(
             role=form.role.data,
             first_name=form.first_name.data,
             last_name=form.last_name.data,
@@ -80,9 +80,9 @@ def invite_user():
             user=user,
             invite_link=invite_link,
         )
-        flash('User {} successfully invited'.format(user.full_name()),
+        flash('Staffer {} successfully invited'.format(user.full_name()),
               'form-success')
-    return render_template('admin/new_user.html', form=form)
+    return render_template('admin/new_staffer.html', form=form)
 
 
 @admin.route('/users')
@@ -90,7 +90,7 @@ def invite_user():
 @admin_required
 def registered_users():
     """View all registered users."""
-    users = User.query.all()
+    users = Staffer.query.all()
     roles = Role.query.all()
     return render_template(
         'admin/registered_users.html', users=users, roles=roles)
@@ -102,7 +102,7 @@ def registered_users():
 @admin_required
 def user_info(user_id):
     """View a user's profile."""
-    user = User.query.filter_by(id=user_id).first()
+    user = Staffer.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
     return render_template('admin/manage_user.html', user=user)
@@ -113,7 +113,7 @@ def user_info(user_id):
 @admin_required
 def change_user_email(user_id):
     """Change a user's email."""
-    user = User.query.filter_by(id=user_id).first()
+    user = Staffer.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
     form = ChangeUserEmailForm()
@@ -137,7 +137,7 @@ def change_account_type(user_id):
               'another administrator to do this.', 'error')
         return redirect(url_for('admin.user_info', user_id=user_id))
 
-    user = User.query.get(user_id)
+    user = Staffer.query.get(user_id)
     if user is None:
         abort(404)
     form = ChangeAccountTypeForm()
@@ -155,7 +155,7 @@ def change_account_type(user_id):
 @admin_required
 def delete_user_request(user_id):
     """Request deletion of a user's account."""
-    user = User.query.filter_by(id=user_id).first()
+    user = Staffer.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
     return render_template('admin/manage_user.html', user=user)
@@ -170,7 +170,7 @@ def delete_user(user_id):
         flash('You cannot delete your own account. Please ask another '
               'administrator to do this.', 'error')
     else:
-        user = User.query.filter_by(id=user_id).first()
+        user = Staffer.query.filter_by(id=user_id).first()
         db.session.delete(user)
         db.session.commit()
         flash('Successfully deleted user %s.' % user.full_name(), 'success')

@@ -56,7 +56,7 @@ def add_fake_data(number_users):
     """
     Adds fake data to the database.
     """
-    User.generate_fake(count=number_users)
+    Staffer.generate_fake(count=number_users)
     Volunteer.generate_fake(count=10)
 
 
@@ -84,8 +84,8 @@ def setup_general():
     # Set up first admin user
     admin_query = Role.query.filter_by(name='Administrator')
     if admin_query.first() is not None:
-        if User.query.filter_by(email=Config.ADMIN_EMAIL).first() is None:
-            user = User(
+        if Staffer.query.filter_by(email=Config.ADMIN_EMAIL).first() is None:
+            user = Staffer(
                 first_name='Admin',
                 last_name='Account',
                 password=Config.ADMIN_PASSWORD,

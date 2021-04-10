@@ -11,7 +11,7 @@ from .contact_method import *
 
 from .member import *
 from .volunteer import *
-from .staffer import *
+# from .staffer import *
 from .request import *
 
 from .request_volunteer_record import *
