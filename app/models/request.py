@@ -1,7 +1,5 @@
 from flask import current_app
 from datetime import datetime
-
-
 from .. import db
 
 class Request(db.Model):
@@ -39,3 +37,35 @@ class Request(db.Model):
 
   def __repr__(self):
     return f"Request('{self.created_date}, '{self.cc_email}')"
+
+class RequestDurationType(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(), unique = True, nullable = False)
+    requests = db.relationship("Request", backref = "request_duration_type", lazy = True)
+    
+    def __repr__(self):
+        return f"request duration type( '{self.name}')"
+
+class RequestStatus(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(), unique = True, nullable = False)
+    requests = db.relationship("Request", backref = "request_status", lazy = True)
+    
+    def __repr__(self):
+        return f"request status( '{self.name}')"
+
+class RequestType(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(), unique = True, nullable = False)
+    requests = db.relationship("Request", backref = "request_type", lazy = True)
+    
+    def __repr__(self):
+        return f"request types( '{self.name}')"
+
+class ContactLogPriorityType(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(), unique = True, nullable = False)
+    requests = db.relationship("Request", backref = "contact_log_priority_type", lazy = True)
+
+    def __repr__(self):
+        return f"contact log priority type( '{self.name}')"
