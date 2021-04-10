@@ -7,11 +7,9 @@ from .user import *  # noqa
 from .miscellaneous import *  # noqa
 
 from .address import *
-from .contact_method import *
 
 from .member import *
 from .volunteer import *
-# from .staffer import *
 from .request import *
 
 from .request_volunteer_record import *
