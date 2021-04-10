@@ -3,7 +3,7 @@ import os
 import subprocess
 
 from flask_migrate import Migrate, MigrateCommand
-from flask_script import Manager, Shell, Server
+from flask_script import Manager, Server, Shell
 from redis import Redis
 from rq import Connection, Queue, Worker
 
@@ -45,13 +45,12 @@ def recreate_db():
     db.session.commit()
 
 
-@manager.option(
-    '-n',
-    '--number-users',
-    default=10,
-    type=int,
-    help='Number of each model type to create',
-    dest='number_users')
+@manager.option('-n',
+                '--number-users',
+                default=10,
+                type=int,
+                help='Number of each model type to create',
+                dest='number_users')
 def add_fake_data(number_users):
     """
     Adds fake data to the database.
@@ -89,17 +88,15 @@ def setup_general():
     # Volunteer - Request setup
     RequestVolunteerStatus.insert_statuses()
 
-
     # Set up first admin user
     admin_query = Role.query.filter_by(name='Administrator')
     if admin_query.first() is not None:
         if Staffer.query.filter_by(email=Config.ADMIN_EMAIL).first() is None:
-            user = Staffer(
-                first_name='Admin',
-                last_name='Account',
-                password=Config.ADMIN_PASSWORD,
-                confirmed=True,
-                email=Config.ADMIN_EMAIL)
+            user = Staffer(first_name='Admin',
+                           last_name='Account',
+                           password=Config.ADMIN_PASSWORD,
+                           confirmed=True,
+                           email=Config.ADMIN_EMAIL)
             db.session.add(user)
             db.session.commit()
             print('Added administrator {}'.format(user.full_name()))
@@ -109,11 +106,10 @@ def setup_general():
 def run_worker():
     """Initializes a slim rq task queue."""
     listen = ['default']
-    conn = Redis(
-        host=app.config['RQ_DEFAULT_HOST'],
-        port=app.config['RQ_DEFAULT_PORT'],
-        db=0,
-        password=app.config['RQ_DEFAULT_PASSWORD'])
+    conn = Redis(host=app.config['RQ_DEFAULT_HOST'],
+                 port=app.config['RQ_DEFAULT_PORT'],
+                 db=0,
+                 password=app.config['RQ_DEFAULT_PASSWORD'])
 
     with Connection(conn):
         worker = Worker(map(Queue, listen))

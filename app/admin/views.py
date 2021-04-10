@@ -1,22 +1,11 @@
-from flask import (
-    Blueprint,
-    abort,
-    flash,
-    redirect,
-    render_template,
-    request,
-    url_for,
-)
+from flask import (Blueprint, abort, flash, redirect, render_template, request,
+                   url_for)
 from flask_login import current_user, login_required
 from flask_rq import get_queue
 
 from app import db
-from app.admin.forms import (
-    ChangeAccountTypeForm,
-    ChangeUserEmailForm,
-    InviteUserForm,
-    NewStafferForm,
-)
+from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
+                             InviteUserForm, NewStafferForm)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import EditableHTML, Role, Staffer
@@ -39,12 +28,11 @@ def new_staffer():
     """Create a new staffer."""
     form = NewStafferForm()
     if form.validate_on_submit():
-        staffer = Staffer(
-            role=form.role.data,
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            email=form.email.data,
-            password=form.password.data)
+        staffer = Staffer(role=form.role.data,
+                          first_name=form.first_name.data,
+                          last_name=form.last_name.data,
+                          email=form.email.data,
+                          password=form.password.data)
         db.session.add(staffer)
         db.session.commit()
         flash('Staffer {} successfully created'.format(staffer.full_name()),
@@ -59,19 +47,17 @@ def invite_user():
     """Invites a new user to create an account and set their own password."""
     form = InviteUserForm()
     if form.validate_on_submit():
-        user = Staffer(
-            role=form.role.data,
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            email=form.email.data)
+        user = Staffer(role=form.role.data,
+                       first_name=form.first_name.data,
+                       last_name=form.last_name.data,
+                       email=form.email.data)
         db.session.add(user)
         db.session.commit()
         token = user.generate_confirmation_token()
-        invite_link = url_for(
-            'account.join_from_invite',
-            user_id=user.id,
-            token=token,
-            _external=True)
+        invite_link = url_for('account.join_from_invite',
+                              user_id=user.id,
+                              token=token,
+                              _external=True)
         get_queue().enqueue(
             send_email,
             recipient=user.email,
@@ -92,8 +78,9 @@ def registered_users():
     """View all registered users."""
     users = Staffer.query.all()
     roles = Role.query.all()
-    return render_template(
-        'admin/registered_users.html', users=users, roles=roles)
+    return render_template('admin/registered_users.html',
+                           users=users,
+                           roles=roles)
 
 
 @admin.route('/user/<int:user_id>')
@@ -121,20 +108,22 @@ def change_user_email(user_id):
         user.email = form.email.data
         db.session.add(user)
         db.session.commit()
-        flash('Email for user {} successfully changed to {}.'.format(
-            user.full_name(), user.email), 'form-success')
+        flash(
+            'Email for user {} successfully changed to {}.'.format(
+                user.full_name(), user.email), 'form-success')
     return render_template('admin/manage_user.html', user=user, form=form)
 
 
-@admin.route(
-    '/user/<int:user_id>/change-account-type', methods=['GET', 'POST'])
+@admin.route('/user/<int:user_id>/change-account-type',
+             methods=['GET', 'POST'])
 @login_required
 @admin_required
 def change_account_type(user_id):
     """Change a user's account type."""
     if current_user.id == user_id:
-        flash('You cannot change the type of your own account. Please ask '
-              'another administrator to do this.', 'error')
+        flash(
+            'You cannot change the type of your own account. Please ask '
+            'another administrator to do this.', 'error')
         return redirect(url_for('admin.user_info', user_id=user_id))
 
     user = Staffer.query.get(user_id)
@@ -145,8 +134,9 @@ def change_account_type(user_id):
         user.role = form.role.data
         db.session.add(user)
         db.session.commit()
-        flash('Role for user {} successfully changed to {}.'.format(
-            user.full_name(), user.role.name), 'form-success')
+        flash(
+            'Role for user {} successfully changed to {}.'.format(
+                user.full_name(), user.role.name), 'form-success')
     return render_template('admin/manage_user.html', user=user, form=form)
 
 
@@ -167,8 +157,9 @@ def delete_user_request(user_id):
 def delete_user(user_id):
     """Delete a user's account."""
     if current_user.id == user_id:
-        flash('You cannot delete your own account. Please ask another '
-              'administrator to do this.', 'error')
+        flash(
+            'You cannot delete your own account. Please ask another '
+            'administrator to do this.', 'error')
     else:
         user = Staffer.query.filter_by(id=user_id).first()
         db.session.delete(user)

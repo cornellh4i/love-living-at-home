@@ -1,5 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
 from flask import current_app
+from flask_sqlalchemy import SQLAlchemy
 
 from .. import db
 
@@ -13,5 +13,5 @@ class Address(db.Model):
     country = db.Column(db.String(64), nullable=False, default='United States')
 
     def __repr__(self):
-        return(f"Address('{self.street_address}',\
+        return (f"Address('{self.street_address}',\
                          '{self.city}', '{self.state}', '{self.country}')")

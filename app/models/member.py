@@ -1,5 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
 from flask import current_app
+from flask_sqlalchemy import SQLAlchemy
+
 from .. import db
 
 
@@ -13,7 +14,9 @@ class Member(db.Model):
     preferred_name = db.Column(db.String(64))
     gender = db.Column(db.String(64), nullable=False)
     # Location
-    primary_address_id = db.Column(db.Integer, db.ForeignKey('address.id'), nullable=False)
+    primary_address_id = db.Column(db.Integer,
+                                   db.ForeignKey('address.id'),
+                                   nullable=False)
     secondary_address_id = db.Column(db.Integer, db.ForeignKey('address.id'))
     # Contact Information
     phone_number = db.Column(db.String(64))
@@ -23,8 +26,7 @@ class Member(db.Model):
     # Service Notes
     volunteer_notes = db.Column(db.Text)
     staffer_notes = db.Column(db.Text)
-    requests = db.relationship(
-        'Request', backref='member', lazy='dynamic')
+    requests = db.relationship('Request', backref='member', lazy='dynamic')
 
     def __repr__(self):
         return f"Member('{self.member_number}', '{self.first_name}' , '{self.last_name}','{self.email_address}')"

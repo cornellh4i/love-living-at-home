@@ -1,7 +1,7 @@
 from flask import current_app
 from flask_login import AnonymousUserMixin, UserMixin
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from .. import db, login_manager
@@ -163,14 +163,13 @@ class Staffer(UserMixin, db.Model):
 
         seed()
         for i in range(count):
-            u = Staffer(
-                first_name=fake.first_name(),
-                last_name=fake.last_name(),
-                email=fake.email(),
-                password='password',
-                confirmed=True,
-                role=choice(roles),
-                **kwargs)
+            u = Staffer(first_name=fake.first_name(),
+                        last_name=fake.last_name(),
+                        email=fake.email(),
+                        password='password',
+                        confirmed=True,
+                        role=choice(roles),
+                        **kwargs)
             db.session.add(u)
             try:
                 db.session.commit()
