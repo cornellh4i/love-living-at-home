@@ -6,6 +6,12 @@
 <div class="content-section">
   <form method="POST" action="">
     {{ form.hidden_tag() }}
+
+    <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
+      <i class="caret left icon"></i>
+      Back to dashboard
+    </a>
+
     <h2 class="header">Search Criteria</h2>
 
     {% set flashes = {
@@ -17,61 +23,73 @@
 
     {{ f.begin_form(form, flashes) }}
 
-    <fieldset class="form-group">
-      <div class="ui form">
-        <!--Dropdown components-->
-        <div class="dropdown">
-          <div class="ui two column stackable grid">
-            <div class="left floated six wide column">
-              <div class="field">
-                <label> {{form.request_type.label}}</label>
-                {{ form.request_type(size=5, class='form-control', multiple="multiple") }}
-              </div>
-              <div class="field">
-                <label> {{form.request_status.label}}</label>
-                {{ form.request_status(size=7, class='form-control', multiple="multiple") }}
-              </div>
+    <div class="ui form">
+      <!--Dropdown components-->
+      <div class="ui two column stackable grid">
+        <div class="six wide column">
+          <div class="dropdown">
+            <div class="field">
+              <label> {{form.request_type.label}}</label>
+              {{ form.request_type(size=5, class='form-control', multiple="multiple") }}
             </div>
-
-          </div>
-
-          <div class="ui two column stackable grid">
-            <div class="right floated six wide column">
-              <div class="field">
-                <label> {{form.service_category.label}}</label>
-                {{ form.service_category(size=9, class='form-control', multiple="multiple") }}
-              </div>
-              <div class="field">
-                <label> {{form.provider_type.label}}</label>
-                {{ form.provider_type(size=4, class='form-control', multiple="multiple") }}
-              </div>
+            <div class="field">
+              <label> {{form.request_status.label}}</label>
+              {{ form.request_status(size=7, class='form-control', multiple="multiple") }}
+            </div>
+            <div class="field">
+              <label> {{form.requesting_member.label}}</label>
+              <select class="ui search dropdown">
+                {% for choice in form.requesting_member.choices %}
+                <option value={{ choice[0] }}>{{choice[1]}}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
         </div>
 
-        <div class="ui two column stackable grid">
-          <div class="right floated six wide column">
+        <div class="right floated six wide column">
+          <div class="field">
+            <label> {{form.service_category.label}}</label>
+            {{ form.service_category(size=9, class='form-control', multiple="multiple") }}
+          </div>
+          <div class="field">
+            <label> {{form.provider_type.label}}</label>
+            {{ form.provider_type(size=4, class='form-control', multiple="multiple") }}
+          </div>
+          <div class="field">
+            <label> {{form.service_provider.label}}</label>
             <select class="ui search dropdown">
-              <div class="field">
-                <label> {{form.requesting_member.label}}</label>
-                {{form.requesting_member}}
-              </div>
+              {% for choice in form.service_provider.choices %}
+              <option value={{ choice[0] }}>{{choice[1]}}</option>
+              {% endfor %}
             </select>
           </div>
         </div>
 
-        <div class="ui two column stackable grid">
-          <div class="left floated six wide column">
-            <select class="ui search dropdown">
-              <div class="field">
-                <label> {{form.service_provider.label}}</label>
-                {{form.service_provider}}
-              </div>
-            </select>
-          </div>
-        </div>
       </div>
-    </fieldset>
-  </form>
+    </div>
+
+    <!-- <div class="right floated six wide column">
+          <select class="ui search dropdown">
+            <div class="field">
+              <label> {{form.requesting_member.label}}</label>
+              {{form.requesting_member}}
+            </div>
+          </select>
+        </div>
+      </div> -->
+
+    <!-- <div class="ui two column stackable grid">
+        <div class="left floated six wide column">
+          <select class="ui search dropdown">
+            <div class="field">
+              <label> {{form.service_provider.label}}</label>
+              {{form.service_provider}}
+            </div>
+          </select>
+        </div>
+      </div> -->
+</div>
+</form>
 </div>
 {% endblock content %}

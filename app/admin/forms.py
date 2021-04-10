@@ -98,11 +98,9 @@ class SearchRequestForm(FlaskForm):
     provider_type = SelectMultipleField('Provider Type', choices = 
     [(0, 'Non-Member Volunteer'), (1, 'Member Volunteer'), (2, 'Contractor')], validators = [DataRequired()])
 
-    requesting_member = StringField('Requesting Member', validators=[InputRequired(),
-                                  Length(1, 64)])
+    requesting_member = SelectField('Requesting Member', choices = [(0, 'Nat Peuly'), (1, 'Sohni Uthra')], validators=[DataRequired()])
 
-    service_provider = StringField("Service Provider", validators=[InputRequired(),
-                                  Length(1, 64)])
+    service_provider = SelectField('Service Provider', choices = [(0, 'Nat Peuly'), (1, 'Sohni Uthra')], validators=[DataRequired()])
 
     # """service_req_from = IntegerField('Service Req # from', default=0)
     # service_req_to = IntegerField('to', default=0)
