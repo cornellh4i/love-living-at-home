@@ -9,8 +9,10 @@ class VolunteerAvailability(db.Model):
     volunteer_id = db.Column(
         db.Integer, db.ForeignKey('volunteer.id'), nullable=False)
     day = db.Column(db.String(20), nullable=False)
-    time_period_id = db.Column(db.Integer, unique=True, nullable=False)
-    availability_status_id = db.Column(db.Integer, unique=True, nullable=False)
+    time_period_id = db.Column(db.Integer, db.ForeignKey('time_period.id'),
+        unique=True, nullable=False)
+    availability_status_id = db.Column(db.Integer, 
+        db.ForeignKey('availability_status.id'), unique=True, nullable=False)
     time_period = db.relationship(
         'TimePeriod', backref='volunteer_availability', lazy=True)
     availability_status = db.relationship(

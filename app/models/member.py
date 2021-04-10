@@ -13,7 +13,7 @@ class Member(db.Model):
     gender = db.Column(db.String(64), nullable=False)
     birthdate = db.Column(db.Date, nullable=False)
     preferred_name = db.Column(db.String(64))
-    address_id = db.Column(db.Integer)
+    address_id = db.Column(db.Integer, db.ForeignKey('address.id'),)
     phone_number = db.Column(db.String(64))
     email_address = db.Column(db.String(64), nullable=False)
     membership_expiration_date = db.Column(db.Date)

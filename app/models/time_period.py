@@ -5,8 +5,7 @@ from .. import db
 
 
 class TimePeriod(db.Model):
-    id = db.Column(db.Integer, db.ForeignKey(
-        'volunteer_availability.time_period_id'), nullable=False, primary_key=True)
+    id = db.Column(db.Integer, nullable=False, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
 
     def __repr__(self):

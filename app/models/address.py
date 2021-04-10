@@ -5,8 +5,7 @@ from .. import db
 
 
 class Address(db.Model):
-    id = db.Column(db.Integer, db.ForeignKey(
-        'member.address_id'), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     street_address = db.Column(db.String(64), nullable=False)
     city = db.Column(db.String(64), nullable=False)
@@ -14,5 +13,5 @@ class Address(db.Model):
     country = db.Column(db.String(64), nullable=False)
 
     def __repr__(self):
-        return f"Address('{self.street_address}',
-                         '{self.city}', '{self.state}', '{self.country}')"
+        return(f"Address('{self.street_address}',\
+                         '{self.city}', '{self.state}', '{self.country}')")
