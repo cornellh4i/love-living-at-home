@@ -1,5 +1,4 @@
 from flask_wtf import FlaskForm
-#from flask_table import Table, Col
 from wtforms.validators import Length, InputRequired, Optional
 from wtforms import ValidationError, SelectMultipleField, widgets
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
@@ -211,9 +210,6 @@ class VolunteerManager(FlaskForm):
         'Email', validators=[InputRequired(),
                              Length(1, 64),
                              Email()])
-    items = [Item('Name1', 'Description1'),
-             Item('Name2', 'Description2'),
-             Item('Name3', 'Description3')]
 
     # What is another way to say Services willing to do
     files = [("alarm", "Alarm/Locks/Security"), ("bill", "Bill Paying/Paperwork"),
