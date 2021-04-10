@@ -43,6 +43,19 @@ class RequestDurationType(db.Model):
     name = db.Column(db.String(), unique = True, nullable = False)
     requests = db.relationship("Request", backref = "request_duration_type", lazy = True)
     
+    @staticmethod
+    def insert_types():
+        duration_types = [
+            'One Way', 
+            'Round Trip'
+        ]
+        for dt in duration_types:
+            duration_type = RequestDurationType.query.filter_by(name=dt).first()
+            if duration_type is None:
+                duration_type = RequestDurationType(name=dt)
+            db.session.add(duration_type)
+        db.session.commit()
+
     def __repr__(self):
         return f"request duration type( '{self.name}')"
 
@@ -51,6 +64,21 @@ class RequestStatus(db.Model):
     name = db.Column(db.String(), unique = True, nullable = False)
     requests = db.relationship("Request", backref = "request_status", lazy = True)
     
+    @staticmethod
+    def insert_statuses():
+        statuses = [
+            'Requested',
+            'Confirmed', 
+            'Completed', 
+            'Cancelled'
+        ]
+        for s in statuses:
+            request_status = RequestStatus.query.filter_by(name=s).first()
+            if request_status is None:
+                request_status = RequestStatus(name=s)
+            db.session.add(request_status)
+        db.session.commit()
+
     def __repr__(self):
         return f"request status( '{self.name}')"
 
@@ -59,6 +87,20 @@ class RequestType(db.Model):
     name = db.Column(db.String(), unique = True, nullable = False)
     requests = db.relationship("Request", backref = "request_type", lazy = True)
     
+    @staticmethod
+    def insert_types():
+        types = [
+            'Transportation Request', 
+            'Member\'s Home Request',
+            'Office Time Request'
+        ]
+        for t in types:
+            request_type = RequestType.query.filter_by(name=t).first()
+            if request_type is None:
+                request_type = RequestType(name=t)
+            db.session.add(request_type)
+        db.session.commit()
+
     def __repr__(self):
         return f"request types( '{self.name}')"
 
@@ -66,6 +108,21 @@ class ContactLogPriorityType(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(), unique = True, nullable = False)
     requests = db.relationship("Request", backref = "contact_log_priority_type", lazy = True)
+
+    @staticmethod
+    def insert_types():
+        priority_types = [
+            'Urgent', 
+            'High', 
+            'Medium', 
+            'Low'
+        ]
+        for pt in priority_types:
+            priority_type = ContactLogPriorityType.query.filter_by(name=pt).first()
+            if priority_type is None:
+                priority_type = ContactLogPriorityType(name=pt)
+            db.session.add(priority_type)
+        db.session.commit()
 
     def __repr__(self):
         return f"contact log priority type( '{self.name}')"

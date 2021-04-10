@@ -80,6 +80,12 @@ def setup_general():
     VolunteerType.insert_types()
     AvailabilityStatus.insert_statuses()
     TimePeriod.insert_time_periods()
+    # Request related setup
+    RequestDurationType.insert_types()
+    RequestStatus.insert_statuses()
+    RequestType.insert_types()
+    ContactLogPriorityType.insert_types()
+
 
     # Set up first admin user
     admin_query = Role.query.filter_by(name='Administrator')
