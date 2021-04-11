@@ -4,17 +4,10 @@ from flask_login import current_user, login_required
 from flask_rq import get_queue
 
 from app import db
-
-from app.admin.forms import (
-    ChangeAccountTypeForm,
-    ChangeUserEmailForm,
-    InviteUserForm,
-    NewStafferForm,
-    TransportationRequestForm,
-    MemberManager,
-    VolunteerManager,
-    ContractorManager
-)
+from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
+                             ContractorManager, InviteUserForm, MemberManager,
+                             NewStafferForm, TransportationRequestForm,
+                             VolunteerManager)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import EditableHTML, Role, Staffer
@@ -203,9 +196,11 @@ def update_editor_contents():
 @admin_required
 def create_request():
     form = TransportationRequestForm()
-    return render_template('admin/transportation_request.html', title='Transportation Request', form=form)
+    return render_template('admin/transportation_request.html',
+                           title='Transportation Request',
+                           form=form)
 
-  
+
 @admin.route('/invite-member', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -230,14 +225,15 @@ def invite_volunteer():
     return render_template('admin/volunteer_manager.html', form=form)
 
 
-@ admin.route('/invite-contractor', methods=['GET', 'POST'])
-@ login_required
-@ admin_required
+@admin.route('/invite-contractor', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def invite_contractor():
     """Page for contactor management."""
     form = ContractorManager()
     if form.validate_on_submit():
-        flash('Contractor {} successfully invited'.format(form.organization_name.data),
-              'form-success')
+        flash(
+            'Contractor {} successfully invited'.format(
+                form.organization_name.data), 'form-success')
         return redirect(url_for('admin.index'))
     return render_template('admin/contractor_manager.html', form=form)
