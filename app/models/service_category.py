@@ -22,9 +22,9 @@ class ServiceCategory(db.Model):
         categories = []
         categories_df = pd.read_csv('./app/data/out/service_categories.csv')
         for row in categories_df.iterrows():
-            category_id, category_name, _, request_type_id = row[1]
+            category_id, category_name, request_type_id = row[1]
             categories.append((category_id, category_name, request_type_id))
-        return (categories)
+        return categories
 
     @staticmethod
     def insert_categories():
