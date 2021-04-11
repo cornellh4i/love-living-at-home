@@ -77,19 +77,19 @@ def setup_general():
     """Runs the set-up needed for both local development and production.
        Also sets up first admin user."""
     Role.insert_roles()
-    # Volunteer related setup
+    # Volunteer related
     VolunteerType.insert_types()
     AvailabilityStatus.insert_statuses()
     TimePeriod.insert_time_periods()
-    # Request related setup
+    # Request related
     RequestDurationType.insert_types()
     RequestStatus.insert_statuses()
     RequestType.insert_types()
     ContactLogPriorityType.insert_types()
     ServiceCategory.insert_categories()
-    # Volunteer - Request setup
+    # Volunteer - Request
     RequestVolunteerStatus.insert_statuses()
-    # Services
+    # Service related
     Service.insert_services()
     ServiceCategory.insert_categories()
 
