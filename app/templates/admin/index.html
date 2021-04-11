@@ -1,26 +1,20 @@
-{% extends 'layouts/base.html' %}
-
-{% macro dashboard_option(title, endpoint, description=None, icon=None) %}
+{% extends 'layouts/base.html' %} {% macro dashboard_option(title, endpoint,
+description=None, icon=None) %}
 <a class="column" href="{{ url_for(endpoint) }}">
-    <div class="ui padded segment">
-        <h3 class="ui header">
-            {% if icon is not none %}
-            <i class="{{ icon }}"></i>
-            {% endif %}
-            <div class="content">
-                {{ title }}
-                {% if description is not none %}
-                <div class="sub header">
-                    {{ description }}
-                </div>
-                {% endif %}
-            </div>
-        </h3>
-    </div>
+  <div class="ui padded segment">
+    <h3 class="ui header">
+      {% if icon is not none %}
+      <i class="{{ icon }}"></i>
+      {% endif %}
+      <div class="content">
+        {{ title }} {% if description is not none %}
+        <div class="sub header">{{ description }}</div>
+        {% endif %}
+      </div>
+    </h3>
+  </div>
 </a>
-{% endmacro %}
-
-{% block content %}
+{% endmacro %} {% block content %}
 <div class="ui stackable centered grid container">
     <div class="twelve wide column">
         <h2 class="ui header">
@@ -37,8 +31,13 @@
             description='Create a transportation service request.', icon='add user icon') }}
             {{ dashboard_option('Search for Request', 'admin.invite_user',
             description='Search for an existing service request.', icon='add user icon') }}
-            {{ dashboard_option('Add Member', 'admin.invite_user',
-            description='Add member information to the system.', icon='add user icon') }}
+            {{ dashboard_option('Add Member', 'admin.invite_member',
+            description='Add member information to the system.', icon='add user icon') }} 
+            {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', description='Add volunteer information to the system.', icon='add user
+            icon') }} 
+            {{ dashboard_option('Add Contractor', 'admin.invite_contractor',
+            description='Add contractor information to the system.', icon='add user
+            icon') }}
         </div>
     </div>
 </div>
