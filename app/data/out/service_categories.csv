@@ -1,9 +1,9 @@
-id,Name,Request Type,Request Type ID
-0,Professional Home/Garden Servi,Member's Home,1
-1,Village Admin,Office,0
-2,Volunteer Home/Garden Service,Member's Home,1
-3,Technical Support,Member's Home,1
-4,Coronavirus Community Support,Transportation,2
-5,Volunteer In-Home Support,Member's Home,1
-6,Professional In-Home Support,Member's Home,1
-7,Transportation,Transportation,2
+ID,Name,Request Type ID
+0,Transportation,0
+1,Coronavirus Community Support,0
+2,Technical Support,2
+3,Professional Home/Garden Servi,2
+4,Professional In-Home Support,2
+5,Village Admin,1
+6,Volunteer Home/Garden Service,2
+7,Volunteer In-Home Support,2

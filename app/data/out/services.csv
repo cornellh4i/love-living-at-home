@@ -1,29 +1,29 @@
-id,Name
-0,Friendly Visit
-1,Appliance Repair
-2,Chimneys-Repr.&Clean.
-3,Flooring/Carpets
-4,Grocery Shopping (Covid-19)
-5,Home Health Care
-6,Bill Paying / Paperwork
-7,Board Meetings
-8,Cloud Storage
-9,Committee
-10,Heating/AC
-11,Garden/Landscape-Prof. 
-12,General Errands (Covid-19)
-13,Const./Reno./Repairs
-14,Event Carpool
-15,Electricians/Electric
-16,Errands w/out Member
-17,Event Planning
-18,Handy Person-Vol.
-19,Cell Phone Help
-20,Alarms/Locks/Security
-21,Email
-22,Gardening/Yard Help -  Vol
-23,Coronavirus Support Phone Call
-24,Community Outreach (Covid-19)
-25,Auto Repair
-26,Coronavirus Remote Assistance
-27,Club Express
+ID,Name,Category ID
+0,Chimneys-Repr.&Clean.,3
+1,Alarms/Locks/Security,3
+2,Committee,5
+3,Event Planning,5
+4,Handy Person-Vol.,6
+5,Flooring/Carpets,3
+6,Club Express,2
+7,Grocery Shopping (Covid-19),1
+8,Appliance Repair,3
+9,Board Meetings,5
+10,General Errands (Covid-19),1
+11,Const./Reno./Repairs,3
+12,Email,2
+13,Home Health Care,4
+14,Coronavirus Support Phone Call,7
+15,Bill Paying / Paperwork,7
+16,Friendly Visit,7
+17,Heating/AC,3
+18,Cell Phone Help,2
+19,Gardening/Yard Help -  Vol,6
+20,Auto Repair,4
+21,Event Carpool,0
+22,Garden/Landscape-Prof. ,3
+23,Cloud Storage,2
+24,Errands w/out Member,7
+25,Electricians/Electric,3
+26,Coronavirus Remote Assistance,7
+27,Community Outreach (Covid-19),5
