@@ -11,6 +11,25 @@ class Service(db.Model):
     provided_services = db.relationship("ProvidedService",
                                         backref="service",
                                         lazy=True)
+    @staticmethod
+    def get_services():
+        import pandas as pd
+        services = []
+        services_df = pd.read_csv('./app/data/out/services.csv')
+        for row in services_df.iterrows():
+            service_id, service_name, category_id = row[1]
+            services.append((service_id, service_name, category_id))
+        return services
+
+    @staticmethod
+    def insert_services():
+        services = Service.get_services()
+        for i, s, c_i in services:
+            service = Service.query.filter_by(name=s).first()
+            if service is None:
+                service = Service(id=i, name=s, category_id=c_i)
+            db.session.add(service)
+        db.session.commit()
 
     def __repr__(self):
         return f"Service( '{self.name}', '{self.category_id}')"
