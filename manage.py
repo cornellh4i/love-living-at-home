@@ -57,7 +57,9 @@ def add_fake_data(number_users):
     """
     Staffer.generate_fake(count=number_users)
     Volunteer.generate_fake(count=10)
-    Address.generate_fake(count=5)
+    Address.generate_fake(count=10)
+    Member.generate_fake(count=10)
+    
 
 
 @manager.command
