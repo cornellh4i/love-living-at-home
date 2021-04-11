@@ -59,7 +59,7 @@ def add_fake_data(number_users):
     Volunteer.generate_fake(count=10)
     Address.generate_fake(count=10)
     Member.generate_fake(count=10)
-    
+
 
 
 @manager.command
@@ -90,6 +90,9 @@ def setup_general():
     ServiceCategory.insert_categories()
     # Volunteer - Request setup
     RequestVolunteerStatus.insert_statuses()
+    # Services
+    Service.insert_services()
+    ServiceCategory.insert_categories()
 
     # Set up first admin user
     admin_query = Role.query.filter_by(name='Administrator')
