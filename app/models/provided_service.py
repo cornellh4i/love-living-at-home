@@ -12,6 +12,6 @@ class ProvidedService(db.Model):
     volunteer_id = db.Column(db.Integer,
                              db.ForeignKey('volunteer.id'),
                              nullable=False)
-                             
+
     def __repr__(self):
         return f"ProvidedService('{self.volunteer_status}')"

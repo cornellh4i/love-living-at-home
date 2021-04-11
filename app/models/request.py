@@ -126,7 +126,7 @@ class RequestType(db.Model):
                                          backref="request_type",
                                          lazy=True)
 
-    @staticmethod 
+    @staticmethod
     def get_types():
         import pandas as pd
         request_types = []
@@ -135,7 +135,6 @@ class RequestType(db.Model):
             request_type_id, request_type_name = row[1]
             request_types.append((request_type_id, request_type_name))
         return request_types
-
 
     @staticmethod
     def insert_types():

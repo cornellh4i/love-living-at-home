@@ -61,7 +61,6 @@ def add_fake_data(number_users):
     Member.generate_fake(count=10)
 
 
-
 @manager.command
 def setup_dev():
     """Runs the set-up needed for local development."""

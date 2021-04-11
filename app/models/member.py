@@ -45,8 +45,7 @@ class Member(db.Model):
                 primary_address_id=-1,
                 email_address=fake.email(),
                 membership_expiration_date=datetime.strptime(
-                    fake.date(),
-                    "%Y-%m-%d").date(),  
+                    fake.date(), "%Y-%m-%d").date(),
                 volunteer_notes=fake.text(),
                 staffer_notes=fake.text(),
                 **kwargs)
@@ -57,8 +56,7 @@ class Member(db.Model):
                 phone_number=fake.phone_number(),
                 email_address=fake.email(),
                 membership_expiration_date=datetime.strptime(
-                    fake.date(),
-                    "%Y-%m-%d").date(),  
+                    fake.date(), "%Y-%m-%d").date(),
                 volunteer_notes=fake.text(),
                 staffer_notes=fake.text(),
                 **kwargs)
@@ -68,7 +66,6 @@ class Member(db.Model):
                 db.session.commit()
             except IntegrityError:
                 db.session.rollback()
-
 
     def __repr__(self):
         return f"Member('{self.first_name}' , '{self.last_name}','{self.email_address}')"

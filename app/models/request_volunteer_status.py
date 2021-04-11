@@ -8,8 +8,8 @@ class RequestVolunteerStatus(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     records = db.relationship('RequestVolunteerRecord',
-                             backref='request_volunteer_status',
-                             lazy=True)
+                              backref='request_volunteer_status',
+                              lazy=True)
 
     @staticmethod
     def insert_statuses():

@@ -11,6 +11,7 @@ class Service(db.Model):
     provided_services = db.relationship("ProvidedService",
                                         backref="service",
                                         lazy=True)
+
     @staticmethod
     def get_services():
         import pandas as pd

@@ -22,11 +22,10 @@ class Address(db.Model):
 
         seed()
         for i in range(count):
-            a = Address(
-                name=fake.company(),
-                street_address=fake.street_address(),
-                city=fake.city(),
-                **kwargs)
+            a = Address(name=fake.company(),
+                        street_address=fake.street_address(),
+                        city=fake.city(),
+                        **kwargs)
             db.session.add(a)
             try:
                 db.session.commit()
