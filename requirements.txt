@@ -26,12 +26,15 @@ jsmin==2.2.2
 jsonpickle==1.2
 Mako==1.1.0
 MarkupSafe==1.1.1
+numpy==1.20.2
 packaging==19.1
+pandas==1.2.3
 pipupgrade==1.5.1
 psycopg2==2.8.3
 pyparsing==2.4.2
 python-dateutil==2.8.0
 python-editor==1.0.4
+pytz==2021.1
 raygun4py==4.3.0
 redis==3.3.8
 requests==2.22.0

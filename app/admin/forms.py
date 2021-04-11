@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms.validators import Length, InputRequired, Optional
 from wtforms import ValidationError, SelectMultipleField, widgets
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
+
 from wtforms.fields import (
     PasswordField,
     StringField,
@@ -23,7 +24,7 @@ from wtforms.validators import (
 )
 
 from app import db
-from app.models import Role, User
+from app.models import Role, Staffer
 from datetime import datetime
 
 serviceCategories = [('Select', 'Select'),
@@ -47,14 +48,14 @@ transportationServices = [('Select','Select'),('Event Carpool', 'Event Carpool')
 ('Vol Driver Misc. Trip', 'Vol Driver Misc. Trip')]
 
 class ChangeUserEmailForm(FlaskForm):
-    email = EmailField(
-        'New email', validators=[InputRequired(),
-                                 Length(1, 64),
-                                 Email()])
+    email = EmailField('New email',
+                       validators=[InputRequired(),
+                                   Length(1, 64),
+                                   Email()])
     submit = SubmitField('Update email')
 
     def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
+        if Staffer.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered.')
 
 
@@ -73,30 +74,29 @@ class InviteUserForm(FlaskForm):
         validators=[InputRequired()],
         get_label='name',
         query_factory=lambda: db.session.query(Role).order_by('permissions'))
-    first_name = StringField(
-        'First name', validators=[InputRequired(),
-                                  Length(1, 64)])
-    last_name = StringField(
-        'Last name', validators=[InputRequired(),
-                                 Length(1, 64)])
-    email = EmailField(
-        'Email', validators=[InputRequired(),
-                             Length(1, 64),
-                             Email()])
+    first_name = StringField('First name',
+                             validators=[InputRequired(),
+                                         Length(1, 64)])
+    last_name = StringField('Last name',
+                            validators=[InputRequired(),
+                                        Length(1, 64)])
+    email = EmailField('Email',
+                       validators=[InputRequired(),
+                                   Length(1, 64),
+                                   Email()])
     submit = SubmitField('Invite')
 
     def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
+        if Staffer.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered.')
 
 
-class NewUserForm(InviteUserForm):
-    password = PasswordField(
-        'Password',
-        validators=[
-            InputRequired(),
-            EqualTo('password2', 'Passwords must match.')
-        ])
+class NewStafferForm(InviteUserForm):
+    password = PasswordField('Password',
+                             validators=[
+                                 InputRequired(),
+                                 EqualTo('password2', 'Passwords must match.')
+                             ])
     password2 = PasswordField('Confirm password', validators=[InputRequired()])
 
     submit = SubmitField('Create')
