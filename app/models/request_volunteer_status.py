@@ -2,10 +2,13 @@ from .. import db
 
 
 class RequestVolunteerStatus(db.Model):
+    """
+    The status of a volunteer with respect to a request that has been created. 
+    """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
-    status = db.relationship('RequestVolunteerRecord',
-                             backref='record',
+    records = db.relationship('RequestVolunteerRecord',
+                             backref='request_volunteer_status',
                              lazy=True)
 
     @staticmethod
