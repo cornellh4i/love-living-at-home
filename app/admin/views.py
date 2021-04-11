@@ -16,6 +16,9 @@ from app.admin.forms import (
     ChangeUserEmailForm,
     InviteUserForm,
     NewUserForm,
+    MemberManager,
+    VolunteerManager,
+    ContractorManager
 )
 from app.decorators import admin_required
 from app.email import send_email
@@ -196,3 +199,40 @@ def update_editor_contents():
     db.session.commit()
 
     return 'OK', 200
+
+
+@admin.route('/invite-member', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def invite_member():
+    """Page for member management."""
+    form = MemberManager()
+    if form.validate_on_submit():
+        flash('Member {} successfully created'.format(form.first_name.data),
+              'form-success')
+    return render_template('admin/member_manager.html', form=form)
+
+
+@admin.route('/invite-volunteer', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def invite_volunteer():
+    """Invites a user to create a volunteer account"""
+    form = VolunteerManager()
+    if form.validate_on_submit():
+        flash('Volunteer {} successfully invited'.format(form.first_name.data),
+              'form-success')
+    return render_template('admin/volunteer_manager.html', form=form)
+
+
+@ admin.route('/invite-contractor', methods=['GET', 'POST'])
+@ login_required
+@ admin_required
+def invite_contractor():
+    """Page for contactor management."""
+    form = ContractorManager()
+    if form.validate_on_submit():
+        flash('Contractor {} successfully invited'.format(form.organization_name.data),
+              'form-success')
+        return redirect(url_for('admin.index'))
+    return render_template('admin/contractor_manager.html', form=form)
