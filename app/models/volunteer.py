@@ -8,8 +8,7 @@ class Volunteer(db.Model):
     middle_initial = db.Column(db.String(5))
     last_name = db.Column(db.String(80), nullable=False)
     preferred_name = db.Column(db.String(80))
-    gender = db.Column(db.String(80), nullable=False)
-    birthdate = db.Column(db.Date(), nullable=False)
+    gender = db.Column(db.String(80))
 
     ## Contact Information
     address_id = db.Column(db.Integer(),
@@ -45,9 +44,6 @@ class Volunteer(db.Model):
             v = Volunteer(
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
-                gender=choice(['Female', 'Male', 'Other',
-                               'Prefer Not to Say']),
-                birthdate=datetime.strptime(fake.date(), "%Y-%m-%d").date(),
                 address_id=-1,
                 phone_number=fake.phone_number(),
                 email_address=fake.email(),
