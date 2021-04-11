@@ -14,7 +14,7 @@ from wtforms.fields import (
     BooleanField,
     DateTimeField
 )
-from wtforms.fields.html5 import EmailField, DateField
+from wtforms.fields.html5 import EmailField, DateField, TimeField
 from wtforms.validators import (
     Email,
     EqualTo,
@@ -24,7 +24,27 @@ from wtforms.validators import (
 
 from app import db
 from app.models import Role, User
+from datetime import datetime
 
+serviceCategories = [('Select', 'Select'),
+('Coronavirus Community Support', 'Coronavirus Community Support'),
+('Transportation', 'Transportation')]
+
+covidServices = [('Select','Select'),
+    ('General Errands', 'General Errands'), 
+('Grocery Shopping', 'Grocery Shopping'),
+('Prescription Pickup', 'Prescription Pickup')]
+
+transportationServices = [('Select','Select'),('Event Carpool', 'Event Carpool'),
+('hack4impact test service', 'hack4impact test service'),
+('Long Dist Non-Med Professional', 'Long Dist Non-Med Professional'),
+('Long Dist. Med Professional', 'Long Dist Med Professional'),
+('Vol Driver Family/Friend Visit','Vol Driver Family/Friend Visit'),
+('Vol Driver LLH Programs/Events', 'Vol Driver LLH Programs/Events'),
+('Vol Driver Local Medical Appt', 'Vol Driver Local Medical Appt'),
+('Vol Driver Shopping/Errands', 'Vol Driver Shopping/Errands'),
+('Vol Driver Local Bus/Airport', 'Vol Driver Local Bus/Airport'),
+('Vol Driver Misc. Trip', 'Vol Driver Misc. Trip')]
 
 class ChangeUserEmailForm(FlaskForm):
     email = EmailField(
@@ -82,6 +102,27 @@ class NewUserForm(InviteUserForm):
     submit = SubmitField('Create')
 
 
+class TransportationRequestForm(FlaskForm):
+    date_created = DateField('Date Created', format = '%Y-%M-%D', default = datetime.today)
+    requested_date = DateField('Requested Date',
+        validators=[InputRequired()], format='%Y-%M-%D')
+    initial_pickup = TimeField('Inital Pickup', format='%H:%M')
+    appointment = TimeField('Appointment', format='%H:%M')
+    return_pickup = TimeField('Return Pickup', format='%H:%M')
+    drop_off = TimeField('Drop Off', format='%H:%M')
+    time_flexible = RadioField('Is Date/Time Flexible?', choices=[('Yes','Yes'),('No','No')])
+    priority =RadioField('High priority?', choices=[('Yes','Yes'),('No','No')])
+    description=TextAreaField('Short description')
+    service_category = SelectField('Service Category', choices = serviceCategories)
+    covidService = SelectField('Service', choices = covidServices)
+    transportationService = SelectField('Service', choices = transportationServices)
+    starting_location = StringField('Starting Location')
+    destination = StringField('Destination')
+
+    submit = SubmitField('Save')
+    cancel = SubmitField('Cancel')
+
+    
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()

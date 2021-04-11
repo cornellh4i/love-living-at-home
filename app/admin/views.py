@@ -16,6 +16,7 @@ from app.admin.forms import (
     ChangeUserEmailForm,
     InviteUserForm,
     NewUserForm,
+    TransportationRequestForm,
     MemberManager,
     VolunteerManager,
     ContractorManager
@@ -201,6 +202,14 @@ def update_editor_contents():
     return 'OK', 200
 
 
+# Create a new service request.
+@admin.route('/create-request', methods=['GET', 'POST'])
+@admin_required
+def create_request():
+    form = TransportationRequestForm()
+    return render_template('admin/transportation_request.html', title='Transportation Request', form=form)
+
+  
 @admin.route('/invite-member', methods=['GET', 'POST'])
 @login_required
 @admin_required

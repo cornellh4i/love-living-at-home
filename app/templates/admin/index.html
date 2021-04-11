@@ -16,27 +16,29 @@ description=None, icon=None) %}
 </a>
 {% endmacro %} {% block content %}
 <div class="ui stackable centered grid container">
-  <div class="twelve wide column">
-    <h2 class="ui header">Admin Dashboard</h2>
-    <div class="ui two column stackable grid">
-      {{ dashboard_option('Registered Users', 'admin.registered_users',
-      description='View and manage user accounts', icon='users icon') }} {{
-      dashboard_option('Add New User', 'admin.new_user', description='Create a
-      new user account', icon='add user icon') }} {{ dashboard_option('Invite
-      New User', 'admin.invite_user', description='Invites a new user to create
-      their own account', icon='add user icon') }} {{ dashboard_option('Create
-      Transportation Request', 'admin.invite_user', description='Create a
-      transportation service request.', icon='add user icon') }} {{
-      dashboard_option('Search for Request', 'admin.invite_user',
-      description='Search for an existing service request.', icon='add user
-      icon') }} {{ dashboard_option('Add Member', 'admin.invite_member',
-      description='Add member information to the system.', icon='add user icon')
-      }} {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer',
-      description='Add volunteer information to the system.', icon='add user
-      icon') }} {{ dashboard_option('Add Contractor', 'admin.invite_contractor',
-      description='Add contractor information to the system.', icon='add user
-      icon') }}
+    <div class="twelve wide column">
+        <h2 class="ui header">
+            Admin Dashboard
+        </h2>
+        <div class="ui two column stackable grid">
+            {{ dashboard_option('Registered Users', 'admin.registered_users',
+            description='View and manage user accounts', icon='users icon') }}
+            {{ dashboard_option('Add New User', 'admin.new_user',
+            description='Create a new user account', icon='add user icon') }}
+            {{ dashboard_option('Invite New User', 'admin.invite_user',
+            description='Invites a new user to create their own account', icon='add user icon') }}
+            {{ dashboard_option('Create Transportation Request', 'admin.create_request',
+            description='Create a transportation service request.', icon='add user icon') }}
+            {{ dashboard_option('Search for Request', 'admin.invite_user',
+            description='Search for an existing service request.', icon='add user icon') }}
+            {{ dashboard_option('Add Member', 'admin.invite_member',
+            description='Add member information to the system.', icon='add user icon') }} 
+            {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', description='Add volunteer information to the system.', icon='add user
+            icon') }} 
+            {{ dashboard_option('Add Contractor', 'admin.invite_contractor',
+            description='Add contractor information to the system.', icon='add user
+            icon') }}
+        </div>
     </div>
-  </div>
 </div>
 {% endblock %}
