@@ -16,32 +16,39 @@ description=None, icon=None) %}
 </a>
 {% endmacro %} {% block content %}
 <div class="ui stackable centered grid container">
-    <div class="twelve wide column">
-        <h2 class="ui header">
-            Admin Dashboard
-        </h2>
-        <div class="ui three column stackable grid">
-            {{ dashboard_option('Registered Staffers', 'admin.registered_users',
-            description='View and manage staffer accounts', icon='users icon') }}
-            {{ dashboard_option('Add New Staffer', 'admin.new_staffer',
-            description='Create a new staffer account', icon='add user icon') }}
-            {{ dashboard_option('Invite New Staffer', 'admin.invite_user',
-            description='Invites a new staffer to create their own account', icon='add user icon') }}
-        </div>
-        <hr />
-        <div class="ui three column stackable grid">
-            {{ dashboard_option('Create Transportation Request', 'admin.create_request',
-            description='Create a transportation service request.', icon='add user icon') }}
-            {{ dashboard_option('Search for Request', 'admin.invite_user',
-            description='Search for an existing service request.', icon='add user icon') }}
-            {{ dashboard_option('Add Member', 'admin.invite_member',
-            description='Add member information to the system.', icon='add user icon') }} 
-            {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', description='Add volunteer information to the system.', icon='add user
-            icon') }} 
-            {{ dashboard_option('Add Contractor', 'admin.invite_contractor',
-            description='Add contractor information to the system.', icon='add user
-            icon') }}
-        </div>
+  <div class="twelve wide column">
+    <h2 class="ui header">
+      Admin Dashboard
+    </h2>
+    <h3>Account Manager</h3>
+    <div class="ui three column stackable grid">
+      {{ dashboard_option('Registered Staffers', 'admin.registered_users',
+      description='View and manage staffer accounts', icon='users icon') }}
+      {{ dashboard_option('Add New Staffer', 'admin.new_staffer',
+      description='Create a new staffer account', icon='add user icon') }}
+      {{ dashboard_option('Invite New Staffer', 'admin.invite_user',
+      description='Invites a new staffer to create their own account', icon='add user icon') }}
     </div>
+    <hr />
+    <h3>Request Manager</h3>
+    <div class="ui two column stackable grid">
+      {{ dashboard_option('Create Transportation Request', 'admin.create_request',
+      description='Create a transportation service request.', icon='add user icon') }}
+      {{ dashboard_option('Search for Request', 'admin.invite_user',
+      description='Search for an existing service request.', icon='add user icon') }}
+    </div>
+    <hr />
+    <h3>People Manager</h3>
+    <div class="ui three column stackable grid">
+      {{ dashboard_option('Add Member', 'admin.invite_member',
+      description='Add member information to the system.', icon='add user icon') }}
+      {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', description='Add volunteer information to the
+      system.', icon='add user
+      icon') }}
+      {{ dashboard_option('Add Contractor', 'admin.invite_contractor',
+      description='Add contractor information to the system.', icon='add user
+      icon') }}
+    </div>
+  </div>
 </div>
 {% endblock %}
