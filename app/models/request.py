@@ -126,16 +126,24 @@ class RequestType(db.Model):
                                          backref="request_type",
                                          lazy=True)
 
+    @staticmethod 
+    def get_types():
+        import pandas as pd
+        request_types = []
+        request_types_df = pd.read_csv('./app/data/out/request_types.csv')
+        for row in request_types_df.iterrows():
+            request_type_id, request_type_name = row[1]
+            request_types.append((request_type_id, request_type_name))
+        return request_types
+
+
     @staticmethod
     def insert_types():
-        types = [
-            'Transportation Request', 'Member\'s Home Request',
-            'Office Time Request'
-        ]
-        for t in types:
+        types = RequestType.get_types()
+        for i, t in types:
             request_type = RequestType.query.filter_by(name=t).first()
             if request_type is None:
-                request_type = RequestType(name=t)
+                request_type = RequestType(id=i, name=t)
             db.session.add(request_type)
         db.session.commit()
 
