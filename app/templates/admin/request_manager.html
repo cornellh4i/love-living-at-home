@@ -14,18 +14,20 @@ description=None, icon=None) %}
     </h3>
   </div>
 </a>
-{% endmacro %} {% block content %}
+{% endmacro %}
+
+{% block content %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
     <h2 class="ui header">
       Request Manager
     </h2>
-    <div class="ui two column stackable grid">
-      {{ dashboard_option('Create Transportation Request', 'admin.create_request',
-      description='Create a transportation service request.', icon='add user icon') }}
-      {{ dashboard_option('Search for Request', 'admin.invite_user',
-      description='Search for an existing service request.', icon='add user icon') }}
+    <div class="ui two item menu">
+      <a class="active item" href="{{ url_for('admin.create_request') }}">Search Requests</a>
+      <a class="item" href="{{ url_for('admin.create_request') }}">Create Requests</a>
     </div>
+    {% block request_content %}
+    {% endblock %}
   </div>
 </div>
 {% endblock %}
