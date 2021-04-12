@@ -1,0 +1,31 @@
+{% extends 'layouts/base.html' %} {% macro dashboard_option(title, endpoint,
+description=None, icon=None) %}
+<a class="column" href="{{ url_for(endpoint) }}">
+  <div class="ui padded segment">
+    <h3 class="ui header">
+      {% if icon is not none %}
+      <i class="{{ icon }}"></i>
+      {% endif %}
+      <div class="content">
+        {{ title }} {% if description is not none %}
+        <div class="sub header">{{ description }}</div>
+        {% endif %}
+      </div>
+    </h3>
+  </div>
+</a>
+{% endmacro %} {% block content %}
+<div class="ui stackable centered grid container">
+  <div class="twelve wide column">
+    <h2 class="ui header">
+      Request Manager
+    </h2>
+    <div class="ui two column stackable grid">
+      {{ dashboard_option('Create Transportation Request', 'admin.create_request',
+      description='Create a transportation service request.', icon='add user icon') }}
+      {{ dashboard_option('Search for Request', 'admin.invite_user',
+      description='Search for an existing service request.', icon='add user icon') }}
+    </div>
+  </div>
+</div>
+{% endblock %}

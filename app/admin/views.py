@@ -23,6 +23,14 @@ def index():
     return render_template('admin/index.html')
 
 
+@admin.route('/request-manager')
+@login_required
+@admin_required
+def request_manager():
+    """Request Manager Page."""
+    return render_template('admin/request_manager.html')
+
+
 @admin.route('/new-staffer', methods=['GET', 'POST'])
 @login_required
 @admin_required
