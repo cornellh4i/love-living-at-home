@@ -14,3 +14,4 @@ from .service import *
 from .service_category import *
 from .user import *  # noqa
 from .volunteer import *
+from .staffer import *

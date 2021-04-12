@@ -18,7 +18,7 @@ class Role(db.Model):
     index = db.Column(db.String(64))
     default = db.Column(db.Boolean, default=False, index=True)
     permissions = db.Column(db.Integer)
-    users = db.relationship('Staffer', backref='role', lazy='dynamic')
+    users = db.relationship('User', backref='role', lazy='dynamic')
 
     @staticmethod
     def insert_roles():
@@ -44,7 +44,7 @@ class Role(db.Model):
         return '<Role \'%s\'>' % self.name
 
 
-class Staffer(UserMixin, db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     confirmed = db.Column(db.Boolean, default=False)
     # Personal Information
@@ -57,7 +57,7 @@ class Staffer(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
 
     def __init__(self, **kwargs):
-        super(Staffer, self).__init__(**kwargs)
+        super(User, self).__init__(**kwargs)
         if self.role is None:
             if self.email == current_app.config['ADMIN_EMAIL']:
                 self.role = Role.query.filter_by(
@@ -163,7 +163,7 @@ class Staffer(UserMixin, db.Model):
 
         seed()
         for i in range(count):
-            u = Staffer(first_name=fake.first_name(),
+            u = User(first_name=fake.first_name(),
                         last_name=fake.last_name(),
                         email=fake.email(),
                         password='password',
@@ -177,7 +177,7 @@ class Staffer(UserMixin, db.Model):
                 db.session.rollback()
 
     def __repr__(self):
-        return '<Staffer \'%s\'>' % self.full_name()
+        return '<User \'%s\'>' % self.full_name()
 
 
 class AnonymousUser(AnonymousUserMixin):
@@ -193,4 +193,4 @@ login_manager.anonymous_user = AnonymousUser
 
 @login_manager.user_loader
 def load_user(user_id):
-    return Staffer.query.get(int(user_id))
+    return User.query.get(int(user_id))

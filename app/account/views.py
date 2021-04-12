@@ -7,7 +7,7 @@ from app.account.forms import (ChangeEmailForm, ChangePasswordForm,
                                CreatePasswordForm, LoginForm, RegistrationForm,
                                RequestResetPasswordForm, ResetPasswordForm)
 from app.email import send_email
-from app.models import Staffer
+from app.models import User
 
 account = Blueprint('account', __name__)
 
@@ -17,7 +17,7 @@ def login():
     """Log in an existing user."""
     form = LoginForm()
     if form.validate_on_submit():
-        user = Staffer.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user is not None and user.password_hash is not None and \
                 user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
@@ -33,7 +33,7 @@ def register():
     """Register a new user, and send them a confirmation email."""
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = Staffer(first_name=form.first_name.data,
+        user = User(first_name=form.first_name.data,
                        last_name=form.last_name.data,
                        email=form.email.data,
                        password=form.password.data)
@@ -76,7 +76,7 @@ def reset_password_request():
         return redirect(url_for('main.index'))
     form = RequestResetPasswordForm()
     if form.validate_on_submit():
-        user = Staffer.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user:
             token = user.generate_password_reset_token()
             reset_link = url_for('account.reset_password',
@@ -103,7 +103,7 @@ def reset_password(token):
         return redirect(url_for('main.index'))
     form = ResetPasswordForm()
     if form.validate_on_submit():
-        user = Staffer.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=form.email.data).first()
         if user is None:
             flash('Invalid email address.', 'form-error')
             return redirect(url_for('main.index'))
@@ -218,7 +218,7 @@ def join_from_invite(user_id, token):
         flash('You are already logged in.', 'error')
         return redirect(url_for('main.index'))
 
-    new_user = Staffer.query.get(user_id)
+    new_user = User.query.get(user_id)
     if new_user is None:
         return redirect(404)
 
