@@ -6,11 +6,11 @@ from flask_rq import get_queue
 from app import db
 from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              ContractorManager, InviteUserForm, MemberManager,
-                             NewStafferForm, TransportationRequestForm,
+                             NewUserForm, TransportationRequestForm,
                              VolunteerManager)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, Staffer
+from app.models import EditableHTML, Role, User
 
 admin = Blueprint('admin', __name__)
 
@@ -38,23 +38,23 @@ def people_manager():
     """People Manager Page."""
     return render_template('admin/people_manager.html')
 
-@admin.route('/new-staffer', methods=['GET', 'POST'])
+@admin.route('/new-user', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def new_staffer():
-    """Create a new staffer."""
-    form = NewStafferForm()
+def new_user():
+    """Create a new user."""
+    form = NewUserForm()
     if form.validate_on_submit():
-        staffer = Staffer(role=form.role.data,
+        user = User(role=form.role.data,
                           first_name=form.first_name.data,
                           last_name=form.last_name.data,
                           email=form.email.data,
                           password=form.password.data)
-        db.session.add(staffer)
+        db.session.add(user)
         db.session.commit()
-        flash('Staffer {} successfully created'.format(staffer.full_name()),
+        flash('User {} successfully created'.format(user.full_name()),
               'form-success')
-    return render_template('admin/new_staffer.html', form=form)
+    return render_template('admin/new_user.html', form=form)
 
 
 @admin.route('/invite-user', methods=['GET', 'POST'])
@@ -64,7 +64,7 @@ def invite_user():
     """Invites a new user to create an account and set their own password."""
     form = InviteUserForm()
     if form.validate_on_submit():
-        user = Staffer(role=form.role.data,
+        user = User(role=form.role.data,
                        first_name=form.first_name.data,
                        last_name=form.last_name.data,
                        email=form.email.data)
@@ -83,9 +83,9 @@ def invite_user():
             user=user,
             invite_link=invite_link,
         )
-        flash('Staffer {} successfully invited'.format(user.full_name()),
+        flash('User {} successfully invited'.format(user.full_name()),
               'form-success')
-    return render_template('admin/new_staffer.html', form=form)
+    return render_template('admin/new_user.html', form=form)
 
 
 @admin.route('/users')
@@ -93,7 +93,7 @@ def invite_user():
 @admin_required
 def registered_users():
     """View all registered users."""
-    users = Staffer.query.all()
+    users = User.query.all()
     roles = Role.query.all()
     return render_template('admin/registered_users.html',
                            users=users,
@@ -106,7 +106,7 @@ def registered_users():
 @admin_required
 def user_info(user_id):
     """View a user's profile."""
-    user = Staffer.query.filter_by(id=user_id).first()
+    user = User.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
     return render_template('admin/manage_user.html', user=user)
@@ -117,7 +117,7 @@ def user_info(user_id):
 @admin_required
 def change_user_email(user_id):
     """Change a user's email."""
-    user = Staffer.query.filter_by(id=user_id).first()
+    user = User.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
     form = ChangeUserEmailForm()
@@ -143,7 +143,7 @@ def change_account_type(user_id):
             'another administrator to do this.', 'error')
         return redirect(url_for('admin.user_info', user_id=user_id))
 
-    user = Staffer.query.get(user_id)
+    user = User.query.get(user_id)
     if user is None:
         abort(404)
     form = ChangeAccountTypeForm()
@@ -162,7 +162,7 @@ def change_account_type(user_id):
 @admin_required
 def delete_user_request(user_id):
     """Request deletion of a user's account."""
-    user = Staffer.query.filter_by(id=user_id).first()
+    user = User.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
     return render_template('admin/manage_user.html', user=user)
@@ -178,7 +178,7 @@ def delete_user(user_id):
             'You cannot delete your own account. Please ask another '
             'administrator to do this.', 'error')
     else:
-        user = Staffer.query.filter_by(id=user_id).first()
+        user = User.query.filter_by(id=user_id).first()
         db.session.delete(user)
         db.session.commit()
         flash('Successfully deleted user %s.' % user.full_name(), 'success')
