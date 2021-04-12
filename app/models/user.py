@@ -164,12 +164,12 @@ class User(UserMixin, db.Model):
         seed()
         for i in range(count):
             u = User(first_name=fake.first_name(),
-                        last_name=fake.last_name(),
-                        email=fake.email(),
-                        password='password',
-                        confirmed=True,
-                        role=choice(roles),
-                        **kwargs)
+                     last_name=fake.last_name(),
+                     email=fake.email(),
+                     password='password',
+                     confirmed=True,
+                     role=choice(roles),
+                     **kwargs)
             db.session.add(u)
             try:
                 db.session.commit()

@@ -29,7 +29,7 @@ def index():
 @admin_required
 def request_manager():
     """Request Manager Page."""
-    return render_template('admin/request_manager.html')
+    return render_template('admin/request_manager/index.html')
 
 
 @admin.route('/people-manager')
@@ -39,6 +39,7 @@ def people_manager():
     """People Manager Page."""
     return render_template('admin/people_manager.html')
 
+
 @admin.route('/new-user', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -47,10 +48,10 @@ def new_user():
     form = NewUserForm()
     if form.validate_on_submit():
         user = User(role=form.role.data,
-                          first_name=form.first_name.data,
-                          last_name=form.last_name.data,
-                          email=form.email.data,
-                          password=form.password.data)
+                    first_name=form.first_name.data,
+                    last_name=form.last_name.data,
+                    email=form.email.data,
+                    password=form.password.data)
         db.session.add(user)
         db.session.commit()
         flash('User {} successfully created'.format(user.full_name()),
@@ -66,9 +67,9 @@ def invite_user():
     form = InviteUserForm()
     if form.validate_on_submit():
         user = User(role=form.role.data,
-                       first_name=form.first_name.data,
-                       last_name=form.last_name.data,
-                       email=form.email.data)
+                    first_name=form.first_name.data,
+                    last_name=form.last_name.data,
+                    email=form.email.data)
         db.session.add(user)
         db.session.commit()
         token = user.generate_confirmation_token()
@@ -219,7 +220,7 @@ def search_request():
 @admin_required
 def create_request():
     form = TransportationRequestForm()
-    return render_template('admin/transportation_request.html',
+    return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
                            form=form)
 

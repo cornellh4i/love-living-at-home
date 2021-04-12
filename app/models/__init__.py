@@ -12,6 +12,6 @@ from .request_volunteer_record import *
 from .request_volunteer_status import *
 from .service import *
 from .service_category import *
+from .staffer import *
 from .user import *  # noqa
 from .volunteer import *
-from .staffer import *
