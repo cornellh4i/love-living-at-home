@@ -14,21 +14,20 @@ description=None, icon=None) %}
     </h3>
   </div>
 </a>
-{% endmacro %} {% block content %}
+{% endmacro %}
+
+{% block content %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
     <h2 class="ui header">
-      Admin Dashboard
+      Request Manager
     </h2>
-    <h3>Account Manager</h3>
-    <div class="ui three column stackable grid">
-      {{ dashboard_option('Registered Staffers', 'admin.registered_users',
-      description='View and manage staffer accounts', icon='users icon') }}
-      {{ dashboard_option('Add New Staffer', 'admin.new_staffer',
-      description='Create a new staffer account', icon='add user icon') }}
-      {{ dashboard_option('Invite New Staffer', 'admin.invite_user',
-      description='Invites a new staffer to create their own account', icon='add user icon') }}
+    <div class="ui two item menu">
+      <a class="active item" href="{{ url_for('admin.create_request') }}">Search Requests</a>
+      <a class="item" href="{{ url_for('admin.create_request') }}">Create Requests</a>
     </div>
+    {% block request_content %}
+    {% endblock %}
   </div>
 </div>
 {% endblock %}
