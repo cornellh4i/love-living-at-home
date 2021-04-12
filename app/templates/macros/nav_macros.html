@@ -25,12 +25,18 @@ render_menu_items.
 ('main.about', 'About', 'info')
 ]%}
 {% set user = [] %}
-{% set request_manager = [] %}
+{% set managers = [] %}
 {% if current_user.is_authenticated %}
 {% set user = ([(current_user.role.index + '.index', current_user.role.name + ' Dashboard', 'user')]) %}
-{% set request_manager = ([(current_user.role.index + '.request_manager', 'Request Manager', 'user')]) %}
 {% endif %}
-{{ render_menu_items( endpoints + user + request_manager ) }}
+
+{% if current_user.is_admin() %}
+{% set managers = ([
+(current_user.role.index + '.request_manager', 'Request Manager', 'user'),
+(current_user.role.index + '.people_manager', 'People Manager', 'user')
+]) %}
+{% endif %}
+{{ render_menu_items( endpoints + user + managers ) }}
 {% endmacro %}
 
 {# This renders the right hand side of the navigation bar. If the user is logged in, it links to
