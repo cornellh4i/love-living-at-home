@@ -29,7 +29,7 @@ def index():
 @admin_required
 def request_manager():
     """Request Manager Page."""
-    return render_template('admin/request_manager/base.html')
+    return render_template('admin/request_manager/layouts/base.html')
 
 
 @admin.route('/people-manager')
