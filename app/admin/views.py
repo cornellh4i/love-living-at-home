@@ -1,23 +1,14 @@
-from flask import (
-    Blueprint,
-    abort,
-    flash,
-    redirect,
-    render_template,
-    request,
-    url_for,
-)
+from flask import (Blueprint, abort, flash, redirect, render_template, request,
+                   url_for)
 from flask_login import current_user, login_required
 from flask_rq import get_queue
 
 from app import db
-from app.admin.forms import (
-    ChangeAccountTypeForm,
-    ChangeUserEmailForm,
-    InviteUserForm,
-    NewUserForm,
-    SearchRequestForm
-)
+
+from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
+                             ContractorManager, InviteUserForm, MemberManager,
+                             NewUserForm, TransportationRequestForm,
+                             VolunteerManager, SearchRequestForm)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import EditableHTML, Role, User
@@ -33,6 +24,21 @@ def index():
     return render_template('admin/index.html')
 
 
+@admin.route('/request-manager')
+@login_required
+@admin_required
+def request_manager():
+    """Request Manager Page."""
+    return render_template('admin/request_manager.html')
+
+
+@admin.route('/people-manager')
+@login_required
+@admin_required
+def people_manager():
+    """People Manager Page."""
+    return render_template('admin/people_manager.html')
+
 @admin.route('/new-user', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -40,12 +46,11 @@ def new_user():
     """Create a new user."""
     form = NewUserForm()
     if form.validate_on_submit():
-        user = User(
-            role=form.role.data,
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            email=form.email.data,
-            password=form.password.data)
+        user = User(role=form.role.data,
+                          first_name=form.first_name.data,
+                          last_name=form.last_name.data,
+                          email=form.email.data,
+                          password=form.password.data)
         db.session.add(user)
         db.session.commit()
         flash('User {} successfully created'.format(user.full_name()),
@@ -60,19 +65,17 @@ def invite_user():
     """Invites a new user to create an account and set their own password."""
     form = InviteUserForm()
     if form.validate_on_submit():
-        user = User(
-            role=form.role.data,
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            email=form.email.data)
+        user = User(role=form.role.data,
+                       first_name=form.first_name.data,
+                       last_name=form.last_name.data,
+                       email=form.email.data)
         db.session.add(user)
         db.session.commit()
         token = user.generate_confirmation_token()
-        invite_link = url_for(
-            'account.join_from_invite',
-            user_id=user.id,
-            token=token,
-            _external=True)
+        invite_link = url_for('account.join_from_invite',
+                              user_id=user.id,
+                              token=token,
+                              _external=True)
         get_queue().enqueue(
             send_email,
             recipient=user.email,
@@ -93,8 +96,9 @@ def registered_users():
     """View all registered users."""
     users = User.query.all()
     roles = Role.query.all()
-    return render_template(
-        'admin/registered_users.html', users=users, roles=roles)
+    return render_template('admin/registered_users.html',
+                           users=users,
+                           roles=roles)
 
 
 @admin.route('/user/<int:user_id>')
@@ -122,20 +126,22 @@ def change_user_email(user_id):
         user.email = form.email.data
         db.session.add(user)
         db.session.commit()
-        flash('Email for user {} successfully changed to {}.'.format(
-            user.full_name(), user.email), 'form-success')
+        flash(
+            'Email for user {} successfully changed to {}.'.format(
+                user.full_name(), user.email), 'form-success')
     return render_template('admin/manage_user.html', user=user, form=form)
 
 
-@admin.route(
-    '/user/<int:user_id>/change-account-type', methods=['GET', 'POST'])
+@admin.route('/user/<int:user_id>/change-account-type',
+             methods=['GET', 'POST'])
 @login_required
 @admin_required
 def change_account_type(user_id):
     """Change a user's account type."""
     if current_user.id == user_id:
-        flash('You cannot change the type of your own account. Please ask '
-              'another administrator to do this.', 'error')
+        flash(
+            'You cannot change the type of your own account. Please ask '
+            'another administrator to do this.', 'error')
         return redirect(url_for('admin.user_info', user_id=user_id))
 
     user = User.query.get(user_id)
@@ -146,8 +152,9 @@ def change_account_type(user_id):
         user.role = form.role.data
         db.session.add(user)
         db.session.commit()
-        flash('Role for user {} successfully changed to {}.'.format(
-            user.full_name(), user.role.name), 'form-success')
+        flash(
+            'Role for user {} successfully changed to {}.'.format(
+                user.full_name(), user.role.name), 'form-success')
     return render_template('admin/manage_user.html', user=user, form=form)
 
 
@@ -168,8 +175,9 @@ def delete_user_request(user_id):
 def delete_user(user_id):
     """Delete a user's account."""
     if current_user.id == user_id:
-        flash('You cannot delete your own account. Please ask another '
-              'administrator to do this.', 'error')
+        flash(
+            'You cannot delete your own account. Please ask another '
+            'administrator to do this.', 'error')
     else:
         user = User.query.filter_by(id=user_id).first()
         db.session.delete(user)
@@ -204,3 +212,51 @@ def update_editor_contents():
 def search_request():
     form = SearchRequestForm()
     return render_template('admin/search_request.html', title = 'Search Request', form = form)
+
+
+# Create a new service request.
+@admin.route('/create-request', methods=['GET', 'POST'])
+@admin_required
+def create_request():
+    form = TransportationRequestForm()
+    return render_template('admin/transportation_request.html',
+                           title='Transportation Request',
+                           form=form)
+
+
+@admin.route('/invite-member', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def invite_member():
+    """Page for member management."""
+    form = MemberManager()
+    if form.validate_on_submit():
+        flash('Member {} successfully created'.format(form.first_name.data),
+              'form-success')
+    return render_template('admin/member_manager.html', form=form)
+
+
+@admin.route('/invite-volunteer', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def invite_volunteer():
+    """Invites a user to create a volunteer account"""
+    form = VolunteerManager()
+    if form.validate_on_submit():
+        flash('Volunteer {} successfully invited'.format(form.first_name.data),
+              'form-success')
+    return render_template('admin/volunteer_manager.html', form=form)
+
+
+@admin.route('/invite-contractor', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def invite_contractor():
+    """Page for contactor management."""
+    form = ContractorManager()
+    if form.validate_on_submit():
+        flash(
+            'Contractor {} successfully invited'.format(
+                form.organization_name.data), 'form-success')
+        return redirect(url_for('admin.index'))
+    return render_template('admin/contractor_manager.html', form=form)

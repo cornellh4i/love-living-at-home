@@ -1,3 +1,4 @@
+*.ipynb_checkpoints/
 .webassets-cache/
 webassets-external/
 .DS_Store

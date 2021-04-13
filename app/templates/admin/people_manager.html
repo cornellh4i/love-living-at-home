@@ -18,18 +18,17 @@ description=None, icon=None) %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
     <h2 class="ui header">
-      Admin Dashboard
+      People Manager
     </h2>
-    <h3>Account Manager</h3>
     <div class="ui three column stackable grid">
-      {{ dashboard_option('Registered User', 'admin.registered_users',
-      description='View and manage user accounts', icon='users icon') }}
-      {{ dashboard_option('Add New User', 'admin.new_user',
-      description='Create a new user account', icon='add user icon') }}
-      {{ dashboard_option('Invite New User', 'admin.invite_user',
-      description='Invites a new user to create their own account', icon='add user icon') }}
-      {{ dashboard_option('Search for Request', 'admin.search_request',
-            description='Search for an existing service request.', icon='add user icon') }}
+      {{ dashboard_option('Add Member', 'admin.invite_member',
+      description='Add member information to the system.', icon='add user icon') }}
+      {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', description='Add volunteer information to the
+      system.', icon='add user
+      icon') }}
+      {{ dashboard_option('Add Contractor', 'admin.invite_contractor',
+      description='Add contractor information to the system.', icon='add user
+      icon') }}
     </div>
   </div>
 </div>

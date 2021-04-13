@@ -33,7 +33,7 @@ class Config:
     MAIL_PORT = os.environ.get('MAIL_PORT', 587)
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', True)
     MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', False)
-    MAIL_USERNAME = 'apikey' #os.environ.get('MAIL_USERNAME')
+    MAIL_USERNAME = 'apikey'  #os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('SENDGRID_API_KEY')
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER')
 
@@ -43,8 +43,7 @@ class Config:
 
     # Admin account
     ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'password')
-    ADMIN_EMAIL = os.environ.get(
-        'ADMIN_EMAIL', 'flask-base-admin@example.com')
+    ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'flask-base-admin@example.com')
     EMAIL_SUBJECT_PREFIX = '[{}]'.format(APP_NAME)
     EMAIL_SENDER = '{app_name} Admin <{email}>'.format(
         app_name=APP_NAME, email=MAIL_DEFAULT_SENDER)
@@ -74,8 +73,9 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     ASSETS_DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL',
-        'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite'))
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        'DEV_DATABASE_URL',
+        'sqlite:///' + os.path.join(basedir, 'llh-data-dev.sqlite'))
 
     @classmethod
     def init_app(cls, app):
@@ -85,7 +85,8 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL',
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        'TEST_DATABASE_URL',
         'sqlite:///' + os.path.join(basedir, 'data-test.sqlite'))
     WTF_CSRF_ENABLED = False
 
@@ -98,8 +99,8 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     DEBUG = False
     USE_RELOADER = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL',
-        'sqlite:///' + os.path.join(basedir, 'data.sqlite'))
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        'DATABASE_URL', 'sqlite:///' + os.path.join(basedir, 'data.sqlite'))
     SSL_DISABLE = (os.environ.get('SSL_DISABLE', 'True') == 'True')
 
     @classmethod

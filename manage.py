@@ -3,12 +3,12 @@ import os
 import subprocess
 
 from flask_migrate import Migrate, MigrateCommand
-from flask_script import Manager, Shell, Server
+from flask_script import Manager, Server, Shell
 from redis import Redis
 from rq import Connection, Queue, Worker
 
 from app import create_app, db
-from app.models import Role, User
+from app.models import *
 from config import Config
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
@@ -45,18 +45,20 @@ def recreate_db():
     db.session.commit()
 
 
-@manager.option(
-    '-n',
-    '--number-users',
-    default=10,
-    type=int,
-    help='Number of each model type to create',
-    dest='number_users')
+@manager.option('-n',
+                '--number-users',
+                default=10,
+                type=int,
+                help='Number of each model type to create',
+                dest='number_users')
 def add_fake_data(number_users):
     """
     Adds fake data to the database.
     """
     User.generate_fake(count=number_users)
+    Volunteer.generate_fake(count=10)
+    Address.generate_fake(count=10)
+    Member.generate_fake(count=10)
 
 
 @manager.command
@@ -75,15 +77,31 @@ def setup_general():
     """Runs the set-up needed for both local development and production.
        Also sets up first admin user."""
     Role.insert_roles()
+    # Volunteer related
+    VolunteerType.insert_types()
+    AvailabilityStatus.insert_statuses()
+    TimePeriod.insert_time_periods()
+    # Request related
+    RequestDurationType.insert_types()
+    RequestStatus.insert_statuses()
+    RequestType.insert_types()
+    ContactLogPriorityType.insert_types()
+    ServiceCategory.insert_categories()
+    # Volunteer - Request
+    RequestVolunteerStatus.insert_statuses()
+    # Service related
+    Service.insert_services()
+    ServiceCategory.insert_categories()
+
+    # Set up first admin user
     admin_query = Role.query.filter_by(name='Administrator')
     if admin_query.first() is not None:
         if User.query.filter_by(email=Config.ADMIN_EMAIL).first() is None:
-            user = User(
-                first_name='Admin',
-                last_name='Account',
-                password=Config.ADMIN_PASSWORD,
-                confirmed=True,
-                email=Config.ADMIN_EMAIL)
+            user = User(first_name='Admin',
+                           last_name='Account',
+                           password=Config.ADMIN_PASSWORD,
+                           confirmed=True,
+                           email=Config.ADMIN_EMAIL)
             db.session.add(user)
             db.session.commit()
             print('Added administrator {}'.format(user.full_name()))
@@ -93,11 +111,10 @@ def setup_general():
 def run_worker():
     """Initializes a slim rq task queue."""
     listen = ['default']
-    conn = Redis(
-        host=app.config['RQ_DEFAULT_HOST'],
-        port=app.config['RQ_DEFAULT_PORT'],
-        db=0,
-        password=app.config['RQ_DEFAULT_PASSWORD'])
+    conn = Redis(host=app.config['RQ_DEFAULT_HOST'],
+                 port=app.config['RQ_DEFAULT_PORT'],
+                 db=0,
+                 password=app.config['RQ_DEFAULT_PASSWORD'])
 
     with Connection(conn):
         worker = Worker(map(Queue, listen))
