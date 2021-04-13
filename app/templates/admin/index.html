@@ -29,6 +29,14 @@ description=None, icon=None) %}
       {{ dashboard_option('Invite New User', 'admin.invite_user',
       description='Invites a new user to create their own account', icon='add user icon') }}
     </div>
+    <hr />
+    <h3>System Manager</h3>
+    <div class="ui two column stackable grid">
+      {{ dashboard_option('Edit Services', 'admin.index',
+      description='Add/Remove/Edit Services', icon='users icon') }}
+      {{ dashboard_option('Edit Service Categories', 'admin.index',
+      description='Add/Remove/Edit Service Categories', icon='add user icon') }}
+
+    </div>
   </div>
-</div>
-{% endblock %}
+  {% endblock %}
