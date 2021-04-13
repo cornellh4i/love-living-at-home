@@ -212,7 +212,7 @@ def update_editor_contents():
 @admin_required
 def search_request():
     form = SearchRequestForm()
-    return render_template('admin/search_request.html', title = 'Search Request', form = form)
+    return render_template('admin/request_manager/search_request.html', title = 'Search Request', form = form)
 
 
 # Create a new service request.

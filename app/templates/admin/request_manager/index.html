@@ -8,7 +8,7 @@
     </h2>
     <div class="ui two item menu">
       <a class="item {% if request.endpoint == 'admin.search_request' %}active{% endif %}"
-        href="{{ url_for('admin.create_request') }}">Search Requests</a>
+        href="{{ url_for('admin.search_request') }}">Search Requests</a>
       <a class="item {% if request.endpoint == 'admin.create_request' %}active{% endif %}"
         href="{{ url_for('admin.create_request') }}">Create Requests</a>
     </div>
