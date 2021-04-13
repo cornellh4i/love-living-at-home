@@ -1,4 +1,6 @@
-{% extends 'layouts/base.html' %} {% macro dashboard_option(title, endpoint,
+{% extends 'layouts/base.html' %}
+
+{% macro dashboard_option(title, endpoint,
 description=None, icon=None) %}
 <a class="column" href="{{ url_for(endpoint) }}">
   <div class="ui padded segment">
@@ -14,7 +16,9 @@ description=None, icon=None) %}
     </h3>
   </div>
 </a>
-{% endmacro %} {% block content %}
+{% endmacro %}
+
+{% block content %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
     <h2 class="ui header">

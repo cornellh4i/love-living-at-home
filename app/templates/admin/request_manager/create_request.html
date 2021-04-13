@@ -1,0 +1,31 @@
+{% extends "admin/request_manager/layouts/base.html" %}
+
+{% macro dashboard_option(title, endpoint, icon=None) %}
+<a class="column" href="{{ url_for(endpoint) }}">
+  <div class="ui padded segment">
+    <h3 class="ui header">
+      {% if icon is not none %}
+      <i class="{{ icon }}"></i>
+      {% endif %}
+      <div class="content">
+        {{ title }}
+      </div>
+    </h3>
+  </div>
+</a>
+{% endmacro %}
+
+{% block request_content %}
+<h3>Create a Request</h3>
+<div class="ui three column stackable grid">
+  {{ dashboard_option('Transportation', 'admin.create_transportation_request', icon='add user icon') }}
+  {{ dashboard_option("Member's Home", 'admin.create_request', icon='add user icon') }}
+  {{ dashboard_option('Office Time', 'admin.create_request', icon='add user icon') }}
+</div>
+<hr />
+
+{% block create_request_content %}
+{# The form to create a Transportation, Member's Home, or Office Time Request will populate here. #}
+{% endblock create_request_content %}
+
+{% endblock request_content %}
