@@ -37,7 +37,7 @@ def request_manager():
 @admin_required
 def people_manager():
     """People Manager Page."""
-    return render_template('admin/people_manager.html')
+    return render_template('admin/people_manager/layouts/base.html')
 
 
 @admin.route('/new-user', methods=['GET', 'POST'])
@@ -234,7 +234,7 @@ def invite_member():
     if form.validate_on_submit():
         flash('Member {} successfully created'.format(form.first_name.data),
               'form-success')
-    return render_template('admin/member_manager.html', form=form)
+    return render_template('admin/people_manager/member_manager.html', form=form)
 
 
 @admin.route('/invite-volunteer', methods=['GET', 'POST'])
@@ -246,7 +246,7 @@ def invite_volunteer():
     if form.validate_on_submit():
         flash('Volunteer {} successfully invited'.format(form.first_name.data),
               'form-success')
-    return render_template('admin/volunteer_manager.html', form=form)
+    return render_template('admin/people_manager/volunteer_manager.html', form=form)
 
 
 @admin.route('/invite-contractor', methods=['GET', 'POST'])
@@ -260,4 +260,4 @@ def invite_contractor():
             'Contractor {} successfully invited'.format(
                 form.organization_name.data), 'form-success')
         return redirect(url_for('admin.index'))
-    return render_template('admin/contractor_manager.html', form=form)
+    return render_template('admin/people_manager/contractor_manager.html', form=form)
