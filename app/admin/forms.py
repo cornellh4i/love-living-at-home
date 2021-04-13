@@ -3,11 +3,12 @@ from datetime import datetime
 from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, ValidationError, widgets
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
+
 from wtforms.fields import (BooleanField, DateTimeField, IntegerField,
-                            PasswordField, RadioField, SelectField,
+                            PasswordField, RadioField, SelectField, SelectMultipleField,
                             StringField, SubmitField, TextAreaField)
-from wtforms.fields.html5 import DateField, EmailField, TimeField
-from wtforms.validators import Email, EqualTo, InputRequired, Length, Optional
+from wtforms.fields.html5 import DateField, EmailField, TimeField, IntegerField
+from wtforms.validators import Email, EqualTo, InputRequired, Length, Optional, DataRequired
 
 from app import db
 from app.models import Role, User
@@ -90,6 +91,38 @@ class NewUserForm(InviteUserForm):
     submit = SubmitField('Create')
 
 
+class SearchRequestForm(FlaskForm):
+
+    request_type = SelectMultipleField('Request Type', choices = [ (0,'Transportation Request'), 
+    (1,'Member\'s Home Request'), (2, 'Office Time Request')], validators = [DataRequired()])
+
+
+    request_status = SelectMultipleField('Request Status', choices = 
+    [(0, 'Requested'), (1, 'Confirmed'), (2, 'Completed'), (3, 'Cancelled')], validators = [DataRequired()])
+
+    service_category = SelectMultipleField('Service Category', choices =
+    [(0, 'COVID Community Support'), (1, 'Professional Home/Garden Service'),
+    (2, 'Professional In-Home Support'), (3, 'Technical Support'), 
+    (4, 'Transportation'), (5, 'Village Admin'), (6, 'Volunteer Home/Garden Service'),
+    (7, 'Volunteer In-Home Support')], validators = [DataRequired()])
+
+    provider_type = SelectMultipleField('Provider Type', choices = 
+    [(0, 'Non-Member Volunteer'), (1, 'Member Volunteer'), (2, 'Contractor')], validators = [DataRequired()])
+
+    requesting_member = SelectField('Requesting Member', choices = [(0, 'Nat Peuly'), (1, 'Sohni Uthra')], validators=[DataRequired()])
+
+    service_provider = SelectField('Service Provider', choices = [(0, 'Nat Peuly'), (1, 'Sohni Uthra')], validators=[DataRequired()])
+
+    # """service_req_from = IntegerField('Service Req # from', default=0)
+    # service_req_to = IntegerField('to', default=0)
+
+    # priority = RadioField('High priority', choices=['Yes', 'No', 'Both'])
+    # show = RadioField('Show', choices=['Undated', 'Dated', 'Both'])
+
+    # search = SubmitField('Search')
+    # reset = SubmitField('Reset')"""
+
+    
 class TransportationRequestForm(FlaskForm):
     date_created = DateField('Date Created',
                              format='%Y-%M-%D',

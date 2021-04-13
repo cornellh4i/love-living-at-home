@@ -4,10 +4,11 @@ from flask_login import current_user, login_required
 from flask_rq import get_queue
 
 from app import db
+
 from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              ContractorManager, InviteUserForm, MemberManager,
                              NewUserForm, TransportationRequestForm,
-                             VolunteerManager)
+                             VolunteerManager, SearchRequestForm)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import EditableHTML, Role, User
@@ -204,6 +205,13 @@ def update_editor_contents():
     db.session.commit()
 
     return 'OK', 200
+
+@admin.route('/search-request', methods=['POST','GET'])
+@login_required
+@admin_required
+def search_request():
+    form = SearchRequestForm()
+    return render_template('admin/search_request.html', title = 'Search Request', form = form)
 
 
 # Create a new service request.
