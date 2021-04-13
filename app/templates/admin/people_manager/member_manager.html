@@ -3,7 +3,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 %} {% block content %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
-    <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
+    <a class="ui basic compact button" href="{{ url_for('admin.people_manager') }}">
       <i class="caret left icon"></i>
       Back to dashboard
     </a>
@@ -13,69 +13,69 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     </h2>
 
     {% set flashes = {
-      'error':   get_flashed_messages(category_filter=['form-error']),
-      'warning': get_flashed_messages(category_filter=['form-check-email']),
-      'info':    get_flashed_messages(category_filter=['form-info']),
-      'success': get_flashed_messages(category_filter=['form-success'])
+    'error': get_flashed_messages(category_filter=['form-error']),
+    'warning': get_flashed_messages(category_filter=['form-check-email']),
+    'info': get_flashed_messages(category_filter=['form-info']),
+    'success': get_flashed_messages(category_filter=['form-success'])
     } %}
-    
-    
-    {{ f.begin_form(form, flashes) }} 
-    
-        {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-        {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-        {{ f.form_message(flashes['info'], header='Information', class='info') }}
-        {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-    
-    
-        {{ f.render_form_field(form.first_name) }} 
-        {{ f.render_form_field(form.middle_initial) }} 
-        {{ f.render_form_field(form.last_name) }} 
-        {{ f.render_form_field(form.preferred_name) }} 
-        {{ f.render_form_field(form.salutation) }} 
-        {{ f.render_form_field(form.pronoun) }}
 
-        <div class="ui header">Primary Address</div>
-        {{ f.render_form_field(form.primary_country) }} 
-        {{ f.render_form_field(form.primary_address1) }} 
-        {{ f.render_form_field(form.primary_address2) }} 
-        {{ f.render_form_field(form.primary_city) }} 
-        {{ f.render_form_field(form.primary_state) }} 
-        {{ f.render_form_field(form.primary_zip_code) }} 
-        {{ f.render_form_field(form.primary_time_zone) }} 
-        {{ f.render_form_field(form.primary_metro_area) }} 
-        {{ f.render_form_field(form.primary_phone) }}
-            
-        <div class="ui header">Secondary Address</div>
-        {{ f.render_form_field(form.secondary_as_primary_checkbox) }} 
-        {{ f.render_form_field(form.secondary_country) }} 
-        {{ f.render_form_field(form.secondary_address1) }} 
-        {{ f.render_form_field(form.secondary_address2) }} 
-        {{ f.render_form_field(form.secondary_city) }} 
-        {{ f.render_form_field(form.secondary_state) }} 
-        {{ f.render_form_field(form.secondary_zip_code) }} 
-        {{ f.render_form_field(form.secondary_time_zone) }} 
-        {{ f.render_form_field(form.secondary_metro_area) }} 
-        {{ f.render_form_field(form.secondary_phone) }}
-        
-        <div class="ui header">Contact Information</div>
-        {{ f.render_form_field(form.phone_number) }} 
-        {{ f.render_form_field(form.cell_number) }} 
-        {{ f.render_form_field(form.email) }}
 
-        <div class="ui header">Emergency Contact Information</div>
-        {{ f.render_form_field(form.emergency_contact_name)}} 
-        {{ f.render_form_field(form.emergency_contact_relationship) }} 
-        {{ f.render_form_field(form.emergency_contact_phone_number) }} 
-        {{ f.render_form_field(form.emergency_contact_email_address) }} 
-        {{ f.render_form_field(form.volunteer_notes) }} 
-        {{ f.render_form_field(form.staffer_notes)}} 
+    {{ f.begin_form(form, flashes) }}
 
-        {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
-            {{ f.render_form_field(field) }}
-        {% endfor %}
-        
-        {{ f.end_form() }}
+    {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+    {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+    {{ f.form_message(flashes['info'], header='Information', class='info') }}
+    {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+
+    {{ f.render_form_field(form.first_name) }}
+    {{ f.render_form_field(form.middle_initial) }}
+    {{ f.render_form_field(form.last_name) }}
+    {{ f.render_form_field(form.preferred_name) }}
+    {{ f.render_form_field(form.salutation) }}
+    {{ f.render_form_field(form.pronoun) }}
+
+    <div class="ui header">Primary Address</div>
+    {{ f.render_form_field(form.primary_country) }}
+    {{ f.render_form_field(form.primary_address1) }}
+    {{ f.render_form_field(form.primary_address2) }}
+    {{ f.render_form_field(form.primary_city) }}
+    {{ f.render_form_field(form.primary_state) }}
+    {{ f.render_form_field(form.primary_zip_code) }}
+    {{ f.render_form_field(form.primary_time_zone) }}
+    {{ f.render_form_field(form.primary_metro_area) }}
+    {{ f.render_form_field(form.primary_phone) }}
+
+    <div class="ui header">Secondary Address</div>
+    {{ f.render_form_field(form.secondary_as_primary_checkbox) }}
+    {{ f.render_form_field(form.secondary_country) }}
+    {{ f.render_form_field(form.secondary_address1) }}
+    {{ f.render_form_field(form.secondary_address2) }}
+    {{ f.render_form_field(form.secondary_city) }}
+    {{ f.render_form_field(form.secondary_state) }}
+    {{ f.render_form_field(form.secondary_zip_code) }}
+    {{ f.render_form_field(form.secondary_time_zone) }}
+    {{ f.render_form_field(form.secondary_metro_area) }}
+    {{ f.render_form_field(form.secondary_phone) }}
+
+    <div class="ui header">Contact Information</div>
+    {{ f.render_form_field(form.phone_number) }}
+    {{ f.render_form_field(form.cell_number) }}
+    {{ f.render_form_field(form.email) }}
+
+    <div class="ui header">Emergency Contact Information</div>
+    {{ f.render_form_field(form.emergency_contact_name)}}
+    {{ f.render_form_field(form.emergency_contact_relationship) }}
+    {{ f.render_form_field(form.emergency_contact_phone_number) }}
+    {{ f.render_form_field(form.emergency_contact_email_address) }}
+    {{ f.render_form_field(form.volunteer_notes) }}
+    {{ f.render_form_field(form.staffer_notes)}}
+
+    {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
+    {{ f.render_form_field(field) }}
+    {% endfor %}
+
+    {{ f.end_form() }}
   </div>
 </div>
 {% endblock %}
