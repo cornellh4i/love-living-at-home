@@ -1,13 +1,14 @@
 from .. import db
 
+
 class Staffer(db.Model):
-  """
-  A Love Living at Home Office Staff who is responsible for 
-    creating/editing requests. 
-  NOTE: Some staffers (but not all) are volunteers, so 
-    we may need to add a boolean (i.e., `is_volunteer`) and connection 
-    between Volunteer and Staffer that is nullable.
-  """
+    """
+    A Love Living at Home Office Staff who is responsible for 
+      creating/editing requests. 
+    NOTE: Some staffers (but not all) are volunteers, so 
+      we may need to add a boolean (i.e., `is_volunteer`) and connection 
+      between Volunteer and Staffer that is nullable.
+    """
     id = db.Column(db.Integer, primary_key=True)
     ## Personal Information
     first_name = db.Column(db.String(80), nullable=False)
@@ -18,5 +19,6 @@ class Staffer(db.Model):
     email_address = db.Column(db.String(80), nullable=False)
 
     requests_created = db.relationship("Request", backref="staffer", lazy=True)
+
     def __repr__(self):
-        return f"Staffer('{self.created_date}, '{self.cc_email}')"
+        return f"Staffer('{self.last_name}, '{self.first_name}')"
