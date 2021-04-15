@@ -4,6 +4,7 @@ module (as opposed to just their python files)
 """
 
 from .address import *
+from .local_resource import *
 from .member import *
 from .metro_area import *
 from .miscellaneous import *  # noqa
