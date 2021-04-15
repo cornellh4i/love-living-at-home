@@ -44,7 +44,10 @@ description=None, icon=None) %}
       description='Add/Remove/Edit Metro Areas', icon='add user icon') }}
       {{ dashboard_option('Edit Destination Addresses', 'admin.index',
       description='Add/Remove/Edit Destination Addresses', icon='add user icon') }}
-
+      {{ dashboard_option('Generate Reports', 'admin.index',
+      description='Generate monthly reports.', icon='add user icon') }}
+      {{ dashboard_option('Edit System Email', 'admin.index',
+      description='Edit the email address from which LLH emails are sent.', icon='add user icon') }}
     </div>
   </div>
   {% endblock %}
