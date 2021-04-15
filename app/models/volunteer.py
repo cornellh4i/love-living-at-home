@@ -75,7 +75,7 @@ class VolunteerType(db.Model):
 
     @staticmethod
     def insert_types():
-        types = ['Member Volunteer', 'Non-Member Volunteer']
+        types = ['Member Volunteer', 'Non-Member Volunteer', 'Local Resource']
         for t in types:
             volunteer_type = VolunteerType.query.filter_by(name=t).first()
             if volunteer_type is None:
