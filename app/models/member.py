@@ -15,6 +15,7 @@ class Member(db.Model):
                                    db.ForeignKey('address.id'),
                                    nullable=False)
     secondary_address_id = db.Column(db.Integer, db.ForeignKey('address.id'))
+    metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
     ## Contact Information
     phone_number = db.Column(db.String(64))
     email_address = db.Column(db.String(64), nullable=False)
