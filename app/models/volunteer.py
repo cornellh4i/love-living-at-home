@@ -14,6 +14,8 @@ class Volunteer(db.Model):
     address_id = db.Column(db.Integer(),
                            db.ForeignKey("address.id"),
                            nullable=False)
+    metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
+
     phone_number = db.Column(db.String(10), nullable=False)
     email_address = db.Column(db.String(80), nullable=False)
 
@@ -75,7 +77,7 @@ class VolunteerType(db.Model):
 
     @staticmethod
     def insert_types():
-        types = ['Member Volunteer', 'Non-Member Volunteer']
+        types = ['Member Volunteer', 'Non-Member Volunteer', 'Local Resource']
         for t in types:
             volunteer_type = VolunteerType.query.filter_by(name=t).first()
             if volunteer_type is None:

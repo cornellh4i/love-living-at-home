@@ -1,4 +1,6 @@
-{% extends 'layouts/base.html' %} {% macro dashboard_option(title, endpoint,
+{% extends 'layouts/base.html' %}
+
+{% macro dashboard_option(title, endpoint,
 description=None, icon=None) %}
 <a class="column" href="{{ url_for(endpoint) }}">
   <div class="ui padded segment">
@@ -14,7 +16,9 @@ description=None, icon=None) %}
     </h3>
   </div>
 </a>
-{% endmacro %} {% block content %}
+{% endmacro %}
+
+{% block content %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
     <h2 class="ui header">
@@ -29,6 +33,21 @@ description=None, icon=None) %}
       {{ dashboard_option('Invite New User', 'admin.invite_user',
       description='Invites a new user to create their own account', icon='add user icon') }}
     </div>
+    <hr />
+    <h3>System Manager</h3>
+    <div class="ui two column stackable grid">
+      {{ dashboard_option('Edit Services', 'admin.index',
+      description='Add/Remove/Edit Services', icon='users icon') }}
+      {{ dashboard_option('Edit Service Categories', 'admin.index',
+      description='Add/Remove/Edit Service Categories', icon='add user icon') }}
+      {{ dashboard_option('Edit Metro Areas', 'admin.index',
+      description='Add/Remove/Edit Metro Areas', icon='add user icon') }}
+      {{ dashboard_option('Edit Destination Addresses', 'admin.index',
+      description='Add/Remove/Edit Destination Addresses', icon='add user icon') }}
+      {{ dashboard_option('Generate Reports', 'admin.index',
+      description='Generate monthly reports.', icon='add user icon') }}
+      {{ dashboard_option('Edit System Email', 'admin.index',
+      description='Edit the email address from which LLH emails are sent.', icon='add user icon') }}
+    </div>
   </div>
-</div>
-{% endblock %}
+  {% endblock %}

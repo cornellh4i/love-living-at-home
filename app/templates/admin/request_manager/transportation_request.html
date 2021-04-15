@@ -1,10 +1,10 @@
-{% extends 'admin/request_manager/layouts/base.html' %}
+{% extends 'admin/request_manager/create_request.html' %}
 {% import 'macros/form_macros.html' as f %}
 
 {% block scripts %}
 {% endblock %}
 
-{% block request_content %}
+{% block create_request_content %}
 {% set flashes = {
 'error': get_flashed_messages(category_filter=['form-error']),
 'warning': get_flashed_messages(category_filter=['form-check-email']),

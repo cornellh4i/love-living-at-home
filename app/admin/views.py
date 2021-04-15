@@ -21,7 +21,7 @@ admin = Blueprint('admin', __name__)
 @admin_required
 def index():
     """Admin dashboard page."""
-    return render_template('admin/index.html')
+    return render_template('admin/system_manager/index.html')
 
 
 @admin.route('/request-manager')
@@ -56,7 +56,7 @@ def new_user():
         db.session.commit()
         flash('User {} successfully created'.format(user.full_name()),
               'form-success')
-    return render_template('admin/new_user.html', form=form)
+    return render_template('admin/system_manager/new_user.html', form=form)
 
 
 @admin.route('/invite-user', methods=['GET', 'POST'])
@@ -97,7 +97,7 @@ def registered_users():
     """View all registered users."""
     users = User.query.all()
     roles = Role.query.all()
-    return render_template('admin/registered_users.html',
+    return render_template('admin/system_manager/registered_users.html',
                            users=users,
                            roles=roles)
 
@@ -111,7 +111,7 @@ def user_info(user_id):
     user = User.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
-    return render_template('admin/manage_user.html', user=user)
+    return render_template('admin/system_manager/manage_user.html', user=user)
 
 
 @admin.route('/user/<int:user_id>/change-email', methods=['GET', 'POST'])
@@ -130,7 +130,7 @@ def change_user_email(user_id):
         flash(
             'Email for user {} successfully changed to {}.'.format(
                 user.full_name(), user.email), 'form-success')
-    return render_template('admin/manage_user.html', user=user, form=form)
+    return render_template('admin/system_manager/manage_user.html', user=user, form=form)
 
 
 @admin.route('/user/<int:user_id>/change-account-type',
@@ -156,7 +156,7 @@ def change_account_type(user_id):
         flash(
             'Role for user {} successfully changed to {}.'.format(
                 user.full_name(), user.role.name), 'form-success')
-    return render_template('admin/manage_user.html', user=user, form=form)
+    return render_template('admin/system_manager/manage_user.html', user=user, form=form)
 
 
 @admin.route('/user/<int:user_id>/delete')
@@ -167,7 +167,7 @@ def delete_user_request(user_id):
     user = User.query.filter_by(id=user_id).first()
     if user is None:
         abort(404)
-    return render_template('admin/manage_user.html', user=user)
+    return render_template('admin/system_manager/manage_user.html', user=user)
 
 
 @admin.route('/user/<int:user_id>/_delete')
@@ -219,6 +219,13 @@ def search_request():
 @admin.route('/create-request', methods=['GET', 'POST'])
 @admin_required
 def create_request():
+    return render_template('admin/request_manager/create_request.html')
+
+
+# Create a new Transportation service request.
+@admin.route('/create-request/transportation-request', methods=['GET', 'POST'])
+@admin_required
+def create_transportation_request():
     form = TransportationRequestForm()
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',

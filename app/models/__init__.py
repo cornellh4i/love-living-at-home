@@ -4,10 +4,13 @@ module (as opposed to just their python files)
 """
 
 from .address import *
+from .local_resource import *
 from .member import *
+from .metro_area import *
 from .miscellaneous import *  # noqa
 from .provided_service import *
 from .request import *
+from .request_member_record import *
 from .request_volunteer_record import *
 from .request_volunteer_status import *
 from .service import *
