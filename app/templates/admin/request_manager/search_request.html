@@ -3,11 +3,13 @@
 
 {% block request_content %}
 
+
 <div class="content-section">
   <form method="POST" action="">
     {{ form.hidden_tag() }}
 
     <h2 class="header">Search Criteria</h2>
+    <hr />
 
     {% set flashes = {
     'error': get_flashed_messages(category_filter=['form-error']),
@@ -31,14 +33,6 @@
               <label> {{form.request_status.label}}</label>
               {{ form.request_status(size=7, class='form-control', multiple="multiple") }}
             </div>
-            <div class="field">
-              <label> {{form.requesting_member.label}}</label>
-              <select class="ui search dropdown">
-                {% for choice in form.requesting_member.choices %}
-                <option value={{ choice[0] }}>{{choice[1]}}</option>
-                {% endfor %}
-              </select>
-            </div>
           </div>
         </div>
 
@@ -51,18 +45,33 @@
             <label> {{form.provider_type.label}}</label>
             {{ form.provider_type(size=4, class='form-control', multiple="multiple") }}
           </div>
-          <div class="field">
-            <label> {{form.service_provider.label}}</label>
-            <select class="ui search dropdown">
-              {% for choice in form.service_provider.choices %}
-              <option value={{ choice[0] }}>{{choice[1]}}</option>
-              {% endfor %}
-            </select>
-          </div>
         </div>
-
+      </div>
+      <script type="text/javascript">
+        $(document).ready(function(){
+          $('.ui.dropdown') .dropdown({ fullTextSearch: true });
+        });
+      </script>
+      <div class="field">
+        <label> {{form.requesting_member.label}}</label>        
+        <select class="ui search selection dropdown" id="search-select">
+          <option value="">Type Name Here</option>
+          {% for choice in form.requesting_member.choices %}
+          <option value={{ choice[0] }}>{{choice[1]}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label> {{form.service_provider.label}}</label>
+        <select class="ui search dropdown">
+          <option value="">Type Name Here</option>
+          {% for choice in form.service_provider.choices %}
+          <option value={{ choice[0] }}>{{choice[1]}}</option>
+          {% endfor %}
+        </select>
       </div>
     </div>
+    <p><hr /></p>
 
     <!-- <div class="right floated six wide column">
           <select class="ui search dropdown">
