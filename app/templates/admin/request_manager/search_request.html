@@ -24,6 +24,17 @@
       <!--Dropdown components-->
       <div class="ui two column stackable grid">
         <div class="six wide column">
+          <!--Javascript to implement Select All (in progress)-->
+          <script type="text/javascript">
+          $("select").on("click", function(){      
+            if ($(this).find(":selected").text() == "Select All"){
+              if ($(this).attr("data-select") == "false")
+                $(this).attr("data-select", "true").find("option").prop("selected", true);
+              else
+                $(this).attr("data-select", "false").find("option").prop("selected", false);
+            }
+          });
+          </script>
           <div class="dropdown">
             <div class="field">
               <label> {{form.request_type.label}}</label>
@@ -72,6 +83,27 @@
       </div>
     </div>
     <p><hr /></p>
+
+    <div class="ui form">
+      <div class="ui two column stackable grid">
+        <div class="six wide column">
+
+
+        </div>
+        <div class="right floated six wide column">
+          <div class="inline fields">
+            <label>{{ form.show.label }}:</label>
+            {% for subfield in form.show %}
+            <tr>
+                <td>{{ subfield }}</td>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <td>{{ subfield.label }}</td>
+            </tr>
+            {% endfor %}        
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- <div class="right floated six wide column">
           <select class="ui search dropdown">
