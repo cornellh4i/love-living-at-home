@@ -87,6 +87,7 @@
     <div class="ui form">
       <div class="ui two column stackable grid">
         <div class="six wide column">
+          <!--Put Calendar here-->
 
 
         </div>
@@ -101,9 +102,42 @@
             </tr>
             {% endfor %}        
           </div>
+          <div class = "field">
+            <label>{{ form.time_period.label }}</label>
+            <select class="ui dropdown">
+              <option value="">Nothing Selected</option>
+              {% for choice in form.time_period.choices %}
+              <option value={{ choice[0] }}>{{choice[1]}}</option>
+              {% endfor %}
+            </select>
+          </div> 
+          <div class="inline fields">
+            <div>
+              <label>{{ form.start_date.label }}:</label>
+              {{form.start_date}}
+            </div>
+            <div>
+              <label>{{form.end_date.label}}:</label> 
+              {{form.end_date}}
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <p><hr /></p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <div class = "ui form">
+      <div class = "ui centered grid">
+      <div class="inline fields">
+        <div>{{form.apply_filters}}</div>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div>{{form.reset_filters}}</div>
+      </div>
+    </div>
+
+    </div>
+
 
     <!-- <div class="right floated six wide column">
           <select class="ui search dropdown">

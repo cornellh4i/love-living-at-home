@@ -121,8 +121,13 @@ class SearchRequestForm(FlaskForm):
     # priority = RadioField('High priority', choices=['Yes', 'No', 'Both'])
     show = RadioField('Show', choices=[(0,'Undated'), (1,'Dated')])
 
-    # search = SubmitField('Search')
-    # reset = SubmitField('Reset')"""
+    time_period = SelectField('Time Period', choices = [(0, 'Today'), (1, 'This Week'), (2, 'This Month'), (3, 'Future Dates')], validators = [DataRequired()])
+
+    start_date = DateField('Start Date', validators=[InputRequired()], format='%Y-%M-%D')
+    end_date = DateField('End Date', validators=[InputRequired()], format='%Y-%M-%D')
+
+    apply_filters = SubmitField('Apply Filters')
+    reset_filters = SubmitField('Reset Filters')
 
     
 class TransportationRequestForm(FlaskForm):
