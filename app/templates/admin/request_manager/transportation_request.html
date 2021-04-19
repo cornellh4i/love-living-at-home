@@ -18,8 +18,8 @@
     <h2 class="ui center aligned header">
       Transportation Request Form
     </h2>
-
     {{ f.render_form_field(form.date_created) }}
+    {{ f.render_form_field(form.requesting_member)}}
   </div>
   <div class="twelve wide column">
     <div class="ui two column stackable grid">
@@ -47,16 +47,16 @@
 
         {{ f.render_form_field(form.covidService) }}
         {{ f.render_form_field(form.transportationService) }}
-
-        {{ f.render_form_field(form.starting_location) }}
       </div>
       <div class="right floated six wide column">
-        {{ f.render_form_field(form.destination) }}
       </div>
     </div>
   </div>
 
   <div class="twelve wide column">
+    {{ f.render_form_field(form.starting_location) }}
+    {{ f.render_form_field(form.destination) }}
+
     {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
     {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
     {{ f.form_message(flashes['info'], header='Information', class='info') }}
