@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, ValidationError, widgets
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
@@ -11,29 +9,8 @@ from wtforms.fields.html5 import DateField, EmailField, TimeField, IntegerField
 from wtforms.validators import Email, EqualTo, InputRequired, Length, Optional, DataRequired
 
 from app import db
-from app.models import Role, User
-
-serviceCategories = [('Select', 'Select'),
-                     ('Coronavirus Community Support',
-                      'Coronavirus Community Support'),
-                     ('Transportation', 'Transportation')]
-
-covidServices = [('Select', 'Select'), ('General Errands', 'General Errands'),
-                 ('Grocery Shopping', 'Grocery Shopping'),
-                 ('Prescription Pickup', 'Prescription Pickup')]
-
-transportationServices = [
-    ('Select', 'Select'), ('Event Carpool', 'Event Carpool'),
-    ('hack4impact test service', 'hack4impact test service'),
-    ('Long Dist Non-Med Professional', 'Long Dist Non-Med Professional'),
-    ('Long Dist. Med Professional', 'Long Dist Med Professional'),
-    ('Vol Driver Family/Friend Visit', 'Vol Driver Family/Friend Visit'),
-    ('Vol Driver LLH Programs/Events', 'Vol Driver LLH Programs/Events'),
-    ('Vol Driver Local Medical Appt', 'Vol Driver Local Medical Appt'),
-    ('Vol Driver Shopping/Errands', 'Vol Driver Shopping/Errands'),
-    ('Vol Driver Local Bus/Airport', 'Vol Driver Local Bus/Airport'),
-    ('Vol Driver Misc. Trip', 'Vol Driver Misc. Trip')
-]
+from app.models import Role, User, ServiceCategory, Service, Staffer, RequestStatus, ContactLogPriorityType, Member
+from datetime import date;
 
 
 class ChangeUserEmailForm(FlaskForm):
@@ -124,28 +101,75 @@ class SearchRequestForm(FlaskForm):
 
     
 class TransportationRequestForm(FlaskForm):
-    date_created = DateField('Date Created',
-                             format='%Y-%M-%D',
-                             default=datetime.today)
+    categoryId = 0
+    def selectedCategory():
+        return db.session.query(ServiceCategory).order_by().filter(ServiceCategory.request_type_id == 0)
+
+    def services():
+        return db.session.query(Service).order_by()
+
+    def stafferQuery():
+        return db.session.query(Staffer).order_by()
+
+    def statusQuery():
+        return db.session.query(RequestStatus).order_by()
+
+    def contactLogQuery():
+        return db.session.query(ContactLogPriorityType).order_by()
+
+    def specialInstructionsQuery():
+         return db.session.query(Member).order_by()
+
+    date_created = StringField('Date Created:', default = date.today,  render_kw={'readonly': True})
     requested_date = DateField('Requested Date',
                                validators=[InputRequired()],
                                format='%Y-%M-%D')
-    initial_pickup = TimeField('Inital Pickup', format='%H:%M')
-    appointment = TimeField('Appointment', format='%H:%M')
-    return_pickup = TimeField('Return Pickup', format='%H:%M')
-    drop_off = TimeField('Drop Off', format='%H:%M')
+    initial_pickup = TimeField('Inital Pickup:', format='%H:%M')
+    appointment = TimeField('Appointment:', format='%H:%M')
+    return_pickup = TimeField('Return Pickup:', format='%H:%M')
+    drop_off = TimeField('Drop Off:', format='%H:%M')
     time_flexible = RadioField('Is Date/Time Flexible?',
                                choices=[('Yes', 'Yes'), ('No', 'No')])
     priority = RadioField('High priority?',
                           choices=[('Yes', 'Yes'), ('No', 'No')])
-    description = TextAreaField('Short description')
-    service_category = SelectField('Service Category',
-                                   choices=serviceCategories)
-    covidService = SelectField('Service', choices=covidServices)
-    transportationService = SelectField('Service',
-                                        choices=transportationServices)
-    starting_location = StringField('Starting Location')
-    destination = StringField('Destination')
+    description = TextAreaField('Short description (included in email):')
+
+    service_category = QuerySelectField(
+        'Service Category:',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=selectedCategory)
+
+    service =  QuerySelectField(
+        'Service:',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=services)
+
+    starting_location = StringField('Starting Location:')
+    destination = StringField('Destination:')
+
+    special_instructions = TextAreaField('Special Instructions:')
+    follow_up_date = DateField('Follow Up Date:',
+                               validators=[InputRequired()],
+                               format='%Y-%M-%D')
+    status =  QuerySelectField(
+        'Status:',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=statusQuery)
+    responsible_staffer = QuerySelectField(
+        'Responsible Staffer:',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=stafferQuery)
+    contact_log_priority = QuerySelectField(
+        'Contact Log Priority:',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=contactLogQuery)
+    person_to_cc = StringField('Person to Cc:',
+     default = "Enter email address(es) separated by comma")
 
     submit = SubmitField('Save')
     cancel = SubmitField('Cancel')
