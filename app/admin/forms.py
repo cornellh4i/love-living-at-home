@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, ValidationError, widgets
-from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 
 from wtforms.fields import (BooleanField, DateTimeField, IntegerField,
                             PasswordField, RadioField, SelectField, SelectMultipleField,
@@ -9,9 +9,34 @@ from wtforms.fields.html5 import DateField, EmailField, TimeField, IntegerField
 from wtforms.validators import Email, EqualTo, InputRequired, Length, Optional, DataRequired
 
 from app import db
-from app.models import Role, User, ServiceCategory, Service, Staffer, RequestStatus, ContactLogPriorityType, Member
+from app.models import Role, User, ServiceCategory, Service, Staffer, RequestStatus, ContactLogPriorityType, Member, Address, RequestDurationType
 from datetime import date;
 
+serviceCategories = [('Select', 'Select'),
+                     ('Coronavirus Community Support',
+                      'Coronavirus Community Support'),
+                     ('Transportation', 'Transportation')]
+
+covidServices = [('Select', 'Select'), ('General Errands', 'General Errands'),
+                 ('Grocery Shopping', 'Grocery Shopping'),
+                 ('Prescription Pickup', 'Prescription Pickup')]
+
+transportationServices = [
+    ('Select', 'Select'), ('Event Carpool', 'Event Carpool'),
+    ('hack4impact test service', 'hack4impact test service'),
+    ('Long Dist Non-Med Professional', 'Long Dist Non-Med Professional'),
+    ('Long Dist. Med Professional', 'Long Dist Med Professional'),
+    ('Vol Driver Family/Friend Visit', 'Vol Driver Family/Friend Visit'),
+    ('Vol Driver LLH Programs/Events', 'Vol Driver LLH Programs/Events'),
+    ('Vol Driver Local Medical Appt', 'Vol Driver Local Medical Appt'),
+    ('Vol Driver Shopping/Errands', 'Vol Driver Shopping/Errands'),
+    ('Vol Driver Local Bus/Airport', 'Vol Driver Local Bus/Airport'),
+    ('Vol Driver Misc. Trip', 'Vol Driver Misc. Trip')
+]
+
+request_duration_type = []
+# db.session.query(RequestDurationType).order_by('id')
+# request_duration_type = [(t.name, t.name) for t in ]
 
 class ChangeUserEmailForm(FlaskForm):
     email = EmailField('New email',
@@ -121,6 +146,11 @@ class TransportationRequestForm(FlaskForm):
          return db.session.query(Member).order_by()
 
     date_created = StringField('Date Created:', default = date.today,  render_kw={'readonly': True})
+    requesting_member = QuerySelectMultipleField(
+        'Requesting Member',
+        validators=[InputRequired()],
+        get_label='first_name',
+        query_factory=lambda: db.session.query(Member).order_by('first_name'))
     requested_date = DateField('Requested Date',
                                validators=[InputRequired()],
                                format='%Y-%M-%D')
@@ -147,7 +177,6 @@ class TransportationRequestForm(FlaskForm):
         query_factory=services)
 
     starting_location = StringField('Starting Location:')
-    destination = StringField('Destination:')
 
     special_instructions = TextAreaField('Special Instructions:')
     follow_up_date = DateField('Follow Up Date:',
@@ -168,9 +197,16 @@ class TransportationRequestForm(FlaskForm):
         validators=[InputRequired()],
         get_label='name',
         query_factory=contactLogQuery)
-    person_to_cc = StringField('Person to Cc:',
+    person_to_cc = StringField('Person to cc:',
      default = "Enter email address(es) separated by comma")
 
+    destination = QuerySelectField(
+        'Destination:',
+        validators=[InputRequired()],
+        get_label='street_address',
+        query_factory=lambda: db.session.query(Address).order_by('street_address'))
+    duration = RadioField('Duration:',
+                               choices=request_duration_type)
     submit = SubmitField('Save')
     cancel = SubmitField('Cancel')
 
