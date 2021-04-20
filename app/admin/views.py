@@ -240,7 +240,7 @@ def create_transportation_request():
                                          return_pickup_time=form.return_pickup,
                                          drop_off_time=form.drop_off,
                                          is_date_time_flexible=form.time_flexible,
-                                         duration_type_id=form.duration.id,
+                                        #  duration_type_id=form.duration.id,
                                          service_category_id=form.service_category.id,
                                          service_id=form.service.id,
                                          starting_address_id=form.starting_location,
