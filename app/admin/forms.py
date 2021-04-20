@@ -145,23 +145,23 @@ class TransportationRequestForm(FlaskForm):
     def specialInstructionsQuery():
          return db.session.query(Member).order_by()
 
-    date_created = StringField('Date Created:', default = date.today,  render_kw={'readonly': True})
+    date_created = StringField('Date Created:', default = date.today, 
+        render_kw={'readonly': True})
     requesting_member = QuerySelectMultipleField(
         'Requesting Member',
         validators=[InputRequired()],
         get_label='first_name',
         query_factory=lambda: db.session.query(Member).order_by('first_name'))
     requested_date = DateField('Requested Date',
-                               validators=[InputRequired()],
-                               format='%Y-%M-%D')
-    initial_pickup = TimeField('Inital Pickup:', format='%H:%M')
-    appointment = TimeField('Appointment:', format='%H:%M')
+                               validators=[InputRequired()])
+    initial_pickup = TimeField('Inital Pickup:', format='%H:%M',
+        validators=[InputRequired()])
+    appointment = TimeField('Appointment:', format='%H:%M', 
+    validators=[InputRequired()])
     return_pickup = TimeField('Return Pickup:', format='%H:%M')
     drop_off = TimeField('Drop Off:', format='%H:%M')
     time_flexible = RadioField('Is Date/Time Flexible?',
                                choices=[('Yes', 'Yes'), ('No', 'No')])
-    priority = RadioField('High priority?',
-                          choices=[('Yes', 'Yes'), ('No', 'No')])
     description = TextAreaField('Short description (included in email):')
 
     service_category = QuerySelectField(
@@ -180,35 +180,30 @@ class TransportationRequestForm(FlaskForm):
 
     special_instructions = TextAreaField('Special Instructions:')
     follow_up_date = DateField('Follow Up Date:',
-                               validators=[InputRequired()],
-                               format='%Y-%M-%D')
+                               validators=[InputRequired()])
     status =  QuerySelectField(
         'Status:',
         validators=[InputRequired()],
         get_label='name',
         query_factory=statusQuery)
-    responsible_staffer = QuerySelectField(
-        'Responsible Staffer:',
-        validators=[InputRequired()],
-        get_label='name',
-        query_factory=stafferQuery)
+    responsible_staffer = SelectField('Responsible Staffer:', choices = [('yes', 'yes')])
     contact_log_priority = QuerySelectField(
         'Contact Log Priority:',
         validators=[InputRequired()],
         get_label='name',
         query_factory=contactLogQuery)
-    person_to_cc = StringField('Person to cc:',
-     default = "Enter email address(es) separated by comma")
-
+    
+    person_to_cc = EmailField('Person to cc',
+                       validators=[Length(0, 64),
+                                   Email(), Optional()])
     destination = QuerySelectField(
         'Destination:',
         validators=[InputRequired()],
         get_label='street_address',
         query_factory=lambda: db.session.query(Address).order_by('street_address'))
-    duration = RadioField('Duration:',
-                               choices=request_duration_type)
-    submit = SubmitField('Save')
-    cancel = SubmitField('Cancel')
+    # duration = RadioField('Duration:',
+    #                            choices=request_duration_type)
+    submit = SubmitField("Submit")
 
 
 class MultiCheckboxField(SelectMultipleField):

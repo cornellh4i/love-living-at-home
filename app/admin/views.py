@@ -223,10 +223,15 @@ def create_request():
 
 
 # Create a new Transportation service request.
-@admin.route('/create-request/transportation-request', methods=['GET', 'POST'])
+@admin.route('/create-request/transportation-request', methods=['Get', 'POST'])
 @admin_required
 def create_transportation_request():
     form = TransportationRequestForm()
+    if form.validate_on_submit():
+        flash('Request submitted!', 'form-success')
+        return redirect(url_for('admin.index'))
+    else:
+        flash(form.errors, 'error')
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
                            form=form)

@@ -24,9 +24,12 @@
     <div class="ui two column stackable grid">
       <div class="six wide column">
         {{ f.render_form_field(form.date_created) }}
-        {{ f.render_form_field(form.requesting_member)}}
       </div>
     </div>
+  </div>
+
+  <div class="twelve wide column">
+    {{ f.render_form_field(form.requesting_member)}}
   </div>
 
   <div class="twelve wide column">
