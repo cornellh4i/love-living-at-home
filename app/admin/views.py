@@ -11,7 +11,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              VolunteerManager, SearchRequestForm)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User
+from app.models import EditableHTML, Role, User, Request, service_category
 
 admin = Blueprint('admin', __name__)
 
@@ -227,6 +227,36 @@ def create_request():
 @admin_required
 def create_transportation_request():
     form = TransportationRequestForm()
+    if form.validate_on_submit():
+        transportation_request = Request(type_id=form.categoryId,
+                                         status_id=form.status.id,
+                                         #update later to short description
+                                         short_description=form.description,
+                                         created_date=form.date_created,
+                                         # modified_date=,
+                                         requested_date=form.requested_date,
+                                         initial_pickup_time=form.initial_pickup,
+                                         appointment_time=form.appointment,
+                                         return_pickup_time=form.return_pickup,
+                                         drop_off_time=form.drop_off,
+                                         is_date_time_flexible=form.time_flexible,
+                                         duration_type_id=form.duration.id,
+                                         service_category_id=form.service_category.id,
+                                         service_id=form.service.id,
+                                         starting_address_id=form.starting_location,
+                                         destination_address_id=form.destination.id,
+                                         # Will be updated in the future for multiple ppl
+                                         requesting_member_id=form.requesting_member[0].id,
+                                         special_instructions=form.special_instructions,
+                                         followup_date=form.follow_up_date,
+                                         responsible_staffer_id=form.responsible_staffer.id,
+                                         contact_log_priority_id=form.contact_log_priority.id,
+                                         cc_email=form.person_to_cc)
+        db.session.add(transportation_request)
+        db.session.commit()
+        flash(
+            'Successfully submitted a new transportation request', 
+            'form-success')
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
                            form=form)
