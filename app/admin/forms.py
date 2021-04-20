@@ -93,25 +93,26 @@ class NewUserForm(InviteUserForm):
 
 class SearchRequestForm(FlaskForm):
 
-    request_type = SelectMultipleField('Request Type', choices = [ (0,'Transportation Request'), 
-    (1,'Member\'s Home Request'), (2, 'Office Time Request')], validators = [DataRequired()])
+    request_type = SelectMultipleField('Request Type', choices=[(0, 'Transportation Request'),
+                                                                (1, 'Member\'s Home Request'), (2, 'Office Time Request')], validators=[DataRequired()])
 
+    request_status = SelectMultipleField('Request Status', choices=[(0, 'Requested'), (
+        1, 'Confirmed'), (2, 'Completed'), (3, 'Cancelled')], validators=[DataRequired()])
 
-    request_status = SelectMultipleField('Request Status', choices = 
-    [(0, 'Requested'), (1, 'Confirmed'), (2, 'Completed'), (3, 'Cancelled')], validators = [DataRequired()])
+    service_category = SelectMultipleField('Service Category', choices=[(0, 'COVID Community Support'), (1, 'Professional Home/Garden Service'),
+                                                                        (2, 'Professional In-Home Support'), (3, 'Technical Support'),
+                                                                        (4, 'Transportation'), (5, 'Village Admin'), (
+                                                                            6, 'Volunteer Home/Garden Service'),
+                                                                        (7, 'Volunteer In-Home Support')], validators=[DataRequired()])
 
-    service_category = SelectMultipleField('Service Category', choices =
-    [(0, 'COVID Community Support'), (1, 'Professional Home/Garden Service'),
-    (2, 'Professional In-Home Support'), (3, 'Technical Support'), 
-    (4, 'Transportation'), (5, 'Village Admin'), (6, 'Volunteer Home/Garden Service'),
-    (7, 'Volunteer In-Home Support')], validators = [DataRequired()])
+    provider_type = SelectMultipleField('Provider Type', choices=[(
+        0, 'Non-Member Volunteer'), (1, 'Member Volunteer'), (2, 'Contractor')], validators=[DataRequired()])
 
-    provider_type = SelectMultipleField('Provider Type', choices = 
-    [(0, 'Non-Member Volunteer'), (1, 'Member Volunteer'), (2, 'Contractor')], validators = [DataRequired()])
+    requesting_member = SelectField('Requesting Member', choices=[(
+        0, 'Nat Peuly'), (1, 'Sohni Uthra')], validators=[DataRequired()])
 
-    requesting_member = SelectField('Requesting Member', choices = [(0, 'Nat Peuly'), (1, 'Sohni Uthra')], validators=[DataRequired()])
-
-    service_provider = SelectField('Service Provider', choices = [(0, 'Nat Peuly'), (1, 'Sohni Uthra')], validators=[DataRequired()])
+    service_provider = SelectField('Service Provider', choices=[(
+        0, 'Nat Peuly'), (1, 'Sohni Uthra')], validators=[DataRequired()])
 
     # """service_req_from = IntegerField('Service Req # from', default=0)
     # service_req_to = IntegerField('to', default=0)
@@ -122,7 +123,7 @@ class SearchRequestForm(FlaskForm):
     # search = SubmitField('Search')
     # reset = SubmitField('Reset')"""
 
-    
+
 class TransportationRequestForm(FlaskForm):
     date_created = DateField('Date Created',
                              format='%Y-%M-%D',
@@ -157,12 +158,12 @@ class MultiCheckboxField(SelectMultipleField):
 
 
 class MemberManager(FlaskForm):
-    first_name = StringField('First name',
+    first_name = StringField('First name *', 
                              validators=[InputRequired(),
                                          Length(1, 64)])
     middle_initial = StringField('Middle Initial',
                                  validators=[Length(min=0, max=1)])
-    last_name = StringField('Last name',
+    last_name = StringField('Last name *',
                             validators=[InputRequired(),
                                         Length(1, 64)])
     preferred_name = StringField(
@@ -172,7 +173,7 @@ class MemberManager(FlaskForm):
                    ("mr", "Mr")]
     salutation = SelectField("Salutation", choices=salutations)
 
-    pronoun = StringField("Pronoun",
+    pronoun = StringField("Pronoun *", 
                           validators=[InputRequired(),
                                       Length(min=1, max=30)])
 
@@ -211,13 +212,13 @@ class MemberManager(FlaskForm):
                                      validators=[Optional(),
                                                  Length(max=200)])
     secondary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
-                                     validators=[Optional(),
-                                                 Length(max=200)])
+        validators=[Optional(),
+                    Length(max=200)])
     secondary_city = StringField('City',
                                  validators=[Optional(),
                                              Length(max=200)])
     secondary_state = SelectField('State', choices=states)
-    secondary_zip_code = TextAreaField('Zip Code',
+    secondary_zip_code = StringField('Zip Code',
                                        validators=[Optional(),
                                                    Length(max=45)])
     secondary_metro_area = SelectField('Metro Area',
@@ -228,8 +229,8 @@ class MemberManager(FlaskForm):
                                    validators=[Optional()])
 
     home_phone_number = IntegerField('Home Phone #',
-                                widget=widgets.Input(input_type="tel"),
-                                validators=[Optional()])
+                                     widget=widgets.Input(input_type="tel"),
+                                     validators=[Optional()])
     cell_number = IntegerField('Cell Phone Number',
                                widget=widgets.Input(input_type="tel"),
                                validators=[Optional()])
@@ -329,32 +330,36 @@ class VolunteerManager(FlaskForm):
 
     submit = SubmitField("Submit")
 
+
 class AddServiceVetting(FlaskForm):
     vetting_types = [("none", "Select"), ("a", "a"), ("b", "b")]
     vetting_users = [("cheryl", "Cheryl"), ("a", "a"), ("b", "b")]
     vetting_type = SelectField('Type: ',
-                                     choices=vetting_types,
-                                     validators=[Optional()])
-    vetting_date = StringField("Date: ", validators=[Optional()])
-    vetting_expiration = StringField("Date Expired: ", validators=[Optional()])
-    vetting_additional_data = TextAreaField("Additional Data: ", validators=[Optional()])
+                               choices=vetting_types,
+                               validators=[InputRequired()])
+    vetting_date = DateField("Date: ", validators=[InputRequired()])
+    vetting_expiration = DateField("Date Expired: ", validators=[
+                                   InputRequired()], format='%Y-%M-%D')
+    vetting_additional_data = TextAreaField("Additional Data: ", validators=[
+                                            InputRequired()], format='%Y-%M-%D')
     vetting_notes = TextAreaField("Notes: ", validators=[Optional()])
     vetting_who_entered = SelectField('Who Entered: ',
-                                     choices=vetting_users,
-                                     validators=[Optional()])
+                                      choices=vetting_users,
+                                      validators=[InputRequired()])
     submit = SubmitField("Save")
+
 
 class IsFullyVetted(FlaskForm):
     volunteer_fully_vetted_checkbox = BooleanField(
         'Check this box to confirm that this volunteer has been fully vetted',
-        validators=[Optional()])
+        validators=[InputRequired()])
     vetting_users = [("cheryl", "Cheryl"), ("a", "a"), ("b", "b")]
     vetting_who_entered = SelectField('Who Entered: ',
-                                     choices=vetting_users,
-                                     validators=[Optional()])
+                                      choices=vetting_users,
+                                      validators=[InputRequired()])
     submit = SubmitField("Save")
 
-    
+
 class ContractorManager(FlaskForm):
     organization_name = StringField(
         'Organization Name',
