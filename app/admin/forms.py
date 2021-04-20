@@ -11,7 +11,7 @@ from wtforms.fields.html5 import DateField, EmailField, TimeField, IntegerField
 from wtforms.validators import Email, EqualTo, InputRequired, Length, Optional, DataRequired
 
 from app import db
-from app.models import Role, User
+from app.models import Role, User, ServiceCategory, Service
 
 serviceCategories = [('Select', 'Select'),
                      ('Coronavirus Community Support',
@@ -304,10 +304,12 @@ class VolunteerManager(FlaskForm):
                                    Email()])
 
     # What is another way to say Services willing to do
-    files = [("alarm", "Alarm/Locks/Security"),
-             ("bill", "Bill Paying/Paperwork"), ("auto", "Auto Repair"),
-             ("remote", "Coronavirus Remote Assistance")]
-    services = MultiCheckboxField('Services willing to do', choices=files)
+    # files = [("alarm", "Alarm/Locks/Security"),
+    #          ("bill", "Bill Paying/Paperwork"), ("auto", "Auto Repair"),
+    #          ("remote", "Coronavirus Remote Assistance")]
+    service_categories = ServiceCategory.get_categories()
+    services = Service.get_services()
+    # services = MultiCheckboxField('Services willing to do', choices=files)
     times = [("morning 8-11", "Morning 8-11"),
              ("morning 11-2", "Lunchtime 11-2"),
              ("afternoon 2-5", "Afternoon 2-5"),

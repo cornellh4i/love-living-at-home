@@ -79,28 +79,24 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     Services Provided By
   </div>
   <div class="ui styled fluid accordion">
+    {% for category in form.service_categories %}
     <div class="title">
       <i class="dropdown icon"></i>
-      Name of Category
+      {{ category[1] }}
     </div>
     <div class="content">
-      <p class="transition hidden">A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.</p>
+      {% for service in form.services %}
+        {% if service[2] == category[0] %}
+        <div class="transition hidden">
+        <div class="ui checkbox">
+          <input type="checkbox" name="example">
+          <label>{{ service[1] }}</label>
+        </div>
+      </div>
+        {% endif %}
+      {% endfor %}
     </div>
-    <div class="title">
-      <i class="dropdown icon"></i>
-      Name of Category
-    </div>
-    <div class="content">
-      <p class="transition hidden">There are many breeds of dogs. Each breed varies in size and temperament. Owners often select a breed of dog that they find to be compatible with their own lifestyle and desires from a companion.</p>
-    </div>
-    <div class="title">
-      <i class="dropdown icon"></i>
-      Name of Category
-    </div>
-    <div class="content">
-      <p class="transition hidden">Three common ways for a prospective owner to acquire a dog is from pet shops, private owners, or shelters.</p>
-      <p class="transition hidden">A pet shop may be the most convenient way to buy a dog. Buying a dog from a private owner allows you to assess the pedigree and upbringing of your dog before choosing to take it home. Lastly, finding your dog from a shelter, helps give a good home to a dog who may not find one so readily.</p>
-    </div>
+    {% endfor %}
   </div>
 </div>
 
