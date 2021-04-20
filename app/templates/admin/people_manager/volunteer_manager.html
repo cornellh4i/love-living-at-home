@@ -40,7 +40,10 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     {{ f.render_form_field(form.primary_address1) }}
     {{ f.render_form_field(form.home_phone) }}
     {{ f.render_form_field(form.email) }}
-    {{ f.render_form_field(form.services) }}
+
+    <div class = "field">
+      <button class = "ui button" id = "show-services">Services</button>
+    </div>
 
     <div class="two fields">
       {{ f.render_form_field(form.availability_day) }}
@@ -48,7 +51,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     </div>
 
     <div class = "field">
-      <button class = "ui button" id = "vettings">Vettings</button>
+      <button class = "ui button" id = "show-vettings">Vettings</button>
     </div>
     
     {{f.render_form_field(form.notes)}}
@@ -69,7 +72,39 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   </div>
 </div>
 
-<div class="ui modal">
+
+<div class="ui modal" id = "services">
+  <i class="close icon"></i>
+  <div class="header">
+    Services Provided By
+  </div>
+  <div class="ui styled fluid accordion">
+    <div class="title">
+      <i class="dropdown icon"></i>
+      Name of Category
+    </div>
+    <div class="content">
+      <p class="transition hidden">A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.</p>
+    </div>
+    <div class="title">
+      <i class="dropdown icon"></i>
+      Name of Category
+    </div>
+    <div class="content">
+      <p class="transition hidden">There are many breeds of dogs. Each breed varies in size and temperament. Owners often select a breed of dog that they find to be compatible with their own lifestyle and desires from a companion.</p>
+    </div>
+    <div class="title">
+      <i class="dropdown icon"></i>
+      Name of Category
+    </div>
+    <div class="content">
+      <p class="transition hidden">Three common ways for a prospective owner to acquire a dog is from pet shops, private owners, or shelters.</p>
+      <p class="transition hidden">A pet shop may be the most convenient way to buy a dog. Buying a dog from a private owner allows you to assess the pedigree and upbringing of your dog before choosing to take it home. Lastly, finding your dog from a shelter, helps give a good home to a dog who may not find one so readily.</p>
+    </div>
+  </div>
+</div>
+
+<div class="ui modal" id = "vettings">
   <i class="close icon"></i>
   <div class="header">
     Vettings
@@ -144,8 +179,15 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 </div>
 
 <script>
-  $('#vettings').click(function(){
-    $('.ui.modal').modal('show');
+  $('#show-services').click(function(){
+    $('#services').modal('show');
+  });
+
+  $('.ui.accordion')
+  .accordion({'exclusive': false});
+
+  $('#show-vettings').click(function(){
+    $('#vettings').modal('show');
   });
 
   $('#context1 .menu .item')

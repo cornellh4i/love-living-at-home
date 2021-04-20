@@ -158,7 +158,7 @@ class MultiCheckboxField(SelectMultipleField):
 
 
 class MemberManager(FlaskForm):
-    first_name = StringField('First name *', 
+    first_name = StringField('First name *',
                              validators=[InputRequired(),
                                          Length(1, 64)])
     middle_initial = StringField('Middle Initial',
@@ -173,7 +173,7 @@ class MemberManager(FlaskForm):
                    ("mr", "Mr")]
     salutation = SelectField("Salutation", choices=salutations)
 
-    pronoun = StringField("Pronoun *", 
+    pronoun = StringField("Pronoun *",
                           validators=[InputRequired(),
                                       Length(min=1, max=30)])
 
@@ -212,15 +212,15 @@ class MemberManager(FlaskForm):
                                      validators=[Optional(),
                                                  Length(max=200)])
     secondary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
-        validators=[Optional(),
-                    Length(max=200)])
+                                     validators=[Optional(),
+                                                 Length(max=200)])
     secondary_city = StringField('City',
                                  validators=[Optional(),
                                              Length(max=200)])
     secondary_state = SelectField('State', choices=states)
     secondary_zip_code = StringField('Zip Code',
-                                       validators=[Optional(),
-                                                   Length(max=45)])
+                                     validators=[Optional(),
+                                                 Length(max=45)])
     secondary_metro_area = SelectField('Metro Area',
                                        choices=metro_areas,
                                        validators=[Optional()])
@@ -337,11 +337,12 @@ class AddServiceVetting(FlaskForm):
     vetting_type = SelectField('Type: ',
                                choices=vetting_types,
                                validators=[InputRequired()])
-    vetting_date = DateField("Date: ", validators=[InputRequired()])
-    vetting_expiration = DateField("Date Expired: ", validators=[
-                                   InputRequired()], format='%Y-%M-%D')
+    vetting_date = DateField("Date: ", validators=[InputRequired()],format='%Y-%M-%D')
+    vetting_expiration = DateField('Date Expired: ',
+                                   validators=[InputRequired()],
+                                   format='%Y-%M-%D')
     vetting_additional_data = TextAreaField("Additional Data: ", validators=[
-                                            InputRequired()], format='%Y-%M-%D')
+                                            InputRequired()])
     vetting_notes = TextAreaField("Notes: ", validators=[Optional()])
     vetting_who_entered = SelectField('Who Entered: ',
                                       choices=vetting_users,
