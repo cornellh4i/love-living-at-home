@@ -229,7 +229,7 @@ def create_transportation_request():
     form = TransportationRequestForm()
     if form.validate_on_submit():
         transportation_request = Request(type_id=form.categoryId,
-                                         status_id=form.status.id,
+                                         status_id=form.status.data.id,
                                          #update later to short description
                                          short_description=form.description,
                                          created_date=form.date_created,
@@ -240,17 +240,17 @@ def create_transportation_request():
                                          return_pickup_time=form.return_pickup,
                                          drop_off_time=form.drop_off,
                                          is_date_time_flexible=form.time_flexible,
-                                         duration_type_id=form.duration.id,
-                                         service_category_id=form.service_category.id,
-                                         service_id=form.service.id,
+                                         duration_type_id=form.duration.data.id,
+                                         service_category_id=form.service_category.data.id,
+                                         service_id=form.service.data.id,
                                          starting_address_id=form.starting_location,
-                                         destination_address_id=form.destination.id,
+                                         destination_address_id=form.destination.data.id,
                                          # Will be updated in the future for multiple ppl
-                                         requesting_member_id=form.requesting_member[0].id,
+                                         requesting_member_id=form.requesting_member.data[0].id,
                                          special_instructions=form.special_instructions,
                                          followup_date=form.follow_up_date,
-                                         responsible_staffer_id=form.responsible_staffer.id,
-                                         contact_log_priority_id=form.contact_log_priority.id,
+                                         responsible_staffer_id=form.responsible_staffer.data.id,
+                                         contact_log_priority_id=form.contact_log_priority.data.id,
                                          cc_email=form.person_to_cc)
         db.session.add(transportation_request)
         db.session.commit()
