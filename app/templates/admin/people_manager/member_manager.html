@@ -28,38 +28,55 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     {{ f.form_message(flashes['success'], header='Success!', class='success') }}
 
 
-    {{ f.render_form_field(form.first_name) }}
+    {{ f.render_form_field(form.first_name) }} *
     {{ f.render_form_field(form.middle_initial) }}
-    {{ f.render_form_field(form.last_name) }}
+    {{ f.render_form_field(form.last_name) }} *
     {{ f.render_form_field(form.preferred_name) }}
     {{ f.render_form_field(form.salutation) }}
-    {{ f.render_form_field(form.pronoun) }}
+    {{ f.render_form_field(form.pronoun) }} *
 
     <div class="ui header">Primary Address</div>
-    {{ f.render_form_field(form.primary_country) }}
     {{ f.render_form_field(form.primary_address1) }}
     {{ f.render_form_field(form.primary_address2) }}
-    {{ f.render_form_field(form.primary_city) }}
-    {{ f.render_form_field(form.primary_state) }}
-    {{ f.render_form_field(form.primary_zip_code) }}
-    {{ f.render_form_field(form.primary_time_zone) }}
+
+    <div class = "fields">
+      <div class = "field">
+        {{ f.render_form_field(form.primary_city) }}
+      </div>
+      <div class = "field">
+        {{ f.render_form_field(form.primary_state) }}
+      </div>
+      <div class = "field">
+        {{ f.render_form_field(form.primary_zip_code) }}
+      </div>
+    </div>
+    {{ f.render_form_field(form.primary_country) }}
     {{ f.render_form_field(form.primary_metro_area) }}
     {{ f.render_form_field(form.primary_phone) }}
 
     <div class="ui header">Secondary Address</div>
     {{ f.render_form_field(form.secondary_as_primary_checkbox) }}
-    {{ f.render_form_field(form.secondary_country) }}
     {{ f.render_form_field(form.secondary_address1) }}
     {{ f.render_form_field(form.secondary_address2) }}
-    {{ f.render_form_field(form.secondary_city) }}
-    {{ f.render_form_field(form.secondary_state) }}
-    {{ f.render_form_field(form.secondary_zip_code) }}
-    {{ f.render_form_field(form.secondary_time_zone) }}
+
+    <div class = "fields">
+      <div class = "field">
+        {{ f.render_form_field(form.secondary_city) }}
+      </div>
+      <div class = "field">
+        {{ f.render_form_field(form.secondary_state) }}
+      </div>
+      <div class = "field">
+        {{ f.render_form_field(form.secondary_zip_code) }}
+      </div>
+    </div>
+
+    {{ f.render_form_field(form.secondary_country) }}
     {{ f.render_form_field(form.secondary_metro_area) }}
     {{ f.render_form_field(form.secondary_phone) }}
 
     <div class="ui header">Contact Information</div>
-    {{ f.render_form_field(form.phone_number) }}
+    {{ f.render_form_field(form.home_phone_number) }}
     {{ f.render_form_field(form.cell_number) }}
     {{ f.render_form_field(form.email) }}
 

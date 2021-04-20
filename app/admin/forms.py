@@ -183,10 +183,10 @@ class MemberManager(FlaskForm):
     metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
 
     primary_country = SelectField('Country', choices=countries)
-    primary_address1 = StringField('Address 1',
+    primary_address1 = StringField('Street address or P.O. Box',
                                    validators=[Optional(),
                                                Length(max=200)])
-    primary_address2 = StringField('Address 2',
+    primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
                                    validators=[Optional(),
                                                Length(max=200)])
     primary_city = StringField('City',
@@ -196,9 +196,6 @@ class MemberManager(FlaskForm):
     primary_zip_code = StringField('Zip Code',
                                    validators=[Optional(),
                                                Length(max=45)])
-    primary_time_zone = SelectField('Timezone',
-                                    choices=time_zones,
-                                    validators=[Optional()])
     primary_metro_area = SelectField('Metro Area',
                                      choices=metro_areas,
                                      validators=[Optional()])
@@ -210,10 +207,10 @@ class MemberManager(FlaskForm):
         'Use this address instead of the primary address',
         validators=[Optional()])
     secondary_country = SelectField('Country', choices=countries)
-    secondary_address1 = StringField('Address 1',
+    secondary_address1 = StringField('Street address or P.O. Box',
                                      validators=[Optional(),
                                                  Length(max=200)])
-    secondary_address2 = StringField('Address 2',
+    secondary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
                                      validators=[Optional(),
                                                  Length(max=200)])
     secondary_city = StringField('City',
@@ -223,9 +220,6 @@ class MemberManager(FlaskForm):
     secondary_zip_code = TextAreaField('Zip Code',
                                        validators=[Optional(),
                                                    Length(max=45)])
-    secondary_time_zone = SelectField('Timezone',
-                                      choices=time_zones,
-                                      validators=[Optional()])
     secondary_metro_area = SelectField('Metro Area',
                                        choices=metro_areas,
                                        validators=[Optional()])
@@ -233,7 +227,7 @@ class MemberManager(FlaskForm):
                                    widget=widgets.Input(input_type="tel"),
                                    validators=[Optional()])
 
-    phone_number = IntegerField('Phone Number',
+    home_phone_number = IntegerField('Home Phone #',
                                 widget=widgets.Input(input_type="tel"),
                                 validators=[Optional()])
     cell_number = IntegerField('Cell Phone Number',
