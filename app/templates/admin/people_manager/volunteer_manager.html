@@ -47,7 +47,10 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
       {{ f.render_form_field(form.availability_time) }}
     </div>
 
-    {{f.render_form_field(form.vettings)}}
+    <div class = "field">
+      <button class = "ui button" id = "vettings">Vettings</button>
+    </div>
+    
     {{f.render_form_field(form.notes)}}
 
     {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
@@ -65,4 +68,89 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     {% endif %}
   </div>
 </div>
+
+<div class="ui modal">
+  <i class="close icon"></i>
+  <div class="header">
+    Vettings
+  </div>
+  <div id="context1">
+    <div class="ui two item menu">
+      <a class="item active" data-tab="first">Add Service Vetting</a>
+      <a class="item" data-tab="second">Is Fully Vetted</a>
+    </div>
+    <div class="ui active tab segment" data-tab="first">
+      <div>
+        <h3 class="header">
+          Add Service Vetting
+        </h3>
+    
+        {% set flashes = {
+        'error': get_flashed_messages(category_filter=['form-error']),
+        'warning': get_flashed_messages(category_filter=['form-check-email']),
+        'info': get_flashed_messages(category_filter=['form-info']),
+        'success': get_flashed_messages(category_filter=['form-success'])
+        } %}
+    
+        {{ f.begin_form(add_vetting, flashes) }}
+    
+        {{ f.render_form_field(add_vetting.vetting_type) }}
+        <div class="two fields">
+          {{ f.render_form_field(add_vetting.vetting_date) }}
+          {{ f.render_form_field(add_vetting.vetting_expiration) }}
+        </div>
+        {{f.render_form_field(add_vetting.vetting_additional_data)}}
+        {{f.render_form_field(add_vetting.vetting_notes)}}
+    
+        {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+        {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+        {{ f.form_message(flashes['info'], header='Information', class='info') }}
+        {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+    
+        {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
+        {{ f.render_form_field(add_vetting.submit) }}
+        {% endfor %}
+        {{ f.end_form() }}
+      </div>
+    </div>
+    <div class="ui tab segment" data-tab="second">
+      <div>
+        <h3 class="header">
+          Is Fully Vetted
+        </h3>
+        {% set flashes = {
+        'error': get_flashed_messages(category_filter=['form-error']),
+        'warning': get_flashed_messages(category_filter=['form-check-email']),
+        'info': get_flashed_messages(category_filter=['form-info']),
+        'success': get_flashed_messages(category_filter=['form-success'])
+        } %}
+    
+        {{ f.begin_form(is_fully_vetted, flashes) }}
+    
+        {{ f.render_form_field(is_fully_vetted.volunteer_fully_vetted_checkbox) }}
+        {{ f.render_form_field(is_fully_vetted.vetting_who_entered) }}
+    
+        {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+        {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+        {{ f.form_message(flashes['info'], header='Information', class='info') }}
+        {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+        {{ f.render_form_field(is_fully_vetted.submit) }}
+    
+        {{ f.end_form() }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $('#vettings').click(function(){
+    $('.ui.modal').modal('show');
+  });
+
+  $('#context1 .menu .item')
+  .tab({
+    context: $('#context1')
+  });
+</script>
 {% endblock %}

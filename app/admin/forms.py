@@ -318,8 +318,6 @@ class VolunteerManager(FlaskForm):
             ("friday", "Friday"), ("saturday", "Saturday"),
             ("sunday", "Sunday")]
     availability_day = MultiCheckboxField('Availability Day', choices=days)
-    vettings = TextAreaField("Vettings", validators=[Optional()])
-
     # make a history of completed and pending services
     notes = TextAreaField("Notes for Office Staff", validators=[Optional()])
 
@@ -331,7 +329,32 @@ class VolunteerManager(FlaskForm):
 
     submit = SubmitField("Submit")
 
+class AddServiceVetting(FlaskForm):
+    vetting_types = [("none", "Select"), ("a", "a"), ("b", "b")]
+    vetting_users = [("cheryl", "Cheryl"), ("a", "a"), ("b", "b")]
+    vetting_type = SelectField('Type: ',
+                                     choices=vetting_types,
+                                     validators=[Optional()])
+    vetting_date = StringField("Date: ", validators=[Optional()])
+    vetting_expiration = StringField("Date Expired: ", validators=[Optional()])
+    vetting_additional_data = TextAreaField("Additional Data: ", validators=[Optional()])
+    vetting_notes = TextAreaField("Notes: ", validators=[Optional()])
+    vetting_who_entered = SelectField('Who Entered: ',
+                                     choices=vetting_users,
+                                     validators=[Optional()])
+    submit = SubmitField("Save")
 
+class IsFullyVetted(FlaskForm):
+    volunteer_fully_vetted_checkbox = BooleanField(
+        'Check this box to confirm that this volunteer has been fully vetted',
+        validators=[Optional()])
+    vetting_users = [("cheryl", "Cheryl"), ("a", "a"), ("b", "b")]
+    vetting_who_entered = SelectField('Who Entered: ',
+                                     choices=vetting_users,
+                                     validators=[Optional()])
+    submit = SubmitField("Save")
+
+    
 class ContractorManager(FlaskForm):
     organization_name = StringField(
         'Organization Name',

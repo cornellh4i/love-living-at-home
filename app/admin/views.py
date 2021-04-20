@@ -8,7 +8,8 @@ from app import db
 from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              ContractorManager, InviteUserForm, MemberManager,
                              NewUserForm, TransportationRequestForm,
-                             VolunteerManager, SearchRequestForm)
+                             VolunteerManager, SearchRequestForm, AddServiceVetting,
+                             IsFullyVetted)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import EditableHTML, Role, User
@@ -207,12 +208,13 @@ def update_editor_contents():
 
     return 'OK', 200
 
-@admin.route('/search-request', methods=['POST','GET'])
+
+@admin.route('/search-request', methods=['POST', 'GET'])
 @login_required
 @admin_required
 def search_request():
     form = SearchRequestForm()
-    return render_template('admin/request_manager/search_request.html', title = 'Search Request', form = form)
+    return render_template('admin/request_manager/search_request.html', title='Search Request', form=form)
 
 
 # Create a new service request.
@@ -250,10 +252,13 @@ def invite_member():
 def invite_volunteer():
     """Invites a user to create a volunteer account"""
     form = VolunteerManager()
+    add_vetting = AddServiceVetting()
+    is_fully_vetted = IsFullyVetted()
     if form.validate_on_submit():
         flash('Volunteer {} successfully invited'.format(form.first_name.data),
               'form-success')
-    return render_template('admin/people_manager/volunteer_manager.html', form=form)
+    return render_template('admin/people_manager/volunteer_manager.html',
+                           form=form, add_vetting=add_vetting, is_fully_vetted=is_fully_vetted)
 
 
 @admin.route('/invite-contractor', methods=['GET', 'POST'])
