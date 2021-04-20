@@ -23,16 +23,16 @@ class Request(db.Model):
                                nullable=False,
                                default=datetime.utcnow().date())
     # Time Info
-    initial_pickup_time = db.Column(db.DateTime,
+    initial_pickup_time = db.Column(db.Time,
                                     nullable=False,
                                     default=datetime.utcnow().time())
-    appointment_time = db.Column(db.DateTime,
+    appointment_time = db.Column(db.Time,
                                  nullable=False,
                                  default=datetime.utcnow().time())
-    return_pickup_time = db.Column(db.DateTime,
+    return_pickup_time = db.Column(db.Time,
                                    nullable=False,
                                    default=datetime.utcnow().time())
-    drop_off_time = db.Column(db.DateTime,
+    drop_off_time = db.Column(db.Time,
                               nullable=False,
                               default=datetime.utcnow().time())
     is_date_time_flexible = db.Column(db.Boolean, nullable=False)

@@ -145,7 +145,7 @@ class TransportationRequestForm(FlaskForm):
     def specialInstructionsQuery():
          return db.session.query(Member).order_by()
 
-    date_created = StringField('Date Created:', default = date.today, 
+    date_created = DateField('Date Created:', default = date.today, 
         render_kw={'readonly': True})
     requesting_member = QuerySelectMultipleField(
         'Requesting Member',
