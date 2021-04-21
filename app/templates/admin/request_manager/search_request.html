@@ -141,7 +141,7 @@
               <div class="container__triangle container__triangle--left"></div>
             </button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <select class="ui dropdown" id="timePeriod">
+            <select class="ui dropdown" id="timePeriod" name="timePeriod">
               <option value="">Nothing Selected</option>
               {% for choice in form.time_period.choices %}
               <option value={{ choice[0] }}>{{choice[1]}}</option>
@@ -156,50 +156,50 @@
           </div>
           
           <script text="text/javascript">
-          $(document).ready( function() {
-          
-            var e = document.getElementById("timePeriod");
-            var strUser = e.value;
-            if (strUser == 0){
-              var date = new Date();
-              var start_date = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate(); 
-              var end_date = start_date;
-            } else if (strUser == 1) {
-              var curr = new Date; // get current date
-              var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
-              var last = first + 6;
-              var start_date = first.getFullYear()+'-'+(first.getMonth()+1)+'-'+first.getDate() ;
-              var end_date = last.getFullYear()+'-'+(last.getMonth()+1)+'-'+last.getDate() ;
-            } else if (strUser == 2) {
-              var date = new Date();
-              var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-              var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-              var start_date = firstDay.getFullYear()+'-'+(firstDay.getMonth()+1)+'-'+firstDay.getDate();
-              var end_date = lastDay.getFullYear()+'-'+(lastDay.getMonth()+1)+'-'+lastDay.getDate();
-            } else if (strUser == 3) {
-              var today = new Date();
-              var tomorrow = new Date(today);
-              tomorrow.setDate(tomorrow.getDate() + 1);
-              var start_date = (tomorrow.getMonth()+1)+'/'+tomorrow.getDate()+'/'+ tomorrow.getFullYear();
-              var end_date = start_date;
-            } else {
-              var date = new Date();
-              var start_date = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate(); 
-              var end_date = start_date;
+          $("select[name = timePeriod]").on("change", function() {  
+            var date = new Date();
+            var start_date;             
+            var end_date;                            
+            
+            switch ($(this).val()){
+              case '0':                                        
+                var start_date = date.getFullYear()+'-'+("0"+(date.getMonth()+1)).slice(-2)+'-'+("0"+date.getDate()).slice(-2); 
+                var end_date = start_date;
+                break;          
+              case '1':
+                var first = date.getDate() - date.getDay() + 1; // First day is the day of the month - the day of the week
+                var last = first + 6;
+                var firstDay =  new Date(date.setDate(first));
+                var lastDay = new Date(date.setDate(last));      
+                var start_date = firstDay.getFullYear()+'-'+("0"+(firstDay.getMonth()+1)).slice(-2)+'-'+("0"+firstDay.getDate()).slice(-2);
+                var end_date = lastDay.getFullYear()+'-'+("0"+(lastDay.getMonth()+1)).slice(-2)+'-'+("0"+lastDay.getDate()).slice(-2);
+                break;
+              case '2':
+                var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+                var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+                var start_date = firstDay.getFullYear()+'-'+("0"+(firstDay.getMonth()+1)).slice(-2)+'-'+("0"+firstDay.getDate()).slice(-2);
+                var end_date = lastDay.getFullYear()+'-'+("0"+(lastDay.getMonth()+1)).slice(-2)+'-'+("0"+lastDay.getDate()).slice(-2);
+                break; 
+              case '3':  
+                var tomorrow = new Date(date);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                var start_date = tomorrow.getFullYear()+'-'+("0"+(tomorrow.getMonth()+1)).slice(-2)+'-'+("0"+tomorrow.getDate()).slice(-2);
+                var end_date = start_date;
+                break; 
+              default: 
             }
-            var dateControl = document.querySelector('input[type="date"]');
-            dateControl.value = str(start_date);
-            //$('#startdate').val(start_date);
-            //$('#enddate').val(end_date);
-            //document.getElementById('startdate').value = start_date;      
-            //document.getElementById('enddate').value = end_date;
+
+            var dateControl = document.querySelector('#startdate');
+            dateControl.value = start_date;
+            //window.alert(dateControl.value);
+            var dateControl2 = document.querySelector('#enddate');
+            dateControl2.value = end_date;
           });
           </script>
           <div class="inline fields">
             <div>
               <label>{{ form.start_date.label }}:</label>
-              <input type="date" id="startdate" name="trip-start"
-                value=>
+              <input type="date" id="startdate" name="trip-start" class = "setDate" value= >
             </div>
             <div>
               <label>{{form.end_date.label}}:</label> 
