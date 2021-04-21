@@ -12,7 +12,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              IsFullyVetted)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User
+from app.models import EditableHTML, Role, User, Member
 
 admin = Blueprint('admin', __name__)
 
@@ -241,6 +241,21 @@ def invite_member():
     """Page for member management."""
     form = MemberManager()
     if form.validate_on_submit():
+        member = Member(salutation=form.salutation.data,
+                        first_name=form.first_name.data,
+                        middle_initial=form.middle_initial.data,
+                        last_name=form.last_name.data,
+                        preferred_name=form.preferred_name.data,
+                        gender=form.pronoun.data,
+                        phone_number=form.home_phone_number.data,
+                        email=form.email.data,
+                        emergency_contact_name=form.emergency_contact_name.data,
+                        emergency_contact_phone_number=form.emergency_contact_phone_number.data,
+                        emergency_contact_email_address=form.emergency_contact_email_address.data,
+                        volunteer_notes=form.volunteer_notes.data,
+                        staffer_notes=form.staffer_notes.data)
+        db.session.add(member)
+        db.session.commit()
         flash('Member {} successfully created'.format(form.first_name.data),
               'form-success')
     return render_template('admin/people_manager/member_manager.html', form=form)
