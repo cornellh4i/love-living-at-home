@@ -25,13 +25,12 @@
   .container__triangle--right {
     border-color: transparent transparent transparent rgba(0, 0, 0, 0.3);
     border-width: 8px 0px 8px 8px;
-  } 
+  }
 
   .container__triangle--left {
     border-color: transparent rgba(0, 0, 0, 0.3) transparent transparent;
     border-width: 8px 8px 8px 0px;
-  } 
-
+  }
 </style>
 
 <div class="content-section">
@@ -56,14 +55,14 @@
         <div class="eight wide column">
           <!--Javascript to implement Select All (in progress)-->
           <script type="text/javascript">
-          $("select").on("click", function(){      
-            if ($(this).find(":selected").text() == "Select All"){
-              if ($(this).attr("data-select") == "false")
-                $(this).attr("data-select", "true").find("option").prop("selected", true);
-              else
-                $(this).attr("data-select", "false").find("option").prop("selected", false);
-            }
-          });
+            $("select").on("click", function () {
+              if ($(this).find(":selected").text() == "Select All") {
+                if ($(this).attr("data-select") == "false")
+                  $(this).attr("data-select", "true").find("option").prop("selected", true);
+                else
+                  $(this).attr("data-select", "false").find("option").prop("selected", false);
+              }
+            });
           </script>
           <div class="dropdown">
             <div class="field">
@@ -89,12 +88,12 @@
         </div>
       </div>
       <script type="text/javascript">
-        $(document).ready(function(){
-          $('.ui.dropdown') .dropdown({ fullTextSearch: true });
+        $(document).ready(function () {
+          $('.ui.dropdown').dropdown({ fullTextSearch: true });
         });
       </script>
       <div class="field">
-        <label> {{form.requesting_member.label}}</label>        
+        <label> {{form.requesting_member.label}}</label>
         <select class="ui search selection dropdown" id="search-select">
           <option value="">Type Name Here</option>
           {% for choice in form.requesting_member.choices %}
@@ -112,7 +111,9 @@
         </select>
       </div>
     </div>
-    <p><hr /></p>
+    <p>
+      <hr />
+    </p>
 
     <div class="ui form">
       <div class="ui two column stackable grid">
@@ -126,16 +127,16 @@
             <label>{{ form.show.label }}:</label>
             {% for subfield in form.show %}
             <tr>
-                <td>{{ subfield }}</td>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <td>{{ subfield.label }}</td>
+              <td>{{ subfield }}</td>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <td>{{ subfield.label }}</td>
             </tr>
-            {% endfor %}        
+            {% endfor %}
           </div>
 
           <!-- <div class = "field"> -->
-            <label>{{ form.time_period.label }}</label>
-            <div class="inline fields">
+          <label>{{ form.time_period.label }}</label>
+          <div class="inline fields">
             <button class="container" id="leftbutton">
               <!-- Triangle -->
               <div class="container__triangle container__triangle--left"></div>
@@ -148,131 +149,178 @@
               {% endfor %}
             </select>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <button class="container" id = "rightbutton">
+            <button class="container" id="rightbutton">
               <!-- Triangle -->
               <div class="container__triangle container__triangle--right"></div>
             </button>
-          <!-- </div>  -->
+            <!-- </div>  -->
           </div>
 
           <script text="text/javascript">
-          document.getElementById("leftbutton").onclick = function() {
+            document.getElementById("leftbutton").onclick = function () {
 
-          var option = document.getElementById("timePeriod").value;          
-          var start_date = document.getElementById("startdate").value; 
-          var date_values = start_date.split("-"); 
-          var year = parseInt(date_values[0]); 
-          var month = parseInt(date_values[1]) - 1;
-          var date = parseInt(date_values[2]);
-          var current = new Date(year, month, date);  
+              var option = document.getElementById("timePeriod").value;
+              var start_date = document.getElementById("startdate").value;
+              var end_date = document.getElementById("enddate").value;
+              var date_values = start_date.split("-");
+              var year = parseInt(date_values[0]);
+              var month = parseInt(date_values[1]) - 1;
+              var date = parseInt(date_values[2]);
+              var current = new Date(year, month, date);
 
-          switch (option) {
-            case '0':
-              var yesterday = new Date(current);
-              yesterday.setDate(yesterday.getDate() - 1)
-              var new_date = yesterday.getFullYear()+'-'+("0"+(yesterday.getMonth()+1)).slice(-2)+'-'+("0"+yesterday.getDate()).slice(-2); 
-              break;
-            case '1':
-              var week_ = current.getDate() - 7; 
-              var last_week = new Date(current.setDate(week_));
-              var new_date = last_week.getFullYear()+'-'+("0"+(last_week.getMonth()+1)).slice(-2)+'-'+("0"+last_week.getDate()).slice(-2);
-              break;
-            case '2':
-              var month_ = current.getMonth() - 1; 
-              var last_month = new Date(current.setMonth(month_));
-              var new_date = last_month.getFullYear()+'-'+("0"+(last_month.getMonth()+1)).slice(-2)+'-'+("0"+last_month.getDate()).slice(-2);
-              break;
-            default:
-              var new_date = start_date;
-          }
+              switch (option) {
+                case '0':
+                  var yesterday = new Date(current);
+                  yesterday.setDate(yesterday.getDate() - 1)
+                  var new_date = yesterday.getFullYear() + '-' + ("0" + (yesterday.getMonth() + 1)).slice(-2) + '-' + ("0" + yesterday.getDate()).slice(-2);
+                  var end_date = new_date;
+                  break;
+                case '1':
+                  var week_ = current.getDate() - 7;
+                  var last_week = new Date(current.setDate(week_));
+                  var end_week = new Date(current.setDate(current.getDate() + 7));
+                  var new_date = last_week.getFullYear() + '-' + ("0" + (last_week.getMonth() + 1)).slice(-2) + '-' + ("0" + last_week.getDate()).slice(-2);
+                  var end_date = end_week.getFullYear() + '-' + ("0" + (end_week.getMonth() + 1)).slice(-2) + '-' + ("0" + end_week.getDate()).slice(-2);
+                  break;
+                case '2':
+                  var month_ = current.getMonth() - 1;
+                  var last_month = new Date(current.setMonth(month_));
+                  var end_month = new Date(current.setMonth(current.getMonth() + 1));
+                  var new_date = last_month.getFullYear() + '-' + ("0" + (last_month.getMonth() + 1)).slice(-2) + '-' + ("0" + last_month.getDate()).slice(-2);
+                  var end_date = end_month.getFullYear() + '-' + ("0" + (end_month.getMonth() + 1)).slice(-2) + '-' + ("0" + end_month.getDate()).slice(-2);
+                  break;
+                default:
+                  var new_date = start_date;
+              }
 
-          var dateControl = document.querySelector('#startdate');
-          dateControl.value = new_date;
-          }         
-          
-          </script>
-        
-          <script text="text/javascript">
-            document.getElementById("rightbutton").onclick = function() {
-              
-            var option = document.getElementById("timePeriod").value;          
-            var start_date = document.getElementById("rightbutton").value;
-          </script>
-          
-          <script text="text/javascript">
-          $("select[name = timePeriod]").on("change", function() {  
-            var date = new Date();
-            var start_date;             
-            var end_date;      
-            //YYYY-MM-DD                      
-            
-            switch ($(this).val()){
-              case '0':                                        
-                var start_date = date.getFullYear()+'-'+("0"+(date.getMonth()+1)).slice(-2)+'-'+("0"+date.getDate()).slice(-2); 
-                var end_date = start_date;
-                break;          
-              case '1':
-                var first = date.getDate() - date.getDay() + 1; // First day is the day of the month - the day of the week
-                var last = first + 6;
-                var firstDay =  new Date(date.setDate(first));
-                var lastDay = new Date(date.setDate(last));      
-                var start_date = firstDay.getFullYear()+'-'+("0"+(firstDay.getMonth()+1)).slice(-2)+'-'+("0"+firstDay.getDate()).slice(-2);
-                var end_date = lastDay.getFullYear()+'-'+("0"+(lastDay.getMonth()+1)).slice(-2)+'-'+("0"+lastDay.getDate()).slice(-2);
-                break;
-              case '2':
-                var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-                var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-                var start_date = firstDay.getFullYear()+'-'+("0"+(firstDay.getMonth()+1)).slice(-2)+'-'+("0"+firstDay.getDate()).slice(-2);
-                var end_date = lastDay.getFullYear()+'-'+("0"+(lastDay.getMonth()+1)).slice(-2)+'-'+("0"+lastDay.getDate()).slice(-2);
-                break; 
-              case '3':  
-                var tomorrow = new Date(date);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                var start_date = tomorrow.getFullYear()+'-'+("0"+(tomorrow.getMonth()+1)).slice(-2)+'-'+("0"+tomorrow.getDate()).slice(-2);
-                var end_date = start_date;
-                break; 
-              default: 
+              var dateControl = document.querySelector('#startdate');
+              dateControl.value = new_date;
+
+              var dateControl2 = document.querySelector('#enddate');
+              dateControl2.value = end_date;
             }
+          </script>
 
-            var dateControl = document.querySelector('#startdate');
-            dateControl.value = start_date;
-            //window.alert(dateControl.value);
-            var dateControl2 = document.querySelector('#enddate');
-            dateControl2.value = end_date;
-          });
+          <script text="text/javascript">
+            document.getElementById("rightbutton").onclick = function () {
+
+              var option = document.getElementById("timePeriod").value;
+              var start_date = document.getElementById("startdate").value;
+              var end_date = document.getElementById("enddate").value;
+              var date_values = start_date.split("-");
+              var year = parseInt(date_values[0]);
+              var month = parseInt(date_values[1]) - 1;
+              var date = parseInt(date_values[2]);
+              var current = new Date(year, month, date);
+
+              switch (option) {
+                case '0':
+                  var tomorrow = new Date(current);
+                  tomorrow.setDate(tomorrow.getDate() + 1)
+                  var new_date = tomorrow.getFullYear() + '-' + ("0" + (tomorrow.getMonth() + 1)).slice(-2) + '-' + ("0" + tomorrow.getDate()).slice(-2);
+                  var end_date = new_date;
+                  break;
+                case '1':
+                  var week_ = current.getDate() + 7;
+                  var next_week = new Date(current.setDate(week_));
+                  var end_week = new Date(current.setDate(current.getDate() + 7));
+                  var new_date = next_week.getFullYear() + '-' + ("0" + (next_week.getMonth() + 1)).slice(-2) + '-' + ("0" + next_week.getDate()).slice(-2);
+                  var end_date = end_week.getFullYear() + '-' + ("0" + (end_week.getMonth() + 1)).slice(-2) + '-' + ("0" + end_week.getDate()).slice(-2);
+                  break;
+                case '2':
+                  var month_ = current.getMonth() + 1;
+                  var next_month = new Date(current.setMonth(month_));
+                  var end_month = new Date(current.setMonth(current.getMonth() + 1));
+                  var new_date = next_month.getFullYear() + '-' + ("0" + (next_month.getMonth() + 1)).slice(-2) + '-' + ("0" + next_month.getDate()).slice(-2);
+                  var end_date = end_month.getFullYear() + '-' + ("0" + (end_month.getMonth() + 1)).slice(-2) + '-' + ("0" + end_month.getDate()).slice(-2);
+                  break;
+                default:
+                  var new_date = start_date;
+              }
+
+              var dateControl = document.querySelector('#startdate');
+              dateControl.value = new_date;
+
+              var dateControl2 = document.querySelector('#enddate');
+              dateControl2.value = end_date;
+            }
+          </script>
+
+          <script text="text/javascript">
+            $("select[name = timePeriod]").on("change", function () {
+              var date = new Date();
+              var start_date;
+              var end_date;
+              //YYYY-MM-DD                      
+
+              switch ($(this).val()) {
+                case '0':
+                  var start_date = date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2);
+                  var end_date = start_date;
+                  break;
+                case '1':
+                  var first = date.getDate() - date.getDay() + 1; // First day is the day of the month - the day of the week
+                  var last = first + 6;
+                  var firstDay = new Date(date.setDate(first));
+                  var lastDay = new Date(date.setDate(last));
+                  var start_date = firstDay.getFullYear() + '-' + ("0" + (firstDay.getMonth() + 1)).slice(-2) + '-' + ("0" + firstDay.getDate()).slice(-2);
+                  var end_date = lastDay.getFullYear() + '-' + ("0" + (lastDay.getMonth() + 1)).slice(-2) + '-' + ("0" + lastDay.getDate()).slice(-2);
+                  break;
+                case '2':
+                  var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+                  var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+                  var start_date = firstDay.getFullYear() + '-' + ("0" + (firstDay.getMonth() + 1)).slice(-2) + '-' + ("0" + firstDay.getDate()).slice(-2);
+                  var end_date = lastDay.getFullYear() + '-' + ("0" + (lastDay.getMonth() + 1)).slice(-2) + '-' + ("0" + lastDay.getDate()).slice(-2);
+                  break;
+                case '3':
+                  var tomorrow = new Date(date);
+                  tomorrow.setDate(tomorrow.getDate() + 1);
+                  var start_date = tomorrow.getFullYear() + '-' + ("0" + (tomorrow.getMonth() + 1)).slice(-2) + '-' + ("0" + tomorrow.getDate()).slice(-2);
+                  var end_date = start_date;
+                  break;
+                default:
+              }
+
+              var dateControl = document.querySelector('#startdate');
+              dateControl.value = start_date;
+              //window.alert(dateControl.value);
+              var dateControl2 = document.querySelector('#enddate');
+              dateControl2.value = end_date;
+            });
           </script>
 
 
           <div class="inline fields">
             <div>
               <label>{{ form.start_date.label }}:</label>
-              <input type="date" id="startdate" name="trip-start" class = "setDate" value= "">
+              <input type="date" id="startdate" name="trip-start" class="setDate" value="">
             </div>
             <div>
-              <label>{{form.end_date.label}}:</label> 
-              <input type="date" id="enddate" name="trip-start"
-                value= "" >
+              <label>{{form.end_date.label}}:</label>
+              <input type="date" id="enddate" name="trip-start" value="">
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <p><hr /></p>
+    <p>
+      <hr />
+    </p>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <div class = "ui form">
-      <div class = "ui centered grid">
-      <div class="inline fields">
-        <div>{{form.apply_filters}}</div>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <div>{{form.reset_filters}}</div>
+    <div class="ui form">
+      <div class="ui centered grid">
+        <div class="inline fields">
+          <div>{{form.apply_filters}}</div>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <div>{{form.reset_filters}}</div>
+        </div>
       </div>
-    </div>
 
     </div>
 
 
-    
+
 </div>
 </form>
 </div>
