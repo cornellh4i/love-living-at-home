@@ -157,10 +157,10 @@
 
           <script text="text/javascript">
           document.getElementById("leftbutton").onclick = function() {
-          
+
           var option = document.getElementById("timePeriod").value;          
-          var start_date = document.getElementById("leftbutton").value;
-          var date_values = start_date.split(" "); 
+          var start_date = document.getElementById("startdate").value; 
+          var date_values = start_date.split("-"); 
           var year = parseInt(date_values[0]); 
           var month = parseInt(date_values[1]) - 1;
           var date = parseInt(date_values[2]);
@@ -182,22 +182,16 @@
               var last_month = new Date(current.setMonth(month_));
               var new_date = last_month.getFullYear()+'-'+("0"+(last_month.getMonth()+1)).slice(-2)+'-'+("0"+last_month.getDate()).slice(-2);
               break;
-            case '3':
-              var yesterday = new Date(current);
-              yesterday.setDate(yesterday.getDate() - 1)
-              var new_date = yesterday.getFullYear()+'-'+("0"+(yesterday.getMonth()+1)).slice(-2)+'-'+("0"+yesterday.getDate()).slice(-2); 
-              break;
             default:
+              var new_date = start_date;
           }
 
           var dateControl = document.querySelector('#startdate');
           dateControl.value = new_date;
-
-
           }         
           
           </script>
-          
+        
           <script text="text/javascript">
             document.getElementById("rightbutton").onclick = function() {
               
