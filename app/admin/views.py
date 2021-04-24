@@ -87,7 +87,7 @@ def invite_user():
         )
         flash('User {} successfully invited'.format(user.full_name()),
               'form-success')
-    return render_template('admin/new_user.html', form=form)
+    return render_template('admin/system_manager/new_user.html', form=form)
 
 
 @admin.route('/users')
