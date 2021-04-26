@@ -376,24 +376,55 @@ class ContractorManager(FlaskForm):
                                    Length(1, 64),
                                    Email()])
 
-    # Is there a better way to record availability in one variable
-    times = [("morning 8-11", "Morning 8-11"),
-             ("morning 11-2", "Lunchtime 11-2"),
-             ("afternoon 2-5", "Afternoon 2-5"),
-             ("evening 5-8", "Evening 5-8"),
-             ("night 8-midnight", "Night 8-Midnight")]
-    availability_time = MultiCheckboxField('Availability Time', choices=times)
-    days = [("monday", "Monday"), ("tuesday", "Tuesday"),
-            ("wednesday", "Wednesday"), ("thursday", "Thursday"),
-            ("friday", "Friday"), ("saturday", "Saturday"),
-            ("sunday", "Sunday")]
-    availability_day = MultiCheckboxField('Availability Day', choices=days)
-    reviews = TextAreaField('Reviews',
-                            validators=[Optional(),
-                                        Length(max=500)])
+    # Alternate way to structure availability
+    # times = [("morning 8-11", "8AM - 11AM"),
+    #          ("morning 11-2", "11AM - 2PM"),
+    #          ("afternoon 2-5", "2PM - 5PM"),
+    #          ("evening 5-8", "5PM - 8PM"),
+    #          ("night 8-midnight", "8PM - 12AM")]
+    # availability_m = SelectMultipleField('Monday', choices=times)
+    # availability_t = SelectMultipleField('Tuesday', choices=times)
+    # availability_w = SelectMultipleField('Wednesday', choices=times)
+    # availability_th = SelectMultipleField('Thursday', choices=times)
+    # availability_f = SelectMultipleField('Friday', choices=times)
 
     submit = SubmitField("Submit")
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered.')
+
+class Reviews(FlaskForm):
+    reviewer_name = StringField('Name of Reviewer',
+        validators=[InputRequired(), Length(min=1, max=30)])
+    notes = TextAreaField('Notes', validators=[Optional(), Length(max=500)])
+    submit = SubmitField("Save")
+
+class AddAvailability(FlaskForm):
+    availability_options = [("not available", "Not Available"), ("most likely available", "Most Likely Available"), ("available", "Available")]
+    availability_m1 = SelectField('Monday', choices=availability_options)
+    availability_m2 = SelectField('', choices=availability_options)
+    availability_m3 = SelectField('', choices=availability_options)
+    availability_m4 = SelectField('', choices=availability_options)
+    availability_m5 = SelectField('', choices=availability_options)
+    availability_t1 = SelectField('Tuesday', choices=availability_options)
+    availability_t2 = SelectField('', choices=availability_options)
+    availability_t3 = SelectField('', choices=availability_options)
+    availability_t4 = SelectField('', choices=availability_options)
+    availability_t5 = SelectField('', choices=availability_options)
+    availability_w1 = SelectField('Wednesday', choices=availability_options)
+    availability_w2 = SelectField('', choices=availability_options)
+    availability_w3 = SelectField('', choices=availability_options)
+    availability_w4 = SelectField('', choices=availability_options)
+    availability_w5 = SelectField('', choices=availability_options)
+    availability_th1 = SelectField('Thursday', choices=availability_options)
+    availability_th2 = SelectField('', choices=availability_options)
+    availability_th3 = SelectField('', choices=availability_options)
+    availability_th4 = SelectField('', choices=availability_options)
+    availability_th5 = SelectField('', choices=availability_options)
+    availability_f1 = SelectField('Friday', choices=availability_options)
+    availability_f2 = SelectField('', choices=availability_options)
+    availability_f3 = SelectField('', choices=availability_options)
+    availability_f4 = SelectField('', choices=availability_options)
+    availability_f5 = SelectField('', choices=availability_options)
+    submit = SubmitField("Save")

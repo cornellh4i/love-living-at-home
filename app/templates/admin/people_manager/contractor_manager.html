@@ -19,26 +19,28 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     'success': get_flashed_messages(category_filter=['form-success'])
     } %}
 
-
     {{ f.begin_form(form, flashes) }}
 
     {{ f.render_form_field(form.organization_name) }}
     {{ f.render_form_field(form.address) }}
     {{ f.render_form_field(form.phone_number) }}
-    {{ f.render_form_input(form.email) }}
 
-    <div class="two fields">
-      {{ f.render_form_field(form.availability_day) }}
-      {{ f.render_form_field(form.availability_time) }}
+    <div class = "field">
+      {{ f.render_form_input(form.email) }}
     </div>
 
-    {{ f.render_form_field(form.reviews) }}
+    <div class = "field">
+      <button class = "ui button" id = "show-availability">Availability</button>
+    </div>
+
+    <div class = "field">
+      <button class = "ui button" id = "show-reviews">Reviews</button>
+    </div>
 
     {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
     {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
     {{ f.form_message(flashes['info'], header='Information', class='info') }}
     {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-
 
     {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
     {{ f.render_form_field(field) }}
@@ -47,4 +49,199 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 
   </div>
 </div>
+
+<div class="ui modal" id = "availability">
+  <i class="close icon"></i>
+  <div class="header">
+    Add Availability
+  </div>
+  <div>
+
+    {% set flashes = {
+    'error': get_flashed_messages(category_filter=['form-error']),
+    'warning': get_flashed_messages(category_filter=['form-check-email']),
+    'info': get_flashed_messages(category_filter=['form-info']),
+    'success': get_flashed_messages(category_filter=['form-success'])
+    } %}
+
+    {{ f.begin_form(add_availability, flashes) }}
+
+    <div class="inline fields">
+      <label>8AM - 11AM</label>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_m1) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_t1) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_w1) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_th1) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_f1) }}
+      </div>
+    </div>
+
+    <div class="inline fields">
+      <label>11AM - 2PM</label>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_m2) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_t2) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_w2) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_th2) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_f2) }}
+      </div>
+    </div>
+
+    <div class="inline fields">
+      <label>2PM - 5PM</label>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_m3) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_t3) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_w3) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_th3) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_f3) }}
+      </div>
+    </div>
+
+    <div class="inline fields">
+      <label>5PM - 8PM</label>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_m4) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_t4) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_w4) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_th4) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_f4) }}
+      </div>
+    </div>
+
+    <div class="inline fields">
+      <label>8PM - 12AM</label>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_m5) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_t5) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_w5) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_th5) }}
+      </div>
+      <div class="two wide field">
+        {{ f.render_form_field(add_availability.availability_f5) }}
+      </div>
+    </div>
+
+    {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+    {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+    {{ f.form_message(flashes['info'], header='Information', class='info') }}
+    {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+    {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
+    {{ f.render_form_field(add_availability.submit) }}
+    {% endfor %}
+
+    {{ f.end_form() }}
+  </div>
+</div>
+
+<div class="ui modal" id = "reviews">
+  <i class="close icon"></i>
+  <div class="header">
+    Reviews
+  </div>
+
+  {% set flashes = {
+  'error': get_flashed_messages(category_filter=['form-error']),
+  'warning': get_flashed_messages(category_filter=['form-check-email']),
+  'info': get_flashed_messages(category_filter=['form-info']),
+  'success': get_flashed_messages(category_filter=['form-success'])
+  } %}
+
+  {{ f.begin_form(reviews, flashes) }}
+
+  <div class="ui styled accordion">
+    <div class="title">
+      <i class="dropdown icon"></i>
+      Add A Review
+    </div>
+    <div class="content">
+      <div class="transition hidden">  
+        <div class="two fields">
+          {{ f.render_form_field(reviews.reviewer_name) }}
+          <div class="ui rating" data-max-rating="5"></div>
+        </div>
+        {{ f.render_form_field(reviews.notes) }}
+      </div>
+    </div>
+    <div class="title">
+      <i class="dropdown icon"></i>
+      Previous Reviews
+    </div>
+    <div class="content">
+      <div class="transition hidden">
+        <div class="ui form">
+          {{ f.render_form_field(reviews.notes) }}
+        </div>
+      </div>
+  </div>
+
+  {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+  {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+  {{ f.form_message(flashes['info'], header='Information', class='info') }}
+  {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+  {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
+  {{ f.render_form_field(reviews.submit) }}
+  {% endfor %}
+
+  {{ f.end_form() }}
+
+</div>
+
+<script>
+  $('#show-availability').click(function(){
+    $('#availability').modal('show');
+  });
+
+  $('#show-reviews').click(function(){
+    $('#reviews').modal('show');
+  });
+
+  $('.ui.accordion')
+  .accordion({'exclusive': false});
+
+  $('.ui.rating')
+  .rating();
+</script>
+
 {% endblock %}
