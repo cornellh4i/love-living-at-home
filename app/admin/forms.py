@@ -185,13 +185,13 @@ class MemberManager(FlaskForm):
 
     primary_country = SelectField('Country', choices=countries)
     primary_address1 = StringField('Street address or P.O. Box',
-                                   validators=[Optional(),
+                                   validators=[InputRequired(),
                                                Length(max=200)])
     primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
                                    validators=[Optional(),
                                                Length(max=200)])
     primary_city = StringField('City',
-                               validators=[Optional(),
+                               validators=[InputRequired(),
                                            Length(max=200)])
     primary_state = SelectField('State', choices=states)
     primary_zip_code = StringField('Zip Code',
@@ -240,7 +240,7 @@ class MemberManager(FlaskForm):
                                    Email()])
 
     emergency_contact_name = StringField(
-        'Contact Name', validators=[InputRequired(),
+        'Contact Name', validators=[Optional(),
                                     Length(1, 64)])
     emergency_contact_relationship = StringField(
         'Relationship', validators=[Optional(), Length(1, 64)])
@@ -249,10 +249,12 @@ class MemberManager(FlaskForm):
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()])
     emergency_contact_email_address = EmailField(
-        'Email', validators=[InputRequired(),
+        'Email', validators=[Optional(),
                              Length(1, 64),
                              Email()])
 
+    expiration_date = DateField("Member Expiration Date: ", validators=[
+        InputRequired()])
     volunteer_notes = TextAreaField('Notes for Volunteers',
                                     validators=[Optional(),
                                                 Length(max=500)])
@@ -339,7 +341,8 @@ class AddServiceVetting(FlaskForm):
     vetting_type = SelectField('Type: ',
                                choices=vetting_types,
                                validators=[InputRequired()])
-    vetting_date = DateField("Date: ", validators=[InputRequired()],format='%Y-%M-%D')
+    vetting_date = DateField("Date: ", validators=[
+                             InputRequired()], format='%Y-%M-%D')
     vetting_expiration = DateField('Date Expired: ',
                                    validators=[InputRequired()],
                                    format='%Y-%M-%D')

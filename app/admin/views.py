@@ -12,7 +12,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              IsFullyVetted)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User, Member
+from app.models import EditableHTML, Role, User, Member, Address
 
 admin = Blueprint('admin', __name__)
 
@@ -241,17 +241,29 @@ def invite_member():
     """Page for member management."""
     form = MemberManager()
     if form.validate_on_submit():
+        if (form.secondary_as_primary_checkbox.data):
+            address = Address(name=form.first_name.data + " " + form.last_name.data,
+                              street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
+                              city=form.secondary_city.data)
+        else:
+            address = Address(name=form.first_name.data + " " + form.last_name.data,
+                              street_address=form.primary_address1.data + " " + form.primary_address2.data,
+                              city=form.primary_city.data)
+        db.session.add(address)
+        db.session.commit()
         member = Member(salutation=form.salutation.data,
+                        primary_address_id=address.id,
                         first_name=form.first_name.data,
                         middle_initial=form.middle_initial.data,
                         last_name=form.last_name.data,
                         preferred_name=form.preferred_name.data,
                         gender=form.pronoun.data,
                         phone_number=form.home_phone_number.data,
-                        email=form.email.data,
+                        email_address=form.email.data,
                         emergency_contact_name=form.emergency_contact_name.data,
                         emergency_contact_phone_number=form.emergency_contact_phone_number.data,
                         emergency_contact_email_address=form.emergency_contact_email_address.data,
+                        membership_expiration_date=form.expiration_date.data,
                         volunteer_notes=form.volunteer_notes.data,
                         staffer_notes=form.staffer_notes.data)
         db.session.add(member)
