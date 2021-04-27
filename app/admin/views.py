@@ -282,7 +282,8 @@ def invite_volunteer():
     add_vetting = AddServiceVetting()
     is_fully_vetted = IsFullyVetted()
     if form.validate_on_submit():
-        flash('Volunteer {} successfully invited'.format(form.first_name.data),'form-success')
+        flash('Volunteer {} successfully invited'.format(
+            form.first_name.data), 'form-success')
     return render_template('admin/people_manager/volunteer_manager.html',
                            form=form, add_vetting=add_vetting, is_fully_vetted=is_fully_vetted)
 
@@ -296,6 +297,7 @@ def invite_contractor():
     add_availability = AddAvailability()
     reviews = Reviews()
     if form.validate_on_submit():
-        flash('Contractor {} successfully invited'.format(form.organization_name.data),'form-success')
+        flash('Contractor {} successfully invited'.format(
+            form.organization_name.data), 'form-success')
         return redirect(url_for('admin.index'))
     return render_template('admin/people_manager/contractor_manager.html', form=form, add_availability=add_availability, reviews=reviews)

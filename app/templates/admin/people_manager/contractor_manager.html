@@ -3,7 +3,10 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 %} {% block content %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
-    <a class="ui basic compact button" href="{{ url_for('admin.people_manager') }}">
+    <a
+      class="ui basic compact button"
+      href="{{ url_for('admin.people_manager') }}"
+    >
       <i class="caret left icon"></i>
       Back to dashboard
     </a>
@@ -12,59 +15,46 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
       <div class="sub header">Create a new contractor account</div>
     </h2>
 
-    {% set flashes = {
-    'error': get_flashed_messages(category_filter=['form-error']),
-    'warning': get_flashed_messages(category_filter=['form-check-email']),
-    'info': get_flashed_messages(category_filter=['form-info']),
-    'success': get_flashed_messages(category_filter=['form-success'])
-    } %}
+    {% set flashes = { 'error':
+    get_flashed_messages(category_filter=['form-error']), 'warning':
+    get_flashed_messages(category_filter=['form-check-email']), 'info':
+    get_flashed_messages(category_filter=['form-info']), 'success':
+    get_flashed_messages(category_filter=['form-success']) } %} {{
+    f.begin_form(form, flashes) }} {{
+    f.render_form_field(form.organization_name) }} {{
+    f.render_form_field(form.address) }} {{
+    f.render_form_field(form.phone_number) }}
 
-    {{ f.begin_form(form, flashes) }}
+    <div class="field">{{ f.render_form_input(form.email) }}</div>
 
-    {{ f.render_form_field(form.organization_name) }}
-    {{ f.render_form_field(form.address) }}
-    {{ f.render_form_field(form.phone_number) }}
-
-    <div class = "field">
-      {{ f.render_form_input(form.email) }}
+    <div class="field">
+      <button class="ui button" id="show-availability">Availability</button>
     </div>
 
-    <div class = "field">
-      <button class = "ui button" id = "show-availability">Availability</button>
+    <div class="field">
+      <button class="ui button" id="show-reviews">Reviews</button>
     </div>
 
-    <div class = "field">
-      <button class = "ui button" id = "show-reviews">Reviews</button>
-    </div>
-
-    {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-    {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-    {{ f.form_message(flashes['info'], header='Information', class='info') }}
-    {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-
-    {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
-    {{ f.render_form_field(field) }}
-    {% endfor %}
-    {{ f.end_form() }}
-
+    {{ f.form_message(flashes['error'], header='Something went wrong.',
+    class='error') }} {{ f.form_message(flashes['warning'], header='Check your
+    email.', class='warning') }} {{ f.form_message(flashes['info'],
+    header='Information', class='info') }} {{ f.form_message(flashes['success'],
+    header='Success!', class='success') }} {% for field in form |
+    selectattr('type', 'equalto', 'SubmitField') %} {{
+    f.render_form_field(field) }} {% endfor %} {{ f.end_form() }}
   </div>
 </div>
 
-<div class="ui modal" id = "availability">
+<div class="ui modal" id="availability">
   <i class="close icon"></i>
-  <div class="header">
-    Add Availability
-  </div>
+  <div class="header">Add Availability</div>
   <div>
-
-    {% set flashes = {
-    'error': get_flashed_messages(category_filter=['form-error']),
-    'warning': get_flashed_messages(category_filter=['form-check-email']),
-    'info': get_flashed_messages(category_filter=['form-info']),
-    'success': get_flashed_messages(category_filter=['form-success'])
-    } %}
-
-    {{ f.begin_form(add_availability, flashes) }}
+    {% set flashes = { 'error':
+    get_flashed_messages(category_filter=['form-error']), 'warning':
+    get_flashed_messages(category_filter=['form-check-email']), 'info':
+    get_flashed_messages(category_filter=['form-info']), 'success':
+    get_flashed_messages(category_filter=['form-success']) } %} {{
+    f.begin_form(add_availability, flashes) }}
 
     <div class="inline fields">
       <label>8AM - 11AM</label>
@@ -161,33 +151,27 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
       </div>
     </div>
 
-    {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-    {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-    {{ f.form_message(flashes['info'], header='Information', class='info') }}
-    {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-
-    {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
-    {{ f.render_form_field(add_availability.submit) }}
-    {% endfor %}
-
-    {{ f.end_form() }}
+    {{ f.form_message(flashes['error'], header='Something went wrong.',
+    class='error') }} {{ f.form_message(flashes['warning'], header='Check your
+    email.', class='warning') }} {{ f.form_message(flashes['info'],
+    header='Information', class='info') }} {{ f.form_message(flashes['success'],
+    header='Success!', class='success') }} {% for field in form |
+    selectattr('type', 'equalto', 'SubmitField') %} {{
+    f.render_form_field(add_availability.submit) }} {% endfor %} {{ f.end_form()
+    }}
   </div>
 </div>
 
-<div class="ui modal" id = "reviews">
+<div class="ui modal" id="reviews">
   <i class="close icon"></i>
-  <div class="header">
-    Reviews
-  </div>
+  <div class="header">Reviews</div>
 
-  {% set flashes = {
-  'error': get_flashed_messages(category_filter=['form-error']),
-  'warning': get_flashed_messages(category_filter=['form-check-email']),
-  'info': get_flashed_messages(category_filter=['form-info']),
-  'success': get_flashed_messages(category_filter=['form-success'])
-  } %}
-
-  {{ f.begin_form(reviews, flashes) }}
+  {% set flashes = { 'error':
+  get_flashed_messages(category_filter=['form-error']), 'warning':
+  get_flashed_messages(category_filter=['form-check-email']), 'info':
+  get_flashed_messages(category_filter=['form-info']), 'success':
+  get_flashed_messages(category_filter=['form-success']) } %} {{
+  f.begin_form(reviews, flashes) }}
 
   <div class="ui styled accordion">
     <div class="title">
@@ -195,7 +179,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
       Add A Review
     </div>
     <div class="content">
-      <div class="transition hidden">  
+      <div class="transition hidden">
         <div class="two fields">
           {{ f.render_form_field(reviews.reviewer_name) }}
           <div class="ui rating" data-max-rating="5"></div>
@@ -209,39 +193,32 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     </div>
     <div class="content">
       <div class="transition hidden">
-        <div class="ui form">
-          {{ f.render_form_field(reviews.notes) }}
-        </div>
+        <div class="ui form">{{ f.render_form_field(reviews.notes) }}</div>
       </div>
+    </div>
+
+    {{ f.form_message(flashes['error'], header='Something went wrong.',
+    class='error') }} {{ f.form_message(flashes['warning'], header='Check your
+    email.', class='warning') }} {{ f.form_message(flashes['info'],
+    header='Information', class='info') }} {{ f.form_message(flashes['success'],
+    header='Success!', class='success') }} {% for field in form |
+    selectattr('type', 'equalto', 'SubmitField') %} {{
+    f.render_form_field(reviews.submit) }} {% endfor %} {{ f.end_form() }}
   </div>
 
-  {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-  {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-  {{ f.form_message(flashes['info'], header='Information', class='info') }}
-  {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+  <script>
+    $('#show-availability').click(function () {
+      $('#availability').modal('show');
+    });
 
-  {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
-  {{ f.render_form_field(reviews.submit) }}
-  {% endfor %}
+    $('#show-reviews').click(function () {
+      $('#reviews').modal('show');
+    });
 
-  {{ f.end_form() }}
+    $('.ui.accordion').accordion({ exclusive: false });
 
+    $('.ui.rating').rating();
+  </script>
+
+  {% endblock %}
 </div>
-
-<script>
-  $('#show-availability').click(function(){
-    $('#availability').modal('show');
-  });
-
-  $('#show-reviews').click(function(){
-    $('#reviews').modal('show');
-  });
-
-  $('.ui.accordion')
-  .accordion({'exclusive': false});
-
-  $('.ui.rating')
-  .rating();
-</script>
-
-{% endblock %}

@@ -397,14 +397,17 @@ class ContractorManager(FlaskForm):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered.')
 
+
 class Reviews(FlaskForm):
     reviewer_name = StringField('Name of Reviewer',
-        validators=[InputRequired(), Length(min=1, max=30)])
+                                validators=[InputRequired(), Length(min=1, max=30)])
     notes = TextAreaField('Notes', validators=[Optional(), Length(max=500)])
     submit = SubmitField("Save")
 
+
 class AddAvailability(FlaskForm):
-    availability_options = [("not available", "Not Available"), ("most likely available", "Most Likely Available"), ("available", "Available")]
+    availability_options = [("not available", "Not Available"), (
+        "most likely available", "Most Likely Available"), ("available", "Available")]
     availability_m1 = SelectField('Monday', choices=availability_options)
     availability_m2 = SelectField('', choices=availability_options)
     availability_m3 = SelectField('', choices=availability_options)
