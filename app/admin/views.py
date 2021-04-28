@@ -281,11 +281,12 @@ def invite_volunteer():
     form = VolunteerManager()
     add_vetting = AddServiceVetting()
     is_fully_vetted = IsFullyVetted()
+    add_availability = AddAvailability()
     if form.validate_on_submit():
         flash('Volunteer {} successfully invited'.format(
             form.first_name.data), 'form-success')
     return render_template('admin/people_manager/volunteer_manager.html',
-                           form=form, add_vetting=add_vetting, is_fully_vetted=is_fully_vetted)
+                           form=form, add_vetting=add_vetting, is_fully_vetted=is_fully_vetted, add_availability=add_availability)
 
 
 @admin.route('/invite-contractor', methods=['GET', 'POST'])
