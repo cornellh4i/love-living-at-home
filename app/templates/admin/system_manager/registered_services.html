@@ -31,13 +31,20 @@
           <tr>
             <th class="sorted ascending">Name</th>
             <th>Category</th>
+            <th>Maintain</th>
           </tr>
         </thead>
         <tbody>
           {% for s in services | sort(attribute='name') %}
-          <tr onclick="window.location.href = '{{ url_for('admin.service_info', service_id=s.id) }}';">
-            <td>{{ s.name }}</td>
-            <td>{{ s.category.name}} </td>
+          <tr>
+            <td onclick="window.location.href = '{{ url_for('admin.service_info', service_id=s.id) }}';">{{ s.name }}
+            </td>
+            <td onclick="window.location.href = '{{ url_for('admin.service_info', service_id=s.id) }}';">{{
+              s.category.name}} </td>
+            <td onclick="window.location.href = '{{ url_for('admin.delete_service', service_id=s.id) }}';">
+              <i class="trash alternate outline icon"></i>
+            </td>
+
           </tr>
           {% endfor %}
         </tbody>

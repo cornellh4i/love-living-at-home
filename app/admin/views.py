@@ -300,3 +300,15 @@ def service_info(service_id):
     if service is None:
         abort(404)
     return render_template('admin/system_manager/manage_service.html', service=service, form=form)
+
+
+@admin.route('/services/_delete/<int:service_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def delete_service(service_id):
+    """Delete a service."""
+    service = Service.query.filter_by(id=service_id).first()
+    db.session.delete(service)
+    db.session.commit()
+    flash('Successfully deleted service %s.' % service.name, 'success')
+    return redirect(url_for('admin.registered_services'))
