@@ -11,7 +11,7 @@ from wtforms.fields.html5 import DateField, EmailField, TimeField, IntegerField
 from wtforms.validators import Email, EqualTo, InputRequired, Length, Optional, DataRequired
 
 from app import db
-from app.models import Role, User
+from app.models import Role, User, ServiceCategory
 
 serviceCategories = [('Select', 'Select'),
                      ('Coronavirus Community Support',
@@ -372,3 +372,12 @@ class ContractorManager(FlaskForm):
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered.')
+
+class EditServiceForm(FlaskForm):
+    name = StringField('Service Name', validators=[InputRequired(), Length(1, 200)])
+    category = QuerySelectField(
+        'Category Name',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=lambda: db.session.query(ServiceCategory).order_by('name'))
+    submit = SubmitField('Save Service Information')

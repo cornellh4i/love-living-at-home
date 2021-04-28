@@ -35,7 +35,7 @@
         </thead>
         <tbody>
           {% for s in services | sort(attribute='name') %}
-          <tr>
+          <tr onclick="window.location.href = '{{ url_for('admin.service_info', service_id=s.id) }}';">
             <td>{{ s.name }}</td>
             <td>{{ s.category.name}} </td>
           </tr>
