@@ -11,7 +11,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              VolunteerManager, SearchRequestForm)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User
+from app.models import EditableHTML, Role, User, Service
 
 admin = Blueprint('admin', __name__)
 
@@ -268,3 +268,13 @@ def invite_contractor():
                 form.organization_name.data), 'form-success')
         return redirect(url_for('admin.index'))
     return render_template('admin/people_manager/contractor_manager.html', form=form)
+
+
+@admin.route('/services')
+@login_required
+@admin_required
+def manage_services():
+    """Manage services."""
+    services = Service.query.all()
+    return render_template('admin/system_manager/manage_services.html',
+                           services=services)
