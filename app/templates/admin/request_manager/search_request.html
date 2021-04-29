@@ -54,24 +54,37 @@
       <div class="ui two column stackable grid">
         <div class="eight wide column">
           <!--Javascript to implement Select All (in progress)-->
-          <script type="text/javascript">
-            $("select").on("click", function () {
-              if ($(this).find(":selected").text() == "Select All") {
-                if ($(this).attr("data-select") == "false")
-                  $(this).attr("data-select", "true").find("option").prop("selected", true);
-                else
-                  $(this).attr("data-select", "false").find("option").prop("selected", false);
-              }
-            });
-          </script>
           <div class="dropdown">
             <div class="field">
               <label> {{form.request_type.label}}</label>
-              {{ form.request_type(size=5, class='form-control', multiple="multiple") }}
+              <select multiple="" class="ui dropdown" name = "requesttype" id = "requesttype" onInput="myFunction()">
+                <option value="">Select Request Type(s)</option>
+                {% for choice in form.request_type.choices %}
+                <option value={{ choice[0] }}>{{choice[1]}}</option>
+                {% endfor %}
+              </select>
             </div>
+
+            <script type="text/javascript">
+            function myFunction() {
+              window.alert(0);
+              var element = document.getElementById("requesttype");               
+              if (element.options[0].selected == true) {
+                for (var i = 1; i < element.options.length; i++) {
+                  elements.options[i].selected = true; 
+                }
+              }
+            };
+            </script>
+
             <div class="field">
               <label> {{form.request_status.label}}</label>
-              {{ form.request_status(size=7, class='form-control', multiple="multiple") }}
+              <select multiple="" class="ui dropdown">
+                <option value="">Select Request Status</option>
+                {% for choice in form.request_status.choices %}
+                <option value={{ choice[0] }}>{{choice[1]}}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
         </div>
@@ -79,11 +92,21 @@
         <div class="right floated eight wide column">
           <div class="field">
             <label> {{form.service_category.label}}</label>
-            {{ form.service_category(size=9, class='form-control', multiple="multiple") }}
+            <select multiple="" class="ui dropdown">
+              <option value="">Select Service Category(s)</option>
+              {% for choice in form.service_category.choices %}
+              <option value={{ choice[0] }}>{{choice[1]}}</option>
+              {% endfor %}
+            </select>
           </div>
           <div class="field">
             <label> {{form.provider_type.label}}</label>
-            {{ form.provider_type(size=4, class='form-control', multiple="multiple") }}
+            <select multiple="" class="ui dropdown">
+              <option value="">Select Provider Type(s)</option>
+              {% for choice in form.provider_type.choices %}
+              <option value={{ choice[0] }}>{{choice[1]}}</option>
+              {% endfor %}
+            </select>
           </div>
         </div>
       </div>
@@ -157,7 +180,7 @@
           </div>
 
           <script text="text/javascript">
-            document.getElementById("leftbutton").onclick = function () {
+            $document.getElementById("leftbutton").onclick = function () {
 
               var option = document.getElementById("timePeriod").value;
               var start_date = document.getElementById("startdate").value;
@@ -308,19 +331,15 @@
     <hr />
   </p>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <div class="ui form">
-    <div class="ui centered grid">
-      <div class="inline fields">
-        <div>{{form.apply_filters}}</div>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <div><input type="reset" value="Reset Filters"></div>
+    <div class="ui form">
+      <div class="ui centered grid">
+        <div class="inline fields">
+          <div>{{form.apply_filters}}</div>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <div><input type="reset" value="Reset Filters"></div>
+        </div>
       </div>
     </div>
-
-  </div>
-
-
-
 </div>
 </form>
 </div>
