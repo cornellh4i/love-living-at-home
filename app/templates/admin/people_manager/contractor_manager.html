@@ -27,12 +27,18 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 
     <div class="field">{{ f.render_form_input(form.email) }}</div>
 
-    <div class="field">
-      <button class="ui button" id="show-availability">Availability</button>
-    </div>
+    <div class="two fields">
+      <div class="field">
+        <button class="fluid inverted violet ui button" id="show-availability">
+          Availability
+        </button>
+      </div>
 
-    <div class="field">
-      <button class="ui button" id="show-reviews">Reviews</button>
+      <div class="field">
+        <button class="fluid inverted violet ui button" id="show-reviews">
+          Reviews
+        </button>
+      </div>
     </div>
 
     {{ f.form_message(flashes['error'], header='Something went wrong.',
@@ -133,18 +139,21 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   f.begin_form(reviews, flashes) }}
 
   <div class="ui styled fluid accordion">
-    <div class="title">
+    <div class="active title">
       <i class="dropdown icon"></i>
       Add A Review
     </div>
-    <div class="content">
-      <div class="transition hidden">
+    <div class="active content">
         <div class="two fields">
-          {{ f.render_form_field(reviews.reviewer_name) }}
-          <div class="ui rating" data-max-rating="5"></div>
+          <div class="field">
+            {{ f.render_form_field(reviews.reviewer_name) }}
+          </div>
+          <div class="field">
+            <label>Rating:</label>
+            <div class="ui massive star rating" data-max-rating="5"></div>
+          </div>
         </div>
         {{ f.render_form_field(reviews.notes) }}
-      </div>
     </div>
     <div class="title">
       <i class="dropdown icon"></i>

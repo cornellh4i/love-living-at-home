@@ -1,3 +1,7 @@
+<style>
+  .ui.item.menu, .ui.item.menu .item{ background:white; color:indigo; }
+  .ui.item.menu .active.item{ background:indigo; color:white; }
+</style>
 {% extends 'layouts/base.html' %} {% import 'macros/form_macros.html' as f %} {%
 import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 %} {% block content %}
@@ -41,16 +45,18 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     {{ f.render_form_field(form.home_phone) }}
     {{ f.render_form_field(form.email) }}
 
-    <div class = "field">
-      <button class = "ui button" id = "show-services">Services</button>
-    </div>
+    <div class="three fields">
+      <div class = "field">
+        <button class = "ui inverted violet fluid button" id = "show-services">Services</button>
+      </div>
 
-    <div class="field">
-      <button class="ui button" id="show-availability">Availability</button>
-    </div>
+      <div class="field">
+        <button class="ui inverted violet fluid button" id="show-availability">Availability</button>
+      </div>
 
-    <div class = "field">
-      <button class = "ui button" id = "show-vettings">Vettings</button>
+      <div class = "field">
+        <button class = "ui inverted violet fluid button" id = "show-vettings">Vettings</button>
+      </div>
     </div>
     
     {{f.render_form_field(form.notes)}}
@@ -263,8 +269,10 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 
   $('#context1 .menu .item')
   .tab({
-    context: $('#context1')
+    context: $('#context1'),
   });
+
+  
 
   $('#show-availability').click(function () {
       $('#availability').modal('show');
