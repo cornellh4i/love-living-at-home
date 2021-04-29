@@ -9,8 +9,13 @@
       Back to all services
     </a>
     <h2 class="ui header">
+
+      {% if service %}
       {{ service.name }}
       <div class="sub header">View and manage {{ service.name }}.</div>
+      {% else %}
+      <div class="sub header">Add a new service</div>
+      {% endif %}
     </h2>
   </div>
   <div class="twelve wide column">

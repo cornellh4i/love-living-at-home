@@ -312,3 +312,18 @@ def delete_service(service_id):
     db.session.commit()
     flash('Successfully deleted service %s.' % service.name, 'success')
     return redirect(url_for('admin.registered_services'))
+
+
+@admin.route('/new-service', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_service():
+    """Create a new service."""
+    form = EditServiceForm()
+    if form.validate_on_submit():
+        service = Service(name=form.name.data, category_id=form.category.data.id)
+        db.session.add(service)
+        db.session.commit()
+        flash('Service {} successfully created'.format(service.name),
+              'form-success')
+    return render_template('admin/system_manager/manage_service.html', form=form)
