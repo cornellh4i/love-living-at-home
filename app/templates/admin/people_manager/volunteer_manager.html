@@ -1,13 +1,23 @@
 <style>
-  .ui.item.menu, .ui.item.menu .item{ background:white; color:indigo; }
-  .ui.item.menu .active.item{ background:indigo; color:white; }
+  .ui.item.menu,
+  .ui.item.menu .item {
+    background: white;
+    color: indigo;
+  }
+  .ui.item.menu .active.item {
+    background: indigo;
+    color: white;
+  }
 </style>
 {% extends 'layouts/base.html' %} {% import 'macros/form_macros.html' as f %} {%
 import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 %} {% block content %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
-    <a class="ui basic compact button" href="{{ url_for('admin.people_manager') }}">
+    <a
+      class="ui basic compact button"
+      href="{{ url_for('admin.people_manager') }}"
+    >
       <i class="caret left icon"></i>
       Back to dashboard
     </a>
@@ -16,100 +26,91 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
       <div class="sub header">Create a new volunteer account</div>
     </h2>
 
-    {% set flashes = {
-    'error': get_flashed_messages(category_filter=['form-error']),
-    'warning': get_flashed_messages(category_filter=['form-check-email']),
-    'info': get_flashed_messages(category_filter=['form-info']),
-    'success': get_flashed_messages(category_filter=['form-success'])
-    } %}
-
-    {{ f.begin_form(form, flashes) }}
+    {% set flashes = { 'error':
+    get_flashed_messages(category_filter=['form-error']), 'warning':
+    get_flashed_messages(category_filter=['form-check-email']), 'info':
+    get_flashed_messages(category_filter=['form-info']), 'success':
+    get_flashed_messages(category_filter=['form-success']) } %} {{
+    f.begin_form(form, flashes) }}
 
     <div class="two fields">
-      {{ f.render_form_field(form.first_name) }}
-      {{ f.render_form_field(form.last_name) }}
+      {{ f.render_form_field(form.first_name) }} {{
+      f.render_form_field(form.last_name) }}
     </div>
     <div class="two fields">
-      {{ f.render_form_field(form.middle_initial) }}
-      {{ f.render_form_field(form.salutation) }}
+      {{ f.render_form_field(form.middle_initial) }} {{
+      f.render_form_field(form.salutation) }}
     </div>
     {{f.render_form_field(form.gender)}}
 
     <div class="two fields">
-      {{ f.render_form_field(form.preferred_name) }}
-      {{ f.render_form_field(form.pronoun) }}
+      {{ f.render_form_field(form.preferred_name) }} {{
+      f.render_form_field(form.pronoun) }}
     </div>
 
     <div class="ui header">Contact Information</div>
-    {{ f.render_form_field(form.primary_address1) }}
-    {{ f.render_form_field(form.home_phone) }}
-    {{ f.render_form_field(form.email) }}
+    {{ f.render_form_field(form.primary_address1) }} {{
+    f.render_form_field(form.home_phone) }} {{ f.render_form_field(form.email)
+    }}
 
     <div class="three fields">
-      <div class = "field">
-        <button class = "ui inverted violet fluid button" id = "show-services">Services</button>
+      <div class="field">
+        <button class="ui inverted violet fluid button" id="show-services">
+          Services
+        </button>
       </div>
 
       <div class="field">
-        <button class="ui inverted violet fluid button" id="show-availability">Availability</button>
+        <button class="ui inverted violet fluid button" id="show-availability">
+          Availability
+        </button>
       </div>
 
-      <div class = "field">
-        <button class = "ui inverted violet fluid button" id = "show-vettings">Vettings</button>
+      <div class="field">
+        <button class="ui inverted violet fluid button" id="show-vettings">
+          Vettings
+        </button>
       </div>
     </div>
-    
-    {{f.render_form_field(form.notes)}}
 
-    {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-    {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-    {{ f.form_message(flashes['info'], header='Information', class='info') }}
-    {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-
-    {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
-    {{ f.render_form_field(field) }}
-    {% endfor %}
-
-    {{ f.end_form() }}
-    {% if form.password %}
-    {{ check.password_check('password', 0) }}
-    {% endif %}
+    {{f.render_form_field(form.notes)}} {{ f.form_message(flashes['error'],
+    header='Something went wrong.', class='error') }} {{
+    f.form_message(flashes['warning'], header='Check your email.',
+    class='warning') }} {{ f.form_message(flashes['info'], header='Information',
+    class='info') }} {{ f.form_message(flashes['success'], header='Success!',
+    class='success') }} {% for field in form | selectattr('type', 'equalto',
+    'SubmitField') %} {{ f.render_form_field(field) }} {% endfor %} {{
+    f.end_form() }} {% if form.password %} {{ check.password_check('password',
+    0) }} {% endif %}
   </div>
 </div>
 
-
-<div class="ui modal" id = "services">
+<div class="ui modal" id="services">
   <i class="close icon"></i>
-  <div class="header">
-    Services Provided By
-  </div>
+  <div class="header">Services Provided By</div>
   <div class="ui styled fluid accordion">
-    {% for category in form.service_categories %}
+    {% for category in service_categories %}
     <div class="title">
       <i class="dropdown icon"></i>
-      {{ category[1] }}
+      {{ category[0] }}
     </div>
     <div class="content">
-      {% for service in form.services %}
-        {% if service[2] == category[0] %}
-        <div class="transition hidden">
+      {% for service in services %} {% if service[1] == category[1] %}
+      <div class="transition hidden">
         <div class="ui checkbox">
-          <input type="checkbox" name="example">
-          <label>{{ service[1] }}</label>
+          <input type="checkbox" name="example" />
+          <label>{{ service[0] }}</label>
         </div>
       </div>
-        {% endif %}
-      {% endfor %}
+      {% endif %} {% endfor %}
     </div>
     {% endfor %}
   </div>
 </div>
 
-<div class="ui modal" id = "vettings">
+<div class="ui modal" id="vettings">
   <i class="close icon"></i>
-  <div class="header">
-    Vettings
-  </div>
+  <div class="header">Vettings</div>
   <div id="context1">
     <div class="ui two item menu">
       <a class="item active" data-tab="first">Add Service Vetting</a>
@@ -117,63 +118,48 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     </div>
     <div class="ui active tab segment" data-tab="first">
       <div>
-        <h3 class="header">
-          Add Service Vetting
-        </h3>
-    
-        {% set flashes = {
-        'error': get_flashed_messages(category_filter=['form-error']),
-        'warning': get_flashed_messages(category_filter=['form-check-email']),
-        'info': get_flashed_messages(category_filter=['form-info']),
-        'success': get_flashed_messages(category_filter=['form-success'])
-        } %}
-    
-        {{ f.begin_form(add_vetting, flashes) }}
-    
-        {{ f.render_form_field(add_vetting.vetting_type) }}
+        <h3 class="header">Add Service Vetting</h3>
+
+        {% set flashes = { 'error':
+        get_flashed_messages(category_filter=['form-error']), 'warning':
+        get_flashed_messages(category_filter=['form-check-email']), 'info':
+        get_flashed_messages(category_filter=['form-info']), 'success':
+        get_flashed_messages(category_filter=['form-success']) } %} {{
+        f.begin_form(add_vetting, flashes) }} {{
+        f.render_form_field(add_vetting.vetting_type) }}
         <div class="two fields">
-          {{ f.render_form_field(add_vetting.vetting_date) }}
-          {{ f.render_form_field(add_vetting.vetting_expiration) }}
+          {{ f.render_form_field(add_vetting.vetting_date) }} {{
+          f.render_form_field(add_vetting.vetting_expiration) }}
         </div>
         {{f.render_form_field(add_vetting.vetting_additional_data)}}
-        {{f.render_form_field(add_vetting.vetting_notes)}}
-    
-        {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-        {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-        {{ f.form_message(flashes['info'], header='Information', class='info') }}
-        {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-    
-        {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
-        {{ f.render_form_field(add_vetting.submit) }}
-        {% endfor %}
-        {{ f.end_form() }}
+        {{f.render_form_field(add_vetting.vetting_notes)}} {{
+        f.form_message(flashes['error'], header='Something went wrong.',
+        class='error') }} {{ f.form_message(flashes['warning'], header='Check
+        your email.', class='warning') }} {{ f.form_message(flashes['info'],
+        header='Information', class='info') }} {{
+        f.form_message(flashes['success'], header='Success!', class='success')
+        }} {% for field in form | selectattr('type', 'equalto', 'SubmitField')
+        %} {{ f.render_form_field(add_vetting.submit) }} {% endfor %} {{
+        f.end_form() }}
       </div>
     </div>
     <div class="ui tab segment" data-tab="second">
       <div>
-        <h3 class="header">
-          Is Fully Vetted
-        </h3>
-        {% set flashes = {
-        'error': get_flashed_messages(category_filter=['form-error']),
-        'warning': get_flashed_messages(category_filter=['form-check-email']),
-        'info': get_flashed_messages(category_filter=['form-info']),
-        'success': get_flashed_messages(category_filter=['form-success'])
-        } %}
-    
-        {{ f.begin_form(is_fully_vetted, flashes) }}
-    
-        {{ f.render_form_field(is_fully_vetted.volunteer_fully_vetted_checkbox) }}
-        {{ f.render_form_field(is_fully_vetted.vetting_who_entered) }}
-    
-        {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-        {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-        {{ f.form_message(flashes['info'], header='Information', class='info') }}
-        {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-
-        {{ f.render_form_field(is_fully_vetted.submit) }}
-    
-        {{ f.end_form() }}
+        <h3 class="header">Is Fully Vetted</h3>
+        {% set flashes = { 'error':
+        get_flashed_messages(category_filter=['form-error']), 'warning':
+        get_flashed_messages(category_filter=['form-check-email']), 'info':
+        get_flashed_messages(category_filter=['form-info']), 'success':
+        get_flashed_messages(category_filter=['form-success']) } %} {{
+        f.begin_form(is_fully_vetted, flashes) }} {{
+        f.render_form_field(is_fully_vetted.volunteer_fully_vetted_checkbox) }}
+        {{ f.render_form_field(is_fully_vetted.vetting_who_entered) }} {{
+        f.form_message(flashes['error'], header='Something went wrong.',
+        class='error') }} {{ f.form_message(flashes['warning'], header='Check
+        your email.', class='warning') }} {{ f.form_message(flashes['info'],
+        header='Information', class='info') }} {{
+        f.form_message(flashes['success'], header='Success!', class='success')
+        }} {{ f.render_form_field(is_fully_vetted.submit) }} {{ f.end_form() }}
       </div>
     </div>
   </div>
@@ -256,26 +242,22 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 </div>
 
 <script>
-  $('#show-services').click(function(){
+  $('#show-services').click(function () {
     $('#services').modal('show');
   });
 
-  $('.ui.accordion')
-  .accordion({'exclusive': false});
+  $('.ui.accordion').accordion({ exclusive: false });
 
-  $('#show-vettings').click(function(){
+  $('#show-vettings').click(function () {
     $('#vettings').modal('show');
   });
 
-  $('#context1 .menu .item')
-  .tab({
+  $('#context1 .menu .item').tab({
     context: $('#context1'),
   });
 
-  
-
   $('#show-availability').click(function () {
-      $('#availability').modal('show');
-    });
+    $('#availability').modal('show');
+  });
 </script>
 {% endblock %}

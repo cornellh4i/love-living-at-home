@@ -309,8 +309,7 @@ class VolunteerManager(FlaskForm):
     # files = [("alarm", "Alarm/Locks/Security"),
     #          ("bill", "Bill Paying/Paperwork"), ("auto", "Auto Repair"),
     #          ("remote", "Coronavirus Remote Assistance")]
-    service_categories = ServiceCategory.get_categories()
-    services = Service.get_services()
+
     # services = MultiCheckboxField('Services willing to do', choices=files)
     times = [("morning 8-11", "Morning 8-11"),
              ("morning 11-2", "Lunchtime 11-2"),

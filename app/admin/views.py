@@ -12,7 +12,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              IsFullyVetted, AddAvailability, Reviews)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User, Member, Address
+from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service
 
 admin = Blueprint('admin', __name__)
 
@@ -280,13 +280,21 @@ def invite_volunteer():
     """Invites a user to create a volunteer account"""
     form = VolunteerManager()
     add_vetting = AddServiceVetting()
+    service_categories = [(category.name, category.request_type_id)
+                          for category in ServiceCategory.query.all()]
+    services = [(service.name, service.category_id)
+                for service in Service.query.all()]
     is_fully_vetted = IsFullyVetted()
     add_availability = AddAvailability()
     if form.validate_on_submit():
         flash('Volunteer {} successfully invited'.format(
             form.first_name.data), 'form-success')
     return render_template('admin/people_manager/volunteer_manager.html',
-                           form=form, add_vetting=add_vetting, is_fully_vetted=is_fully_vetted, add_availability=add_availability)
+                           form=form, add_vetting=add_vetting,
+                           is_fully_vetted=is_fully_vetted,
+                           add_availability=add_availability,
+                           services=services,
+                           service_categories=service_categories)
 
 
 @admin.route('/invite-contractor', methods=['GET', 'POST'])
