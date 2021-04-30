@@ -8,10 +8,11 @@ from app import db
 from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              ContractorManager, InviteUserForm, MemberManager,
                              NewUserForm, TransportationRequestForm,
-                             VolunteerManager, SearchRequestForm)
+                             VolunteerManager, SearchRequestForm, AddServiceVetting,
+                             IsFullyVetted, AddAvailability, Reviews)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User
+from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service
 
 admin = Blueprint('admin', __name__)
 
@@ -207,12 +208,13 @@ def update_editor_contents():
 
     return 'OK', 200
 
-@admin.route('/search-request', methods=['POST','GET'])
+
+@admin.route('/search-request', methods=['POST', 'GET'])
 @login_required
 @admin_required
 def search_request():
     form = SearchRequestForm()
-    return render_template('admin/request_manager/search_request.html', title = 'Search Request', form = form)
+    return render_template('admin/request_manager/search_request.html', title='Search Request', form=form)
 
 
 # Create a new service request.
@@ -239,6 +241,33 @@ def invite_member():
     """Page for member management."""
     form = MemberManager()
     if form.validate_on_submit():
+        if (form.secondary_as_primary_checkbox.data):
+            address = Address(name=form.first_name.data + " " + form.last_name.data,
+                              street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
+                              city=form.secondary_city.data)
+        else:
+            address = Address(name=form.first_name.data + " " + form.last_name.data,
+                              street_address=form.primary_address1.data + " " + form.primary_address2.data,
+                              city=form.primary_city.data)
+        db.session.add(address)
+        db.session.commit()
+        member = Member(salutation=form.salutation.data,
+                        primary_address_id=address.id,
+                        first_name=form.first_name.data,
+                        middle_initial=form.middle_initial.data,
+                        last_name=form.last_name.data,
+                        preferred_name=form.preferred_name.data,
+                        gender=form.pronoun.data,
+                        phone_number=form.home_phone_number.data,
+                        email_address=form.email.data,
+                        emergency_contact_name=form.emergency_contact_name.data,
+                        emergency_contact_phone_number=form.emergency_contact_phone_number.data,
+                        emergency_contact_email_address=form.emergency_contact_email_address.data,
+                        membership_expiration_date=form.expiration_date.data,
+                        volunteer_notes=form.volunteer_notes.data,
+                        staffer_notes=form.staffer_notes.data)
+        db.session.add(member)
+        db.session.commit()
         flash('Member {} successfully created'.format(form.first_name.data),
               'form-success')
     return render_template('admin/people_manager/member_manager.html', form=form)
@@ -250,10 +279,22 @@ def invite_member():
 def invite_volunteer():
     """Invites a user to create a volunteer account"""
     form = VolunteerManager()
+    add_vetting = AddServiceVetting()
+    service_categories = [(category.name, category.request_type_id)
+                          for category in ServiceCategory.query.all()]
+    services = [(service.name, service.category_id)
+                for service in Service.query.all()]
+    is_fully_vetted = IsFullyVetted()
+    add_availability = AddAvailability()
     if form.validate_on_submit():
-        flash('Volunteer {} successfully invited'.format(form.first_name.data),
-              'form-success')
-    return render_template('admin/people_manager/volunteer_manager.html', form=form)
+        flash('Volunteer {} successfully invited'.format(
+            form.first_name.data), 'form-success')
+    return render_template('admin/people_manager/volunteer_manager.html',
+                           form=form, add_vetting=add_vetting,
+                           is_fully_vetted=is_fully_vetted,
+                           add_availability=add_availability,
+                           services=services,
+                           service_categories=service_categories)
 
 
 @admin.route('/invite-contractor', methods=['GET', 'POST'])
@@ -262,9 +303,10 @@ def invite_volunteer():
 def invite_contractor():
     """Page for contactor management."""
     form = ContractorManager()
+    add_availability = AddAvailability()
+    reviews = Reviews()
     if form.validate_on_submit():
-        flash(
-            'Contractor {} successfully invited'.format(
-                form.organization_name.data), 'form-success')
+        flash('Contractor {} successfully invited'.format(
+            form.organization_name.data), 'form-success')
         return redirect(url_for('admin.index'))
-    return render_template('admin/people_manager/contractor_manager.html', form=form)
+    return render_template('admin/people_manager/contractor_manager.html', form=form, add_availability=add_availability, reviews=reviews)
