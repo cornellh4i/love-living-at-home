@@ -117,10 +117,6 @@ class SearchRequestForm(FlaskForm):
     service_provider = SelectField('Service Provider', choices = [(0, 'Nat Peuly'), (1, 'Sohni Uthra'), (2, 'Angela Jin'), 
     (3, 'Alina Kim')], validators=[DataRequired()])
 
-    # """service_req_from = IntegerField('Service Req # from', default=0)
-    # service_req_to = IntegerField('to', default=0)
-
-    # priority = RadioField('High priority', choices=['Yes', 'No', 'Both'])
     show = RadioField('Show', choices=[(0,'Undated'), (1,'Dated')])
 
     time_period = SelectField('Time Period', choices = [(0, 'Today'), (1, 'This Week'), (2, 'This Month'), (3, 'Future Dates')], validators = [DataRequired()])
@@ -363,12 +359,6 @@ class VolunteerManager(FlaskForm):
                                    Length(1, 64),
                                    Email()])
 
-    # What is another way to say Services willing to do
-    # files = [("alarm", "Alarm/Locks/Security"),
-    #          ("bill", "Bill Paying/Paperwork"), ("auto", "Auto Repair"),
-    #          ("remote", "Coronavirus Remote Assistance")]
-
-    # services = MultiCheckboxField('Services willing to do', choices=files)
     times = [("morning 8-11", "Morning 8-11"),
              ("morning 11-2", "Lunchtime 11-2"),
              ("afternoon 2-5", "Afternoon 2-5"),
@@ -430,18 +420,6 @@ class ContractorManager(FlaskForm):
                        validators=[InputRequired(),
                                    Length(1, 64),
                                    Email()])
-
-    # Alternate way to structure availability
-    # times = [("morning 8-11", "8AM - 11AM"),
-    #          ("morning 11-2", "11AM - 2PM"),
-    #          ("afternoon 2-5", "2PM - 5PM"),
-    #          ("evening 5-8", "5PM - 8PM"),
-    #          ("night 8-midnight", "8PM - 12AM")]
-    # availability_m = SelectMultipleField('Monday', choices=times)
-    # availability_t = SelectMultipleField('Tuesday', choices=times)
-    # availability_w = SelectMultipleField('Wednesday', choices=times)
-    # availability_th = SelectMultipleField('Thursday', choices=times)
-    # availability_f = SelectMultipleField('Friday', choices=times)
     submit = SubmitField("Submit")
 
 class Reviews(FlaskForm):

@@ -32,7 +32,7 @@ render_menu_items.
 
 {% if current_user.is_admin() %}
 {% set managers = ([
-(current_user.role.index + '.request_manager', 'Request Manager', 'handshake outline'),
+(current_user.role.index + '.search_request', 'Request Manager', 'handshake outline'),
 (current_user.role.index + '.people_manager', 'People Manager', 'address book
 ')
 ]) %}

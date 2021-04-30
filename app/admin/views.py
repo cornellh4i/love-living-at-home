@@ -26,14 +26,6 @@ def index():
     return render_template('admin/system_manager/index.html')
 
 
-@admin.route('/request-manager')
-@login_required
-@admin_required
-def request_manager():
-    """Request Manager Page."""
-    return render_template('admin/request_manager/layouts/base.html')
-
-
 @admin.route('/people-manager')
 @login_required
 @admin_required
@@ -210,6 +202,7 @@ def update_editor_contents():
     return 'OK', 200
 
 
+# @admin.route('/request-manager')
 @admin.route('/search-request', methods=['POST', 'GET'])
 @login_required
 @admin_required
