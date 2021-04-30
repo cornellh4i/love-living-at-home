@@ -94,36 +94,41 @@ class NewUserForm(InviteUserForm):
 
 
 class SearchRequestForm(FlaskForm):
+    request_type = SelectMultipleField('Request Type', choices = [(-1, 'Select All'),(0,'Transportation Request'), 
+    (1,'Member\'s Home Request'), (2, 'Office Time Request')], validators = [DataRequired()])
 
-    request_type = SelectMultipleField('Request Type', choices=[(0, 'Transportation Request'),
-                                                                (1, 'Member\'s Home Request'), (2, 'Office Time Request')], validators=[DataRequired()])
 
-    request_status = SelectMultipleField('Request Status', choices=[(0, 'Requested'), (
-        1, 'Confirmed'), (2, 'Completed'), (3, 'Cancelled')], validators=[DataRequired()])
+    request_status = SelectMultipleField('Request Status', choices = 
+    [(-1, 'Select All'),(0, 'Requested'), (1, 'Confirmed'), (2, 'Completed'), (3, 'Cancelled')], validators = [DataRequired()])
 
-    service_category = SelectMultipleField('Service Category', choices=[(0, 'COVID Community Support'), (1, 'Professional Home/Garden Service'),
-                                                                        (2, 'Professional In-Home Support'), (3, 'Technical Support'),
-                                                                        (4, 'Transportation'), (5, 'Village Admin'), (
-                                                                            6, 'Volunteer Home/Garden Service'),
-                                                                        (7, 'Volunteer In-Home Support')], validators=[DataRequired()])
+    service_category = SelectMultipleField('Service Category', choices =
+    [(-1, 'Select All'),(0, 'COVID Community Support'), (1, 'Professional Home/Garden Service'),
+    (2, 'Professional In-Home Support'), (3, 'Technical Support'), 
+    (4, 'Transportation'), (5, 'Village Admin'), (6, 'Volunteer Home/Garden Service'),
+    (7, 'Volunteer In-Home Support')], validators = [DataRequired()])
 
-    provider_type = SelectMultipleField('Provider Type', choices=[(
-        0, 'Non-Member Volunteer'), (1, 'Member Volunteer'), (2, 'Contractor')], validators=[DataRequired()])
+    provider_type = SelectMultipleField('Provider Type', choices = 
+    [(-1, 'Select All'), (0, 'Non-Member Volunteer'), (1, 'Member Volunteer'), (2, 'Contractor')], validators = [DataRequired()])
 
-    requesting_member = SelectField('Requesting Member', choices=[(
-        0, 'Nat Peuly'), (1, 'Sohni Uthra')], validators=[DataRequired()])
+    requesting_member = SelectField('Requesting Member', choices = [(0, 'Nat Peuly'), (1, 'Sohni Uthra'), (2, 'Angela Jin'), 
+    (3, 'Alina Kim')], validators=[DataRequired()])
 
-    service_provider = SelectField('Service Provider', choices=[(
-        0, 'Nat Peuly'), (1, 'Sohni Uthra')], validators=[DataRequired()])
+    service_provider = SelectField('Service Provider', choices = [(0, 'Nat Peuly'), (1, 'Sohni Uthra'), (2, 'Angela Jin'), 
+    (3, 'Alina Kim')], validators=[DataRequired()])
 
     # """service_req_from = IntegerField('Service Req # from', default=0)
     # service_req_to = IntegerField('to', default=0)
 
     # priority = RadioField('High priority', choices=['Yes', 'No', 'Both'])
-    # show = RadioField('Show', choices=['Undated', 'Dated', 'Both'])
+    show = RadioField('Show', choices=[(0,'Undated'), (1,'Dated')])
 
-    # search = SubmitField('Search')
-    # reset = SubmitField('Reset')"""
+    time_period = SelectField('Time Period', choices = [(0, 'Today'), (1, 'This Week'), (2, 'This Month'), (3, 'Future Dates')], validators = [DataRequired()])
+
+    start_date = DateField('Start Date', validators=[InputRequired()], format='%Y-%M-%D')
+    end_date = DateField('End Date', validators=[InputRequired()], format='%Y-%M-%D')
+
+    apply_filters = SubmitField('Apply Filters')
+    reset_filters = SubmitField('Reset Filters')
 
 
 class TransportationRequestForm(FlaskForm):
