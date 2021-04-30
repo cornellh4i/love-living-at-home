@@ -326,9 +326,6 @@ class MemberManager(FlaskForm):
 
     submit = SubmitField("Submit")
 
-    def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
-            raise ValidationError('Email already registered.')
 
 
 class VolunteerManager(FlaskForm):
@@ -388,11 +385,6 @@ class VolunteerManager(FlaskForm):
 
     submit = SubmitField("Submit")
 
-    def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
-            raise ValidationError('Email already registered.')
-
-    submit = SubmitField("Submit")
 
 
 class AddServiceVetting(FlaskForm):
@@ -450,12 +442,7 @@ class ContractorManager(FlaskForm):
     # availability_w = SelectMultipleField('Wednesday', choices=times)
     # availability_th = SelectMultipleField('Thursday', choices=times)
     # availability_f = SelectMultipleField('Friday', choices=times)
-
     submit = SubmitField("Submit")
-
-    def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
-            raise ValidationError('Email already registered.')
 
 class Reviews(FlaskForm):
     reviewer_name = StringField('Name of Reviewer',
