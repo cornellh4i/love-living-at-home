@@ -3,10 +3,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 %} {% block content %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
-    <a
-      class="ui basic compact button"
-      href="{{ url_for('admin.people_manager') }}"
-    >
+    <a class="ui basic compact button" href="{{ url_for('admin.people_manager') }}">
       <i class="caret left icon"></i>
       Back to dashboard
     </a>
@@ -117,13 +114,18 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     </table>
 
     {{ f.form_message(flashes['error'], header='Something went wrong.',
-    class='error') }} {{ f.form_message(flashes['warning'], header='Check your
-    email.', class='warning') }} {{ f.form_message(flashes['info'],
-    header='Information', class='info') }} {{ f.form_message(flashes['success'],
-    header='Success!', class='success') }} {% for field in form |
+    class='error') }}
+    {{ f.form_message(flashes['warning'], header='Check your
+    email.', class='warning') }}
+    {{ f.form_message(flashes['info'],
+    header='Information', class='info') }}
+    {{ f.form_message(flashes['success'],
+    header='Success!', class='success') }}
+    {% for field in form |
     selectattr('type', 'equalto', 'SubmitField') %} {{
-    f.render_form_field(add_availability.submit) }} {% endfor %} {{ f.end_form()
-    }}
+    f.render_form_field(add_availability.submit) }}
+    {% endfor %}
+    {{ f.end_form() }}
   </div>
 </div>
 
@@ -144,16 +146,16 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
       Add A Review
     </div>
     <div class="active content">
-        <div class="two fields">
-          <div class="field">
-            {{ f.render_form_field(reviews.reviewer_name) }}
-          </div>
-          <div class="field">
-            <label>Rating:</label>
-            <div class="ui massive star rating" data-max-rating="5"></div>
-          </div>
+      <div class="two fields">
+        <div class="field">
+          {{ f.render_form_field(reviews.reviewer_name) }}
         </div>
-        {{ f.render_form_field(reviews.notes) }}
+        <div class="field">
+          <label>Rating:</label>
+          <div class="ui massive star rating" data-max-rating="5"></div>
+        </div>
+      </div>
+      {{ f.render_form_field(reviews.notes) }}
     </div>
     <div class="title">
       <i class="dropdown icon"></i>

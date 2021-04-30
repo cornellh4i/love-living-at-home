@@ -5,6 +5,7 @@ class Member(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ## Name
     salutation = db.Column(db.String(20))
+    member_number = db.Column(db.Integer) #NEW
     first_name = db.Column(db.String(64), nullable=False)
     middle_initial = db.Column(db.String(1))
     last_name = db.Column(db.String(64), nullable=False)
@@ -17,12 +18,14 @@ class Member(db.Model):
     secondary_address_id = db.Column(db.Integer, db.ForeignKey('address.id'))
     metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
     ## Contact Information
-    phone_number = db.Column(db.String(64))
+    primary_phone_number = db.Column(db.String(64))
+    secondary_phone_number = db.Column(db.String(64)) #NEW
     email_address = db.Column(db.String(64), nullable=False)
     ## Emergency Contact Information
     emergency_contact_name = db.Column(db.String(64))
     emergency_contact_phone_number = db.Column(db.String(64))
     emergency_contact_email_address = db.Column(db.String(64))
+    emergency_contact_relation = db.Column(db.String(64)) #NEW
     ## Membership Info
     membership_expiration_date = db.Column(db.Date, nullable=False)
     ## Service Notes
