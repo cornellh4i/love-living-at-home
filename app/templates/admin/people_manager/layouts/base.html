@@ -1,4 +1,5 @@
-{% extends 'layouts/base.html' %} {% macro dashboard_option(title, endpoint,
+{% extends 'layouts/base.html' %}
+{% macro dashboard_option(title, endpoint,
 description=None, icon=None) %}
 <a class="column" href="{{ url_for(endpoint) }}">
   <div class="ui padded segment">
@@ -15,6 +16,16 @@ description=None, icon=None) %}
   </div>
 </a>
 {% endmacro %}
+
+{% macro manage_volunteer() %}
+<i class="clock outline icon right floated"></i>
+<i class="check square outline icon right floated"></i>
+<i class="handshake outline icon right floated"></i>
+<i class="pencil icon right floated"></i>
+{% endmacro %}
+
+
+
 {% block content %}
 <div class="ui stackable centered grid container">
   <div class="four wide column">
@@ -44,7 +55,6 @@ description=None, icon=None) %}
 
 
       <form class="ui form" id="member-filter-form">
-
         <div class="grouped fields">
           <label>Volunteer Type:</label>
           <div class="field">
@@ -60,7 +70,6 @@ description=None, icon=None) %}
             </div>
           </div>
         </div>
-
 
         <div class="ui field">
           <label>Name:</label>
@@ -82,7 +91,6 @@ description=None, icon=None) %}
           </div>
         </div>
         <button type="submit">Search</button>
-
       </form>
 
       <form class="ui form" id="volunteer-filter-form">
@@ -97,79 +105,99 @@ description=None, icon=None) %}
 
   <div class="twelve wide column">
     <h3>Search Results</h3>
+    <div class="ui segment">
+      <div class="ui fluid card">
+        <div class="content">
+          <div class="header">Angela Jin
+            {{ manage_volunteer() }}
+          </div>
+
+        </div>
+        <div class="content">~info about person~</div>
+      </div>
+
+      <div class="ui fluid card">
+        <div class="content">
+          <div class="header">Alina Kim
+            {{ manage_volunteer() }}
+          </div>
+        </div>
+
+
+      </div>
+    </div>
   </div>
-</div>
 
-<script language='javascript'>
-  $(document).ready(function () {
-    $('.ui.accordion').accordion();
-  });
-
-
-  $(document)
-    .ready(function () {
-      // seems a little sketch -- hard coded so that the "Members" is the first selected option.
-      $('#volunteer-filter-form').hide()
-      $('#local-resource-filter-form').hide()
-
-      $('.ui.menu .ui.dropdown').dropdown({
-        on: 'hover'
-      });
-      $('.ui.menu a.item')
-        .on('click', function () {
-          $(this)
-            .addClass('active')
-            .siblings()
-            .removeClass('active')
-            ;
-        })
-        ;
-
-      // is there a cleaner way than to just list out all three cases?
-      $('a.item#member-menu-item')
-        .on('click', function () {
-          // window.alert("HI");
-          $('#member-filter-form')
-            .show();
-          $('#volunteer-filter-form')
-            .hide();
-          $('#local-resource-filter-form')
-            .hide();
-        })
-        ;
-
-      $('a.item#volunteer-menu-item')
-        .on('click', function () {
-          // if ($(this).hasClass('active')) {
-          //   window.alert("Volunteer");
-          // }
-          $('#member-filter-form')
-            .hide();
-          $('#volunteer-filter-form')
-            .show();
-          $('#local-resource-filter-form')
-            .hide();
-        })
-        ;
-
-      $('a.item#local-resource-menu-item')
-        .on('click', function () {
-          // if ($(this).hasClass('active')) {
-          //   window.alert("Volunteer");
-          // }
-          $('#member-filter-form')
-            .hide();
-          $('#volunteer-filter-form')
-            .hide();
-          $('#local-resource-filter-form')
-            .show();
-        })
-        ;
-
-    })
+  <script language='javascript'>
+    $(document).ready(function () {
+      $('.ui.accordion').accordion();
+    });
 
 
+    $(document)
+      .ready(function () {
+        // seems a little sketch -- hard coded so that the "Members" is the first selected option.
+        $('#volunteer-filter-form').hide()
+        $('#local-resource-filter-form').hide()
 
-</script>
+        $('.ui.menu .ui.dropdown').dropdown({
+          on: 'hover'
+        });
+        $('.ui.menu a.item')
+          .on('click', function () {
+            $(this)
+              .addClass('active')
+              .siblings()
+              .removeClass('active')
+              ;
+          })
+          ;
 
-{% endblock %}
+        // is there a cleaner way than to just list out all three cases?
+        $('a.item#member-menu-item')
+          .on('click', function () {
+            // window.alert("HI");
+            $('#member-filter-form')
+              .show();
+            $('#volunteer-filter-form')
+              .hide();
+            $('#local-resource-filter-form')
+              .hide();
+          })
+          ;
+
+        $('a.item#volunteer-menu-item')
+          .on('click', function () {
+            // if ($(this).hasClass('active')) {
+            //   window.alert("Volunteer");
+            // }
+            $('#member-filter-form')
+              .hide();
+            $('#volunteer-filter-form')
+              .show();
+            $('#local-resource-filter-form')
+              .hide();
+          })
+          ;
+
+        $('a.item#local-resource-menu-item')
+          .on('click', function () {
+            // if ($(this).hasClass('active')) {
+            //   window.alert("Volunteer");
+            // }
+            $('#member-filter-form')
+              .hide();
+            $('#volunteer-filter-form')
+              .hide();
+            $('#local-resource-filter-form')
+              .show();
+          })
+          ;
+
+      })
+
+
+
+  </script>
+
+  {% endblock %}
