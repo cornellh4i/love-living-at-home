@@ -8,7 +8,7 @@ class LocalResource(db.Model):
     contact_first_name = db.Column(db.String(80), nullable=False)
     contact_middle_initial = db.Column(db.String(5))
     contact_last_name = db.Column(db.String(80), nullable=False)
-    organization_name = db.Column(db.String(80))
+    company_name = db.Column(db.String(80))
     ## Location Information
     address_id = db.Column(db.Integer(),
                            db.ForeignKey("address.id"))
