@@ -17,7 +17,7 @@ class LocalResource(db.Model):
     primary_phone_number = db.Column(db.String(10), nullable=False)
     secondary_phone_number = db.Column(db.String(10))
     email_address = db.Column(db.String(80))
-    preferred_contact_method=choice(['phone', 'email', 'phone and email']),
+    preferred_contact_method=db.Column(db.String(80)),
     website = db.Column(db.String(80))
 
 
