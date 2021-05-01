@@ -14,22 +14,163 @@ description=None, icon=None) %}
     </h3>
   </div>
 </a>
-{% endmacro %} {% block content %}
+{% endmacro %}
+{% block content %}
 <div class="ui stackable centered grid container">
+  <div class="four wide column">
+    <h2>People Manager</h2>
+  </div>
   <div class="twelve wide column">
-    <h2 class="ui header">
-      People Manager
-    </h2>
     <div class="ui three column stackable grid">
-      {{ dashboard_option('Add Member', 'admin.invite_member',
-      description='Add member information to the system.', icon='add user icon') }}
-      {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', description='Add volunteer information to the
-      system.', icon='add user
-      icon') }}
-      {{ dashboard_option('Add Contractor', 'admin.invite_contractor',
-      description='Add contractor information to the system.', icon='add user
-      icon') }}
+      {{ dashboard_option('Add Member', 'admin.invite_member', icon='add user icon') }}
+      {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', icon='add user icon') }}
+      {{ dashboard_option('Add Local Resource', 'admin.invite_contractor', icon='add user icon') }}
     </div>
   </div>
 </div>
+<div class="ui stackable centered grid container">
+  <div class="four wide column">
+    <!-- <form class="ui form"> -->
+
+    <h3>Filters</h3>
+
+    <div class="attached ui top segment">
+      <div class="ui secondary pointing menu three item">
+        <!-- NOTE!!! RESIZING THIS IS NOT GREAT -->
+        <a class="item active" id="member-menu-item">Members</a>
+        <a class="item" id="volunteer-menu-item">Volunteers</a>
+        <a class="item" id="local-resource-menu-item">Local Resources</a>
+      </div>
+    </div>
+    <div class="attached ui segment">
+
+      <form class="ui form" id="member-filter-form">
+
+        <div class="grouped fields">
+          <label>Volunteer Type:</label>
+          <div class="field">
+            <div class="ui checkbox">
+              <input type="checkbox" name="volunteer_type" />
+              <label>Member</label>
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui checkbox">
+              <input type="checkbox" name="volunteer_type" />
+              <label>Non-Member</label>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="ui field">
+          <label>Name:</label>
+          <input id="search-name" type="text" placeholder="Search name..." />
+        </div>
+
+        <div class="ui field">
+          <label>Organization:</label>
+          <input id="search-name" type="text" placeholder="Search organization..." />
+        </div>
+
+        <div class="ui field">
+          <label>Vetting:</label>
+          <div class="field">
+            <div class="ui checkbox">
+              <input type="checkbox" name="volunteer_type" />
+              <label>Fully Vetted</label>
+            </div>
+          </div>
+        </div>
+        <button type="submit">Search</button>
+
+      </form>
+
+      <form class="ui form" id="volunteer-filter-form">
+        Volunteer Filter Form
+      </form>
+
+      <form class="ui form" id="local-resource-filter-form">
+        Local Resource Filter Form
+      </form>
+    </div>
+  </div>
+
+  <div class="twelve wide column">
+    <h3>Search Results</h3>
+  </div>
+</div>
+
+<script language='javascript'>
+  $(document).ready(function () {
+    $('.ui.accordion').accordion();
+  });
+
+
+  $(document)
+    .ready(function () {
+      // seems a little sketch -- hard coded so that the "Members" is the first selected option.
+      $('#volunteer-filter-form').hide()
+      $('#local-resource-filter-form').hide()
+
+      $('.ui.menu .ui.dropdown').dropdown({
+        on: 'hover'
+      });
+      $('.ui.menu a.item')
+        .on('click', function () {
+          $(this)
+            .addClass('active')
+            .siblings()
+            .removeClass('active')
+            ;
+        })
+        ;
+
+      // is there a cleaner way than to just list out all three cases?
+      $('a.item#member-menu-item')
+        .on('click', function () {
+          // window.alert("HI");
+          $('#member-filter-form')
+            .show();
+          $('#volunteer-filter-form')
+            .hide();
+          $('#local-resource-filter-form')
+            .hide();
+        })
+        ;
+
+      $('a.item#volunteer-menu-item')
+        .on('click', function () {
+          // if ($(this).hasClass('active')) {
+          //   window.alert("Volunteer");
+          // }
+          $('#member-filter-form')
+            .hide();
+          $('#volunteer-filter-form')
+            .show();
+          $('#local-resource-filter-form')
+            .hide();
+        })
+        ;
+
+      $('a.item#local-resource-menu-item')
+        .on('click', function () {
+          // if ($(this).hasClass('active')) {
+          //   window.alert("Volunteer");
+          // }
+          $('#member-filter-form')
+            .hide();
+          $('#volunteer-filter-form')
+            .hide();
+          $('#local-resource-filter-form')
+            .show();
+        })
+        ;
+
+    })
+
+
+
+</script>
+
 {% endblock %}
