@@ -5,13 +5,13 @@ class Member(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ## Name
     salutation = db.Column(db.String(20))
-    member_number = db.Column(db.Integer) #NEW
+    member_number = db.Column(db.Integer)
     first_name = db.Column(db.String(64), nullable=False)
     middle_initial = db.Column(db.String(1))
     last_name = db.Column(db.String(64), nullable=False)
     preferred_name = db.Column(db.String(64))
     gender = db.Column(db.String(64), nullable=False) # Dropdown: [Female, Male, Unspecified, Does not wish to answer]
-    birthdate = db.Column(db.Date, nullable=False) #NEW
+    birthdate = db.Column(db.Date, nullable=False) 
     ## Location
     primary_address_id = db.Column(db.Integer,
                                    db.ForeignKey('address.id'),
@@ -19,8 +19,8 @@ class Member(db.Model):
     secondary_address_id = db.Column(db.Integer, db.ForeignKey('address.id'))
     metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
     ## Contact Information
-    primary_phone_number = db.Column(db.String(64), nullable=False) #NAME CHANGE
-    secondary_phone_number = db.Column(db.String(64)) #NEW
+    primary_phone_number = db.Column(db.String(64), nullable=False) 
+    secondary_phone_number = db.Column(db.String(64)) 
     email_address = db.Column(db.String(64))
     preferred_contact_method = db.Column(db.String(80), nullable=False) # One of: ['phone', 'email', 'phone and email'], implement as checkboxes
 
@@ -28,7 +28,7 @@ class Member(db.Model):
     emergency_contact_name = db.Column(db.String(64))
     emergency_contact_phone_number = db.Column(db.String(64))
     emergency_contact_email_address = db.Column(db.String(64))
-    emergency_contact_relation = db.Column(db.String(64)) #NEW
+    emergency_contact_relation = db.Column(db.String(64)) 
     ## Membership Info
     membership_expiration_date = db.Column(db.Date, nullable=False)
     ## Service Notes
