@@ -10,7 +10,8 @@ class Member(db.Model):
     middle_initial = db.Column(db.String(1))
     last_name = db.Column(db.String(64), nullable=False)
     preferred_name = db.Column(db.String(64))
-    gender = db.Column(db.String(64))
+    gender = db.Column(db.String(64), nullable=False) # Dropdown: [Female, Male, Unspecified, Does not wish to answer]
+    birthdate = db.Column(db.Date, nullable=False) #NEW
     ## Location
     primary_address_id = db.Column(db.Integer,
                                    db.ForeignKey('address.id'),
@@ -18,9 +19,9 @@ class Member(db.Model):
     secondary_address_id = db.Column(db.Integer, db.ForeignKey('address.id'))
     metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
     ## Contact Information
-    primary_phone_number = db.Column(db.String(64))
+    primary_phone_number = db.Column(db.String(64), nullable=False) #NAME CHANGE
     secondary_phone_number = db.Column(db.String(64)) #NEW
-    email_address = db.Column(db.String(64), nullable=False)
+    email_address = db.Column(db.String(64))
     ## Emergency Contact Information
     emergency_contact_name = db.Column(db.String(64))
     emergency_contact_phone_number = db.Column(db.String(64))
@@ -47,28 +48,21 @@ class Member(db.Model):
 
         seed()
         for i in range(count):
-            member_without_phone = Member(
+            m = Member(
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
+                gender=choice(['Male', 'Female', 'Unspecified', 'Does Not Wish to Answer']),
+                birthdate=datetime.strptime(
+                    fake.date(), "%Y-%m-%d").date(),
                 primary_address_id=-1,
-                email_address=fake.email(),
+                primary_phone_number=fake.phone_number(),
+                secondary_phone_number=choice([fake.phone_number(), None]),
+                email_address=choice([fake.email(), None]),
                 membership_expiration_date=datetime.strptime(
                     fake.date(), "%Y-%m-%d").date(),
                 volunteer_notes=fake.text(),
                 staffer_notes=fake.text(),
                 **kwargs)
-            member_with_phone = Member(
-                first_name=fake.first_name(),
-                last_name=fake.last_name(),
-                primary_address_id=-1,
-                phone_number=fake.phone_number(),
-                email_address=fake.email(),
-                membership_expiration_date=datetime.strptime(
-                    fake.date(), "%Y-%m-%d").date(),
-                volunteer_notes=fake.text(),
-                staffer_notes=fake.text(),
-                **kwargs)
-            m = choice([member_without_phone, member_with_phone])
             db.session.add(m)
             try:
                 db.session.commit()
