@@ -24,7 +24,7 @@ class Volunteer(db.Model):
                         db.ForeignKey("volunteer_type.id"),
                         nullable=False)
     last_service_date = db.Column(db.Date(), nullable=False)  # Is this useful?
-    rating = db.Column(db.Integer(), nullable=False)
+    rating = db.Column(db.Float(), nullable=False)
     is_fully_vetted = db.Column(db.Boolean(), nullable=False)
     preferred_contact_method_id = db.Column(db.Integer(),
                                             db.ForeignKey("contact_method.id"),

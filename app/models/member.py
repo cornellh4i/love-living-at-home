@@ -31,6 +31,7 @@ class Member(db.Model):
     # Notes about this member that only the staffers can see.
     staffer_notes = db.Column(db.Text)
     requests = db.relationship('Request', backref='member', lazy='dynamic')
+    reviews_given = db.relationship('Review', backref='member', lazy='dynamic')
 
     @staticmethod
     def generate_fake(count=100, **kwargs):
