@@ -22,6 +22,8 @@ class Member(db.Model):
     primary_phone_number = db.Column(db.String(64), nullable=False) #NAME CHANGE
     secondary_phone_number = db.Column(db.String(64)) #NEW
     email_address = db.Column(db.String(64))
+    preferred_contact_method = db.Column(db.String(80), nullable=False) # One of: ['phone', 'email', 'phone and email'], implement as checkboxes
+
     ## Emergency Contact Information
     emergency_contact_name = db.Column(db.String(64))
     emergency_contact_phone_number = db.Column(db.String(64))
@@ -58,6 +60,7 @@ class Member(db.Model):
                 primary_phone_number=fake.phone_number(),
                 secondary_phone_number=choice([fake.phone_number(), None]),
                 email_address=choice([fake.email(), None]),
+                preferred_contact_method=choice(['phone', 'email', 'phone and email']),
                 membership_expiration_date=datetime.strptime(
                     fake.date(), "%Y-%m-%d").date(),
                 volunteer_notes=fake.text(),

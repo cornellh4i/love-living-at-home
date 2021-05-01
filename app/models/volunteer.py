@@ -23,6 +23,7 @@ class Volunteer(db.Model):
 
     organization_name = db.Column(db.String(80))
     email_address = db.Column(db.String(80))
+    preferred_contact_method = db.Column(db.String(80), nullable=False) # One of: ['phone', 'email', 'phone and email'], implement as checkboxes
 
     ## Volunteer-Specific Information
     type_id = db.Column(db.Integer(),
@@ -31,7 +32,6 @@ class Volunteer(db.Model):
     rating = db.Column(db.Integer(), nullable=False)
     is_fully_vetted = db.Column(db.Boolean(), nullable=False)
     vettings = db.Column(db.Text)
-    preferred_contact_method = db.Column(db.String(80), nullable=False) # One of: ['phone', 'email', 'phone and email'], implement as checkboxes
     
     ## Emergency Contact Information
     emergency_contact_name = db.Column(db.String(64))
