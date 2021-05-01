@@ -13,6 +13,7 @@ from .request import *
 from .request_member_record import *
 from .request_volunteer_record import *
 from .request_volunteer_status import *
+from .review import *
 from .service import *
 from .service_category import *
 from .staffer import *
