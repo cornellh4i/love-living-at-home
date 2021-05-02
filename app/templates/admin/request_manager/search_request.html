@@ -57,7 +57,7 @@
           <div class="dropdown">
             <div class="field">
               <label> {{form.request_type.label}}</label>
-              <select multiple="" class="ui dropdown" name = "requesttype" id = "requesttype" onInput="myFunction()">
+              <select multiple="" class="ui dropdown" name="requesttype" id="requesttype" onChange="myFunction()">
                 <option value="">Select Request Type(s)</option>
                 {% for choice in form.request_type.choices %}
                 <option value={{ choice[0] }}>{{choice[1]}}</option>
@@ -66,15 +66,15 @@
             </div>
 
             <script type="text/javascript">
-            function myFunction() {
-              window.alert(0);
-              var element = document.getElementById("requesttype");               
-              if (element.options[0].selected == true) {
-                for (var i = 1; i < element.options.length; i++) {
-                  elements.options[i].selected = true; 
+              function myFunction() {
+                window.alert(0);
+                var element = document.getElementById("requesttype");
+                if (element.options[0].selected == true) {
+                  for (var i = 1; i < element.options.length; i++) {
+                    elements.options[i].selected = true;
+                  }
                 }
-              }
-            };
+              };
             </script>
 
             <div class="field">
@@ -327,10 +327,10 @@
       </div>
     </div>
 
-  <p>
-    <hr />
-  </p>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <p>
+      <hr />
+    </p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <div class="ui form">
       <div class="ui centered grid">
         <div class="inline fields">
