@@ -10,10 +10,10 @@ class ServiceCategory(db.Model):
                                 db.ForeignKey("request_type.id"),
                                 nullable=False)
     services = db.relationship("Service",
-                               backref="service_category",
+                               backref="category",
                                lazy=True)
     requests = db.relationship("Request",
-                               backref="service_category",
+                               backref="category",
                                lazy=True)
 
     @staticmethod

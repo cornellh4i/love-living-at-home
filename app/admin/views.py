@@ -9,10 +9,11 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              ContractorManager, InviteUserForm, MemberManager,
                              NewUserForm, TransportationRequestForm,
                              VolunteerManager, SearchRequestForm, AddServiceVetting,
-                             IsFullyVetted, AddAvailability, Reviews)
+                             IsFullyVetted, AddAvailability, Reviews, EditServiceForm)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category
+
 
 admin = Blueprint('admin', __name__)
 
@@ -344,3 +345,62 @@ def invite_contractor():
             form.organization_name.data), 'form-success')
         return redirect(url_for('admin.index'))
     return render_template('admin/people_manager/contractor_manager.html', form=form, add_availability=add_availability, reviews=reviews)
+
+
+@admin.route('/services')
+@login_required
+@admin_required
+def registered_services():
+    """Manage services."""
+    services = Service.query.all()
+    return render_template('admin/system_manager/registered_services.html',
+                           services=services)
+
+
+@admin.route('/services/<int:service_id>', methods=['GET', 'POST'])
+@admin.route('/services/<int:service_id>/info', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def service_info(service_id):
+    """View a service's profile."""
+    service = Service.query.filter_by(id=service_id).first()
+    form=EditServiceForm(name=service.name, category=service.category)
+    if form.validate_on_submit():
+        updated_service = service
+        updated_service.name = form.name.data
+        updated_service.category = form.category.data
+        db.session.add(updated_service)
+        db.session.commit()
+        flash('Service {} successfully updated'.format(
+                form.name.data), 'form-success')
+        return redirect(url_for('admin.registered_services'))
+    if service is None:
+        abort(404)
+    return render_template('admin/system_manager/manage_service.html', service=service, form=form)
+
+
+@admin.route('/services/_delete/<int:service_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def delete_service(service_id):
+    """Delete a service."""
+    service = Service.query.filter_by(id=service_id).first()
+    db.session.delete(service)
+    db.session.commit()
+    flash('Successfully deleted service %s.' % service.name, 'success')
+    return redirect(url_for('admin.registered_services'))
+
+
+@admin.route('/new-service', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_service():
+    """Create a new service."""
+    form = EditServiceForm()
+    if form.validate_on_submit():
+        service = Service(name=form.name.data, category_id=form.category.data.id)
+        db.session.add(service)
+        db.session.commit()
+        flash('Service {} successfully created'.format(service.name),
+              'form-success')
+    return render_template('admin/system_manager/manage_service.html', form=form)

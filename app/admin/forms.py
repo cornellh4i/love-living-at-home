@@ -12,7 +12,6 @@ from app import db
 from app.models import Role, User, ServiceCategory, Service, Staffer, RequestStatus, ContactLogPriorityType, Member, Address, RequestDurationType
 from datetime import date;
 
-
 serviceCategories = [('Select', 'Select'),
                      ('Coronavirus Community Support',
                       'Coronavirus Community Support'),
@@ -497,3 +496,13 @@ class AddAvailability(FlaskForm):
     availability_f4 = SelectField('', choices=availability_options)
     availability_f5 = SelectField('', choices=availability_options)
     submit = SubmitField("Save")
+
+
+class EditServiceForm(FlaskForm):
+    name = StringField('Service Name', validators=[InputRequired(), Length(1, 200)])
+    category = QuerySelectField(
+        'Category Name',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=lambda: db.session.query(ServiceCategory).order_by('name'))
+    submit = SubmitField('Save Service Information')
