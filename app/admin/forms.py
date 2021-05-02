@@ -1,8 +1,6 @@
-from datetime import datetime
-
 from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, ValidationError, widgets
-from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 
 from wtforms.fields import (BooleanField, DateTimeField, IntegerField,
                             PasswordField, RadioField, SelectField, SelectMultipleField,
@@ -11,7 +9,8 @@ from wtforms.fields.html5 import DateField, EmailField, TimeField, IntegerField
 from wtforms.validators import Email, EqualTo, InputRequired, Length, Optional, DataRequired
 
 from app import db
-from app.models import Role, User
+from app.models import Role, User, ServiceCategory, Service, Staffer, RequestStatus, ContactLogPriorityType, Member, Address, RequestDurationType
+from datetime import date;
 
 serviceCategories = [('Select', 'Select'),
                      ('Coronavirus Community Support',
@@ -35,6 +34,9 @@ transportationServices = [
     ('Vol Driver Misc. Trip', 'Vol Driver Misc. Trip')
 ]
 
+request_duration_type = []
+# db.session.query(RequestDurationType).order_by('id')
+# request_duration_type = [(t.name, t.name) for t in ]
 
 class ChangeUserEmailForm(FlaskForm):
     email = EmailField('New email',
@@ -131,31 +133,84 @@ class SearchRequestForm(FlaskForm):
 
     
 class TransportationRequestForm(FlaskForm):
-    date_created = DateField('Date Created',
-                             format='%Y-%M-%D',
-                             default=datetime.today)
+    categoryId = 0
+    def selectedCategory():
+        return db.session.query(ServiceCategory).order_by().filter(ServiceCategory.request_type_id == 0)
+
+    def services():
+        return db.session.query(Service).order_by()
+
+    def stafferQuery():
+        return db.session.query(Staffer).order_by()
+
+    def statusQuery():
+        return db.session.query(RequestStatus).order_by()
+
+    def contactLogQuery():
+        return db.session.query(ContactLogPriorityType).order_by()
+
+    def specialInstructionsQuery():
+         return db.session.query(Member).order_by()
+
+    date_created = DateField('Date Created:', default = date.today, 
+        render_kw={'readonly': True})
+    requesting_member = QuerySelectMultipleField(
+        'Requesting Member',
+        validators=[InputRequired()],
+        get_label='first_name',
+        query_factory=lambda: db.session.query(Member).order_by('first_name'))
     requested_date = DateField('Requested Date',
-                               validators=[InputRequired()],
-                               format='%Y-%M-%D')
-    initial_pickup = TimeField('Inital Pickup', format='%H:%M')
-    appointment = TimeField('Appointment', format='%H:%M')
-    return_pickup = TimeField('Return Pickup', format='%H:%M')
-    drop_off = TimeField('Drop Off', format='%H:%M')
+                               validators=[InputRequired()])
+    initial_pickup = TimeField('Inital Pickup:', format='%H:%M',
+        validators=[InputRequired()])
+    appointment = TimeField('Appointment:', format='%H:%M', 
+    validators=[InputRequired()])
+    return_pickup = TimeField('Return Pickup:', format='%H:%M')
+    drop_off = TimeField('Drop Off:', format='%H:%M')
     time_flexible = RadioField('Is Date/Time Flexible?',
                                choices=[('Yes', 'Yes'), ('No', 'No')])
-    priority = RadioField('High priority?',
-                          choices=[('Yes', 'Yes'), ('No', 'No')])
-    description = TextAreaField('Short description')
-    service_category = SelectField('Service Category',
-                                   choices=serviceCategories)
-    covidService = SelectField('Service', choices=covidServices)
-    transportationService = SelectField('Service',
-                                        choices=transportationServices)
-    starting_location = StringField('Starting Location')
-    destination = StringField('Destination')
+    description = TextAreaField('Short description (included in email):')
 
-    submit = SubmitField('Save')
-    cancel = SubmitField('Cancel')
+    service_category = QuerySelectField(
+        'Service Category:',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=selectedCategory)
+
+    service =  QuerySelectField(
+        'Service:',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=services)
+
+    starting_location = StringField('Starting Location:')
+
+    special_instructions = TextAreaField('Special Instructions:')
+    follow_up_date = DateField('Follow Up Date:',
+                               validators=[InputRequired()])
+    status =  QuerySelectField(
+        'Status:',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=statusQuery)
+    responsible_staffer = SelectField('Responsible Staffer:', choices = [('yes', 'yes')])
+    contact_log_priority = QuerySelectField(
+        'Contact Log Priority:',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=contactLogQuery)
+    
+    person_to_cc = EmailField('Person to cc',
+                       validators=[Length(0, 64),
+                                   Email(), Optional()])
+    destination = QuerySelectField(
+        'Destination:',
+        validators=[InputRequired()],
+        get_label='street_address',
+        query_factory=lambda: db.session.query(Address).order_by('street_address'))
+    # duration = RadioField('Duration:',
+    #                            choices=request_duration_type)
+    submit = SubmitField("Submit")
 
 
 class MultiCheckboxField(SelectMultipleField):
