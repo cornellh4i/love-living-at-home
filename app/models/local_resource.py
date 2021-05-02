@@ -19,7 +19,7 @@ class LocalResource(db.Model):
     email_address = db.Column(db.String(80))
     preferred_contact_method=db.Column(db.String(80))
     website = db.Column(db.String(80))
-
+    reviews_received = db.relationship('Review', backref='local_resource', lazy='dynamic')
 
     def __repr__(self):
         return f"Local Resource('{self.organization_name}')"

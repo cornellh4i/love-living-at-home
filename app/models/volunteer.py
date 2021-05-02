@@ -29,7 +29,7 @@ class Volunteer(db.Model):
     type_id = db.Column(db.Integer(),
                         db.ForeignKey("volunteer_type.id"),
                         nullable=False)
-    rating = db.Column(db.Integer(), nullable=False)
+    rating = db.Column(db.Float(), nullable=False)
     is_fully_vetted = db.Column(db.Boolean(), nullable=False)
     vettings = db.Column(db.Text)
     
