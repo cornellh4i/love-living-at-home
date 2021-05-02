@@ -12,6 +12,7 @@ from app import db
 from app.models import Role, User, ServiceCategory, Service, Staffer, RequestStatus, ContactLogPriorityType, Member, Address, RequestDurationType
 from datetime import date;
 
+
 serviceCategories = [('Select', 'Select'),
                      ('Coronavirus Community Support',
                       'Coronavirus Community Support'),
@@ -94,10 +95,11 @@ class NewUserForm(InviteUserForm):
 
 
 class SearchRequestForm(FlaskForm):
-
     request_type = SelectMultipleField('Request Type', choices = [(-1, 'Select All'),(0,'Transportation Request'), 
     (1,'Member\'s Home Request'), (2, 'Office Time Request')], validators = [DataRequired()])
 
+    request_status = SelectMultipleField('Request Status', choices=[(0, 'Requested'), (
+        1, 'Confirmed'), (2, 'Completed'), (3, 'Cancelled')], validators=[DataRequired()])
 
     request_status = SelectMultipleField('Request Status', choices = 
     [(-1, 'Select All'),(0, 'Requested'), (1, 'Confirmed'), (2, 'Completed'), (3, 'Cancelled')], validators = [DataRequired()])
@@ -117,6 +119,7 @@ class SearchRequestForm(FlaskForm):
     service_provider = SelectField('Service Provider', choices = [(0, 'Nat Peuly'), (1, 'Sohni Uthra'), (2, 'Angela Jin'), 
     (3, 'Alina Kim')], validators=[DataRequired()])
 
+
     # """service_req_from = IntegerField('Service Req # from', default=0)
     # service_req_to = IntegerField('to', default=0)
 
@@ -131,7 +134,7 @@ class SearchRequestForm(FlaskForm):
     apply_filters = SubmitField('Apply Filters')
     reset_filters = SubmitField('Reset Filters')
 
-    
+
 class TransportationRequestForm(FlaskForm):
     categoryId = 0
     def selectedCategory():
@@ -219,12 +222,12 @@ class MultiCheckboxField(SelectMultipleField):
 
 
 class MemberManager(FlaskForm):
-    first_name = StringField('First name',
+    first_name = StringField('First name *',
                              validators=[InputRequired(),
                                          Length(1, 64)])
     middle_initial = StringField('Middle Initial',
                                  validators=[Length(min=0, max=1)])
-    last_name = StringField('Last name',
+    last_name = StringField('Last name *',
                             validators=[InputRequired(),
                                         Length(1, 64)])
     preferred_name = StringField(
@@ -234,7 +237,7 @@ class MemberManager(FlaskForm):
                    ("mr", "Mr")]
     salutation = SelectField("Salutation", choices=salutations)
 
-    pronoun = StringField("Pronoun",
+    pronoun = StringField("Pronoun *",
                           validators=[InputRequired(),
                                       Length(min=1, max=30)])
 
@@ -245,22 +248,19 @@ class MemberManager(FlaskForm):
     metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
 
     primary_country = SelectField('Country', choices=countries)
-    primary_address1 = StringField('Address 1',
-                                   validators=[Optional(),
+    primary_address1 = StringField('Street address or P.O. Box',
+                                   validators=[InputRequired(),
                                                Length(max=200)])
-    primary_address2 = StringField('Address 2',
+    primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
                                    validators=[Optional(),
                                                Length(max=200)])
     primary_city = StringField('City',
-                               validators=[Optional(),
+                               validators=[InputRequired(),
                                            Length(max=200)])
     primary_state = SelectField('State', choices=states)
     primary_zip_code = StringField('Zip Code',
                                    validators=[Optional(),
                                                Length(max=45)])
-    primary_time_zone = SelectField('Timezone',
-                                    choices=time_zones,
-                                    validators=[Optional()])
     primary_metro_area = SelectField('Metro Area',
                                      choices=metro_areas,
                                      validators=[Optional()])
@@ -272,22 +272,19 @@ class MemberManager(FlaskForm):
         'Use this address instead of the primary address',
         validators=[Optional()])
     secondary_country = SelectField('Country', choices=countries)
-    secondary_address1 = StringField('Address 1',
+    secondary_address1 = StringField('Street address or P.O. Box',
                                      validators=[Optional(),
                                                  Length(max=200)])
-    secondary_address2 = StringField('Address 2',
+    secondary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
                                      validators=[Optional(),
                                                  Length(max=200)])
     secondary_city = StringField('City',
                                  validators=[Optional(),
                                              Length(max=200)])
     secondary_state = SelectField('State', choices=states)
-    secondary_zip_code = TextAreaField('Zip Code',
-                                       validators=[Optional(),
-                                                   Length(max=45)])
-    secondary_time_zone = SelectField('Timezone',
-                                      choices=time_zones,
-                                      validators=[Optional()])
+    secondary_zip_code = StringField('Zip Code',
+                                     validators=[Optional(),
+                                                 Length(max=45)])
     secondary_metro_area = SelectField('Metro Area',
                                        choices=metro_areas,
                                        validators=[Optional()])
@@ -295,9 +292,9 @@ class MemberManager(FlaskForm):
                                    widget=widgets.Input(input_type="tel"),
                                    validators=[Optional()])
 
-    phone_number = IntegerField('Phone Number',
-                                widget=widgets.Input(input_type="tel"),
-                                validators=[Optional()])
+    home_phone_number = IntegerField('Home Phone #',
+                                     widget=widgets.Input(input_type="tel"),
+                                     validators=[Optional()])
     cell_number = IntegerField('Cell Phone Number',
                                widget=widgets.Input(input_type="tel"),
                                validators=[Optional()])
@@ -307,7 +304,7 @@ class MemberManager(FlaskForm):
                                    Email()])
 
     emergency_contact_name = StringField(
-        'Contact Name', validators=[InputRequired(),
+        'Contact Name', validators=[Optional(),
                                     Length(1, 64)])
     emergency_contact_relationship = StringField(
         'Relationship', validators=[Optional(), Length(1, 64)])
@@ -316,10 +313,12 @@ class MemberManager(FlaskForm):
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()])
     emergency_contact_email_address = EmailField(
-        'Email', validators=[InputRequired(),
+        'Email', validators=[Optional(),
                              Length(1, 64),
                              Email()])
 
+    expiration_date = DateField("Member Expiration Date: ", validators=[
+        InputRequired()])
     volunteer_notes = TextAreaField('Notes for Volunteers',
                                     validators=[Optional(),
                                                 Length(max=500)])
@@ -371,10 +370,11 @@ class VolunteerManager(FlaskForm):
                                    Email()])
 
     # What is another way to say Services willing to do
-    files = [("alarm", "Alarm/Locks/Security"),
-             ("bill", "Bill Paying/Paperwork"), ("auto", "Auto Repair"),
-             ("remote", "Coronavirus Remote Assistance")]
-    services = MultiCheckboxField('Services willing to do', choices=files)
+    # files = [("alarm", "Alarm/Locks/Security"),
+    #          ("bill", "Bill Paying/Paperwork"), ("auto", "Auto Repair"),
+    #          ("remote", "Coronavirus Remote Assistance")]
+
+    # services = MultiCheckboxField('Services willing to do', choices=files)
     times = [("morning 8-11", "Morning 8-11"),
              ("morning 11-2", "Lunchtime 11-2"),
              ("afternoon 2-5", "Afternoon 2-5"),
@@ -386,8 +386,6 @@ class VolunteerManager(FlaskForm):
             ("friday", "Friday"), ("saturday", "Saturday"),
             ("sunday", "Sunday")]
     availability_day = MultiCheckboxField('Availability Day', choices=days)
-    vettings = TextAreaField("Vettings", validators=[Optional()])
-
     # make a history of completed and pending services
     notes = TextAreaField("Notes for Office Staff", validators=[Optional()])
 
@@ -398,6 +396,37 @@ class VolunteerManager(FlaskForm):
             raise ValidationError('Email already registered.')
 
     submit = SubmitField("Submit")
+
+
+class AddServiceVetting(FlaskForm):
+    vetting_types = [("none", "Select"), ("a", "a"), ("b", "b")]
+    vetting_users = [("cheryl", "Cheryl"), ("a", "a"), ("b", "b")]
+    vetting_type = SelectField('Type: ',
+                               choices=vetting_types,
+                               validators=[InputRequired()])
+    vetting_date = DateField("Date: ", validators=[
+                             InputRequired()], format='%Y-%M-%D')
+    vetting_expiration = DateField('Date Expired: ',
+                                   validators=[InputRequired()],
+                                   format='%Y-%M-%D')
+    vetting_additional_data = TextAreaField("Additional Data: ", validators=[
+                                            InputRequired()])
+    vetting_notes = TextAreaField("Notes: ", validators=[Optional()])
+    vetting_who_entered = SelectField('Who Entered: ',
+                                      choices=vetting_users,
+                                      validators=[InputRequired()])
+    submit = SubmitField("Save")
+
+
+class IsFullyVetted(FlaskForm):
+    volunteer_fully_vetted_checkbox = BooleanField(
+        'Check this box to confirm that this volunteer has been fully vetted',
+        validators=[InputRequired()])
+    vetting_users = [("cheryl", "Cheryl"), ("a", "a"), ("b", "b")]
+    vetting_who_entered = SelectField('Who Entered: ',
+                                      choices=vetting_users,
+                                      validators=[InputRequired()])
+    submit = SubmitField("Save")
 
 
 class ContractorManager(FlaskForm):
@@ -413,24 +442,58 @@ class ContractorManager(FlaskForm):
                                    Length(1, 64),
                                    Email()])
 
-    # Is there a better way to record availability in one variable
-    times = [("morning 8-11", "Morning 8-11"),
-             ("morning 11-2", "Lunchtime 11-2"),
-             ("afternoon 2-5", "Afternoon 2-5"),
-             ("evening 5-8", "Evening 5-8"),
-             ("night 8-midnight", "Night 8-Midnight")]
-    availability_time = MultiCheckboxField('Availability Time', choices=times)
-    days = [("monday", "Monday"), ("tuesday", "Tuesday"),
-            ("wednesday", "Wednesday"), ("thursday", "Thursday"),
-            ("friday", "Friday"), ("saturday", "Saturday"),
-            ("sunday", "Sunday")]
-    availability_day = MultiCheckboxField('Availability Day', choices=days)
-    reviews = TextAreaField('Reviews',
-                            validators=[Optional(),
-                                        Length(max=500)])
+    # Alternate way to structure availability
+    # times = [("morning 8-11", "8AM - 11AM"),
+    #          ("morning 11-2", "11AM - 2PM"),
+    #          ("afternoon 2-5", "2PM - 5PM"),
+    #          ("evening 5-8", "5PM - 8PM"),
+    #          ("night 8-midnight", "8PM - 12AM")]
+    # availability_m = SelectMultipleField('Monday', choices=times)
+    # availability_t = SelectMultipleField('Tuesday', choices=times)
+    # availability_w = SelectMultipleField('Wednesday', choices=times)
+    # availability_th = SelectMultipleField('Thursday', choices=times)
+    # availability_f = SelectMultipleField('Friday', choices=times)
 
     submit = SubmitField("Submit")
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered.')
+
+
+class Reviews(FlaskForm):
+    reviewer_name = StringField('Name of Reviewer',
+                                validators=[InputRequired(), Length(min=1, max=30)])
+    notes = TextAreaField('Notes', validators=[Optional(), Length(max=500)])
+    submit = SubmitField("Save")
+
+
+class AddAvailability(FlaskForm):
+    availability_options = [("not available", "Not Available"), (
+        "most likely available", "Most Likely Available"), ("available", "Available")]
+    availability_m1 = SelectField('', choices=availability_options)
+    availability_m2 = SelectField('', choices=availability_options)
+    availability_m3 = SelectField('', choices=availability_options)
+    availability_m4 = SelectField('', choices=availability_options)
+    availability_m5 = SelectField('', choices=availability_options)
+    availability_t1 = SelectField('', choices=availability_options)
+    availability_t2 = SelectField('', choices=availability_options)
+    availability_t3 = SelectField('', choices=availability_options)
+    availability_t4 = SelectField('', choices=availability_options)
+    availability_t5 = SelectField('', choices=availability_options)
+    availability_w1 = SelectField('', choices=availability_options)
+    availability_w2 = SelectField('', choices=availability_options)
+    availability_w3 = SelectField('', choices=availability_options)
+    availability_w4 = SelectField('', choices=availability_options)
+    availability_w5 = SelectField('', choices=availability_options)
+    availability_th1 = SelectField('', choices=availability_options)
+    availability_th2 = SelectField('', choices=availability_options)
+    availability_th3 = SelectField('', choices=availability_options)
+    availability_th4 = SelectField('', choices=availability_options)
+    availability_th5 = SelectField('', choices=availability_options)
+    availability_f1 = SelectField('', choices=availability_options)
+    availability_f2 = SelectField('', choices=availability_options)
+    availability_f3 = SelectField('', choices=availability_options)
+    availability_f4 = SelectField('', choices=availability_options)
+    availability_f5 = SelectField('', choices=availability_options)
+    submit = SubmitField("Save")

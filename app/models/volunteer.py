@@ -9,26 +9,36 @@ class Volunteer(db.Model):
     last_name = db.Column(db.String(80), nullable=False)
     preferred_name = db.Column(db.String(80))
     gender = db.Column(db.String(80))
-
+    birthdate = db.Column(db.Date(), nullable=False)
     ## Contact Information
-    address_id = db.Column(db.Integer(),
+    primary_address_id = db.Column(db.Integer(),
                            db.ForeignKey("address.id"),
                            nullable=False)
+    secondary_address_id = db.Column(db.Integer(),
+                           db.ForeignKey("address.id"))
     metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
 
-    phone_number = db.Column(db.String(10), nullable=False)
-    email_address = db.Column(db.String(80), nullable=False)
+    primary_phone_number = db.Column(db.String(10), nullable=False)
+    secondary_phone_number = db.Column(db.String(10))
+
+    organization_name = db.Column(db.String(80))
+    email_address = db.Column(db.String(80))
+    preferred_contact_method = db.Column(db.String(80), nullable=False) # One of: ['phone', 'email', 'phone and email'], implement as checkboxes
 
     ## Volunteer-Specific Information
     type_id = db.Column(db.Integer(),
                         db.ForeignKey("volunteer_type.id"),
                         nullable=False)
-    last_service_date = db.Column(db.Date(), nullable=False)  # Is this useful?
     rating = db.Column(db.Integer(), nullable=False)
     is_fully_vetted = db.Column(db.Boolean(), nullable=False)
-    preferred_contact_method_id = db.Column(db.Integer(),
-                                            db.ForeignKey("contact_method.id"),
-                                            nullable=False)
+    vettings = db.Column(db.Text)
+    
+    ## Emergency Contact Information
+    emergency_contact_name = db.Column(db.String(64))
+    emergency_contact_phone_number = db.Column(db.String(64))
+    emergency_contact_email_address = db.Column(db.String(64))
+    emergency_contact_relation = db.Column(db.String(64)) 
+
     general_notes = db.Column(db.String(255), nullable=False)
 
     @staticmethod
@@ -46,16 +56,16 @@ class Volunteer(db.Model):
             v = Volunteer(
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
-                address_id=-1,
-                phone_number=fake.phone_number(),
-                email_address=fake.email(),
-                type_id=-1,
-                last_service_date=datetime.strptime(
-                    fake.date(),
-                    "%Y-%m-%d").date(),  # would they like this to be required?
-                rating=random() * 5.0,  # would they like this to be required?
+                birthdate=datetime.strptime(
+                    fake.date(), "%Y-%m-%d").date(),
+                primary_address_id=-1,
+                primary_phone_number=fake.phone_number(),
+                email_address=choice([fake.email(), None]),
+                type_id=choice([0, 1, 2]),
+                rating=random() * 5.0,  
                 is_fully_vetted=choice([True, False]),
-                preferred_contact_method_id=-1,
+                vettings=choice([fake.text(), None]),
+                preferred_contact_method=choice(['phone', 'email', 'phone and email']),
                 general_notes=fake.text(),
                 **kwargs)
             db.session.add(v)
@@ -65,7 +75,7 @@ class Volunteer(db.Model):
                 db.session.rollback()
 
     def __repr__(self):
-        return f"Volunteer('{self.first_name}', '{self.last_name}')"
+        return f"Volunteer('{self.first_name} {self.last_name}')"
 
 
 class VolunteerType(db.Model):
@@ -97,7 +107,7 @@ class VolunteerAvailability(db.Model):
                              nullable=False)
     day_of_week = db.Column(
         db.String(20), nullable=False
-    )  # one of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    )  # one of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     time_period_id = db.Column(db.Integer,
                                db.ForeignKey('time_period.id'),
                                unique=True,
@@ -165,14 +175,3 @@ class VolunteerVacationDay(db.Model):
     def __repr__(self):
         return f"VolunteerVacationDay('{self.date}')"
 
-
-# For Creating Services
-class ContactMethod(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-    volunteers = db.relationship("Volunteer",
-                                 backref="contact_method",
-                                 lazy=True)
-
-    def __repr__(self):
-        return f"ContactMethod('{self.name}')"

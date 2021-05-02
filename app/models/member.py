@@ -5,11 +5,13 @@ class Member(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ## Name
     salutation = db.Column(db.String(20))
+    member_number = db.Column(db.Integer)
     first_name = db.Column(db.String(64), nullable=False)
     middle_initial = db.Column(db.String(1))
     last_name = db.Column(db.String(64), nullable=False)
     preferred_name = db.Column(db.String(64))
-    gender = db.Column(db.String(64))
+    gender = db.Column(db.String(64), nullable=False) # Dropdown: [Female, Male, Unspecified, Does not wish to answer]
+    birthdate = db.Column(db.Date, nullable=False) 
     ## Location
     primary_address_id = db.Column(db.Integer,
                                    db.ForeignKey('address.id'),
@@ -17,12 +19,16 @@ class Member(db.Model):
     secondary_address_id = db.Column(db.Integer, db.ForeignKey('address.id'))
     metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
     ## Contact Information
-    phone_number = db.Column(db.String(64))
-    email_address = db.Column(db.String(64), nullable=False)
+    primary_phone_number = db.Column(db.String(64), nullable=False) 
+    secondary_phone_number = db.Column(db.String(64)) 
+    email_address = db.Column(db.String(64))
+    preferred_contact_method = db.Column(db.String(80), nullable=False) # One of: ['phone', 'email', 'phone and email'], implement as checkboxes
+
     ## Emergency Contact Information
     emergency_contact_name = db.Column(db.String(64))
     emergency_contact_phone_number = db.Column(db.String(64))
     emergency_contact_email_address = db.Column(db.String(64))
+    emergency_contact_relation = db.Column(db.String(64)) 
     ## Membership Info
     membership_expiration_date = db.Column(db.Date, nullable=False)
     ## Service Notes
@@ -44,28 +50,22 @@ class Member(db.Model):
 
         seed()
         for i in range(count):
-            member_without_phone = Member(
+            m = Member(
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
+                gender=choice(['Male', 'Female', 'Unspecified', 'Does Not Wish to Answer']),
+                birthdate=datetime.strptime(
+                    fake.date(), "%Y-%m-%d").date(),
                 primary_address_id=-1,
-                email_address=fake.email(),
+                primary_phone_number=fake.phone_number(),
+                secondary_phone_number=choice([fake.phone_number(), None]),
+                email_address=choice([fake.email(), None]),
+                preferred_contact_method=choice(['phone', 'email', 'phone and email']),
                 membership_expiration_date=datetime.strptime(
                     fake.date(), "%Y-%m-%d").date(),
                 volunteer_notes=fake.text(),
                 staffer_notes=fake.text(),
                 **kwargs)
-            member_with_phone = Member(
-                first_name=fake.first_name(),
-                last_name=fake.last_name(),
-                primary_address_id=-1,
-                phone_number=fake.phone_number(),
-                email_address=fake.email(),
-                membership_expiration_date=datetime.strptime(
-                    fake.date(), "%Y-%m-%d").date(),
-                volunteer_notes=fake.text(),
-                staffer_notes=fake.text(),
-                **kwargs)
-            m = choice([member_without_phone, member_with_phone])
             db.session.add(m)
             try:
                 db.session.commit()

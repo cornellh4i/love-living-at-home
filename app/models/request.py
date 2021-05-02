@@ -51,7 +51,7 @@ class Request(db.Model):
                                     db.ForeignKey('address.id'),
                                     nullable=False)
     destination_address_id = db.Column(db.Integer,
-                                       db.ForeignKey('contact_method.id'),
+                                       db.ForeignKey('address.id'),
                                        nullable=False)
     # Member Info
     requesting_member_id = db.Column(db.Integer,
