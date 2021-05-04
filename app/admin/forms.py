@@ -368,24 +368,26 @@ class VolunteerManager(FlaskForm):
                                    Length(1, 64),
                                    Email()])
 
+    
     # What is another way to say Services willing to do
     # files = [("alarm", "Alarm/Locks/Security"),
     #          ("bill", "Bill Paying/Paperwork"), ("auto", "Auto Repair"),
     #          ("remote", "Coronavirus Remote Assistance")]
 
     # services = MultiCheckboxField('Services willing to do', choices=files)
-    times = [("morning 8-11", "Morning 8-11"),
-             ("morning 11-2", "Lunchtime 11-2"),
-             ("afternoon 2-5", "Afternoon 2-5"),
-             ("evening 5-8", "Evening 5-8"),
-             ("night 8-midnight", "Night 8-Midnight")]
-    availability_time = MultiCheckboxField('Availability Time', choices=times)
-    days = [("monday", "Monday"), ("tuesday", "Tuesday"),
-            ("wednesday", "Wednesday"), ("thursday", "Thursday"),
-            ("friday", "Friday"), ("saturday", "Saturday"),
-            ("sunday", "Sunday")]
-    availability_day = MultiCheckboxField('Availability Day', choices=days)
+    # times = [("morning 8-11", "Morning 8-11"),
+    #          ("morning 11-2", "Lunchtime 11-2"),
+    #          ("afternoon 2-5", "Afternoon 2-5"),
+    #          ("evening 5-8", "Evening 5-8"),
+    #          ("night 8-midnight", "Night 8-Midnight")]
+    # availability_time = MultiCheckboxField('Availability Time', choices=times)
+    # days = [("monday", "Monday"), ("tuesday", "Tuesday"),
+    #         ("wednesday", "Wednesday"), ("thursday", "Thursday"),
+    #         ("friday", "Friday"), ("saturday", "Saturday"),
+    #         ("sunday", "Sunday")]
+    # availability_day = MultiCheckboxField('Availability Day', choices=days)
     # make a history of completed and pending services
+
     notes = TextAreaField("Notes for Office Staff", validators=[Optional()])
 
     submit = SubmitField("Submit")

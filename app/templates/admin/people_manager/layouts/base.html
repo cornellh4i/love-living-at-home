@@ -1,4 +1,5 @@
 {% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
 {% macro dashboard_option(title, endpoint,
 description=None, icon=None) %}
 <a class="column" href="{{ url_for(endpoint) }}">
@@ -18,9 +19,9 @@ description=None, icon=None) %}
 {% endmacro %}
 
 {% macro manage_volunteer() %}
-<i class="clock outline icon right floated"></i>
-<i class="check square outline icon right floated"></i>
-<i class="handshake outline icon right floated"></i>
+<i class="clock outline icon right floated" style = "cursor: pointer"></i>
+<i class="check square outline icon right floated" style = "cursor: pointer"></i>
+<i class="handshake outline icon right floated" style = "cursor: pointer"></i>
 <i class="pencil icon right floated"></i>
 {% endmacro %}
 
@@ -128,6 +129,188 @@ description=None, icon=None) %}
     </div>
   </div>
 
+   <!-- Service Categories Pop Up -->
+  <div class="ui modal" id="services">
+    <i class="close icon"></i>
+    <div class="header">Services Provided By</div>
+    <div class="ui styled fluid accordion">
+      {% for category in service_categories %}
+      <div class="title">
+        <i class="dropdown icon"></i>
+        {{ category[0] }}
+      </div>
+      <div class="content">
+        {% for service in services %} {% if service[1] == category[1] %}
+        <div class="transition hidden">
+          <div class="ui checkbox">
+            <input type="checkbox" name="example" />
+            <label>{{ service[0] }}</label>
+          </div>
+        </div>
+        {% endif %} {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Vettings Pop Up -->
+  <div class="ui modal" id="vettings">
+    <i class="close icon"></i>
+    <div class="header">Vettings</div>
+    <div id="context1">
+      <div class="ui two item menu">
+        <a class="item active" data-tab="first">Add Service Vetting</a>
+        <a class="item" data-tab="second">Is Fully Vetted</a>
+      </div>
+      <div class="ui active tab segment" data-tab="first">
+        <div>
+          <h3 class="header">Add Service Vetting</h3>
+  
+          {% set flashes = { 'error':
+          get_flashed_messages(category_filter=['form-error']), 'warning':
+          get_flashed_messages(category_filter=['form-check-email']), 'info':
+          get_flashed_messages(category_filter=['form-info']), 'success':
+          get_flashed_messages(category_filter=['form-success']) } %} {{
+          f.begin_form(add_vetting, flashes) }} {{
+          f.render_form_field(add_vetting.vetting_type) }}
+          <div class="two fields">
+            {{ f.render_form_field(add_vetting.vetting_date) }} {{
+            f.render_form_field(add_vetting.vetting_expiration) }}
+          </div>
+
+          {{f.render_form_field(add_vetting.vetting_additional_data)}}
+          {{f.render_form_field(add_vetting.vetting_notes)}} 
+          
+                              
+          <div class="actions">
+            {{ f.form_message(flashes['error'], header='Something went wrong.',
+            class='error') }}
+            {{ f.form_message(flashes['warning'], header='Check your
+            email.', class='warning') }}
+            {{ f.form_message(flashes['info'],
+            header='Information', class='info') }}
+            {{ f.form_message(flashes['success'],
+            header='Success!', class='success') }} 
+            {{ f.render_form_field(add_vetting.submit) }}
+          </div>
+          {{ f.end_form() }}
+        </div>
+      </div>
+      <div class="ui tab segment" data-tab="second">
+        <div>
+          <h3 class="header">Is Fully Vetted</h3>
+          {% set flashes = { 'error':
+          get_flashed_messages(category_filter=['form-error']), 'warning':
+          get_flashed_messages(category_filter=['form-check-email']), 'info':
+          get_flashed_messages(category_filter=['form-info']), 'success':
+          get_flashed_messages(category_filter=['form-success']) } %} {{
+          f.begin_form(is_fully_vetted, flashes) }} {{
+          f.render_form_field(is_fully_vetted.volunteer_fully_vetted_checkbox) }}
+          {{ f.render_form_field(is_fully_vetted.vetting_who_entered) }} 
+          
+        <div class="actions">
+          {{ f.form_message(flashes['error'], header='Something went wrong.',
+          class='error') }}
+          {{ f.form_message(flashes['warning'], header='Check your
+          email.', class='warning') }}
+          {{ f.form_message(flashes['info'],
+          header='Information', class='info') }}
+          {{ f.form_message(flashes['success'],
+          header='Success!', class='success') }} 
+          {{ f.render_form_field(is_fully_vetted.submit) }} 
+        </div>
+          
+          
+          {{ f.end_form() }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Availability Pop Up -->
+  <div class="ui fullscreen modal" id="availability">
+    <i class="close icon"></i>
+    <div class="header">Add Availability</div>
+    <div class="content">
+      
+      {% set flashes = 
+        { 'error': get_flashed_messages(category_filter=['form-error']), 
+        'warning': get_flashed_messages(category_filter=['form-check-email']), 
+        'info': get_flashed_messages(category_filter=['form-info']), 
+        'success': get_flashed_messages(category_filter=['form-success']) } 
+      %} 
+
+      {{ f.begin_form(add_availability, flashes) }}
+      <table class="ui definition table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>8AM - 11AM</td>
+            <td>{{ f.render_form_field(add_availability.availability_m1) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_t1) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_w1) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_th1) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_f1) }}</td>
+          </tr>
+          <tr>
+            <td>11AM - 2PM</td>
+            <td>{{ f.render_form_field(add_availability.availability_m2) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_t2) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_w2) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_th2) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_f2) }}</td>
+          </tr>
+          <tr>
+            <td>2PM - 5PM</td>
+            <td>{{ f.render_form_field(add_availability.availability_m3) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_t3) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_w3) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_th3) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_f3) }}</td>
+          </tr>
+          <tr>
+            <td>5PM - 8PM</td>
+            <td>{{ f.render_form_field(add_availability.availability_m3) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_t3) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_w3) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_th3) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_f3) }}</td>
+          </tr>
+          <tr>
+            <td>8PM - 12AM</td>
+            <td>{{ f.render_form_field(add_availability.availability_m4) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_t4) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_w4) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_th4) }}</td>
+            <td>{{ f.render_form_field(add_availability.availability_f4) }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="actions">
+        {{ f.form_message(flashes['error'], header='Something went wrong.',
+        class='error') }}
+        {{ f.form_message(flashes['warning'], header='Check your
+        email.', class='warning') }}
+        {{ f.form_message(flashes['info'],
+        header='Information', class='info') }}
+        {{ f.form_message(flashes['success'],
+        header='Success!', class='success') }}
+        {{ f.render_form_field(add_availability.submit) }}
+      </div>
+      {{ f.end_form() }}
+    </div>
+  </div>
+
   <script language='javascript'>
     $(document).ready(function () {
       $('.ui.accordion').accordion();
@@ -196,7 +379,23 @@ description=None, icon=None) %}
 
       })
 
+    $('i.handshake.outline.icon.right.floated').click(function () {
+      $('#services').modal('show');
+    });
 
+    $('.ui.accordion').accordion({ exclusive: false });
+
+    $('i.check.square.outline.icon.right.floated').click(function () {
+      $('#vettings').modal('show');
+    });
+    
+    $('#context1 .menu .item').tab({
+     context: $('#context1'),
+    });
+
+    $('i.clock.outline.icon.right.floated').click(function () {
+      $('#availability').modal('show');
+    });
 
   </script>
 

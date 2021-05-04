@@ -24,19 +24,12 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 
     <div class="field">{{ f.render_form_input(form.email) }}</div>
 
-    <div class="two fields">
-      <div class="field">
-        <button class="fluid inverted violet ui button" id="show-availability">
-          Availability
-        </button>
-      </div>
-
-      <div class="field">
-        <button class="fluid inverted violet ui button" id="show-reviews">
-          Reviews
-        </button>
-      </div>
+    <div class="field">
+      <button class="fluid inverted violet ui button" id="show-reviews">
+        Reviews
+      </button>
     </div>
+
 
     {{ f.form_message(flashes['error'], header='Something went wrong.',
     class='error') }} {{ f.form_message(flashes['warning'], header='Check your
@@ -48,86 +41,6 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   </div>
 </div>
 
-<div class="ui fullscreen modal" id="availability">
-  <i class="close icon"></i>
-  <div class="header">Add Availability</div>
-  <div class="content">
-    {% set flashes = { 'error':
-    get_flashed_messages(category_filter=['form-error']), 'warning':
-    get_flashed_messages(category_filter=['form-check-email']), 'info':
-    get_flashed_messages(category_filter=['form-info']), 'success':
-    get_flashed_messages(category_filter=['form-success']) } %} {{
-    f.begin_form(add_availability, flashes) }}
-    <table class="ui definition table">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Monday</th>
-          <th>Tuesday</th>
-          <th>Wednesday</th>
-          <th>Thursday</th>
-          <th>Friday</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>8AM - 11AM</td>
-          <td>{{ f.render_form_field(add_availability.availability_m1) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_t1) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_w1) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_th1) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_f1) }}</td>
-        </tr>
-        <tr>
-          <td>11AM - 2PM</td>
-          <td>{{ f.render_form_field(add_availability.availability_m2) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_t2) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_w2) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_th2) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_f2) }}</td>
-        </tr>
-        <tr>
-          <td>2PM - 5PM</td>
-          <td>{{ f.render_form_field(add_availability.availability_m3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_t3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_w3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_th3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_f3) }}</td>
-        </tr>
-        <tr>
-          <td>5PM - 8PM</td>
-          <td>{{ f.render_form_field(add_availability.availability_m3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_t3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_w3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_th3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_f3) }}</td>
-        </tr>
-        <tr>
-          <td>8PM - 12AM</td>
-          <td>{{ f.render_form_field(add_availability.availability_m4) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_t4) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_w4) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_th4) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_f4) }}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    {{ f.form_message(flashes['error'], header='Something went wrong.',
-    class='error') }}
-    {{ f.form_message(flashes['warning'], header='Check your
-    email.', class='warning') }}
-    {{ f.form_message(flashes['info'],
-    header='Information', class='info') }}
-    {{ f.form_message(flashes['success'],
-    header='Success!', class='success') }}
-    {% for field in form |
-    selectattr('type', 'equalto', 'SubmitField') %} {{
-    f.render_form_field(add_availability.submit) }}
-    {% endfor %}
-    {{ f.end_form() }}
-  </div>
-</div>
 
 <div class="ui modal" id="reviews">
   <i class="close icon"></i>
@@ -177,10 +90,6 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   </div>
 
   <script>
-    $('#show-availability').click(function () {
-      $('#availability').modal('show');
-    });
-
     $('#show-reviews').click(function () {
       $('#reviews').modal('show');
     });

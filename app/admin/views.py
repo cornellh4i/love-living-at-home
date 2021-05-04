@@ -9,7 +9,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              ContractorManager, InviteUserForm, MemberManager,
                              NewUserForm, TransportationRequestForm,
                              VolunteerManager, SearchRequestForm, AddServiceVetting,
-                             IsFullyVetted, AddAvailability, Reviews, EditServiceForm)
+                             IsFullyVetted, AddAvailability, Reviews, EditServiceForm, MultiCheckboxField)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category
@@ -39,7 +39,19 @@ def request_manager():
 @admin_required
 def people_manager():
     """People Manager Page."""
-    return render_template('admin/people_manager/layouts/base.html')
+    add_availability = AddAvailability()
+    add_vetting = AddServiceVetting()
+    is_fully_vetted = IsFullyVetted()
+    service_categories = [(category.name, category.request_type_id)
+                          for category in ServiceCategory.query.all()]
+    services = [(service.name, service.category_id)
+                for service in Service.query.all()]
+    return render_template('admin/people_manager/layouts/base.html',
+                           add_availability=add_availability,
+                           add_vetting=add_vetting,
+                           is_fully_vetted=is_fully_vetted,
+                           services=services,
+                           service_categories=service_categories)
 
 
 @admin.route('/new-user', methods=['GET', 'POST'])
@@ -232,34 +244,34 @@ def create_transportation_request():
     form = TransportationRequestForm()
     if form.validate_on_submit():
         transportation_request = Request(
-                                         type_id = 1,
-                                         status_id=form.status.data.id,
-                                         #update later to short description
-                                         short_description=form.description.data,
-                                         created_date=form.date_created.data,
-                                         # modified_date=,
-                                         requested_date=form.requested_date.data,
-                                         initial_pickup_time=form.initial_pickup.data,
-                                         appointment_time=form.appointment.data,
-                                         return_pickup_time=form.return_pickup.data,
-                                         drop_off_time=form.drop_off.data,
-                                         is_date_time_flexible=form.time_flexible.data == 'Yes',
-                                         duration_type_id=0,
-                                         service_category_id=form.service_category.data.id,
-                                         service_id=form.service.data.id,
-                                         starting_address_id=form.starting_location.data,
-                                         destination_address_id=form.destination.data.id,
-                                         # Will be updated in the future for multiple ppl
-                                         requesting_member_id=form.requesting_member.data[0].id,
-                                         special_instructions=form.special_instructions.data,
-                                         followup_date=form.follow_up_date.data,
-                                         responsible_staffer_id=form.responsible_staffer.data,
-                                         contact_log_priority_id=form.contact_log_priority.data.id,
-                                         cc_email=form.person_to_cc.data)
+            type_id=1,
+            status_id=form.status.data.id,
+            # update later to short description
+            short_description=form.description.data,
+            created_date=form.date_created.data,
+            # modified_date=,
+            requested_date=form.requested_date.data,
+            initial_pickup_time=form.initial_pickup.data,
+            appointment_time=form.appointment.data,
+            return_pickup_time=form.return_pickup.data,
+            drop_off_time=form.drop_off.data,
+            is_date_time_flexible=form.time_flexible.data == 'Yes',
+            duration_type_id=0,
+            service_category_id=form.service_category.data.id,
+            service_id=form.service.data.id,
+            starting_address_id=form.starting_location.data,
+            destination_address_id=form.destination.data.id,
+            # Will be updated in the future for multiple ppl
+            requesting_member_id=form.requesting_member.data[0].id,
+            special_instructions=form.special_instructions.data,
+            followup_date=form.follow_up_date.data,
+            responsible_staffer_id=form.responsible_staffer.data,
+            contact_log_priority_id=form.contact_log_priority.data.id,
+            cc_email=form.person_to_cc.data)
         db.session.add(transportation_request)
         db.session.commit()
         flash(
-            'Successfully submitted a new transportation request', 
+            'Successfully submitted a new transportation request',
             'form-success')
         return redirect(url_for('admin.index'))
     else:
@@ -313,21 +325,17 @@ def invite_member():
 @admin_required
 def invite_volunteer():
     """Invites a user to create a volunteer account"""
-    form = VolunteerManager()
-    add_vetting = AddServiceVetting()
-    service_categories = [(category.name, category.request_type_id)
-                          for category in ServiceCategory.query.all()]
-    services = [(service.name, service.category_id)
+    service_categories = sorted([(category.name, category.request_type_id, category.id)
+                                for category in ServiceCategory.query.all()],
+                                key=lambda triple: triple[2])
+    services = [(service.name, service.category_id, service.id)
                 for service in Service.query.all()]
-    is_fully_vetted = IsFullyVetted()
-    add_availability = AddAvailability()
+    form = VolunteerManager()
     if form.validate_on_submit():
         flash('Volunteer {} successfully invited'.format(
             form.first_name.data), 'form-success')
     return render_template('admin/people_manager/volunteer_manager.html',
-                           form=form, add_vetting=add_vetting,
-                           is_fully_vetted=is_fully_vetted,
-                           add_availability=add_availability,
+                           form=form,
                            services=services,
                            service_categories=service_categories)
 
@@ -338,7 +346,6 @@ def invite_volunteer():
 def invite_contractor():
     """Page for contactor management."""
     form = ContractorManager()
-    add_availability = AddAvailability()
     reviews = Reviews()
     if form.validate_on_submit():
         flash('Contractor {} successfully invited'.format(
@@ -364,7 +371,7 @@ def registered_services():
 def service_info(service_id):
     """View a service's profile."""
     service = Service.query.filter_by(id=service_id).first()
-    form=EditServiceForm(name=service.name, category=service.category)
+    form = EditServiceForm(name=service.name, category=service.category)
     if form.validate_on_submit():
         updated_service = service
         updated_service.name = form.name.data
@@ -372,7 +379,7 @@ def service_info(service_id):
         db.session.add(updated_service)
         db.session.commit()
         flash('Service {} successfully updated'.format(
-                form.name.data), 'form-success')
+            form.name.data), 'form-success')
         return redirect(url_for('admin.registered_services'))
     if service is None:
         abort(404)
@@ -398,7 +405,8 @@ def new_service():
     """Create a new service."""
     form = EditServiceForm()
     if form.validate_on_submit():
-        service = Service(name=form.name.data, category_id=form.category.data.id)
+        service = Service(name=form.name.data,
+                          category_id=form.category.data.id)
         db.session.add(service)
         db.session.commit()
         flash('Service {} successfully created'.format(service.name),
