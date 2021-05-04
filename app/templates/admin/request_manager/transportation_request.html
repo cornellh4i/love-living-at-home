@@ -33,16 +33,30 @@
   </div>
 
   <div class="twelve wide column">
-    <div class="ui two column stackable grid">
-      <div class="six wide column">
-        {{ f.render_form_field(form.requested_date) }}
-        {{ f.render_form_field(form.initial_pickup) }}
-        {{ f.render_form_field(form.appointment) }}
+    <div class="ui two column stackable relaxed grid">
+      <div class="two column row">
+        <div class="six wide column">
+          {{ f.render_form_field(form.requested_date) }}
+        </div>
+        <div class="right floated six wide column">
+          {{ f.render_form_field(form.time_flexible) }}
+        </div>
       </div>
-      <div class="right floated six wide column">
-        {{ f.render_form_field(form.time_flexible) }}
-        {{ f.render_form_field(form.return_pickup) }}
-        {{ f.render_form_field(form.drop_off) }}
+      <div class="two column row">
+        <div class="six wide column">
+          {{ f.render_form_field(form.initial_pickup) }}
+        </div>
+        <div class="right floated six wide column">
+          {{ f.render_form_field(form.return_pickup) }}
+        </div>
+      </div>
+      <div class="two column row">
+        <div class="six wide column">
+          {{ f.render_form_field(form.appointment) }}
+        </div>
+        <div class="right floated six wide column">
+          {{ f.render_form_field(form.drop_off) }}
+        </div>
       </div>
     </div>
   </div>

@@ -255,7 +255,7 @@ def create_transportation_request():
             'Successfully submitted a new transportation request', 
             'form-success')
         return redirect(url_for('admin.index'))
-    else:
+    elif (len(form.errors) > 0):
         flash(form.errors, 'error')
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
