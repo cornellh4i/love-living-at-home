@@ -14,7 +14,7 @@
     padding: 8px;
   }
 
-  .container__triangle {
+  .triangle {
     border-style: solid;
 
     /* Size */
@@ -22,15 +22,27 @@
     width: 0px;
   }
 
-  .container__triangle--right {
+  .right_triangle {
     border-color: transparent transparent transparent rgba(0, 0, 0, 0.3);
     border-width: 8px 0px 8px 8px;
   }
 
-  .container__triangle--left {
+  .left_triangle {
     border-color: transparent rgba(0, 0, 0, 0.3) transparent transparent;
     border-width: 8px 8px 8px 0px;
   }
+
+  .requestbox {
+    width: 840px;
+    padding: 100px;
+    border: 1px solid gray;
+    margin: 0;
+  }
+
+  .divright {
+    float: right 
+  }
+  
 </style>
 
 <div class="content-section">
@@ -38,7 +50,7 @@
     {{ form.hidden_tag() }}
 
     <h2 class="header">Search Criteria</h2>
-    <hr />
+    <hr/>
 
     {% set flashes = {
     'error': get_flashed_messages(category_filter=['form-error']),
@@ -79,7 +91,7 @@
 
             <div class="field">
               <label> {{form.request_status.label}}</label>
-              <select multiple="" class="ui dropdown">
+              <select multiple="" class="ui dropdown" name="requeststatus">
                 <option value="">Select Request Status</option>
                 {% for choice in form.request_status.choices %}
                 <option value={{ choice[0] }}>{{choice[1]}}</option>
@@ -92,7 +104,7 @@
         <div class="right floated eight wide column">
           <div class="field">
             <label> {{form.service_category.label}}</label>
-            <select multiple="" class="ui dropdown">
+            <select multiple="" class="ui dropdown" name="servicecategory">
               <option value="">Select Service Category(s)</option>
               {% for choice in form.service_category.choices %}
               <option value={{ choice[0] }}>{{choice[1]}}</option>
@@ -101,7 +113,7 @@
           </div>
           <div class="field">
             <label> {{form.provider_type.label}}</label>
-            <select multiple="" class="ui dropdown">
+            <select multiple="" class="ui dropdown" name="providertype">
               <option value="">Select Provider Type(s)</option>
               {% for choice in form.provider_type.choices %}
               <option value={{ choice[0] }}>{{choice[1]}}</option>
@@ -117,7 +129,7 @@
       </script>
       <div class="field">
         <label> {{form.requesting_member.label}}</label>
-        <select class="ui search selection dropdown" id="search-select">
+        <select class="ui search selection dropdown" name="requestingmem">
           <option value="">Type Name Here</option>
           {% for choice in form.requesting_member.choices %}
           <option value={{ choice[0] }}>{{choice[1]}}</option>
@@ -126,7 +138,7 @@
       </div>
       <div class="field">
         <label> {{form.service_provider.label}}</label>
-        <select class="ui search dropdown">
+        <select class="ui search dropdown" name="serviceprov">
           <option value="">Type Name Here</option>
           {% for choice in form.service_provider.choices %}
           <option value={{ choice[0] }}>{{choice[1]}}</option>
@@ -162,7 +174,7 @@
           <div class="inline fields">
             <button class="container" id="leftbutton">
               <!-- Triangle -->
-              <div class="container__triangle container__triangle--left"></div>
+              <div class="triangle left_triangle"></div>
             </button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <select class="ui dropdown" id="timePeriod" name="timePeriod">
@@ -174,7 +186,7 @@
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="container" id="rightbutton">
               <!-- Triangle -->
-              <div class="container__triangle container__triangle--right"></div>
+              <div class="triangle right_triangle"></div>
             </button>
             <!-- </div>  -->
           </div>
@@ -340,6 +352,42 @@
         </div>
       </div>
     </div>
+
+    <h2 class="header">Search Results</h2>
+    <div id="" class="divright">(0 Results found)</div>
+
+    <p>
+      <hr />
+    </p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <div class="ui four column stackable grid">
+      <div class="field">
+        <label>Sort By:</label>
+        <select class="ui search dropdown" name="sortby">
+          <option value = "">Choose filter</option>
+          <option value= 0 >Create Date</option>
+        </select>
+      </div>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <div class="field">
+        <div class = "box">
+
+          
+
+        </div>
+    </div>
+    </div>
+
+
+
+
+
+
+
+
+
+    {{f.end_form()}}
+    <!-- form.data-->
 </div>
 </form>
 </div>
