@@ -138,7 +138,7 @@ class TransportationRequestForm(FlaskForm):
     return_pickup = TimeField('Return Pickup:', format='%H:%M')
     drop_off = TimeField('Drop Off:', format='%H:%M')
     time_flexible = RadioField('Is Date/Time Flexible?',
-                               choices=[('Yes', 'Yes'), ('No', 'No')])
+                               choices=[(True, 'Yes'), (False, 'No')])
     description = TextAreaField('Short description (included in email):')
 
     # service_category = QuerySelectField(
@@ -178,12 +178,12 @@ class TransportationRequestForm(FlaskForm):
     special_instructions = TextAreaField('Special Instructions:')
     follow_up_date = DateField('Follow Up Date:',
                                validators=[InputRequired()])
-    status =  QuerySelectField(
+    status = QuerySelectField(
         'Status:',
         validators=[InputRequired()],
         get_label='name',
         query_factory=statusQuery)
-    responsible_staffer = SelectField('Responsible Staffer:', choices = [('yes', 'yes')])
+    responsible_staffer = SelectField('Responsible Staffer:')
     contact_log_priority = QuerySelectField(
         'Contact Log Priority:',
         validators=[InputRequired()],

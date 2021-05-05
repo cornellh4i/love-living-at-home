@@ -233,19 +233,17 @@ def create_transportation_request():
         transportation_request = Request(
                                          type_id = 1,
                                          status_id=form.status.data.id,
-                                         #update later to short description
                                          short_description=form.description.data,
                                          created_date=form.date_created.data,
-                                         # modified_date=,
                                          requested_date=form.requested_date.data,
                                          initial_pickup_time=form.initial_pickup.data,
                                          appointment_time=form.appointment.data,
                                          return_pickup_time=form.return_pickup.data,
                                          drop_off_time=form.drop_off.data,
-                                         is_date_time_flexible=form.time_flexible.data == 'Yes',
-                                         duration_type_id=0,
+                                         is_date_time_flexible=form.time_flexible.data,
+                                         duration_type_id=form.duration.data,
                                          service_category_id=form.service_category.data.id,
-                                         service_id=form.service.data.id,
+                                         service_id=form.covid_service.data.id,
                                          starting_address_id=form.starting_location.data,
                                          destination_address_id=form.destination.data.id,
                                          # Will be updated in the future for multiple ppl
