@@ -47,10 +47,65 @@
     margin-top: 20px;
   }
 
+  .divleft {
+    float: left 
+  }
 
   .divright {
     float: right
   }
+
+  .date_box {
+    position: relative;
+    width: 140px;
+    height: 131px;
+    border: 1px solid gray; 
+    overflow: hidden;
+    margin: -60px;
+    text-align: center;
+    font-weight: bold;
+    vertical-align: middle;
+  }
+
+  .day_box {
+    width: 140px;
+    height: 25px;
+    background-color: gainsboro;
+    margin: -60px;
+    margin-top: -130px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .time_box {
+    width: 140px;
+    height: 35px;
+    background-color: gainsboro;
+    margin: -60px;
+    margin-top: 95px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .date_number_box {
+    width: 140px;
+    height: 5px;
+    margin: -60px;
+    margin-top: 90px;
+    text-align: center;
+    font-weight: bold;
+    font-size: x-large;
+  }
+
+  .name_box{
+    position: relative;
+    width: 140px;
+    height: 131px; 
+    overflow: hidden;
+    margin: 240px;
+    
+  }
+   
 </style>
 
 <div class="content-section">
@@ -361,7 +416,7 @@
       </div>
     </div>
 
-    <h2 class="header">Search Results</h2>
+    <h2 class="header" class ="divleft">Search Results</h2>
     <div id="" class="divright">(0 Results Found)</div>
 
     <p>
@@ -377,11 +432,33 @@
         </select>
       </div>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
       <div class="field">
-        <div class="request_number_box"></div>
+        <div class="request_number_box">
+          
+          <div class="divleft"><b>Request #6163</b></div>
+         
+          <div class="divright"><b>Status: Confirmed</b></div>
+        </div>
       </div>
       <div class="field">
-        <div class="request_box"></div>
+        <div class="request_box" class="float-container">
+          <div class = "field">
+             <div class="date_box"></div>
+             <div class="day_box">Saturday</div>
+             <div class="date_number_box">03/16</div>
+             <div class="time_box">2:40 PM - 3:20 PM</div>
+          </div>
+          <div class="divleft" class="name_box">
+            <!-- Randy Warren  -->
+          </div>
+          <div class="divleft">
+            
+          </div>
+          <div class="divleft">
+            
+          </div>
+        </div>
       </div>
     </div>
 
