@@ -133,8 +133,11 @@ class TransportationRequestForm(FlaskForm):
     def selectedCategory():
         return db.session.query(ServiceCategory).order_by().filter(ServiceCategory.request_type_id == 0)
 
-    def services():
-        return db.session.query(Service).order_by()
+    def covid_services():
+        return db.session.query(Service).order_by().filter(Service.category_id == 1)
+
+    def transportation_services():
+        return db.session.query(Service).order_by().filter(Service.category_id == 0)
 
     def stafferQuery():
         return db.session.query(Staffer).order_by()
@@ -167,17 +170,37 @@ class TransportationRequestForm(FlaskForm):
                                choices=[('Yes', 'Yes'), ('No', 'No')])
     description = TextAreaField('Short description (included in email):')
 
-    service_category = QuerySelectField(
-        'Service Category:',
-        validators=[InputRequired()],
-        get_label='name',
-        query_factory=selectedCategory)
+    # service_category = QuerySelectField(
+    #     'Service Category:',
+    #     validators=[InputRequired()],
+    #     get_label='name',
+    #     query_factory=selectedCategory)
 
-    service =  QuerySelectField(
+    # service =  QuerySelectField(
+    #     'Service:',
+    #     validators=[InputRequired()],
+    #     get_label='name',
+    #     query_factory=services)
+
+    service_category = SelectField('Service Category:', 
+    choices = [('Transportation', 'Transportation'), ('Coronavirus Community Support', 'Coronavirus Community Support')],
+    render_kw={'onchange': "serviceChoices()"})
+
+    covid_service = QuerySelectField(
         'Service:',
+        id = "covid_service",
+        render_kw={'onchange': "serviceChoices()"},
         validators=[InputRequired()],
         get_label='name',
-        query_factory=services)
+        query_factory=covid_services)
+
+    transportation_service = QuerySelectField(
+        'Service:',
+        render_kw={'onchange': "serviceChoices()"},
+        id = "transportation_service",
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=transportation_services)
 
     starting_location = StringField('Starting Location:')
 

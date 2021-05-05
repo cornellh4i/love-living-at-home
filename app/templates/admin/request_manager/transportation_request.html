@@ -72,13 +72,33 @@
         {{ f.render_form_field(form.starting_location) }}
       </div>
       <div class="right floated six wide column">
-        {{ f.render_form_field(form.service) }}
+        <div id="covid" style="display:none;">
+          {{ f.render_form_field(form.covid_service) }}
+        </div>
+        <!-- <p id="p">paragraph!</p> -->
+        <div id="transportation">
+          {{ f.render_form_field(form.transportation_service) }}
+        </div>
         {{ f.render_form_field(form.destination) }}
       </div>
       <div class="right floated six wide column">
       </div>
     </div>
   </div>
+
+  <script>
+    function serviceChoices() {
+      let service_category = document.getElementById("service_category").value;
+      // document.getElementById("p").style.display = "none";
+      if (service_category === "Coronavirus Community Support") {
+        document.getElementById("covid").style.display = "initial";
+        document.getElementById("transportation").style.display = "none";
+      } else if (service_category === "Transportation") {
+        document.getElementById("covid").style.display = "none"
+        document.getElementById("transportation").style.display = "initial"
+      }
+    }
+  </script>
 
   <div class="twelve wide column">
     {{ f.render_form_field(form.special_instructions) }}
