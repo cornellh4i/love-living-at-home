@@ -124,10 +124,14 @@ class TransportationRequestForm(FlaskForm):
     def specialInstructionsQuery():
          return db.session.query(Member).order_by()
 
+    special_instructions_list = []
+
     date_created = DateField('Date Created:', default = date.today, 
         render_kw={'readonly': True})
     requesting_member = SelectMultipleField(
         'Requesting Member',
+        id = 'member',
+        render_kw={'onchange': "specialInstructions()"},
         validators=[InputRequired()])
     requested_date = DateField('Requested Date',
                                validators=[InputRequired()])
@@ -141,21 +145,18 @@ class TransportationRequestForm(FlaskForm):
                                choices=[('Yes', 'Yes'), ('No', 'No')])
     description = TextAreaField('Short description (included in email):')
 
-    # service_category = QuerySelectField(
-    #     'Service Category:',
-    #     validators=[InputRequired()],
-    #     get_label='name',
-    #     query_factory=selectedCategory)
+    service_category = QuerySelectField(
+        'Service Category:',
+        render_kw={'onchange': "serviceChoices()"},
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=selectedCategory)
 
     # service =  QuerySelectField(
     #     'Service:',
     #     validators=[InputRequired()],
     #     get_label='name',
     #     query_factory=services)
-
-    service_category = SelectField('Service Category:', 
-    choices = [('Transportation', 'Transportation'), ('Coronavirus Community Support', 'Coronavirus Community Support')],
-    render_kw={'onchange': "serviceChoices()"})
 
     covid_service = QuerySelectField(
         'Service:',
@@ -176,6 +177,7 @@ class TransportationRequestForm(FlaskForm):
     starting_location = StringField('Starting Location:')
 
     special_instructions = TextAreaField('Special Instructions:')
+
     follow_up_date = DateField('Follow Up Date:',
                                validators=[InputRequired()])
     status =  QuerySelectField(
