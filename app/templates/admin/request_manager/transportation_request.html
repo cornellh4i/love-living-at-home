@@ -145,7 +145,7 @@
     {{ f.form_message(flashes['success'], header='Success!', class='success') }}
 
     {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
-    {{ f.render_form_field(field) }}
+    {{ f.render_form_field(field, extra_classes=".ui .button") }}
     {% endfor %}
   </div>
 </div>
