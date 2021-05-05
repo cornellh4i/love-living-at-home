@@ -29,7 +29,7 @@
   </div>
 
   <div class="twelve wide column">
-    {{ f.render_form_field(form.requesting_member)}}
+    {{ f.render_custom_select(form.requesting_member)}}
   </div>
 
   <div class="twelve wide column">
@@ -69,15 +69,17 @@
     <div class="ui two column stackable grid">
       <div class="six wide column">
         {{ f.render_form_field(form.service_category) }}
-        {{ f.render_form_field(form.starting_location) }}
+        
       </div>
       <div class="right floated six wide column">
         {{ f.render_form_field(form.service) }}
-        {{ f.render_form_field(form.destination) }}
       </div>
       <div class="right floated six wide column">
       </div>
     </div>
+    {{ f.render_form_field(form.starting_location) }}
+    {{ f.render_custom_select(form.destination) }}
+    {{ f.render_form_field(form.duration) }}
   </div>
 
   <div class="twelve wide column">
