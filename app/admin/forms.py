@@ -345,6 +345,7 @@ class VolunteerManager(FlaskForm):
     salutations = [("", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
                    ("mr", "Mr")]
     salutation = SelectField("Salutation", choices=salutations)
+
     first_name = StringField(
         'First Name', validators=[InputRequired(),
                                   Length(min=1, max=30)])
@@ -353,21 +354,49 @@ class VolunteerManager(FlaskForm):
     last_name = StringField(
         'Last Name', validators=[InputRequired(),
                                  Length(min=1, max=30)])
+    salutations = [("", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
+                   ("mr", "Mr")]
+    salutation = SelectField("Salutation", choices=salutations)
+
     gender = SelectField("Gender",
                          validators=[InputRequired()],
-                         choices=[("male", "Male"), ('female', "Female")])
+                         choices=[("male", "Male"), ('female', "Female"), ("unspecified", "Unspecified"), ("no_answer", "Do not wish to answer")])
 
+    birthday = DateField("Birthday ", validators=[InputRequired()])
     # make this a stringfield or select field?
-    pronoun = StringField("Pronouns",
-                          validators=[InputRequired(),
-                                      Length(min=1, max=30)])
     preferred_name = StringField(
         'Preferred Name', validators=[Optional(),
                                       Length(min=1, max=30)])
-    primary_address1 = StringField(
-        'Address', validators=[InputRequired(),
-                               Length(max=200)])
-
+    #address
+    primary_address1 = StringField('Street address or P.O. Box',
+                                   validators=[InputRequired(),
+                                               Length(max=200)])
+    primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
+                                   validators=[Optional(),
+                                               Length(max=200)])
+    primary_city = StringField('City',
+                               validators=[InputRequired(),
+                                           Length(max=200)])
+    primary_state = StringField('State', 
+                                validators=[InputRequired(),
+                                           Length(max=200)])
+    primary_zip_code = StringField('Zip Code',
+                                   validators=[Optional(),
+                                               Length(max=45)])
+    #emergency contact
+    emergency_contact_name = StringField(
+        'Contact Name', validators=[Optional(),
+                                    Length(1, 64)])
+    emergency_contact_relationship = StringField(
+        'Relationship', validators=[Optional(), Length(1, 64)])
+    emergency_contact_phone_number = IntegerField(
+        'Phone Number',
+        widget=widgets.Input(input_type="tel"),
+        validators=[Optional()])
+    emergency_contact_email_address = EmailField(
+        'Email', validators=[Optional(),
+                             Length(1, 64),
+                             Email()])
     # now under contact info
     home_phone = IntegerField(widget=widgets.Input(input_type="tel"),
                               validators=[InputRequired()])
@@ -375,25 +404,15 @@ class VolunteerManager(FlaskForm):
                        validators=[InputRequired(),
                                    Length(1, 64),
                                    Email()])
+    contact_preference = RadioField('Preferred Contact Method', choices=[('phone', "Phone"), ('email', "Email"), ('phone_and_email', "Phone and Email")])
+    general_email_checkbox = BooleanField(
+                                    'Uncheck this box to stop this service provider from receiving village general information emails. \
+                                    Note that this setting does not affect system generated emails such as transaction confirmation messages.',
+                                    validators=[InputRequired()], render_kw={'checked': True})
+    open_email_checkbox = BooleanField(
+                                    'Uncheck this box to stop this service provider from receiving automated open requests emails.',
+                                    validators=[InputRequired()], render_kw={'checked': True})
 
-    # What is another way to say Services willing to do
-    # files = [("alarm", "Alarm/Locks/Security"),
-    #          ("bill", "Bill Paying/Paperwork"), ("auto", "Auto Repair"),
-    #          ("remote", "Coronavirus Remote Assistance")]
-
-    # services = MultiCheckboxField('Services willing to do', choices=files)
-    # times = [("morning 8-11", "Morning 8-11"),
-    #          ("morning 11-2", "Lunchtime 11-2"),
-    #          ("afternoon 2-5", "Afternoon 2-5"),
-    #          ("evening 5-8", "Evening 5-8"),
-    #          ("night 8-midnight", "Night 8-Midnight")]
-    # availability_time = MultiCheckboxField('Availability Time', choices=times)
-    # days = [("monday", "Monday"), ("tuesday", "Tuesday"),
-    #         ("wednesday", "Wednesday"), ("thursday", "Thursday"),
-    #         ("friday", "Friday"), ("saturday", "Saturday"),
-    #         ("sunday", "Sunday")]
-    # availability_day = MultiCheckboxField('Availability Day', choices=days)
-    # make a history of completed and pending services
 
     notes = TextAreaField("Notes for Office Staff", validators=[Optional()])
 
@@ -407,34 +426,13 @@ class VolunteerManager(FlaskForm):
 
 
 class AddServiceVetting(FlaskForm):
-    vetting_types = [("none", "Select"), ("a", "a"), ("b", "b")]
-    vetting_users = [("cheryl", "Cheryl"), ("a", "a"), ("b", "b")]
-    vetting_type = SelectField('Type: ',
-                               choices=vetting_types,
-                               validators=[InputRequired()])
-    vetting_date = DateField("Date: ", validators=[
-                             InputRequired()], format='%Y-%M-%D')
-    vetting_expiration = DateField('Date Expired: ',
-                                   validators=[InputRequired()],
-                                   format='%Y-%M-%D')
-    vetting_additional_data = TextAreaField("Additional Data: ", validators=[
-                                            InputRequired()])
-    vetting_notes = TextAreaField("Notes: ", validators=[Optional()])
-    vetting_who_entered = SelectField('Who Entered: ',
-                                      choices=vetting_users,
-                                      validators=[InputRequired()])
-    submit = SubmitField("Save")
-
-
-class IsFullyVetted(FlaskForm):
+    vetting_notes = TextAreaField("",render_kw={"rows": 15, "cols": 105},validators=[Optional()])
     volunteer_fully_vetted_checkbox = BooleanField(
-        'Check this box to confirm that this volunteer has been fully vetted',
-        validators=[InputRequired()])
-    vetting_users = [("cheryl", "Cheryl"), ("a", "a"), ("b", "b")]
-    vetting_who_entered = SelectField('Who Entered: ',
-                                      choices=vetting_users,
-                                      validators=[InputRequired()])
+        'Is Fully Vetted?',
+        validators=[InputRequired()] )
     submit = SubmitField("Save")
+
+
 
 
 class ContractorManager(FlaskForm):
