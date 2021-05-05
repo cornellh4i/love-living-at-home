@@ -38,12 +38,19 @@
     border: 1px solid gray;
     margin: 0;
   }
-  
+
+  .request_number_box {
+    background-color: tan;
+    width: 840px;
+    padding: 20px;
+    margin: 0px;
+    margin-top: 20px;
+  }
+
 
   .divright {
-    float: right 
+    float: right
   }
-  
 </style>
 
 <div class="content-section">
@@ -51,7 +58,7 @@
     {{ form.hidden_tag() }}
 
     <h2 class="header">Search Criteria</h2>
-    <hr/>
+    <hr />
 
     {% set flashes = {
     'error': get_flashed_messages(category_filter=['form-error']),
@@ -70,7 +77,7 @@
           <div class="dropdown">
             <div class="field">
               <label> {{form.request_type.label}}</label>
-              <select multiple="" class="ui dropdown" name = "requesttype" id = "requesttype" onInput="myFunction()">
+              <select multiple="" class="ui dropdown" name="requesttype" id="requesttype" onInput="myFunction()">
                 <option value="">Select Request Type(s)</option>
                 {% for choice in form.request_type.choices %}
                 <option value={{ choice[0] }}>{{choice[1]}}</option>
@@ -79,15 +86,15 @@
             </div>
 
             <script type="text/javascript">
-            function myFunction() {
-              window.alert(0);
-              var element = document.getElementById("requesttype");               
-              if (element.options[0].selected == true) {
-                for (var i = 1; i < element.options.length; i++) {
-                  elements.options[i].selected = true; 
+              function myFunction() {
+                window.alert(0);
+                var element = document.getElementById("requesttype");
+                if (element.options[0].selected == true) {
+                  for (var i = 1; i < element.options.length; i++) {
+                    elements.options[i].selected = true;
+                  }
                 }
-              }
-            };
+              };
             </script>
 
             <div class="field">
@@ -340,10 +347,10 @@
       </div>
     </div>
 
-  <p>
-    <hr />
-  </p>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <p>
+      <hr />
+    </p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <div class="ui form">
       <div class="ui centered grid">
         <div class="inline fields">
@@ -355,7 +362,7 @@
     </div>
 
     <h2 class="header">Search Results</h2>
-    <div id="" class="divright">(0 Results found)</div>
+    <div id="" class="divright">(0 Results Found)</div>
 
     <p>
       <hr />
@@ -365,18 +372,17 @@
       <div class="field">
         <label>Sort By:</label>
         <select class="ui search dropdown" name="sortby">
-          <option value = "">Choose filter</option>
-          <option value= 0 >Create Date</option>
+          <option value="">Choose filter</option>
+          <option value=0>Create Date</option>
         </select>
       </div>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <div class="field">
-        <div class = "box">
-
-          
-
-        </div>
-    </div>
+        <div class="request_number_box"></div>
+      </div>
+      <div class="field">
+        <div class="request_box"></div>
+      </div>
     </div>
 
 
