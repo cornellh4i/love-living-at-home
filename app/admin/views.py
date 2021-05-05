@@ -12,7 +12,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              IsFullyVetted, AddAvailability, Reviews, EditServiceForm, MultiCheckboxField)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category
+from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category, LocalResource
 
 
 admin = Blueprint('admin', __name__)
@@ -288,28 +288,50 @@ def invite_member():
     """Page for member management."""
     form = MemberManager()
     if form.validate_on_submit():
+        secondary_address = False
         if (form.secondary_as_primary_checkbox.data):
             address = Address(name=form.first_name.data + " " + form.last_name.data,
                               street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
                               city=form.secondary_city.data)
+            secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
+                              street_address=form.primary_address1.data + " " + form.primary_address2.data,
+                              city=form.primary_city.data)
         else:
             address = Address(name=form.first_name.data + " " + form.last_name.data,
                               street_address=form.primary_address1.data + " " + form.primary_address2.data,
                               city=form.primary_city.data)
+            if form.secondary_address1.data:
+                secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
+                                street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
+                                city=form.secondary_city.data)
         db.session.add(address)
         db.session.commit()
+        if secondary_address:
+            db.session.add(secondary_address)
+            db.session.commit()
+        if form.preferred_contact_method_phone:
+            preferred_method = "Phone"
+        elif form.preferred_contact_method_email:
+            preferred_method = "Email"
+        elif form.preferred_contact_method_phone_and_email:
+            preferred_method = "Phone and Email"
         member = Member(salutation=form.salutation.data,
                         primary_address_id=address.id,
+                        secondary_address_id = secondary_address.id if secondary_address else None,
                         first_name=form.first_name.data,
                         middle_initial=form.middle_initial.data,
                         last_name=form.last_name.data,
                         preferred_name=form.preferred_name.data,
-                        gender=form.pronoun.data,
-                        phone_number=form.home_phone_number.data,
+                        gender=form.gender.data,
+                        birthdate = form.birthday.data,
+                        primary_phone_number=form.primary_phone.data,
+                        secondary_phone_number = form.cell_number.data,
                         email_address=form.email.data,
+                        preferred_contact_method=form.preferred_contact_method.data,
                         emergency_contact_name=form.emergency_contact_name.data,
                         emergency_contact_phone_number=form.emergency_contact_phone_number.data,
                         emergency_contact_email_address=form.emergency_contact_email_address.data,
+                        emergency_contact_relation = form.emergency_contact_relationship.data,
                         membership_expiration_date=form.expiration_date.data,
                         volunteer_notes=form.volunteer_notes.data,
                         staffer_notes=form.staffer_notes.data)
@@ -330,6 +352,16 @@ def invite_volunteer():
                                 key=lambda triple: triple[2])
     services = [(service.name, service.category_id, service.id)
                 for service in Service.query.all()]
+
+    category_dict = {}
+    for count, category in enumerate(service_categories):
+        choices = []
+        for service in services:
+            if service[1] == category[1]:
+                choices.append((service[0], service[0]))
+        category_dict[category[0]] = MultiCheckboxField(category[0], choices=choices)
+    for key, value in category_dict.items():
+        setattr(VolunteerManager, key, value)
     form = VolunteerManager()
     if form.validate_on_submit():
         flash('Volunteer {} successfully invited'.format(
@@ -337,7 +369,7 @@ def invite_volunteer():
     return render_template('admin/people_manager/volunteer_manager.html',
                            form=form,
                            services=services,
-                           service_categories=service_categories)
+                           service_categories=service_categories, category_dict = category_dict)
 
 
 @admin.route('/invite-contractor', methods=['GET', 'POST'])
@@ -348,10 +380,28 @@ def invite_contractor():
     form = ContractorManager()
     reviews = Reviews()
     if form.validate_on_submit():
+        address = None
+        if form.primary_address1.data:
+            address = Address(name=form.first_name.data + " " + form.last_name.data,
+                            street_address=form.primary_address1.data + " " + form.primary_address2.data,
+                            city=form.primary_city.data)
+            db.session.add(address)
+            db.session.commit()
+        localResource = LocalResource(contact_salutation=form.salutation.data,
+                                      address_id=(address.id if address else None),
+                                      contact_first_name=form.first_name.data,
+                                      contact_middle_initial=form.middle_initial.data,
+                                      contact_last_name=form.last_name.data,
+                                      company_name=form.company_name.data,
+                                      primary_phone_number=form.primary_phone_number.data,
+                                      secondary_phone_number=form.secondary_phone_number.data,
+                                      email_address=form.email.data,
+                                      preferred_contact_method=form.preferred_contact_method.data)
+        db.session.add(localResource)
+        db.session.commit()
         flash('Contractor {} successfully invited'.format(
-            form.organization_name.data), 'form-success')
-        return redirect(url_for('admin.index'))
-    return render_template('admin/people_manager/contractor_manager.html', form=form, add_availability=add_availability, reviews=reviews)
+            form.last_name.data), 'form-success')
+    return render_template('admin/people_manager/contractor_manager.html', form=form, reviews=reviews)
 
 
 @admin.route('/services')

@@ -54,9 +54,25 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     }}
 
     <div class="field">
-      <button class="ui inverted violet fluid button" id="show-services">
+      <i class="ui inverted violet fluid button" id="show-services">
         Services
-      </button>
+      </i>
+    </div>
+
+    <div class="ui modal" id="services">
+      <i class="close icon"></i>
+      <div class="header">Services Provided By</div>
+      <div class="ui styled fluid accordion">
+        {% for key, value in category_dict.items() %}
+          <div class="title">
+            <i class="dropdown icon"></i>
+            {{ key }}
+          </div>
+          <div class="content">
+          {{ form|attr(key)() }}
+          </div>
+          {% endfor %}
+      </div>
     </div>
 
     {{f.render_form_field(form.notes)}} {{ f.form_message(flashes['error'],
@@ -64,17 +80,11 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     f.form_message(flashes['warning'], header='Check your email.',
     class='warning') }} {{ f.form_message(flashes['info'], header='Information',
     class='info') }} {{ f.form_message(flashes['success'], header='Success!',
-    class='success') }} {% for field in form | selectattr('type', 'equalto',
-    'SubmitField') %} {{ f.render_form_field(field) }} {% endfor %} {{
+    class='success') }} 
+    
+    {{f.render_form_field(form.submit)}} {{
     f.end_form() }} {% if form.password %} {{ check.password_check('password',
     0) }} {% endif %}
-  </div>
-</div>
-
-<div class="ui modal" id="services">
-  <i class="close icon"></i>
-  <div class="header">Services Provided By</div>
-  <div class="ui styled fluid accordion">
   </div>
 </div>
 
@@ -86,3 +96,4 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   $('.ui.accordion').accordion({ exclusive: false });
 </script>
 {% endblock %}
+

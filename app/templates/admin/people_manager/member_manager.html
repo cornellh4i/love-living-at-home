@@ -37,7 +37,8 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 
     <div class="two fields">
       {{ f.render_form_field(form.salutation) }}
-      {{ f.render_form_field(form.pronoun) }}
+      {{ f.render_form_field(form.gender) }}
+      {{ f.render_form_field(form.birthday) }}
     </div>
 
     <div class="ui header">Primary Address</div>
@@ -87,6 +88,9 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     {{ f.render_form_field(form.home_phone_number) }}
     {{ f.render_form_field(form.cell_number) }}
     {{ f.render_form_field(form.email) }}
+    
+    <div class="inline fields">
+    {{ f.render_form_field(form.preferred_contact_method)}}</div>
 
     <div class="ui header">Emergency Contact Information</div>
     {{ f.render_form_field(form.emergency_contact_name)}}
@@ -106,3 +110,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   </div>
 </div>
 {% endblock %}
+
+<script>
+
+</script>
