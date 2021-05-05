@@ -9,7 +9,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              ContractorManager, InviteUserForm, MemberManager,
                              NewUserForm, TransportationRequestForm,
                              VolunteerManager, SearchRequestForm, AddServiceVetting,
-                             IsFullyVetted, AddAvailability, Reviews, EditServiceForm, MultiCheckboxField)
+                              AddAvailability, Reviews, EditServiceForm, MultiCheckboxField)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category
@@ -41,7 +41,7 @@ def people_manager():
     """People Manager Page."""
     add_availability = AddAvailability()
     add_vetting = AddServiceVetting()
-    is_fully_vetted = IsFullyVetted()
+    
     service_categories = [(category.name, category.request_type_id)
                           for category in ServiceCategory.query.all()]
     services = [(service.name, service.category_id)
@@ -49,7 +49,7 @@ def people_manager():
     return render_template('admin/people_manager/layouts/base.html',
                            add_availability=add_availability,
                            add_vetting=add_vetting,
-                           is_fully_vetted=is_fully_vetted,
+                           
                            services=services,
                            service_categories=service_categories)
 
@@ -332,6 +332,35 @@ def invite_volunteer():
                 for service in Service.query.all()]
     form = VolunteerManager()
     if form.validate_on_submit():
+        address = Address(name=form.first_name.data + " " + form.last_name.data,
+                    street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
+                    city=form.secondary_city.data)
+        db.session.add(address)
+        db.session.commit()
+        volunteer = Volunteer(salutation=form.salutation.data,
+                first_name=form.first_name.data,
+                middle_initial=form.middle_initial.data,
+                last_name=form.last_name.data,
+                preferred_name=form.preferred_name.data,
+                gender=form.gender.data,
+                pronoun=form.pronoun.data,
+                phone_number=form.home_phone_number.data,
+                email=form.email.data,
+                emergency_contact_name=form.emergency_contact_name.data,
+                emergency_contact_phone_number=form.emergency_contact_phone_number.data,
+                emergency_contact_email_address=form.emergency_contact_email_address.data,
+                contact_preference=form.contact_preference.data,
+                general_email_checkbox=form.general_email_checkbox.data,
+                open_email_checkbox=form.open_email_checkbox.data,
+                #implement services form
+                #availability_time=form.availability_time.data,
+                #availability_day=form.availability_day.data,
+                notes=form.notes.data)
+        address = Address(name=form.first_name.data + " " + form.last_name.data,
+                    street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
+                    city=form.secondary_city.data)
+        db.session.add(volunteer)
+        db.session.commit()
         flash('Volunteer {} successfully invited'.format(
             form.first_name.data), 'form-success')
     return render_template('admin/people_manager/volunteer_manager.html',
