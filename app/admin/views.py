@@ -1,3 +1,5 @@
+from app.models.request import RequestDurationType
+from operator import __truediv__
 from flask import (Blueprint, abort, flash, redirect, render_template, request,
                    url_for)
 from flask_login import current_user, login_required
@@ -223,6 +225,10 @@ def create_request():
 @admin_required
 def create_transportation_request():
     form = TransportationRequestForm()
+    form.requesting_member.multiple = True
+    form.requesting_member.choices = [(member.id, member.first_name + " " + member.last_name) for member in Member.query.all()]
+    form.duration.choices = [(request_duration_type.id, request_duration_type.name) for request_duration_type in RequestDurationType.query.all()]
+    form.destination.choices = [(address.id, address.name + " " + address.street_address) for address in Address.query.all()]
     if form.validate_on_submit():
         transportation_request = Request(
                                          type_id = 1,

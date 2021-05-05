@@ -12,33 +12,6 @@ from app import db
 from app.models import Role, User, ServiceCategory, Service, Staffer, RequestStatus, ContactLogPriorityType, Member, Address, RequestDurationType
 from datetime import date;
 
-
-serviceCategories = [('Select', 'Select'),
-                     ('Coronavirus Community Support',
-                      'Coronavirus Community Support'),
-                     ('Transportation', 'Transportation')]
-
-covidServices = [('Select', 'Select'), ('General Errands', 'General Errands'),
-                 ('Grocery Shopping', 'Grocery Shopping'),
-                 ('Prescription Pickup', 'Prescription Pickup')]
-
-transportationServices = [
-    ('Select', 'Select'), ('Event Carpool', 'Event Carpool'),
-    ('hack4impact test service', 'hack4impact test service'),
-    ('Long Dist Non-Med Professional', 'Long Dist Non-Med Professional'),
-    ('Long Dist. Med Professional', 'Long Dist Med Professional'),
-    ('Vol Driver Family/Friend Visit', 'Vol Driver Family/Friend Visit'),
-    ('Vol Driver LLH Programs/Events', 'Vol Driver LLH Programs/Events'),
-    ('Vol Driver Local Medical Appt', 'Vol Driver Local Medical Appt'),
-    ('Vol Driver Shopping/Errands', 'Vol Driver Shopping/Errands'),
-    ('Vol Driver Local Bus/Airport', 'Vol Driver Local Bus/Airport'),
-    ('Vol Driver Misc. Trip', 'Vol Driver Misc. Trip')
-]
-
-request_duration_type = []
-# db.session.query(RequestDurationType).order_by('id')
-# request_duration_type = [(t.name, t.name) for t in ]
-
 class ChangeUserEmailForm(FlaskForm):
     email = EmailField('New email',
                        validators=[InputRequired(),
@@ -153,11 +126,9 @@ class TransportationRequestForm(FlaskForm):
 
     date_created = DateField('Date Created:', default = date.today, 
         render_kw={'readonly': True})
-    requesting_member = QuerySelectMultipleField(
+    requesting_member = SelectMultipleField(
         'Requesting Member',
-        validators=[InputRequired()],
-        get_label='first_name',
-        query_factory=lambda: db.session.query(Member).order_by('first_name'))
+        validators=[InputRequired()])
     requested_date = DateField('Requested Date',
                                validators=[InputRequired()])
     initial_pickup = TimeField('Inital Pickup:', format='%H:%M',
@@ -222,13 +193,10 @@ class TransportationRequestForm(FlaskForm):
     person_to_cc = EmailField('Person to cc',
                        validators=[Length(0, 64),
                                    Email(), Optional()])
-    destination = QuerySelectField(
+    destination = SelectField(
         'Destination:',
-        validators=[InputRequired()],
-        get_label='street_address',
-        query_factory=lambda: db.session.query(Address).order_by('street_address'))
-    # duration = RadioField('Duration:',
-    #                            choices=request_duration_type)
+        validators=[InputRequired()])
+    duration = RadioField('Duration:')
     submit = SubmitField("Submit")
 
 
