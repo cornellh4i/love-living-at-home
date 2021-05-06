@@ -50,4 +50,45 @@ description=None, icon=None) %}
       description='Edit the email address from which LLH emails are sent.', icon='add user icon') }}
     </div>
   </div>
+
+  <div style="width: 22%;margin:20px;">
+    <input type="text" id="selectedValues" class="date-values" readonly />
+    <div id="parent" class="container" style="display:none;">
+      <div class="row header-row">
+        <div class="col-xs previous">
+          <a href="#" id="previous" onclick="previous()">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+          </a>
+        </div>
+        <div class="card-header month-selected col-sm" id="monthAndYear">
+        </div>
+        <div class="col-sm">
+          <select class="form-control col-xs-6" name="month" id="month" onchange="change()"></select>
+        </div>
+        <div class="col-sm">
+          <select class="form-control col-xs-6" name="year" id="year" onchange="change()"></select>
+        </div>
+        <div class="col-xs next">
+          <a href="#" id="next" onclick="next()">
+            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+      <table id="calendar">
+        <thead>
+          <tr>
+            <th>S</th>
+            <th>M</th>
+            <th>T</th>
+            <th>W</th>
+            <th>T</th>
+            <th>F</th>
+            <th>S</th>
+          </tr>
+        </thead>
+        <tbody id="calendarBody"></tbody>
+      </table>
+    </div>
+  </div>
+
   {% endblock %}
