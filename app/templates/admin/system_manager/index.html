@@ -19,6 +19,11 @@ description=None, icon=None) %}
 {% endmacro %}
 
 {% block content %}
+<style>
+  .highlight {
+    background-color: lightblue;
+  }
+</style>
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
     <h2 class="ui header">
@@ -51,44 +56,60 @@ description=None, icon=None) %}
     </div>
   </div>
 
-  <div style="width: 22%;margin:20px;">
-    <input type="text" id="selectedValues" class="date-values" readonly />
+  <div style="width: 100%;">
+    <div type="text" id="selectedValues" class="date-values" readonly></div>
     <div id="parent" class="container" style="display:none;">
-      <div class="row header-row">
-        <div class="col-xs previous">
-          <a href="#" id="previous" onclick="previous()">
-            <i class="fa fa-arrow-left" aria-hidden="true"></i>
-          </a>
-        </div>
-        <div class="card-header month-selected col-sm" id="monthAndYear">
-        </div>
-        <div class="col-sm">
-          <select class="form-control col-xs-6" name="month" id="month" onchange="change()"></select>
-        </div>
-        <div class="col-sm">
-          <select class="form-control col-xs-6" name="year" id="year" onchange="change()"></select>
-        </div>
-        <div class="col-xs next">
-          <a href="#" id="next" onclick="next()">
-            <i class="fa fa-arrow-right" aria-hidden="true"></i>
-          </a>
+      <div class="ui cards">
+        <div class="ui card">
+          <div class="ui header mini form">
+
+            <div class="four fields">
+              <div class="field previous">
+                <a href="#" id="previous" onclick="previous()">
+                  <i class="ui icon angle left" aria-hidden="true"></i>
+                </a>
+              </div>
+              <div class="field">
+                <select class="ui fluid" name="month" id="month" onchange="change()"></select>
+              </div>
+              <div class="field">
+                <select class="ui fluid" name="year" id="year" onchange="change()"></select>
+              </div>
+              <div class="field next">
+                <a href="#" id="next" onclick="next()">
+                  <i class="ui icon angle right" aria-hidden="true"></i>
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="description">
+            <table id="calendar">
+              <thead>
+                <tr>
+                  <th>S</th>
+                  <th>M</th>
+                  <th>T</th>
+                  <th>W</th>
+                  <th>T</th>
+                  <th>F</th>
+                  <th>S</th>
+                </tr>
+              </thead>
+              <tbody id="calendarBody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
-      <table id="calendar">
-        <thead>
-          <tr>
-            <th>S</th>
-            <th>M</th>
-            <th>T</th>
-            <th>W</th>
-            <th>T</th>
-            <th>F</th>
-            <th>S</th>
-          </tr>
-        </thead>
-        <tbody id="calendarBody"></tbody>
-      </table>
+
+
     </div>
   </div>
 
-  {% endblock %}
+
+</div>
+
+
+
+{% endblock %}

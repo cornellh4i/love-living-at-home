@@ -65,26 +65,21 @@ function change() {
 
 
 function loadControl(month, year) {
-    
+
     addMonths(month);
     addYears(year);
 
     let firstDay = (new Date(year, month)).getDay();
 
-     // body of the calendar
+    // body of the calendar
     var tbl = document.querySelector("#calendarBody");
     // clearing all previous cells
     tbl.innerHTML = "";
 
 
-    var monthAndYear = document.getElementById("monthAndYear");
-    // filing data about month and in the page via DOM.
-    monthAndYear.innerHTML = months[month] + " " + year;
-
-
     selectYear.value = year;
     selectMonth.value = month;
-    
+
     // creating the date cells here
     let date = 1;
 
@@ -165,18 +160,12 @@ function loadControl(month, year) {
         });
 
         // update the selectedValues text input
-        document.getElementById('selectedValues').value = datesToString(sortedArray);
+        document.getElementById('selectedValues').innerHTML = datesToString(sortedArray);
     });
 
 
-    var $search = $('#selectedValues');
     var $dropBox = $('#parent');
-    
-    $search.on('blur', function (event) {
-        //$dropBox.hide();
-    }).on('focus', function () {
-        $dropBox.show();
-    });
+    $dropBox.show();
 }
 
 
@@ -231,11 +220,6 @@ function datesToString(dates) {
     return dates.join(dateSeparator);
 }
 
-function endSelection() {
-    $('#parent').hide();
-}
-
-
 // to add the button panel at the bottom of the calendar
 function addButtonPanel(tbl) {
     // after we have looped for all the days and the calendar is complete,
@@ -247,12 +231,12 @@ function addButtonPanel(tbl) {
     var parentDiv = document.createElement("div");
     parentDiv.classList.add('row');
     parentDiv.classList.add('buttonPanel-row');
-    
+
 
     var div = document.createElement("div");
     div.className = 'col-sm';
     var resetButton = document.createElement("button");
-    resetButton.className = 'btn';
+    resetButton.className = 'button';
     resetButton.value = 'Reset';
     resetButton.onclick = function () { resetCalendar(); };
     var resetButtonText = document.createTextNode("Reset");
@@ -260,12 +244,12 @@ function addButtonPanel(tbl) {
 
     div.appendChild(resetButton);
     parentDiv.appendChild(div);
-   
+
 
     var div2 = document.createElement("div");
     div2.className = 'col-sm';
     var doneButton = document.createElement("button");
-    doneButton.className = 'btn';
+    doneButton.className = 'button';
     doneButton.value = 'Done';
     doneButton.onclick = function () { endSelection(); };
     var doneButtonText = document.createTextNode("Done");
