@@ -9,8 +9,8 @@ var selectedDates = [];
 var years = [];
 
 // parameters to be set for the datepicker to run accordingly
-var minYear = 2011;
-var maxYear = 2020;
+var minYear = 2018
+var maxYear = 2021;
 var startMonth = 0;
 var endMonth = 11;
 var highlightToday = true;
@@ -229,34 +229,30 @@ function addButtonPanel(tbl) {
     cell = document.createElement("td");
     cell.colSpan = 7;
     var parentDiv = document.createElement("div");
-    parentDiv.classList.add('row');
     parentDiv.classList.add('buttonPanel-row');
 
 
     var div = document.createElement("div");
-    div.className = 'col-sm';
+    div.className = 'ui fluid';
     var resetButton = document.createElement("button");
     resetButton.className = 'button';
     resetButton.value = 'Reset';
     resetButton.onclick = function () { resetCalendar(); };
+    resetButton.float = 'left';
     var resetButtonText = document.createTextNode("Reset");
     resetButton.appendChild(resetButtonText);
-
     div.appendChild(resetButton);
     parentDiv.appendChild(div);
 
-
-    var div2 = document.createElement("div");
-    div2.className = 'col-sm';
     var doneButton = document.createElement("button");
     doneButton.className = 'button';
     doneButton.value = 'Done';
-    doneButton.onclick = function () { endSelection(); };
+    doneButton.onclick = function () { window.alert("Selection complete.") };
+    doneButton.float = 'right';
+
     var doneButtonText = document.createTextNode("Done");
     doneButton.appendChild(doneButtonText);
-
-    div2.appendChild(doneButton);
-    parentDiv.appendChild(div2);
+    div.appendChild(doneButton);
 
     cell.appendChild(parentDiv);
     row.appendChild(cell);
