@@ -9,10 +9,10 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              ContractorManager, InviteUserForm, MemberManager,
                              NewUserForm, TransportationRequestForm,
                              VolunteerManager, SearchRequestForm, AddServiceVetting,
-                             IsFullyVetted, AddAvailability, Reviews, EditServiceForm)
+                             IsFullyVetted, AddAvailability, Reviews, EditServiceForm, EditMetroAreaForm)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category
+from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category, MetroArea
 
 
 admin = Blueprint('admin', __name__)
@@ -379,7 +379,7 @@ def service_info(service_id):
     return render_template('admin/system_manager/manage_service.html', service=service, form=form)
 
 
-@admin.route('/services/_delete/<int:service_id>', methods=['GET', 'POST'])
+@admin.route('/services/<int:service_id>/_delete')
 @login_required
 @admin_required
 def delete_service(service_id):
@@ -405,3 +405,65 @@ def new_service():
         return redirect(url_for('admin.registered_services'))
 
     return render_template('admin/system_manager/manage_service.html', form=form)
+
+
+####
+# Metro Areas
+####
+@admin.route('/metro-areas')
+@login_required
+@admin_required
+def registered_metro_areas():
+    """Manage metro areas."""
+    metro_areas = MetroArea.query.all()
+    return render_template('admin/system_manager/registered_metro_areas.html',
+                           metro_areas=metro_areas)
+
+
+@admin.route('/metro-areas/<int:metro_area_id>', methods=['GET', 'POST'])
+@admin.route('/metro-areas/<int:metro_area_id>/info', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def metro_area_info(metro_area_id):
+    """View a metro area's profile."""
+    metro_area = MetroArea.query.filter_by(id=metro_area_id).first()
+    form=EditMetroAreaForm(name=metro_area.name)
+    if form.validate_on_submit():
+        updated_metro_area = metro_area
+        updated_metro_area.name = form.name.data
+        db.session.add(updated_service)
+        db.session.commit()
+        flash('Metro Area {} successfully updated'.format(
+                form.name.data), 'form-success')
+        return redirect(url_for('admin.registered_metro_areas'))
+    if metro_area is None:
+        abort(404)
+    return render_template('admin/system_manager/manage_metro_area.html', metro_area=metro_area, form=form)
+
+
+@admin.route('/metro-areas/<int:metro_area_id>/_delete')
+@login_required
+@admin_required
+def delete_metro_area(metro_area_id):
+    """Delete a metro area.."""
+    metro_area = MetroArea.query.filter_by(id=metro_area_id).first()
+    db.session.delete(metro_area)
+    db.session.commit()
+    flash('Successfully deleted metro area %s.' % metro_area.name, 'success')
+    return redirect(url_for('admin.registered_metro_areas'))
+
+
+@admin.route('/new-metro-area', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_metro_area():
+    """Create a new metro area."""
+    form = EditMetroAreaForm()
+    if form.validate_on_submit():
+        metro_area = MetroArea(name=form.name.data)
+        db.session.add(metro_area)
+        db.session.commit()
+        flash('Metro Area {} successfully created'.format(metro_area.name),'success')
+        return redirect(url_for('admin.registered_metro_areas'))
+
+    return render_template('admin/system_manager/manage_metro_area.html', form=form)

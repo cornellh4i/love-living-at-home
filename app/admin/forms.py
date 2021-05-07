@@ -506,3 +506,7 @@ class EditServiceForm(FlaskForm):
         get_label='name',
         query_factory=lambda: db.session.query(ServiceCategory).order_by('name'))
     submit = SubmitField('Save Service Information')
+
+class EditMetroAreaForm(FlaskForm):
+    name = StringField('Metro Area Name', validators=[InputRequired(), Length(1, 200)])
+    submit = SubmitField('Save Metro Area Information')

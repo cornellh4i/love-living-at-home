@@ -1,0 +1,92 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="ui stackable grid container">
+  <div class="sixteen wide tablet twelve wide computer centered column">
+    <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
+      <i class="caret left icon"></i>
+      Back to dashboard
+    </a>
+    <h2 class="ui header">
+      Metro Areas
+      <div class="sub header">
+        View and manage metro areas.
+      </div>
+    </h2>
+
+    <div class="ui menu">
+      <div class="ui search item">
+        <div class="ui transparent icon input">
+          <input id="search-metro-areas" type="text" placeholder="Search metro areas...">
+          <i class="search icon"></i>
+        </div>
+      </div>
+    </div>
+
+    {# Use overflow-x: scroll so that mobile views don't freak out
+    # when the table is too wide #}
+    <div style="overflow-x: scroll;">
+      <a class="ui basic compact button" href="{{ url_for('admin.new_metro_area') }}">
+        <i class="plus icon"></i>
+        Add a Metro Area
+      </a>
+      <table class="ui searchable sortable unstackable selectable celled table">
+        <thead>
+          <tr>
+            <th class="sorted ascending">Name</th>
+            <th>Maintain</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ma in metro_areas | sort(attribute='name') %}
+          <tr>
+            <td onclick="window.location.href = '{{ url_for('admin.metro_area_info', metro_area_id=ma.id) }}';">{{
+              ma.name }}
+            </td>
+            <td>
+              <i class="trash alternate outline icon delete-metro-area" id={{ma.id}}></i>
+            </td>
+
+            <div class="ui modal" id='modal-{{ma.id}}'>
+              <div class="header">Delete Metro Area</div>
+              <div class="content">Would you like to delete Metro Area [{{ma.name}}]?</div>
+              <div class="actions">
+                <div class="positive ui approve button"
+                  onclick="window.location.href = '{{ url_for('admin.delete_metro_area',  metro_area_id=ma.id) }}';">
+                  Yes
+                </div>
+                <div class="negative ui deny button">No</div>
+              </div>
+            </div>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#search-metro-areas').keyup(function () {
+      var searchText = $(this).val();
+      if (searchText.length > 0) {
+        $('tbody td:icontains(' + searchText + ')').addClass('positive');
+        $('td.positive').not(':icontains(' + searchText + ')').removeClass('positive');
+        $('tbody td').not(':icontains(' + searchText + ')').closest('tr').addClass('hidden').hide();
+        $('tr.hidden:icontains(' + searchText + ')').removeClass('hidden').show();
+      } else {
+        $('td.positive').removeClass('positive');
+        $('tr.hidden').removeClass('hidden').show();
+      }
+    });
+
+    $('.delete-metro-area').click(function () {
+      metro_area_id = $(this).attr('id');
+      $(`#modal-${metro_area_id}`).modal('show');
+    });
+  });
+</script>
+{% endblock %}
