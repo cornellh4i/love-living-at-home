@@ -92,6 +92,7 @@ def setup_general():
     # Service related
     Service.insert_services()
     ServiceCategory.insert_categories()
+    MetroArea.insert_metro_areas()
 
     # Set up first admin user
     admin_query = Role.query.filter_by(name='Administrator')
