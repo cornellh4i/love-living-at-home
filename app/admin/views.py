@@ -229,8 +229,10 @@ def create_transportation_request():
     form.requesting_member.choices = [(member.id, member.first_name + " " + member.last_name) for member in Member.query.all()]
     form.duration.choices = [(request_duration_type.id, request_duration_type.name) for request_duration_type in RequestDurationType.query.all()]
     form.destination.choices = [(address.id, address.name + " " + address.street_address) for address in Address.query.all()]
+    form.starting_location.choices = [(address.id, address.name + " " + address.street_address) for address in Address.query.all()]
     form.special_instructions_list = [(member.id, member.volunteer_notes) for member in Member.query.all()]
     if form.validate_on_submit():
+        flash(request.method, 'success')
         transportation_request = Request(
                                          type_id = 1,
                                          status_id=form.status.data.id,
@@ -244,11 +246,13 @@ def create_transportation_request():
                                          is_date_time_flexible=form.time_flexible.data,
                                          duration_type_id=form.duration.data,
                                          service_category_id=form.service_category.data.id,
-                                         service_id=form.covid_service.data.id,
+                                         service_id= form.transportation_service.data.id
+                                            if form.service_category.data.id == 0 
+                                            else form.covid_service.data.id,
                                          starting_address_id=form.starting_location.data,
-                                         destination_address_id=form.destination.data.id,
+                                         destination_address_id=form.destination.data,
                                          # Will be updated in the future for multiple ppl
-                                         requesting_member_id=form.requesting_member.data[0].id,
+                                         requesting_member_id=form.requesting_member.data[0],
                                          special_instructions=form.special_instructions.data,
                                          followup_date=form.follow_up_date.data,
                                          responsible_staffer_id=form.responsible_staffer.data,
@@ -260,7 +264,9 @@ def create_transportation_request():
             'Successfully submitted a new transportation request', 
             'form-success')
         return redirect(url_for('admin.index'))
-    elif (len(form.errors) > 0):
+    # elif (len(form.errors) > 0):
+    else:
+        flash(request.method, 'error')
         flash(form.errors, 'error')
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',

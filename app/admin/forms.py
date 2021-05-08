@@ -122,7 +122,7 @@ class TransportationRequestForm(FlaskForm):
         return db.session.query(ContactLogPriorityType).order_by()
 
     def specialInstructionsQuery():
-         return db.session.query(Member).order_by()
+        return db.session.query(Member).order_by()
 
     special_instructions_list = []
 
@@ -131,8 +131,8 @@ class TransportationRequestForm(FlaskForm):
     requesting_member = SelectMultipleField(
         'Requesting Member',
         id = 'member',
-        render_kw={'onchange': "specialInstructions()"},
-        validators=[InputRequired()])
+        validators=[InputRequired()],
+        coerce = int)
     requested_date = DateField('Requested Date',
                                validators=[InputRequired()])
     initial_pickup = TimeField('Inital Pickup:', format='%H:%M',
@@ -142,7 +142,7 @@ class TransportationRequestForm(FlaskForm):
     return_pickup = TimeField('Return Pickup:', format='%H:%M')
     drop_off = TimeField('Drop Off:', format='%H:%M')
     time_flexible = RadioField('Is Date/Time Flexible?',
-                               choices=[(True, 'Yes'), (False, 'No')])
+                               choices=[(True, 'Yes'), (False, 'No')],  coerce=lambda x: x == 'True')
     description = TextAreaField('Short description (included in email):')
 
     service_category = QuerySelectField(
@@ -152,17 +152,11 @@ class TransportationRequestForm(FlaskForm):
         get_label='name',
         query_factory=selectedCategory)
 
-    # service =  QuerySelectField(
-    #     'Service:',
-    #     validators=[InputRequired()],
-    #     get_label='name',
-    #     query_factory=services)
-
     covid_service = QuerySelectField(
         'Service:',
         id = "covid_service",
         render_kw={'onchange': "serviceChoices()"},
-        validators=[InputRequired()],
+        validators=[Optional()],
         get_label='name',
         query_factory=covid_services)
 
@@ -170,22 +164,25 @@ class TransportationRequestForm(FlaskForm):
         'Service:',
         render_kw={'onchange': "serviceChoices()"},
         id = "transportation_service",
-        validators=[InputRequired()],
+        validators=[Optional()],
         get_label='name',
         query_factory=transportation_services)
 
-    starting_location = StringField('Starting Location:')
+    starting_location = SelectField(
+        'Destination:',
+        validators=[InputRequired()], coerce=int)
 
     special_instructions = TextAreaField('Special Instructions:')
 
-    follow_up_date = DateField('Follow Up Date:',
-                               validators=[InputRequired()])
+    follow_up_date = DateField('Follow Up Date:')
     status = QuerySelectField(
         'Status:',
         validators=[InputRequired()],
         get_label='name',
         query_factory=statusQuery)
-    responsible_staffer = SelectField('Responsible Staffer:')
+    responsible_staffer = SelectField('Responsible Staffer:', 
+        choices = [(1, 'yes'), (2, 'no')],
+        coerce=int)
     contact_log_priority = QuerySelectField(
         'Contact Log Priority:',
         validators=[InputRequired()],
@@ -193,12 +190,11 @@ class TransportationRequestForm(FlaskForm):
         query_factory=contactLogQuery)
     
     person_to_cc = EmailField('Person to cc',
-                       validators=[Length(0, 64),
-                                   Email(), Optional()])
+                       validators=[Length(0, 64), Optional()])
     destination = SelectField(
         'Destination:',
-        validators=[InputRequired()])
-    duration = RadioField('Duration:')
+        validators=[InputRequired()], coerce=int)
+    duration = RadioField('Duration:', coerce=int)
     submit = SubmitField("Submit")
 
 

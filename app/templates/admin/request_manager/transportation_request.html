@@ -29,7 +29,7 @@
   </div>
 
   <div class="twelve wide column">
-    {{ f.render_custom_select(form.requesting_member)}}
+    {{ f.render_form_field(form.requesting_member)}}
   </div>
 
   <div class="twelve wide column">
@@ -56,7 +56,6 @@
         </div>
         <div class="right floated six wide column">
           {{ f.render_form_field(form.drop_off) }}
-          {{ form.special_instructions.data = }}
         </div>
       </div>
     </div>
@@ -93,26 +92,26 @@
 
   <script>
     function serviceChoices() {
-      let service_category = document.getElementById("service_category").value;
-      // document.getElementById("p").style.display = "none";
-      if (service_category === "1") {
-        document.getElementById("covid").style.display = "initial";
-        document.getElementById("transportation").style.display = "none";
-      } else if (service_category === "0") {
-        document.getElementById("covid").style.display = "none"
-        document.getElementById("transportation").style.display = "initial"
-      }
+      // let service_category = document.getElementById("service_category").value;
+      // // document.getElementById("p").style.display = "none";
+      // if (service_category === "1") {
+      //   document.getElementById("covid").style.display = "initial";
+      //   document.getElementById("transportation").style.display = "none";
+      // } else if (service_category === "0") {
+      //   document.getElementById("covid").style.display = "none"
+      //   document.getElementById("transportation").style.display = "initial"
+      // }
     }
 
-    function specialInstructions() {
-      let special_instructions = document.getElementById("special_instructions");
-      let obj = JSON.parse(special_instructions.innerText);
-      let p = document.createElement('p');
-      p.innerText = special_instructions.innerText;
-      document.getElementById('p').appendChild(p);
-      let id = document.getElementById('member').value;
+    // function specialInstructions() {
+    //   let special_instructions = document.getElementById("special_instructions");
+    //   let obj = JSON.parse(special_instructions.innerText);
+    //   let p = document.createElement('p');
+    //   p.innerText = special_instructions.innerText;
+    //   document.getElementById('p').appendChild(p);
+    //   let id = document.getElementById('member').value;
 
-    }
+    // }
   </script>
 
   <div class="twelve wide column">
@@ -135,6 +134,10 @@
 
   <div class="twelve wide column">
     {{ f.render_form_field(form.person_to_cc) }}
+  </div>
+
+  <div class="form_errors">
+    {{ form.requesting_member.data }}
   </div>
 
   <div class="twelve wide column">

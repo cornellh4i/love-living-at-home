@@ -71,7 +71,7 @@ class Request(db.Model):
         db.Integer,
         db.ForeignKey('contact_log_priority_type.id'),
         nullable=False)
-    cc_email = db.Column(db.String(120), unique=True, nullable=False)
+    cc_email = db.Column(db.String(120), unique=False, nullable=False)
 
     def __repr__(self):
         return f"Request('{self.created_date}, '{self.cc_email}')"
