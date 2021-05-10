@@ -12,7 +12,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                               AddAvailability, Reviews, EditServiceForm, MultiCheckboxField)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category, LocalResource, Volunteer
+from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category, LocalResource, Volunteer, MetroArea
 
 
 admin = Blueprint('admin', __name__)
@@ -301,19 +301,19 @@ def invite_member():
         if (form.secondary_as_primary_checkbox.data):
             address = Address(name=form.first_name.data + " " + form.last_name.data,
                               street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
-                              city=form.secondary_city.data)
+                              city=form.secondary_city.data, zipcode = form.secondary_zip_code.data)
             secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
                               street_address=form.primary_address1.data + " " + form.primary_address2.data,
-                              city=form.primary_city.data)
+                              city=form.primary_city.data, zipcode = form.primary_zip_code.data)
             metro = MetroArea(name = form.secondary_metro_area)
         else:
             address = Address(name=form.first_name.data + " " + form.last_name.data,
                               street_address=form.primary_address1.data + " " + form.primary_address2.data,
-                              city=form.primary_city.data)
+                              city=form.primary_city.data, zipcode = form.primary_zip_code.data)
             if form.secondary_address1.data:
                 secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
                                 street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
-                                city=form.secondary_city.data)
+                                city=form.secondary_city.data, zipcode = form.secondary_zip_code.data)
             metro = MetroArea(name = form.primary_metro_area)
         db.session.add(address)
         db.session.commit()
@@ -341,6 +341,7 @@ def invite_member():
                         emergency_contact_email_address=form.emergency_contact_email_address.data,
                         emergency_contact_relation = form.emergency_contact_relationship.data,
                         membership_expiration_date=form.expiration_date.data,
+                        member_number = form.member_number,
                         volunteer_notes=form.volunteer_notes.data,
                         staffer_notes=form.staffer_notes.data)
         db.session.add(member)

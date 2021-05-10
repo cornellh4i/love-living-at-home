@@ -327,6 +327,7 @@ class MemberManager(FlaskForm):
 
     expiration_date = DateField("Member Expiration Date: ", validators=[
         InputRequired()])
+    member_number = IntegerField(validators = [Optional()])
     volunteer_notes = TextAreaField('Notes for Volunteers',
                                     validators=[Optional(),
                                                 Length(max=500)])
