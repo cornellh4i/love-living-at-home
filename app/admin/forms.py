@@ -429,11 +429,8 @@ class AddServiceVetting(FlaskForm):
     vetting_notes = TextAreaField("",render_kw={"rows": 15, "cols": 105},validators=[Optional()])
     volunteer_fully_vetted_checkbox = BooleanField(
         'Is Fully Vetted?',
-        validators=[InputRequired()] )
+        validators=[Optional()])
     submit = SubmitField("Save")
-
-
-
 
 class ContractorManager(FlaskForm):
     first_name = StringField('First name *',

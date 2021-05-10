@@ -142,39 +142,34 @@ description=None, icon=None) %}
       </div>
       {% endfor %}
     </div>
-  </div>
+  </div>  
 
   <!-- Vettings Pop Up -->
   <div class="ui modal" id="vettings">
     <i class="close icon"></i>
     <div class="ui center aligned header">Vettings</div>
-        <div class="content">
+        <div class="content" id = "Sofia">
+          {% set flashes = 
+            { 'error': get_flashed_messages(category_filter=['form-error']), 
+            'warning': get_flashed_messages(category_filter=['form-check-email']), 
+            'info': get_flashed_messages(category_filter=['form-info']), 
+            'success': get_flashed_messages(category_filter=['form-success']) } 
+          %} 
+          {{ f.begin_form(add_vetting, flashes) }}
           <div class="ui two column stackable grid">
             <h3 class="eight wide column">Service Vettings</h3>
-            <div class="eight wide column" style = "text-align:right"> {{f.render_form_field(add_vetting.volunteer_fully_vetted_checkbox) }}</div>
+            <div class="eight wide column" style = "text-align:right"> 
+              {{f.render_form_field(add_vetting.volunteer_fully_vetted_checkbox) }}
+            </div>
           </div>
 
           <div class="ui attached segment">
-
             <h3 class="ui top attached header">
               Notes
             </h3>
             <div class="ui fluid attached segment">
               <p>{{f.render_form_field(add_vetting.vetting_notes)}}</p>
             </div>
-            
-            {{ f.render_form_field(add_vetting.submit) }}
-          </div>
-        </div>
-          {% set flashes = { 'error':
-          get_flashed_messages(category_filter=['form-error']), 'warning':
-          get_flashed_messages(category_filter=['form-check-email']), 'info':
-          get_flashed_messages(category_filter=['form-info']), 'success':
-          get_flashed_messages(category_filter=['form-success']) } %} {{
-          f.begin_form(add_vetting, flashes) }}
-          
-                          
-          <div class="actions">
             {{ f.form_message(flashes['error'], header='Something went wrong.',
             class='error') }}
             {{ f.form_message(flashes['warning'], header='Check your
@@ -183,19 +178,12 @@ description=None, icon=None) %}
             header='Information', class='info') }}
             {{ f.form_message(flashes['success'],
             header='Success!', class='success') }} 
-            
+            {{ f.render_form_field(add_vetting.submit) }}
           </div>
-          {{ f.end_form() }}
-        
-      
- 
-          
-          
-          {{ f.end_form() }}
+        </div>
+        {{ f.end_form() }}
     </div>
   </div>
-    
-  
   
   <!-- Availability Pop Up -->
   <div class="ui fullscreen modal" id="availability">
@@ -370,3 +358,6 @@ description=None, icon=None) %}
   </script>
 
   {% endblock %}
+
+
+    

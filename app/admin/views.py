@@ -12,7 +12,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                               AddAvailability, Reviews, EditServiceForm, MultiCheckboxField)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category, LocalResource
+from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category, LocalResource, Volunteer
 
 
 admin = Blueprint('admin', __name__)
@@ -34,7 +34,7 @@ def request_manager():
     return render_template('admin/request_manager/layouts/base.html')
 
 
-@admin.route('/people-manager')
+@admin.route('/people-manager',  methods=['GET', 'POST'])
 @login_required
 @admin_required
 def people_manager():
@@ -46,6 +46,15 @@ def people_manager():
                           for category in ServiceCategory.query.all()]
     services = [(service.name, service.category_id)
                 for service in Service.query.all()]
+    if add_vetting.validate_on_submit():
+        ## NEED TO CHANGE THIS SO THAT WE UPDATE VETTINGS BASED ON WHICH USER WAS SELECTED
+        volunteer = Volunteer.query.filter_by(first_name='Jennifer').first()
+        volunteer.vettings = add_vetting.vetting_notes.data
+        volunteer.is_fully_vetted = add_vetting.volunteer_fully_vetted_checkbox.data
+        db.session.commit()
+        flash(
+            'Vettings for user {} successfully saved.'.format(
+                volunteer.first_name), 'form-success')
     return render_template('admin/people_manager/layouts/base.html',
                            add_availability=add_availability,
                            add_vetting=add_vetting,
@@ -296,6 +305,7 @@ def invite_member():
             secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
                               street_address=form.primary_address1.data + " " + form.primary_address2.data,
                               city=form.primary_city.data)
+            metro = MetroArea(name = form.secondary_metro_area)
         else:
             address = Address(name=form.first_name.data + " " + form.last_name.data,
                               street_address=form.primary_address1.data + " " + form.primary_address2.data,
@@ -304,20 +314,18 @@ def invite_member():
                 secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
                                 street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
                                 city=form.secondary_city.data)
+            metro = MetroArea(name = form.primary_metro_area)
         db.session.add(address)
+        db.session.commit()
+        db.session(metro)
         db.session.commit()
         if secondary_address:
             db.session.add(secondary_address)
             db.session.commit()
-        if form.preferred_contact_method_phone:
-            preferred_method = "Phone"
-        elif form.preferred_contact_method_email:
-            preferred_method = "Email"
-        elif form.preferred_contact_method_phone_and_email:
-            preferred_method = "Phone and Email"
         member = Member(salutation=form.salutation.data,
                         primary_address_id=address.id,
                         secondary_address_id = secondary_address.id if secondary_address else None,
+                        metro_area_id = metro.id, 
                         first_name=form.first_name.data,
                         middle_initial=form.middle_initial.data,
                         last_name=form.last_name.data,
