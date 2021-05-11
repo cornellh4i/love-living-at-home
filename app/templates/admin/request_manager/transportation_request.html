@@ -106,8 +106,10 @@
     
     <!-- </div> -->
     <!-- <div class="right floated four wide column"> -->
-    <button class="ui inverted violet fluid button" id="show-new-destinations">
+    <button class="ui inverted violet fluid button" id="show-new-destination">
       Add new destination</button>
+    <button class="ui inverted violet fluid button" id="show-new-service-provider">
+      Add New Service Provider</button>
     <!-- </div> -->
     <!-- </div> -->
     <!-- </div> -->
@@ -130,10 +132,22 @@
     </div>
   </div>
 
+  <div id="new-service-provider" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">Add Service Provider</div>
+    <div class="content">
+      <h3>Add New Service Provider</h3>
+    </div>
+  </div>
+
   <script>
     $('#show-new-destination').click(function () {
       $('#new-destination').modal('show');
     });
+
+    $('#show-new-service-provider').click(function () {
+    $('#new-service-provider').modal('show');
+  });
 
     function serviceChoices() {
       let service_category = document.getElementById("service_category").value;
