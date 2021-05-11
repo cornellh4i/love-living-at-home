@@ -82,25 +82,53 @@
       <div class="right floated six wide column">
       </div>
     </div>
-    <div id="special_instructions" style="display:none;">{{ form.special_instructions_list}}</div>
-    <div id='p'></div>
 
-    {{ f.render_form_field(form.starting_location) }}
+    <div>{{ f.render_form_field(form.starting_location) }}</div>
+    <!-- <div class="ui two column stackable relaxed grid"> -->
+    <!-- <div class="two column row"> -->
+    <!-- <div class="eight wide column"> -->
     {{ f.render_form_field(form.destination) }}
-    {{ f.render_form_field(form.duration) }}
+    <!-- </div> -->
+    <!-- <div class="right floated four wide column"> -->
+    <button class="ui inverted violet fluid button" id="show-new-destinations">
+      Add new destination</button>
+    <!-- </div> -->
+    <!-- </div> -->
+    <!-- </div> -->
+    <div>{{ f.render_form_field(form.duration) }}</div>
+  </div>
+
+  <div id="new-destination" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">Add Availability</div>
+    <div class="content">
+      <h3>Add new destination</h3>
+      {{f.render_form_field(form.destination_name)}}
+      {{f.render_form_field(form.street_address1)}}
+      {{f.render_form_field(form.street_address2)}}
+      {{f.render_form_field(form.city)}}
+      {{f.render_form_field(form.state)}}
+      {{f.render_form_field(form.zip)}}
+      {{f.render_form_field(form.country)}}
+      {{f.render_form_field(form.add_address)}}
+    </div>
   </div>
 
   <script>
+    $('#show-new-destination').click(function () {
+      $('#new-destination').modal('show');
+    });
+
     function serviceChoices() {
-      // let service_category = document.getElementById("service_category").value;
-      // // document.getElementById("p").style.display = "none";
-      // if (service_category === "1") {
-      //   document.getElementById("covid").style.display = "initial";
-      //   document.getElementById("transportation").style.display = "none";
-      // } else if (service_category === "0") {
-      //   document.getElementById("covid").style.display = "none"
-      //   document.getElementById("transportation").style.display = "initial"
-      // }
+      let service_category = document.getElementById("service_category").value;
+      // document.getElementById("p").style.display = "none";
+      if (service_category === "1") {
+        document.getElementById("covid").style.display = "initial";
+        document.getElementById("transportation").style.display = "none";
+      } else if (service_category === "0") {
+        document.getElementById("covid").style.display = "none"
+        document.getElementById("transportation").style.display = "initial"
+      }
     }
 
     // function specialInstructions() {

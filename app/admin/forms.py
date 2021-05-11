@@ -195,6 +195,16 @@ class TransportationRequestForm(FlaskForm):
         'Destination:',
         validators=[InputRequired()], coerce=int)
     duration = RadioField('Duration:', coerce=int)
+
+    destination_name = StringField('Destination Name:', validators = [InputRequired()])
+    street_address1 = StringField('Street Address:', validators = [InputRequired()])
+    street_address2 = StringField('Apt, Unit, Building, Floor, etc:', validators = [InputRequired()])
+    city = StringField('City:', validators = [InputRequired()])
+    state = StringField('State/Province:', validators = [InputRequired()])
+    zip = StringField('Zip:', validators = [InputRequired()])
+    country = StringField('Country:', validators = [InputRequired()])
+    add_address = SubmitField('Add Address')
+
     submit = SubmitField("Submit")
 
 
