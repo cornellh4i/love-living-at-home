@@ -88,19 +88,34 @@
     {{ f.render_form_field(form.starting_location) }}
     {{ f.render_form_field(form.destination) }}
     {{ f.render_form_field(form.duration) }}
+    <div class="four fields">
+      <div class="field">
+        <button class="ui purple basic button" type="button">Send Request</button>
+      </div>
+      <div class="field">
+        <button class="ui purple basic button" type="button">Send Request</button>
+      </div>
+      <div class="field">
+        <button class="ui purple basic button" type="button">Send Request</button>
+      </div>
+      <div class="field">
+        <button class="ui purple basic button" type="button">Send Request</button>
+      </div>
+    </div>
+    
   </div>
 
   <script>
     function serviceChoices() {
-      // let service_category = document.getElementById("service_category").value;
-      // // document.getElementById("p").style.display = "none";
-      // if (service_category === "1") {
-      //   document.getElementById("covid").style.display = "initial";
-      //   document.getElementById("transportation").style.display = "none";
-      // } else if (service_category === "0") {
-      //   document.getElementById("covid").style.display = "none"
-      //   document.getElementById("transportation").style.display = "initial"
-      // }
+      let service_category = document.getElementById("service_category").value;
+      document.getElementById("p").style.display = "none";
+      if (service_category === "1") {
+        document.getElementById("covid").style.display = "initial";
+        document.getElementById("transportation").style.display = "none";
+      } else if (service_category === "0") {
+        document.getElementById("covid").style.display = "none"
+        document.getElementById("transportation").style.display = "initial"
+      }
     }
 
     // function specialInstructions() {
