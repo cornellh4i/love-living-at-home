@@ -12,7 +12,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                               AddAvailability, Reviews, EditServiceForm, MultiCheckboxField)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category, LocalResource, Volunteer, MetroArea
+from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category, LocalResource, Volunteer, MetroArea, ProvidedService
 
 
 admin = Blueprint('admin', __name__)
@@ -301,19 +301,19 @@ def invite_member():
         if (form.secondary_as_primary_checkbox.data):
             address = Address(name=form.first_name.data + " " + form.last_name.data,
                               street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
-                              city=form.secondary_city.data, zipcode = form.secondary_zip_code.data)
+                              city=form.secondary_city.data)
             secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
                               street_address=form.primary_address1.data + " " + form.primary_address2.data,
-                              city=form.primary_city.data, zipcode = form.primary_zip_code.data)
+                              city=form.primary_city.data)
             metro = MetroArea(name = form.secondary_metro_area)
         else:
             address = Address(name=form.first_name.data + " " + form.last_name.data,
                               street_address=form.primary_address1.data + " " + form.primary_address2.data,
-                              city=form.primary_city.data, zipcode = form.primary_zip_code.data)
+                              city=form.primary_city.data)
             if form.secondary_address1.data:
                 secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
                                 street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
-                                city=form.secondary_city.data, zipcode = form.secondary_zip_code.data)
+                                city=form.secondary_city.data)
             metro = MetroArea(name = form.primary_metro_area)
         db.session.add(address)
         db.session.commit()
@@ -363,7 +363,9 @@ def invite_volunteer():
                 for service in Service.query.all()]
 
     category_dict = {}
+    category_name_to_id = {}
     for count, category in enumerate(service_categories):
+        category_name_to_id[category[0]] = category[1]
         choices = []
         for service in services:
             if service[1] == category[1]:
@@ -372,28 +374,45 @@ def invite_volunteer():
     for key, value in category_dict.items():
         setattr(VolunteerManager, key, value)
     form = VolunteerManager()
+    service_ids = []
     if form.validate_on_submit():
+        for key, value in category_dict.items():
+            service_input = getattr(form, key)
+            service_data = service_input.data
+            for service in service_data:
+                service_to_be_committed = Service.query.filter_by(name = service, category_id = int(category_name_to_id[key])).first()
+                service_ids.append(service_to_be_committed.id)
         address = Address(name=form.first_name.data + " " + form.last_name.data,
                     street_address=form.primary_address1.data + " " + form.primary_address2.data,
                     city=form.primary_city.data)
         db.session.add(address)
         db.session.commit()
-        volunteer = Volunteer(salutation=form.salutation.data,
+        volunteer = Volunteer(
+            # salutation=form.salutation.data,
                 first_name=form.first_name.data,
                 middle_initial=form.middle_initial.data,
                 last_name=form.last_name.data,
                 preferred_name=form.preferred_name.data,
                 birthdate = form.birthday.data,
                 gender=form.gender.data,
-                phone_number=form.home_phone_number.data,
-                email=form.email.data,
+                primary_phone_number=form.home_phone.data,
+                # email=form.email.data,
                 emergency_contact_name=form.emergency_contact_name.data,
                 emergency_contact_phone_number=form.emergency_contact_phone_number.data,
                 emergency_contact_email_address=form.emergency_contact_email_address.data,
-                preferred_contact_method=form.contact_preference,
-                notes=form.notes.data)
+                preferred_contact_method=form.contact_preference.data,
+                primary_address_id = address.id,
+                type_id = 2, #What should we set volunteer type id as???
+                general_notes=form.notes.data,
+                rating = 1, #Why is this not null before the user even creates a volunteer? 
+                is_fully_vetted = True,
+                )
         db.session.add(volunteer)
         db.session.commit()
+        for service in service_ids:
+            provided_service = ProvidedService(service_id = service, volunteer_id = volunteer.id)
+            db.session.add(provided_service)
+            db.session.commit()
         flash('Volunteer {} successfully invited'.format(
             form.first_name.data), 'form-success')
     return render_template('admin/people_manager/volunteer_manager.html',

@@ -77,16 +77,17 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   </div>
     {{ f.render_form_field(form.general_email_checkbox) }}
     {{ f.render_form_field(form.open_email_checkbox) }}
-
+<!-- 
     <div class="field">
       <i class="ui inverted violet fluid button" id="show-services">
         Services
       </i>
-    </div>
+    </div> -->
 
-    <div class="ui modal" id="services">
-      <i class="close icon"></i>
-      <div class="header">Services Provided By</div>
+    <!-- <div class="ui modal" id="services">
+      <i class="close icon"></i> -->
+    <div class = "field">
+      <div class="ui header">Services Provided By</div>
       <div class="ui styled fluid accordion">
         {% for key, value in category_dict.items() %}
           <div class="title">
@@ -99,6 +100,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
           {% endfor %}
       </div>
     </div>
+    <!-- </div> -->
 
     {{f.render_form_field(form.notes)}} {{ f.form_message(flashes['error'],
     header='Something went wrong.', class='error') }} {{

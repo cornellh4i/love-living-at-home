@@ -9,7 +9,7 @@ class Address(db.Model):
     city = db.Column(db.String(64), nullable=False)
     state = db.Column(db.String(64), default='New York')
     country = db.Column(db.String(64), default='United States')
-    zipcode = db.Column(db.String(64))
+    # zipcode = db.Column(db.String(64)) # WILL HAVE TO INCLUDE THIS
 
     @staticmethod
     def generate_fake(count=5, **kwargs):
