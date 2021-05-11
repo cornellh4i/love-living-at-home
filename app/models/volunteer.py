@@ -109,7 +109,7 @@ class VolunteerAvailability(db.Model):
     day_of_week = db.Column(
         db.String(20), nullable=False
     )  # one of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    start_time = db.Column(db.Time, nullable=False) # For now, the end time is automatically one hour after start time, and start_time is always at the granularity of an hour.
+    start_hour = db.Column(db.Integer, nullable=False) # 24-hour time [0-23] (e.g., if '13', then this entry is for 1-2pm).
     availability_status_id = db.Column(db.Integer,
                                        db.ForeignKey('availability_status.id'),
                                        unique=True,
