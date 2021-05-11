@@ -116,7 +116,7 @@ class VolunteerAvailability(db.Model):
                                        nullable=False)
 
     def __repr__(self):
-        return f"VolunteerAvailability('{self.day}')"
+        return f"VolunteerAvailability('{self.day_of_week}: {self.start_time}')"
 
 
 class AvailabilityStatus(db.Model):
@@ -126,8 +126,7 @@ class AvailabilityStatus(db.Model):
     @staticmethod
     def insert_statuses():
         statuses = [
-            'Most likely available', 'Not available',
-            'Backup - might be available', 'Call me if really desperate'
+            'Available', 'Available for Backup'
         ]
         for s in statuses:
             availability_status = AvailabilityStatus.query.filter_by(
@@ -138,7 +137,7 @@ class AvailabilityStatus(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return f"AvailabilityStatus('{self.name}')"
+        return f"AvailabilityStatus('[{self.id}] {self.name}')"
 
 
 
