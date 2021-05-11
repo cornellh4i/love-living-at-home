@@ -80,7 +80,7 @@ def setup_general():
     # Volunteer related
     VolunteerType.insert_types()
     AvailabilityStatus.insert_statuses()
-    TimePeriod.insert_time_periods()
+    # TimePeriod.insert_time_periods()
     # Request related
     RequestDurationType.insert_types()
     RequestStatus.insert_statuses()

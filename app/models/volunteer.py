@@ -109,10 +109,7 @@ class VolunteerAvailability(db.Model):
     day_of_week = db.Column(
         db.String(20), nullable=False
     )  # one of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    time_period_id = db.Column(db.Integer,
-                               db.ForeignKey('time_period.id'),
-                               unique=True,
-                               nullable=False)
+    start_time = db.Column(db.Time, nullable=False) # For now, the end time is automatically one hour after start time, and start_time is always at the granularity of an hour.
     availability_status_id = db.Column(db.Integer,
                                        db.ForeignKey('availability_status.id'),
                                        unique=True,
@@ -143,26 +140,6 @@ class AvailabilityStatus(db.Model):
     def __repr__(self):
         return f"AvailabilityStatus('{self.name}')"
 
-
-class TimePeriod(db.Model):
-    id = db.Column(db.Integer, nullable=False, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-
-    @staticmethod
-    def insert_time_periods():
-        time_periods = [
-            'Morning 8-11', 'Lunchtime 11-2', 'Afternoon 2-5', 'Evening 5-8',
-            'Night 8-Midnight'
-        ]
-        for tp in time_periods:
-            time_period = TimePeriod.query.filter_by(name=tp).first()
-            if time_period is None:
-                time_period = TimePeriod(name=tp)
-            db.session.add(time_period)
-        db.session.commit()
-
-    def __repr__(self):
-        return f"TimePeriod('{self.name}')"
 
 
 # For Vacation Calendar
