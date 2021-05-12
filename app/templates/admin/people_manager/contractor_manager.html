@@ -54,16 +54,10 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 
     <br><br/>
     <div class="inline fields">
-      {{ f.render_form_field(form.preferred_contact_method)}}</div>
-
-    {{ f.render_form_field(form.website) }}
-
-    <div class="field">
-      <i class="fluid inverted violet ui button" id="show-reviews">
-        Reviews
-      </i>
+      {{ f.render_form_field(form.preferred_contact_method)}}
     </div>
 
+    {{ f.render_form_field(form.website) }}
 
     {{ f.form_message(flashes['error'], header='Something went wrong.',
     class='error') }} {{ f.form_message(flashes['warning'], header='Check your
@@ -75,67 +69,9 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   </div>
 </div>
 
-
-<div class="ui modal" id="reviews">
-  <i class="close icon"></i>
-  <div class="header">Reviews</div>
-
-  {% set flashes = { 'error':
-  get_flashed_messages(category_filter=['form-error']), 'warning':
-  get_flashed_messages(category_filter=['form-check-email']), 'info':
-  get_flashed_messages(category_filter=['form-info']), 'success':
-  get_flashed_messages(category_filter=['form-success']) } %} {{
-  f.begin_form(reviews, flashes) }}
-
-  <div class="ui styled fluid accordion">
-    <div class="active title">
-      <i class="dropdown icon"></i>
-      Add A Review
-    </div>
-    <div class="active content">
-      <div class="two fields">
-        <div class="field">
-          {{ f.render_form_field(reviews.reviewer_name) }}
-        </div>
-        <div class="field">
-          <label>Rating:</label>
-          <div class="ui massive star rating" data-max-rating="5"></div>
-        </div>
-      </div>
-      {{ f.render_form_field(reviews.notes) }}
-    </div>
-    <div class="title">
-      <i class="dropdown icon"></i>
-      Previous Reviews
-    </div>
-    <div class="content">
-      <div class="transition hidden">
-        <div class="ui form">{{ f.render_form_field(reviews.notes) }}</div>
-      </div>
-    </div>
-
-    {{ f.form_message(flashes['error'], header='Something went wrong.',
-    class='error') }} {{ f.form_message(flashes['warning'], header='Check your
-    email.', class='warning') }} {{ f.form_message(flashes['info'],
-    header='Information', class='info') }} {{ f.form_message(flashes['success'],
-    header='Success!', class='success') }} {% for field in form |
-    selectattr('type', 'equalto', 'SubmitField') %} {{
-    f.render_form_field(reviews.submit) }} {% endfor %} {{ f.end_form() }}
-  </div>
-
   <script>
-    $('#show-reviews').click(function () {
-      $('#reviews').modal('show');
-    });
-
-    $('.ui.accordion').accordion({ exclusive: false });
-
-    $('.ui.rating').rating();
-
     $('.ui.radio.checkbox')
-    .checkbox()
-    ;
+    .checkbox();
   </script>
 
   {% endblock %}
-</div>

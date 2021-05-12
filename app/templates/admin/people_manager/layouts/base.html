@@ -19,6 +19,7 @@ description=None, icon=None) %}
 {% endmacro %}
 
 {% macro manage_volunteer() %}
+<i class="comment outline icon right floated" style = "cursor: pointer"></i>
 <i class="clock outline icon right floated" style = "cursor: pointer"></i>
 <i class="check square outline icon right floated" style = "cursor: pointer"></i>
 <i class="handshake outline icon right floated" style = "cursor: pointer"></i>
@@ -103,7 +104,6 @@ description=None, icon=None) %}
           <div class="header">Angela Jin
             {{ manage_volunteer() }}
           </div>
-
         </div>
         <div class="content">~info about person~</div>
       </div>
@@ -180,7 +180,7 @@ description=None, icon=None) %}
             header='Success!', class='success') }} 
             {{ f.render_form_field(add_vetting.submit) }}
           </div>
-        </div>
+       </div>
         {{ f.end_form() }}
     </div>
   </div>
@@ -199,60 +199,46 @@ description=None, icon=None) %}
       %} 
 
       {{ f.begin_form(add_availability, flashes) }}
-      <table class="ui definition table">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>Wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>8AM - 11AM</td>
-            <td>{{ f.render_form_field(add_availability.availability_m1) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_t1) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_w1) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_th1) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_f1) }}</td>
-          </tr>
-          <tr>
-            <td>11AM - 2PM</td>
-            <td>{{ f.render_form_field(add_availability.availability_m2) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_t2) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_w2) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_th2) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_f2) }}</td>
-          </tr>
-          <tr>
-            <td>2PM - 5PM</td>
-            <td>{{ f.render_form_field(add_availability.availability_m3) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_t3) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_w3) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_th3) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_f3) }}</td>
-          </tr>
-          <tr>
-            <td>5PM - 8PM</td>
-            <td>{{ f.render_form_field(add_availability.availability_m3) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_t3) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_w3) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_th3) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_f3) }}</td>
-          </tr>
-          <tr>
-            <td>8PM - 12AM</td>
-            <td>{{ f.render_form_field(add_availability.availability_m4) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_t4) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_w4) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_th4) }}</td>
-            <td>{{ f.render_form_field(add_availability.availability_f4) }}</td>
-          </tr>
-        </tbody>
-      </table>
+
+      <div class="ui header">Monday:</div>
+        <div class="ui segment">
+          <a class="ui purple ribbon label">Available:</a>
+          <span>{{ f.render_form_field(add_availability.availability_monday) }}</span>
+        </div>
+        <div class="ui segment">
+          <a class="ui purple ribbon label">Available For Backup:</a>
+          <span>{{ f.render_form_field(add_availability.backup_monday) }}</span>
+        </div>
+
+      <div class="ui header">Tuesday:</div>
+        <div class="ui segment">
+          <a class="ui purple horizontal label">Available:</a>
+          <span>{{ f.render_form_field(add_availability.availability_tuesday) }}</span>
+        </div>
+        <div class="ui segment">
+          <a class="ui purple horizontal label">Available For Backup:</a>
+          <span>{{ f.render_form_field(add_availability.backup_tuesday) }}</span>
+        </div>
+
+      <div class="ui header">Wednesday:</div>
+      {{ f.render_form_field(add_availability.availability_wednesday) }}
+      {{ f.render_form_field(add_availability.backup_wednesday) }}
+
+      <div class="ui header">Thursday:</div>
+      {{ f.render_form_field(add_availability.availability_thursday) }} 
+      {{ f.render_form_field(add_availability.backup_thursday) }} 
+
+      <div class="ui header">Friday:</div>
+      {{ f.render_form_field(add_availability.availability_friday) }} 
+      {{ f.render_form_field(add_availability.backup_friday) }} 
+
+      <div class="ui header">Saturday:</div>
+      {{ f.render_form_field(add_availability.availability_saturday) }} 
+      {{ f.render_form_field(add_availability.backup_saturday) }} 
+
+      <div class="ui header">Sunday:</div>
+      {{ f.render_form_field(add_availability.availability_sunday) }} 
+      {{ f.render_form_field(add_availability.backup_sunday) }} 
 
       <div class="actions">
         {{ f.form_message(flashes['error'], header='Something went wrong.',
@@ -269,11 +255,65 @@ description=None, icon=None) %}
     </div>
   </div>
 
+  <!-- Reviews Pop Up -->
+  <div class="ui modal" id="reviews">
+    <i class="close icon"></i>
+    <div class="header">Reviews</div>
+  
+    {% set flashes = { 'error':
+    get_flashed_messages(category_filter=['form-error']), 'warning':
+    get_flashed_messages(category_filter=['form-check-email']), 'info':
+    get_flashed_messages(category_filter=['form-info']), 'success':
+    get_flashed_messages(category_filter=['form-success']) } %} {{
+    f.begin_form(reviews, flashes) }}
+  
+    <div class="ui styled fluid accordion">
+      <div class="active title">
+        <i class="dropdown icon"></i>
+        Add A Review
+      </div>
+      <div class="active content">
+        <div class="two fields">
+          <div class="field">
+            {{ f.render_form_field(reviews.reviewer_name) }}
+          </div>
+          <div class="field">
+            <label>Rating:</label>
+            <div class="ui massive star rating" data-max-rating="5"></div>
+          </div>
+        </div>
+        {{ f.render_form_field(reviews.notes) }}
+      </div>
+      <div class="title">
+        <i class="dropdown icon"></i>
+        Previous Reviews
+      </div>
+      <div class="content">
+        <div class="transition hidden">
+          <div class="ui form">{{ f.render_form_field(reviews.notes) }}</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        {{ f.form_message(flashes['error'], header='Something went wrong.',
+        class='error') }} 
+        {{ f.form_message(flashes['warning'], header='Check your
+        email.', class='warning') }} 
+        {{ f.form_message(flashes['info'],
+        header='Information', class='info') }} 
+        {{ f.form_message(flashes['success'],
+        header='Success!', class='success') }}  
+        {{f.render_form_field(reviews.submit) }}
+      </div>
+      {{ f.end_form() }}
+      
+    </div>  
+  </div>
+
   <script language='javascript'>
     $(document).ready(function () {
       $('.ui.accordion').accordion();
     });
-
 
     $(document)
       .ready(function () {
@@ -341,8 +381,6 @@ description=None, icon=None) %}
       $('#services').modal('show');
     });
 
-    $('.ui.accordion').accordion({ exclusive: false });
-
     $('i.check.square.outline.icon.right.floated').click(function () {
       $('#vettings').modal('show');
     });
@@ -355,9 +393,14 @@ description=None, icon=None) %}
       $('#availability').modal('show');
     });
 
+    $('i.comment.outline.icon.right.floated').click(function () {
+      $('#reviews').modal('show');
+    });
+    
+    $('.ui.accordion').accordion({ exclusive: false });
+
+    $('.ui.rating').rating();
+
   </script>
 
-  {% endblock %}
-
-
-    
+  {% endblock %}   

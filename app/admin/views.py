@@ -43,6 +43,7 @@ def people_manager():
     """People Manager Page."""
     add_availability = AddAvailability()
     add_vetting = AddServiceVetting()
+    reviews = Reviews()
 
     service_categories = [(category.name, category.request_type_id)
                           for category in ServiceCategory.query.all()]
@@ -60,9 +61,9 @@ def people_manager():
     return render_template('admin/people_manager/layouts/base.html',
                            add_availability=add_availability,
                            add_vetting=add_vetting,
-
                            services=services,
-                           service_categories=service_categories)
+                           service_categories=service_categories,
+                           reviews=reviews)
 
 
 @admin.route('/new-user', methods=['GET', 'POST'])
@@ -435,7 +436,6 @@ def invite_volunteer():
 def invite_contractor():
     """Page for contactor management."""
     form = ContractorManager()
-    reviews = Reviews()
     if form.validate_on_submit():
         address = None
         if form.primary_address1.data:
@@ -459,7 +459,7 @@ def invite_contractor():
         db.session.commit()
         flash('Contractor {} successfully invited'.format(
             form.last_name.data), 'form-success')
-    return render_template('admin/people_manager/contractor_manager.html', form=form, reviews=reviews)
+    return render_template('admin/people_manager/contractor_manager.html', form=form)
 
 
 @admin.route('/services')
