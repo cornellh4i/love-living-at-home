@@ -399,20 +399,13 @@ class VolunteerManager(FlaskForm):
                              Length(1, 64),
                              Email()])
     # now under contact info
-    home_phone = IntegerField(widget=widgets.Input(input_type="tel"),
+    home_phone = IntegerField("Primary Phone Number",widget=widgets.Input(input_type="tel"),
                               validators=[InputRequired()])
     email = EmailField('Email',
                        validators=[InputRequired(),
                                    Length(1, 64),
                                    Email()])
     contact_preference = RadioField('Preferred Contact Method', choices=[('phone', "Phone"), ('email', "Email"), ('phone_and_email', "Phone and Email")])
-    general_email_checkbox = BooleanField(
-                                    'Uncheck this box to stop this service provider from receiving village general information emails. \
-                                    Note that this setting does not affect system generated emails such as transaction confirmation messages.',
-                                    validators=[InputRequired()], render_kw={'checked': True})
-    open_email_checkbox = BooleanField(
-                                    'Uncheck this box to stop this service provider from receiving automated open requests emails.',
-                                    validators=[InputRequired()], render_kw={'checked': True})
 
 
     notes = TextAreaField("Notes for Office Staff", validators=[Optional()])
