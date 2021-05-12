@@ -13,12 +13,12 @@ class Volunteer(db.Model):
     gender = db.Column(db.String(80))
     birthday = db.Column(db.Date, nullable=False)
     ## Contact Information
-    #primary_address_id = db.Column(db.Integer(),
-    #                       db.ForeignKey("address.id"),
-    #                       nullable=False)
-    #secondary_address_id = db.Column(db.Integer(),
-    #                       db.ForeignKey("address.id"))
-    #metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
+    primary_address_id = db.Column(db.Integer(),
+                          db.ForeignKey("address.id"),
+                          nullable=False)
+    secondary_address_id = db.Column(db.Integer(),
+                          db.ForeignKey("address.id"))
+    metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
 
     primary_phone_number = db.Column(db.String(64), nullable=False)
     secondary_phone_number = db.Column(db.String(10))
@@ -34,7 +34,7 @@ class Volunteer(db.Model):
                     
     rating = db.Column(db.Float(), nullable=False)
     is_fully_vetted = db.Column(db.Boolean(), nullable=False)
-    #vettings = db.Column(db.Text)
+    vettings = db.Column(db.Text)
     
     ## Emergency Contact Information
     emergency_contact_name = db.Column(db.String(64))
@@ -59,7 +59,7 @@ class Volunteer(db.Model):
             v = Volunteer(
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
-                birthdate=datetime.strptime(
+                birthday=datetime.strptime(
                     fake.date(), "%Y-%m-%d").date(),
                 primary_address_id=-1,
                 primary_phone_number=fake.phone_number(),

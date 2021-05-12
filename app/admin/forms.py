@@ -547,3 +547,6 @@ class EditMetroAreaForm(FlaskForm):
     name = StringField('Metro Area Name', validators=[
                        InputRequired(), Length(1, 200)])
     submit = SubmitField('Save Metro Area Information')
+
+class AddServiceToVolunteer(FlaskForm):
+    submit = SubmitField('Save')

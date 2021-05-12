@@ -9,7 +9,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              ContractorManager, InviteUserForm, MemberManager,
                              NewUserForm, TransportationRequestForm,
                              VolunteerManager, SearchRequestForm, AddServiceVetting,
-                             AddAvailability, Reviews, EditServiceForm, MultiCheckboxField, EditMetroAreaForm)
+                             AddAvailability, Reviews, EditServiceForm, MultiCheckboxField, EditMetroAreaForm, AddServiceToVolunteer)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import (EditableHTML, Role, User, Member, Address, ServiceCategory,
@@ -43,26 +43,59 @@ def people_manager():
     """People Manager Page."""
     add_availability = AddAvailability()
     add_vetting = AddServiceVetting()
-
-    service_categories = [(category.name, category.request_type_id)
-                          for category in ServiceCategory.query.all()]
-    services = [(service.name, service.category_id)
+    service_categories = sorted([(category.name, category.request_type_id, category.id)
+                                for category in ServiceCategory.query.all()],
+                                key=lambda triple: triple[2])
+    services = [(service.name, service.category_id, service.id)
                 for service in Service.query.all()]
+
+    category_dict = {}
+    category_name_to_id = {}
+    for count, category in enumerate(service_categories):
+        category_name_to_id[category[0]] = category[1]
+        choices = []
+        for service in services:
+            if service[1] == category[1]:
+                choices.append((service[0], service[0]))
+        category_dict[category[0]] = MultiCheckboxField(
+            category[0], choices=choices)
+    for key, value in category_dict.items():
+        setattr(AddServiceToVolunteer, key, value)
+    service_form = AddServiceToVolunteer()
+
+    # NEED TO CHANGE THIS SO THAT WE UPDATE VETTINGS BASED ON WHICH USER WAS SELECTED
+    volunteer = Volunteer.query.first()
+
+    ## VETTINGS UPDATED 
     if add_vetting.validate_on_submit():
         # NEED TO CHANGE THIS SO THAT WE UPDATE VETTINGS BASED ON WHICH USER WAS SELECTED
-        volunteer = Volunteer.query.filter_by(first_name='Jennifer').first()
+        volunteer = Volunteer.query.first()
         volunteer.vettings = add_vetting.vetting_notes.data
         volunteer.is_fully_vetted = add_vetting.volunteer_fully_vetted_checkbox.data
         db.session.commit()
         flash(
             'Vettings for user {} successfully saved.'.format(
                 volunteer.first_name), 'form-success')
+
+    ## SERVICES UPDATED 
+    if service_form.validate_on_submit():
+        for key, value in category_dict.items():
+            service_input = getattr(service_form, key)
+            service_data = service_input.data
+            for service in service_data:
+                service_to_be_committed = Service.query.filter_by(
+                    name=service, category_id=int(category_name_to_id[key])).first()
+                provided_service = ProvidedService(
+                service_id=service_to_be_committed.id, volunteer_id=volunteer.id)
+                db.session.add(provided_service)
+                db.session.commit()
+            flash('Services provided by {} successfully updated'.format(volunteer.first_name), 'form-success')
+
     return render_template('admin/people_manager/layouts/base.html',
                            add_availability=add_availability,
                            add_vetting=add_vetting,
-
-                           services=services,
-                           service_categories=service_categories)
+                           service_form = service_form, 
+                           category_dict = category_dict)
 
 
 @admin.route('/new-user', methods=['GET', 'POST'])

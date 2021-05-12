@@ -124,31 +124,45 @@ description=None, icon=None) %}
   <div class="ui modal" id="services">
     <i class="close icon"></i>
     <div class="header">Services Provided By</div>
-    <div class="ui styled fluid accordion">
-      {% for category in service_categories %}
-      <div class="title">
-        <i class="dropdown icon"></i>
-        {{ category[0] }}
-      </div>
-      <div class="content">
-        {% for service in services %} {% if service[1] == category[1] %}
-        <div class="transition hidden">
-          <div class="ui checkbox">
-            <input type="checkbox" name="example" />
-            <label>{{ service[0] }}</label>
+    {% set flashes = 
+      { 'error': get_flashed_messages(category_filter=['form-error']), 
+      'warning': get_flashed_messages(category_filter=['form-check-email']), 
+      'info': get_flashed_messages(category_filter=['form-info']), 
+      'success': get_flashed_messages(category_filter=['form-success']) } 
+    %} 
+    {{ f.begin_form(service_form, flashes) }}
+    <div class = "content">
+      <div class="ui styled fluid accordion">
+        {% for key, value in category_dict.items() %}
+          <div class="title">
+            <i class="dropdown icon"></i>
+            {{ key }}
           </div>
-        </div>
-        {% endif %} {% endfor %}
+          <div class="content">
+          {{ service_form|attr(key)() }}
+          </div>
+          {% endfor %}
       </div>
-      {% endfor %}
+      <div class = "actions">
+        {{ f.form_message(flashes['error'], header='Something went wrong.',
+        class='error') }}
+        {{ f.form_message(flashes['warning'], header='Check your
+        email.', class='warning') }}
+        {{ f.form_message(flashes['info'],
+        header='Information', class='info') }}
+        {{ f.form_message(flashes['success'],
+        header='Success!', class='success') }} 
+        {{ f.render_form_field(service_form.submit) }}
+      </div>
     </div>
+    {{ f.end_form() }}
   </div>  
 
   <!-- Vettings Pop Up -->
   <div class="ui modal" id="vettings">
     <i class="close icon"></i>
     <div class="ui center aligned header">Vettings</div>
-        <div class="content" id = "Sofia">
+        <div class="content">
           {% set flashes = 
             { 'error': get_flashed_messages(category_filter=['form-error']), 
             'warning': get_flashed_messages(category_filter=['form-check-email']), 
