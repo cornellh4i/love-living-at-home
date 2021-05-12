@@ -9,10 +9,12 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              ContractorManager, InviteUserForm, MemberManager,
                              NewUserForm, TransportationRequestForm,
                              VolunteerManager, SearchRequestForm, AddServiceVetting,
-                              AddAvailability, Reviews, EditServiceForm, MultiCheckboxField)
+                             AddAvailability, Reviews, EditServiceForm, MultiCheckboxField, EditMetroAreaForm)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category, LocalResource, Volunteer, MetroArea, ProvidedService
+from app.models import (EditableHTML, Role, User, Member, Address, ServiceCategory,
+                        Service,  Request, service_category, LocalResource, Volunteer,
+                        MetroArea, ProvidedService)
 
 
 admin = Blueprint('admin', __name__)
@@ -41,13 +43,13 @@ def people_manager():
     """People Manager Page."""
     add_availability = AddAvailability()
     add_vetting = AddServiceVetting()
-    
+
     service_categories = [(category.name, category.request_type_id)
                           for category in ServiceCategory.query.all()]
     services = [(service.name, service.category_id)
                 for service in Service.query.all()]
     if add_vetting.validate_on_submit():
-        ## NEED TO CHANGE THIS SO THAT WE UPDATE VETTINGS BASED ON WHICH USER WAS SELECTED
+        # NEED TO CHANGE THIS SO THAT WE UPDATE VETTINGS BASED ON WHICH USER WAS SELECTED
         volunteer = Volunteer.query.filter_by(first_name='Jennifer').first()
         volunteer.vettings = add_vetting.vetting_notes.data
         volunteer.is_fully_vetted = add_vetting.volunteer_fully_vetted_checkbox.data
@@ -58,7 +60,7 @@ def people_manager():
     return render_template('admin/people_manager/layouts/base.html',
                            add_availability=add_availability,
                            add_vetting=add_vetting,
-                           
+
                            services=services,
                            service_categories=service_categories)
 
@@ -303,45 +305,48 @@ def invite_member():
                               street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
                               city=form.secondary_city.data)
             secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
-                              street_address=form.primary_address1.data + " " + form.primary_address2.data,
-                              city=form.primary_city.data)
-            metro = MetroArea(name = form.secondary_metro_area)
+                                        street_address=form.primary_address1.data + " " + form.primary_address2.data,
+                                        city=form.primary_city.data)
+            if form.secondary_metro_area.data:
+                metro = MetroArea(name=form.secondary_metro_area.data)
         else:
             address = Address(name=form.first_name.data + " " + form.last_name.data,
                               street_address=form.primary_address1.data + " " + form.primary_address2.data,
                               city=form.primary_city.data)
             if form.secondary_address1.data:
                 secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
-                                street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
-                                city=form.secondary_city.data)
-            metro = MetroArea(name = form.primary_metro_area)
+                                            street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
+                                            city=form.secondary_city.data)
+            if form.primary_metro_area.data:
+                metro = MetroArea(name=form.primary_metro_area.data)
         db.session.add(address)
         db.session.commit()
-        db.session(metro)
-        db.session.commit()
+        if metro:
+            db.session.add(metro)
+            db.session.commit()
         if secondary_address:
             db.session.add(secondary_address)
             db.session.commit()
         member = Member(salutation=form.salutation.data,
                         primary_address_id=address.id,
-                        secondary_address_id = secondary_address.id if secondary_address else None,
-                        metro_area_id = metro.id, 
+                        secondary_address_id=secondary_address.id if secondary_address else None,
+                        metro_area_id=metro.id,
                         first_name=form.first_name.data,
                         middle_initial=form.middle_initial.data,
                         last_name=form.last_name.data,
                         preferred_name=form.preferred_name.data,
                         gender=form.gender.data,
-                        birthdate = form.birthday.data,
+                        birthdate=form.birthday.data,
                         primary_phone_number=form.primary_phone.data,
-                        secondary_phone_number = form.cell_number.data,
+                        secondary_phone_number=form.cell_number.data,
                         email_address=form.email.data,
                         preferred_contact_method=form.preferred_contact_method.data,
                         emergency_contact_name=form.emergency_contact_name.data,
                         emergency_contact_phone_number=form.emergency_contact_phone_number.data,
                         emergency_contact_email_address=form.emergency_contact_email_address.data,
-                        emergency_contact_relation = form.emergency_contact_relationship.data,
+                        emergency_contact_relation=form.emergency_contact_relationship.data,
                         membership_expiration_date=form.expiration_date.data,
-                        member_number = form.member_number,
+                        member_number=form.member_number.data,
                         volunteer_notes=form.volunteer_notes.data,
                         staffer_notes=form.staffer_notes.data)
         db.session.add(member)
@@ -370,7 +375,8 @@ def invite_volunteer():
         for service in services:
             if service[1] == category[1]:
                 choices.append((service[0], service[0]))
-        category_dict[category[0]] = MultiCheckboxField(category[0], choices=choices)
+        category_dict[category[0]] = MultiCheckboxField(
+            category[0], choices=choices)
     for key, value in category_dict.items():
         setattr(VolunteerManager, key, value)
     form = VolunteerManager()
@@ -380,37 +386,39 @@ def invite_volunteer():
             service_input = getattr(form, key)
             service_data = service_input.data
             for service in service_data:
-                service_to_be_committed = Service.query.filter_by(name = service, category_id = int(category_name_to_id[key])).first()
+                service_to_be_committed = Service.query.filter_by(
+                    name=service, category_id=int(category_name_to_id[key])).first()
                 service_ids.append(service_to_be_committed.id)
         address = Address(name=form.first_name.data + " " + form.last_name.data,
-                    street_address=form.primary_address1.data + " " + form.primary_address2.data,
-                    city=form.primary_city.data)
+                          street_address=form.primary_address1.data + " " + form.primary_address2.data,
+                          city=form.primary_city.data)
         db.session.add(address)
         db.session.commit()
         volunteer = Volunteer(
-                salutation=form.salutation.data,
-                first_name=form.first_name.data,
-                middle_initial=form.middle_initial.data,
-                last_name=form.last_name.data,
-                preferred_name=form.preferred_name.data,
-                birthday = form.birthday.data,
-                gender=form.gender.data,
-                primary_phone_number=form.home_phone.data,
-                # email=form.email.data,
-                emergency_contact_name=form.emergency_contact_name.data,
-                emergency_contact_phone_number=form.emergency_contact_phone_number.data,
-                emergency_contact_email_address=form.emergency_contact_email_address.data,
-                preferred_contact_method=form.contact_preference.data,
-                #primary_address_id = address.id,
-                type_id = 2, #What should we set volunteer type id as???
-                general_notes=form.notes.data,
-                rating = 1, #Why is this not null before the user even creates a volunteer? 
-                is_fully_vetted = True,
-                )
+            salutation=form.salutation.data,
+            first_name=form.first_name.data,
+            middle_initial=form.middle_initial.data,
+            last_name=form.last_name.data,
+            preferred_name=form.preferred_name.data,
+            birthday=form.birthday.data,
+            gender=form.gender.data,
+            primary_phone_number=form.home_phone.data,
+            # email=form.email.data,
+            emergency_contact_name=form.emergency_contact_name.data,
+            emergency_contact_phone_number=form.emergency_contact_phone_number.data,
+            emergency_contact_email_address=form.emergency_contact_email_address.data,
+            preferred_contact_method=form.contact_preference.data,
+            #primary_address_id = address.id,
+            type_id=2,  # What should we set volunteer type id as???
+            general_notes=form.notes.data,
+            rating=1,  # Why is this not null before the user even creates a volunteer?
+            is_fully_vetted=True,
+        )
         db.session.add(volunteer)
         db.session.commit()
         for service in service_ids:
-            provided_service = ProvidedService(service_id = service, volunteer_id = volunteer.id)
+            provided_service = ProvidedService(
+                service_id=service, volunteer_id=volunteer.id)
             db.session.add(provided_service)
             db.session.commit()
         flash('Volunteer {} successfully invited'.format(
@@ -418,7 +426,7 @@ def invite_volunteer():
     return render_template('admin/people_manager/volunteer_manager.html',
                            form=form,
                            services=services,
-                           service_categories=service_categories, category_dict = category_dict)
+                           service_categories=service_categories, category_dict=category_dict)
 
 
 @admin.route('/invite-contractor', methods=['GET', 'POST'])
@@ -432,12 +440,13 @@ def invite_contractor():
         address = None
         if form.primary_address1.data:
             address = Address(name=form.first_name.data + " " + form.last_name.data,
-                            street_address=form.primary_address1.data + " " + form.primary_address2.data,
-                            city=form.primary_city.data)
+                              street_address=form.primary_address1.data + " " + form.primary_address2.data,
+                              city=form.primary_city.data)
             db.session.add(address)
             db.session.commit()
         localResource = LocalResource(contact_salutation=form.salutation.data,
-                                      address_id=(address.id if address else None),
+                                      address_id=(
+                                          address.id if address else None),
                                       contact_first_name=form.first_name.data,
                                       contact_middle_initial=form.middle_initial.data,
                                       contact_last_name=form.last_name.data,
@@ -485,7 +494,7 @@ def service_info(service_id):
     return render_template('admin/system_manager/manage_service.html', service=service, form=form)
 
 
-@admin.route('/services/_delete/<int:service_id>', methods=['GET', 'POST'])
+@admin.route('/services/<int:service_id>/_delete')
 @login_required
 @admin_required
 def delete_service(service_id):
@@ -508,6 +517,70 @@ def new_service():
                           category_id=form.category.data.id)
         db.session.add(service)
         db.session.commit()
-        flash('Service {} successfully created'.format(service.name),
-              'form-success')
+        flash('Service {} successfully created'.format(service.name), 'success')
+        return redirect(url_for('admin.registered_services'))
+
     return render_template('admin/system_manager/manage_service.html', form=form)
+
+
+####
+# Metro Areas
+####
+@admin.route('/metro-areas')
+@login_required
+@admin_required
+def registered_metro_areas():
+    """Manage metro areas."""
+    metro_areas = MetroArea.query.all()
+    return render_template('admin/system_manager/registered_metro_areas.html',
+                           metro_areas=metro_areas)
+
+
+@admin.route('/metro-areas/<int:metro_area_id>', methods=['GET', 'POST'])
+@admin.route('/metro-areas/<int:metro_area_id>/info', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def metro_area_info(metro_area_id):
+    """View a metro area's profile."""
+    metro_area = MetroArea.query.filter_by(id=metro_area_id).first()
+    form = EditMetroAreaForm(name=metro_area.name)
+    if form.validate_on_submit():
+        updated_metro_area = metro_area
+        updated_metro_area.name = form.name.data
+        db.session.add(updated_service)
+        db.session.commit()
+        flash('Metro Area {} successfully updated'.format(
+            form.name.data), 'form-success')
+        return redirect(url_for('admin.registered_metro_areas'))
+    if metro_area is None:
+        abort(404)
+    return render_template('admin/system_manager/manage_metro_area.html', metro_area=metro_area, form=form)
+
+
+@admin.route('/metro-areas/<int:metro_area_id>/_delete')
+@login_required
+@admin_required
+def delete_metro_area(metro_area_id):
+    """Delete a metro area.."""
+    metro_area = MetroArea.query.filter_by(id=metro_area_id).first()
+    db.session.delete(metro_area)
+    db.session.commit()
+    flash('Successfully deleted metro area %s.' % metro_area.name, 'success')
+    return redirect(url_for('admin.registered_metro_areas'))
+
+
+@admin.route('/new-metro-area', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_metro_area():
+    """Create a new metro area."""
+    form = EditMetroAreaForm()
+    if form.validate_on_submit():
+        metro_area = MetroArea(name=form.name.data)
+        db.session.add(metro_area)
+        db.session.commit()
+        flash('Metro Area {} successfully created'.format(
+            metro_area.name), 'success')
+        return redirect(url_for('admin.registered_metro_areas'))
+
+    return render_template('admin/system_manager/manage_metro_area.html', form=form)

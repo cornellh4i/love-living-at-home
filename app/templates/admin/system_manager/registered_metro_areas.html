@@ -8,16 +8,16 @@
       Back to dashboard
     </a>
     <h2 class="ui header">
-      Provided Services
+      Metro Areas
       <div class="sub header">
-        View and manage services.
+        View and manage metro areas.
       </div>
     </h2>
 
     <div class="ui menu">
       <div class="ui search item">
         <div class="ui transparent icon input">
-          <input id="search-services" type="text" placeholder="Search services...">
+          <input id="search-metro-areas" type="text" placeholder="Search metro areas...">
           <i class="search icon"></i>
         </div>
       </div>
@@ -26,35 +26,33 @@
     {# Use overflow-x: scroll so that mobile views don't freak out
     # when the table is too wide #}
     <div style="overflow-x: scroll;">
-      <a class="ui basic compact button" href="{{ url_for('admin.new_service') }}">
+      <a class="ui basic compact button" href="{{ url_for('admin.new_metro_area') }}">
         <i class="plus icon"></i>
-        Add a Service
+        Add a Metro Area
       </a>
       <table class="ui searchable sortable unstackable selectable celled table">
         <thead>
           <tr>
             <th class="sorted ascending">Name</th>
-            <th>Category</th>
             <th>Maintain</th>
           </tr>
         </thead>
         <tbody>
-          {% for s in services | sort(attribute='name') %}
+          {% for ma in metro_areas | sort(attribute='name') %}
           <tr>
-            <td onclick="window.location.href = '{{ url_for('admin.service_info', service_id=s.id) }}';">{{ s.name }}
+            <td onclick="window.location.href = '{{ url_for('admin.metro_area_info', metro_area_id=ma.id) }}';">{{
+              ma.name }}
             </td>
-            <td onclick="window.location.href = '{{ url_for('admin.service_info', service_id=s.id) }}';">{{
-              s.category.name}} </td>
             <td>
-              <i class="trash alternate outline icon delete-service" id={{s.id}}></i>
+              <i class="trash alternate outline icon delete-metro-area" id={{ma.id}}></i>
             </td>
 
-            <div class="ui modal" id='modal-{{s.id}}'>
-              <div class="header">Delete Service</div>
-              <div class="content">Would you like to delete Service [{{s.name}}]?</div>
+            <div class="ui modal" id='modal-{{ma.id}}'>
+              <div class="header">Delete Metro Area</div>
+              <div class="content">Would you like to delete Metro Area [{{ma.name}}]?</div>
               <div class="actions">
                 <div class="positive ui approve button"
-                  onclick="window.location.href = '{{ url_for('admin.delete_service', service_id=s.id) }}';">
+                  onclick="window.location.href = '{{ url_for('admin.delete_metro_area',  metro_area_id=ma.id) }}';">
                   Yes
                 </div>
                 <div class="negative ui deny button">No</div>
@@ -70,10 +68,9 @@
 
 
 
-
 <script type="text/javascript">
   $(document).ready(function () {
-    $('#search-services').keyup(function () {
+    $('#search-metro-areas').keyup(function () {
       var searchText = $(this).val();
       if (searchText.length > 0) {
         $('tbody td:icontains(' + searchText + ')').addClass('positive');
@@ -86,9 +83,9 @@
       }
     });
 
-    $('.delete-service').click(function () {
-      service_id = $(this).attr('id');
-      $(`#modal-${service_id}`).modal('show');
+    $('.delete-metro-area').click(function () {
+      metro_area_id = $(this).attr('id');
+      $(`#modal-${metro_area_id}`).modal('show');
     });
   });
 </script>

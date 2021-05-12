@@ -59,6 +59,7 @@ def add_fake_data(number_users):
     Volunteer.generate_fake(count=10)
     Address.generate_fake(count=10)
     Member.generate_fake(count=10)
+    VolunteerAvailability.import_fake()
 
 
 @manager.command
@@ -80,7 +81,7 @@ def setup_general():
     # Volunteer related
     VolunteerType.insert_types()
     AvailabilityStatus.insert_statuses()
-    TimePeriod.insert_time_periods()
+    # TimePeriod.insert_time_periods()
     # Request related
     RequestDurationType.insert_types()
     RequestStatus.insert_statuses()
@@ -92,6 +93,7 @@ def setup_general():
     # Service related
     Service.insert_services()
     ServiceCategory.insert_categories()
+    MetroArea.insert_metro_areas()
 
     # Set up first admin user
     admin_query = Role.query.filter_by(name='Administrator')

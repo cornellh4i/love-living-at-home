@@ -249,7 +249,7 @@ class MemberManager(FlaskForm):
                          validators=[InputRequired()])
 
     countries = [('united_states', 'United States'), ('b', "B"), ('c', 'C')]
-    states = [('none', ""), ("ny", "NY")]
+    states = [("ny", "NY")]
     time_zones = [("est", "Eastern Time (US & Canada) (UTC-05:00)"),
                   ("b", "B"), ("c", "C")]
     metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
@@ -310,7 +310,8 @@ class MemberManager(FlaskForm):
                                    Length(1, 64),
                                    Email()])
 
-    preferred_contact_method = RadioField(choices=[('phone','Phone'),('email','Email'),('phone_and_email', 'Phone and Email')])
+    preferred_contact_method = RadioField(choices=[(
+        'phone', 'Phone'), ('email', 'Email'), ('phone_and_email', 'Phone and Email')])
     emergency_contact_name = StringField(
         'Contact Name', validators=[Optional(),
                                     Length(1, 64)])
@@ -327,7 +328,7 @@ class MemberManager(FlaskForm):
 
     expiration_date = DateField("Member Expiration Date: ", validators=[
         InputRequired()])
-    member_number = IntegerField(validators = [Optional()])
+    member_number = IntegerField(validators=[Optional()])
     volunteer_notes = TextAreaField('Notes for Volunteers',
                                     validators=[Optional(),
                                                 Length(max=500)])
@@ -342,7 +343,8 @@ class MemberManager(FlaskForm):
         if User.query.filter_by(email=field.data).first():
             raise ValidationError('Email already registered.')
 
-class VolunteerManager(FlaskForm):        
+
+class VolunteerManager(FlaskForm):
     salutations = [("", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
                    ("mr", "Mr")]
     salutation = SelectField("Salutation", choices=salutations)
@@ -368,7 +370,7 @@ class VolunteerManager(FlaskForm):
     preferred_name = StringField(
         'Preferred Name', validators=[Optional(),
                                       Length(min=1, max=30)])
-    #address
+    # address
     primary_address1 = StringField('Street address or P.O. Box',
                                    validators=[InputRequired(),
                                                Length(max=200)])
@@ -378,13 +380,13 @@ class VolunteerManager(FlaskForm):
     primary_city = StringField('City',
                                validators=[InputRequired(),
                                            Length(max=200)])
-    primary_state = StringField('State', 
+    primary_state = StringField('State',
                                 validators=[InputRequired(),
-                                           Length(max=200)])
+                                            Length(max=200)])
     primary_zip_code = StringField('Zip Code',
                                    validators=[Optional(),
                                                Length(max=45)])
-    #emergency contact
+    # emergency contact
     emergency_contact_name = StringField(
         'Contact Name', validators=[Optional(),
                                     Length(1, 64)])
@@ -399,14 +401,14 @@ class VolunteerManager(FlaskForm):
                              Length(1, 64),
                              Email()])
     # now under contact info
-    home_phone = IntegerField("Primary Phone Number",widget=widgets.Input(input_type="tel"),
+    home_phone = IntegerField("Primary Phone Number", widget=widgets.Input(input_type="tel"),
                               validators=[InputRequired()])
     email = EmailField('Email',
                        validators=[InputRequired(),
                                    Length(1, 64),
                                    Email()])
-    contact_preference = RadioField('Preferred Contact Method', choices=[('phone', "Phone"), ('email', "Email"), ('phone_and_email', "Phone and Email")])
-
+    contact_preference = RadioField('Preferred Contact Method', choices=[(
+        'phone', "Phone"), ('email', "Email"), ('phone_and_email', "Phone and Email")])
 
     notes = TextAreaField("Notes for Office Staff", validators=[Optional()])
 
@@ -420,11 +422,13 @@ class VolunteerManager(FlaskForm):
 
 
 class AddServiceVetting(FlaskForm):
-    vetting_notes = TextAreaField("",render_kw={"rows": 15, "cols": 105},validators=[Optional()])
+    vetting_notes = TextAreaField(
+        "", render_kw={"rows": 15, "cols": 105}, validators=[Optional()])
     volunteer_fully_vetted_checkbox = BooleanField(
         'Is Fully Vetted?',
         validators=[Optional()])
     submit = SubmitField("Save")
+
 
 class ContractorManager(FlaskForm):
     first_name = StringField('First name *',
@@ -477,7 +481,8 @@ class ContractorManager(FlaskForm):
                                    Length(1, 64),
                                    Email()])
 
-    preferred_contact_method = RadioField(choices=[('phone','Phone'),('email','Email'),('phone_and_email', 'Phone and Email')])
+    preferred_contact_method = RadioField(choices=[(
+        'phone', 'Phone'), ('email', 'Email'), ('phone_and_email', 'Phone and Email')])
 
     website = StringField(
         'Website',
@@ -536,3 +541,9 @@ class EditServiceForm(FlaskForm):
         get_label='name',
         query_factory=lambda: db.session.query(ServiceCategory).order_by('name'))
     submit = SubmitField('Save Service Information')
+
+
+class EditMetroAreaForm(FlaskForm):
+    name = StringField('Metro Area Name', validators=[
+                       InputRequired(), Length(1, 200)])
+    submit = SubmitField('Save Metro Area Information')
