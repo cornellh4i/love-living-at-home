@@ -82,18 +82,41 @@
       </div>
     </div>
 
+    <style>
+      .column {
+        position: relative;
+      }
+
+      .column .side-button {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+    </style>
+
     <div>{{ f.render_form_field(form.starting_location) }}</div>
     <!-- <div class="ui two column stackable relaxed grid"> -->
     <!-- <div class="two column row"> -->
     <!-- <div class="eight wide column"> -->
-    {{ f.render_form_field(form.destination) }}
-    <button type="button" class="ui inverted violet fluid button" id="show-new-destination">
-      Add new address</button>
-
+    <div class="ui two column stackable grid">
+      <div class="ui two column row">
+        <div class="ten wide column">
+          {{ f.render_form_field(form.destination) }}
+        </div>
+        <div class="right floated four wide column">
+          <button type="button" class="ui inverted violet fluid button side-button" id="show-new-destination">
+            Add new address</button>
+        </div>
+      </div>
+    </div>
     {{ f.render_form_field(form.duration) }}
-    <button type="button" class="ui inverted violet fluid button" id="show-new-service-provider">
-      Add New Service Provider</button>
-    Insert Text
+
+    <div class="field">
+      <label>Volunteer:</label>
+      <button type="button" class="ui inverted violet fluid button" id="show-new-service-provider">
+        Add New Service Provider</button>
+    </div>
+
     <div class="four fields">
       <div class="field">
         <button class="ui purple basic button" type="button">Send Request</button>
@@ -121,9 +144,10 @@
 
   <p id="special-instructions" style="display:none;">{{form.special_instructions_list}} </p>
 
-  <div class="twelve wide column" id="special-instructions-div">
-    {{ f.render_form_field(form.special_instructions) }}
-
+  <div class="twelve wide column">
+    <div class="field" id="special-instructions-div">
+      {{ f.render_form_field(form.special_instructions) }}
+    </div>
   </div>
 
   <div class="twelve wide column">
@@ -200,7 +224,7 @@
       $('#special-instructions-div').empty();
       let str = document.getElementById("special-instructions").innerHTML;
       let obj = JSON.parse(str);
-      $('#special-instructions-div').append('<p>Special Instructions:</p>');
+      $('#special-instructions-div').append('<label class = "ui form field">Special Instructions:</label>');
       $('#special-instructions-div').append('<textarea name="special_instructions" class="ui textArea" >' + obj[member_id] + '</textarea>');
       special_input = obj[member_id];
     }
