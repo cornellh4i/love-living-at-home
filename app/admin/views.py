@@ -441,11 +441,12 @@ def invite_volunteer():
             emergency_contact_name=form.emergency_contact_name.data,
             emergency_contact_phone_number=form.emergency_contact_phone_number.data,
             emergency_contact_email_address=form.emergency_contact_email_address.data,
+            emergency_contact_relationship = form.emergency_contact_relationship.data,
             preferred_contact_method=form.contact_preference.data,
             type_id=2,  # What should we set volunteer type id as???
             general_notes=form.notes.data,
             rating=1,  # Why is this not null before the user even creates a volunteer?
-            is_fully_vetted=True,
+            is_fully_vetted=False, #What should be default? 
         )
         db.session.add(volunteer)
         db.session.commit()
