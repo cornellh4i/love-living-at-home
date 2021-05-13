@@ -74,7 +74,6 @@
         <div id="covid" style="display:none;">
           {{ f.render_form_field(form.covid_service) }}
         </div>
-        <!-- <p id="p">paragraph!</p> -->
         <div id="transportation">
           {{ f.render_form_field(form.transportation_service) }}
         </div>
@@ -88,8 +87,13 @@
     <!-- <div class="two column row"> -->
     <!-- <div class="eight wide column"> -->
     {{ f.render_form_field(form.destination) }}
+    <button type="button" class="ui inverted violet fluid button" id="show-new-destination">
+      Add new address</button>
+
     {{ f.render_form_field(form.duration) }}
-    <p><strong>Insert Text</strong></p>
+    <button type="button" class="ui inverted violet fluid button" id="show-new-service-provider">
+      Add New Service Provider</button>
+    Insert Text
     <div class="four fields">
       <div class="field">
         <button class="ui purple basic button" type="button">Send Request</button>
@@ -104,33 +108,7 @@
         <button class="ui purple basic button" type="button">Summary</button>
       </div>
     </div>
-    
-    <!-- </div> -->
-    <!-- <div class="right floated four wide column"> -->
-    <button class="ui inverted violet fluid button" id="show-new-destination">
-      Add new destination</button>
-    <button class="ui inverted violet fluid button" id="show-new-service-provider">
-      Add New Service Provider</button>
-    <!-- </div> -->
-    <!-- </div> -->
-    <!-- </div> -->
-    <div>{{ f.render_form_field(form.duration) }}</div>
-  </div>
 
-  <div id="new-destination" class="ui modal">
-    <i class="close icon"></i>
-    <div class="header">Add Availability</div>
-    <div class="content">
-      <h3>Add new destination</h3>
-      {{f.render_form_field(form.destination_name)}}
-      {{f.render_form_field(form.street_address1)}}
-      {{f.render_form_field(form.street_address2)}}
-      {{f.render_form_field(form.city)}}
-      {{f.render_form_field(form.state)}}
-      {{f.render_form_field(form.zip)}}
-      {{f.render_form_field(form.country)}}
-      {{f.render_form_field(form.add_address)}}
-    </div>
   </div>
 
   <div id="new-service-provider" class="ui modal">
@@ -141,39 +119,9 @@
     </div>
   </div>
 
-  <script>
-    $('#show-new-destination').click(function () {
-      $('#new-destination').modal('show');
-    });
+  <p id="special-instructions" style="display:none;">{{form.special_instructions_list}} </p>
 
-    $('#show-new-service-provider').click(function () {
-    $('#new-service-provider').modal('show');
-  });
-
-    function serviceChoices() {
-      let service_category = document.getElementById("service_category").value;
-      // document.getElementById("p").style.display = "none";
-      if (service_category === "1") {
-        document.getElementById("covid").style.display = "initial";
-        document.getElementById("transportation").style.display = "none";
-      } else if (service_category === "0") {
-        document.getElementById("covid").style.display = "none"
-        document.getElementById("transportation").style.display = "initial"
-      }
-    }
-
-    // function specialInstructions() {
-    //   let special_instructions = document.getElementById("special_instructions");
-    //   let obj = JSON.parse(special_instructions.innerText);
-    //   let p = document.createElement('p');
-    //   p.innerText = special_instructions.innerText;
-    //   document.getElementById('p').appendChild(p);
-    //   let id = document.getElementById('member').value;
-
-    // }
-  </script>
-
-  <div class="twelve wide column">
+  <div class="twelve wide column" id="special-instructions-div">
     {{ f.render_form_field(form.special_instructions) }}
 
   </div>
@@ -195,9 +143,69 @@
     {{ f.render_form_field(form.person_to_cc) }}
   </div>
 
-  <div class="form_errors">
-    {{ form.requesting_member.data }}
+  <div id="new-destination" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">Add New Destination</div>
+    <div class="content">
+      <h3>Add a New Address</h3>
+      <div class="ui stackable centered grid container">
+        <div class="twelve wide column">
+          {{f.render_form_field(form.destination_name)}}
+          {{f.render_form_field(form.street_address1)}}
+          {{f.render_form_field(form.street_address2)}}
+          {{f.render_form_field(form.city)}}
+        </div>
+        <div class="two column row">
+          <div class="six wide column">
+            {{f.render_form_field(form.state)}}
+          </div>
+          <div class="six wide column">
+            {{f.render_form_field(form.zip)}}
+          </div>
+        </div>
+        <div class="two column row">
+          <div class="six wide column">
+            {{f.render_form_field(form.country)}}
+          </div>
+          <div class="six wide column">
+            {{f.render_form_field(form.add_address)}}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <script>
+    $('#show-new-destination').click(function () {
+      $('#new-destination').modal('show');
+    });
+
+    $('#show-new-service-provider').click(function () {
+      $('#new-service-provider').modal('show');
+    });
+
+    function serviceChoices() {
+      let service_category = document.getElementById("service_category").value;
+      if (service_category === "1") {
+        document.getElementById("covid").style.display = "initial";
+        document.getElementById("transportation").style.display = "none";
+      } else if (service_category === "0") {
+        document.getElementById("covid").style.display = "none"
+        document.getElementById("transportation").style.display = "initial"
+      }
+    }
+
+    function specialInstructions() {
+      let member_id = document.getElementById("member").value.toString();
+      $('#special-instructions-div').empty();
+      let str = document.getElementById("special-instructions").innerHTML;
+      let obj = JSON.parse(str);
+      $('#special-instructions-div').append('<p>Special Instructions:</p>');
+      $('#special-instructions-div').append('<textarea name="special_instructions" class="ui textArea" >' + obj[member_id] + '</textarea>');
+      special_input = obj[member_id];
+    }
+  </script>
+
 
   <div class="twelve wide column">
 
@@ -206,10 +214,10 @@
     {{ f.form_message(flashes['info'], header='Information', class='info') }}
     {{ f.form_message(flashes['success'], header='Success!', class='success') }}
 
-    {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
-    {{ f.render_form_field(field, extra_classes=".ui .button") }}
-    {% endfor %}
+    {{ f.render_form_field(form.submit, extra_classes=".ui .button") }}
+
+    {{ f.end_form() }}
   </div>
 </div>
-{{ f.end_form() }}
+
 {% endblock %}

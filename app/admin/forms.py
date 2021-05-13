@@ -124,12 +124,13 @@ class TransportationRequestForm(FlaskForm):
     def specialInstructionsQuery():
         return db.session.query(Member).order_by()
 
-    special_instructions_list = []
+    special_instructions_list = {}
 
     date_created = DateField('Date Created:', default = date.today, 
         render_kw={'readonly': True})
     requesting_member = SelectMultipleField(
         'Requesting Member',
+        render_kw={'onchange': "specialInstructions()"},
         id = 'member',
         validators=[InputRequired()],
         coerce = int)
@@ -172,7 +173,7 @@ class TransportationRequestForm(FlaskForm):
         'Destination:',
         validators=[InputRequired()], coerce=int)
 
-    special_instructions = TextAreaField('Special Instructions:')
+    special_instructions = TextAreaField('Special Instructions:', id = "special-instructions-text")
 
     follow_up_date = DateField('Follow Up Date:')
     status = QuerySelectField(
@@ -196,13 +197,13 @@ class TransportationRequestForm(FlaskForm):
         validators=[InputRequired()], coerce=int)
     duration = RadioField('Duration:', coerce=int)
 
-    destination_name = StringField('Destination Name:', validators = [InputRequired()])
-    street_address1 = StringField('Street Address:', validators = [InputRequired()])
-    street_address2 = StringField('Apt, Unit, Building, Floor, etc:', validators = [InputRequired()])
-    city = StringField('City:', validators = [InputRequired()])
-    state = StringField('State/Province:', validators = [InputRequired()])
-    zip = StringField('Zip:', validators = [InputRequired()])
-    country = StringField('Country:', validators = [InputRequired()])
+    destination_name = StringField('Destination Name:')
+    street_address1 = StringField('Street Address:')
+    street_address2 = StringField('Apt, Unit, Building, Floor, etc:')
+    city = StringField('City:')
+    state = StringField('State/Province:')
+    zip = StringField('Zip:')
+    country = StringField('Country:')
     add_address = SubmitField('Add Address')
 
     submit = SubmitField("Submit")

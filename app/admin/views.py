@@ -15,6 +15,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service, Request, service_category
+import json
 
 
 admin = Blueprint('admin', __name__)
@@ -219,6 +220,11 @@ def search_request():
 def create_request():
     return render_template('admin/request_manager/create_request.html')
 
+@admin.route("/modify-transportation-request", methods=['GET', 'POST'])
+@admin_required
+def modify_transportation_request():
+    application_standard_id = request.args.get('member') # gets value from the getJson()
+    return None
 
 # Create a new Transportation service request.
 @admin.route('/create-request/transportation-request', methods=['Get', 'POST'])
@@ -230,9 +236,10 @@ def create_transportation_request():
     form.duration.choices = [(request_duration_type.id, request_duration_type.name) for request_duration_type in RequestDurationType.query.all()]
     form.destination.choices = [(address.id, address.name + " " + address.street_address) for address in Address.query.all()]
     form.starting_location.choices = [(address.id, address.name + " " + address.street_address) for address in Address.query.all()]
-    form.special_instructions_list = [(member.id, member.volunteer_notes) for member in Member.query.all()]
+    form.special_instructions_list = json.dumps({ str(member.id)  :  member.volunteer_notes  for member in Member.query.all()})
     if form.validate_on_submit():
         flash(request.method, 'success')
+        special_input = request.form.get('special_instructions')
         transportation_request = Request(
                                          type_id = 1,
                                          status_id=form.status.data.id,
@@ -253,7 +260,7 @@ def create_transportation_request():
                                          destination_address_id=form.destination.data,
                                          # Will be updated in the future for multiple ppl
                                          requesting_member_id=form.requesting_member.data[0],
-                                         special_instructions=form.special_instructions.data,
+                                         special_instructions=special_input,
                                          followup_date=form.follow_up_date.data,
                                          responsible_staffer_id=form.responsible_staffer.data,
                                          contact_log_priority_id=form.contact_log_priority.data.id,
