@@ -504,7 +504,27 @@ class Reviews(FlaskForm):
 class AddAvailability(FlaskForm):
     availability_times = [("7 am", "7 am"), ("8 am", "8 am"), ("9 am", "9 am"), 
     ("10 am", "10 am"), ("11 am", "11 am"), ("12 pm", "12 pm"), ("1 pm", "1 pm"), 
-    ("2 pm", "2 pm"), ("3 pm", "3 pm"), ("4 pm", "4 pm"), ("5 pm", "5 pm"), ("6 pm", "6 pm")] 
+    ("2 pm", "2 pm"), ("3 pm", "3 pm"), ("4 pm", "4 pm"), ("5 pm", "5 pm"), ("6 pm", "6 pm"),
+    ("7-8 am", "7-8 am"), ("7-9 am", "7-9 am"), ("7-10 am", "7-10 am"), ("7-11 am", "7-11 am"), 
+    ("7 am-12 pm", "7 am-12 pm"), ("7 am-1 pm", "7 am-1 pm"), ("7 am-2 pm", "7 am-2 pm"), 
+    ("7 am-3 pm", "7 am-3 pm"), ("7 am-4 pm", "7 am-4 pm"), ("7 am-5 pm", "7 am-5 pm"), 
+    ("7 am-6 pm", "7 am-6 pm"), ("8-9 am", "8-9 am"), ("8-10 am", "8-10 am"), ("8-11 am", "8-11 am"), 
+    ("8 am-12 pm", "8 am-12 pm"), ("8 am-1 pm", "8 am-1 pm"), ("8 am-2 pm", "8 am-2 pm"), 
+    ("8 am-3 pm", "8 am-3 pm"), ("8 am-4 pm", "8 am-4 pm"), ("8 am-5 pm", "8 am-5 pm"), 
+    ("8 am-6 pm", "8 am-6 pm"), ("9-10 am", "9-10 am"), ("9-11 am", "9-11 am"), 
+    ("9 am-12 pm", "9 am-12 pm"), ("9 am-1 pm", "9 am-1 pm"), ("9 am-2 pm", "9 am-2 pm"), 
+    ("9 am-3 pm", "9 am-3 pm"), ("9 am-4 pm", "9 am-4 pm"), ("9 am-5 pm", "9 am-5 pm"), 
+    ("9 am-6 pm", "9 am-6 pm"), ("10-11 am", "10-11 am"), ("10 am-12 pm", "10 am-12 pm"), 
+    ("10 am-1 pm", "10 am-1 pm"), ("10 am-2 pm", "10 am-2 pm"), ("10 am-3 pm", "10 am-3 pm"), 
+    ("10 am-4 pm", "10 am-4 pm"), ("10 am-5 pm", "10 am-5 pm"), ("10 am-6 pm", "10 am-6 pm"), 
+    ("11 am-12 pm", "11 am-12 pm"), ("11 am-1 pm", "11 am-1 pm"), ("11 am-2 pm", "11 am-2 pm"), 
+    ("11 am-3 pm", "11 am-3 pm"), ("11 am-4 pm", "11 am-4 pm"), ("11 am-5 pm", "11 am-5 pm"), 
+    ("11 am-6 pm", "11 am-6 pm"), ("12-1 pm", "12-1 pm"), ("12-2 pm", "12-2 pm"), ("12-3 pm", "12-3 pm"), 
+    ("12-4 pm", "12-4 pm"), ("12-5 pm", "12-5 pm"), ("12-6 pm", "12-6 pm"), ("1-2 pm", "1-2 pm"), 
+    ("1-3 pm", "1-3 pm"), ("1-4 pm", "1-4 pm"), ("1-5 pm", "1-5 pm"), ("1-6 pm", "1-6 pm"),
+    ("2-3 pm", "2-3 pm"), ("2-4 pm", "2-4 pm"), ("2-5 pm", "2-5 pm"), ("2-6 pm", "2-6 pm"),
+    ("3-4 pm", "3-4 pm"), ("3-5 pm", "3-5 pm"), ("3-6 pm", "3-6 pm"), ("4-5 pm", "4-5 pm"), 
+    ("4-6 pm", "4-6 pm"), ("5-6 pm", "5-6 pm")] 
     availability_monday = SelectMultipleField('', choices=availability_times)
     backup_monday = SelectMultipleField('', choices=availability_times)
     availability_tuesday = SelectMultipleField('', choices=availability_times)

@@ -212,34 +212,64 @@ description=None, icon=None) %}
 
       <div class="ui header">Tuesday:</div>
         <div class="ui segment">
-          <a class="ui purple horizontal label">Available:</a>
+          <a class="ui purple ribbon label">Available:</a>
           <span>{{ f.render_form_field(add_availability.availability_tuesday) }}</span>
         </div>
         <div class="ui segment">
-          <a class="ui purple horizontal label">Available For Backup:</a>
+          <a class="ui purple ribbon label">Available For Backup:</a>
           <span>{{ f.render_form_field(add_availability.backup_tuesday) }}</span>
         </div>
 
       <div class="ui header">Wednesday:</div>
-      {{ f.render_form_field(add_availability.availability_wednesday) }}
-      {{ f.render_form_field(add_availability.backup_wednesday) }}
+        <div class="ui segment">
+          <a class="ui purple ribbon label">Available:</a>
+          <span>{{ f.render_form_field(add_availability.availability_wednesday) }}</span>
+        </div>
+        <div class="ui segment">
+          <a class="ui purple ribbon label">Available For Backup:</a>
+          <span>{{ f.render_form_field(add_availability.backup_wednesday) }}</span>
+        </div>
 
       <div class="ui header">Thursday:</div>
-      {{ f.render_form_field(add_availability.availability_thursday) }} 
-      {{ f.render_form_field(add_availability.backup_thursday) }} 
-
+        <div class="ui segment">
+          <a class="ui purple ribbon label">Available:</a>
+          <span>{{ f.render_form_field(add_availability.availability_thursday) }}</span>
+        </div>
+        <div class="ui segment">
+          <a class="ui purple ribbon label">Available For Backup:</a>
+          <span>{{ f.render_form_field(add_availability.backup_thursday) }}</span>
+        </div>
+       
       <div class="ui header">Friday:</div>
-      {{ f.render_form_field(add_availability.availability_friday) }} 
-      {{ f.render_form_field(add_availability.backup_friday) }} 
+        <div class="ui segment">
+          <a class="ui purple ribbon label">Available:</a>
+          <span>{{ f.render_form_field(add_availability.availability_friday) }}</span>
+        </div>
+        <div class="ui segment">
+          <a class="ui purple ribbon label">Available For Backup:</a>
+          <span>{{ f.render_form_field(add_availability.backup_friday) }}</span>
+        </div>
 
       <div class="ui header">Saturday:</div>
-      {{ f.render_form_field(add_availability.availability_saturday) }} 
-      {{ f.render_form_field(add_availability.backup_saturday) }} 
+        <div class="ui segment">
+          <a class="ui purple ribbon label">Available:</a>
+          <span>{{ f.render_form_field(add_availability.availability_saturday) }}</span>
+        </div>
+        <div class="ui segment">
+          <a class="ui purple ribbon label">Available For Backup:</a>
+          <span>{{ f.render_form_field(add_availability.backup_saturday) }}</span>
+        </div>
 
       <div class="ui header">Sunday:</div>
-      {{ f.render_form_field(add_availability.availability_sunday) }} 
-      {{ f.render_form_field(add_availability.backup_sunday) }} 
-
+        <div class="ui segment">
+          <a class="ui purple ribbon label">Available:</a>
+          <span>{{ f.render_form_field(add_availability.availability_sunday) }}</span>
+        </div>
+        <div class="ui segment">
+          <a class="ui purple ribbon label">Available For Backup:</a>
+          <span>{{ f.render_form_field(add_availability.backup_sunday) }}</span>
+        </div>
+       
       <div class="actions">
         {{ f.form_message(flashes['error'], header='Something went wrong.',
         class='error') }}
