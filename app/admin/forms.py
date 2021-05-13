@@ -169,9 +169,9 @@ class TransportationRequestForm(FlaskForm):
         get_label='name',
         query_factory=transportation_services)
 
-    starting_location = SelectField(
-        'Destination:',
-        validators=[InputRequired()], coerce=int)
+    starting_location = StringField(
+        'Pickup Location:',
+        validators=[InputRequired()])
 
     special_instructions = TextAreaField('Special Instructions:', id = "special-instructions-text")
 
@@ -181,9 +181,10 @@ class TransportationRequestForm(FlaskForm):
         validators=[InputRequired()],
         get_label='name',
         query_factory=statusQuery)
-    responsible_staffer = SelectField('Responsible Staffer:', 
-        choices = [(1, 'yes'), (2, 'no')],
+    
+    responsible_staffer = SelectField('Responsible Staffer:',
         coerce=int)
+
     contact_log_priority = QuerySelectField(
         'Contact Log Priority:',
         validators=[InputRequired()],

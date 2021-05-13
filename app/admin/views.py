@@ -14,7 +14,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              IsFullyVetted, AddAvailability, Reviews, EditServiceForm)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service, Request, service_category
+from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service, Request, service_category, Staffer
 import json
 
 
@@ -228,9 +228,10 @@ def create_transportation_request():
     form.requesting_member.multiple = True
     form.requesting_member.choices = [(member.id, member.first_name + " " + member.last_name) for member in Member.query.all()]
     form.duration.choices = [(request_duration_type.id, request_duration_type.name) for request_duration_type in RequestDurationType.query.all()]
-    form.destination.choices = [(address.id, address.name + " " + address.street_address) for address in Address.query.all()]
+    form.destination.choices = [(address.id, address.name + " - " + address.street_address) for address in Address.query.all()]
     form.starting_location.choices = [(address.id, address.name + " " + address.street_address) for address in Address.query.all()]
     form.special_instructions_list = json.dumps({ str(member.id)  :  member.volunteer_notes  for member in Member.query.all()})
+    form.responsible_staffer.choices = [(staffer.id, staffer.first_name + " " + staffer.last_name) for staffer in Staffer.query.all()]
     if form.validate_on_submit():
         flash(request.method, 'success')
         special_input = request.form.get('special_instructions')
@@ -250,13 +251,13 @@ def create_transportation_request():
                                          service_id= form.transportation_service.data.id
                                             if form.service_category.data.id == 0 
                                             else form.covid_service.data.id,
-                                         starting_address_id=form.starting_location.data,
+                                         starting_address=form.starting_location.data,
                                          destination_address_id=form.destination.data,
                                          # Will be updated in the future for multiple ppl
                                          requesting_member_id=form.requesting_member.data[0],
                                          special_instructions=special_input,
                                          followup_date=form.follow_up_date.data,
-                                         responsible_staffer_id=form.responsible_staffer.data,
+                                         responsible_staffer_id =form.responsible_staffer.data,
                                          contact_log_priority_id=form.contact_log_priority.data.id,
                                          cc_email=form.person_to_cc.data)
         db.session.add(transportation_request)
