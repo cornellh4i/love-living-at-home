@@ -48,7 +48,7 @@ def people_manager():
                                 key=lambda triple: triple[2])
     services = [(service.name, service.category_id, service.id)
                 for service in Service.query.all()]
-
+    reviews = Reviews()
     category_dict = {}
     category_name_to_id = {}
     for count, category in enumerate(service_categories):
@@ -95,7 +95,7 @@ def people_manager():
                            add_availability=add_availability,
                            add_vetting=add_vetting,
                            service_form = service_form, 
-                           category_dict = category_dict)
+                           category_dict = category_dict, reviews = reviews)
 
 
 @admin.route('/new-user', methods=['GET', 'POST'])
@@ -469,7 +469,6 @@ def invite_volunteer():
 def invite_contractor():
     """Page for contactor management."""
     form = ContractorManager()
-    reviews = Reviews()
     if form.validate_on_submit():
         address = None
         if form.primary_address1.data:
@@ -493,7 +492,7 @@ def invite_contractor():
         db.session.commit()
         flash('Contractor {} successfully invited'.format(
             form.last_name.data), 'form-success')
-    return render_template('admin/people_manager/contractor_manager.html', form=form, reviews=reviews)
+    return render_template('admin/people_manager/contractor_manager.html', form=form)
 
 
 @admin.route('/services')

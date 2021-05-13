@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, ValidationError, widgets
 from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 
-from wtforms.fields import (BooleanField, DateTimeField, IntegerField,
+from wtforms.fields import (BooleanField, IntegerField,
                             PasswordField, RadioField, SelectField, SelectMultipleField,
                             StringField, SubmitField, TextAreaField)
 from wtforms.fields.html5 import DateField, EmailField, TimeField, IntegerField
@@ -502,33 +502,43 @@ class Reviews(FlaskForm):
 
 
 class AddAvailability(FlaskForm):
-    availability_options = [("not available", "Not Available"), (
-        "most likely available", "Most Likely Available"), ("available", "Available")]
-    availability_m1 = SelectField('', choices=availability_options)
-    availability_m2 = SelectField('', choices=availability_options)
-    availability_m3 = SelectField('', choices=availability_options)
-    availability_m4 = SelectField('', choices=availability_options)
-    availability_m5 = SelectField('', choices=availability_options)
-    availability_t1 = SelectField('', choices=availability_options)
-    availability_t2 = SelectField('', choices=availability_options)
-    availability_t3 = SelectField('', choices=availability_options)
-    availability_t4 = SelectField('', choices=availability_options)
-    availability_t5 = SelectField('', choices=availability_options)
-    availability_w1 = SelectField('', choices=availability_options)
-    availability_w2 = SelectField('', choices=availability_options)
-    availability_w3 = SelectField('', choices=availability_options)
-    availability_w4 = SelectField('', choices=availability_options)
-    availability_w5 = SelectField('', choices=availability_options)
-    availability_th1 = SelectField('', choices=availability_options)
-    availability_th2 = SelectField('', choices=availability_options)
-    availability_th3 = SelectField('', choices=availability_options)
-    availability_th4 = SelectField('', choices=availability_options)
-    availability_th5 = SelectField('', choices=availability_options)
-    availability_f1 = SelectField('', choices=availability_options)
-    availability_f2 = SelectField('', choices=availability_options)
-    availability_f3 = SelectField('', choices=availability_options)
-    availability_f4 = SelectField('', choices=availability_options)
-    availability_f5 = SelectField('', choices=availability_options)
+    availability_times = [("7 am", "7 am"), ("8 am", "8 am"), ("9 am", "9 am"), 
+    ("10 am", "10 am"), ("11 am", "11 am"), ("12 pm", "12 pm"), ("1 pm", "1 pm"), 
+    ("2 pm", "2 pm"), ("3 pm", "3 pm"), ("4 pm", "4 pm"), ("5 pm", "5 pm"), ("6 pm", "6 pm"),
+    ("7-8 am", "7-8 am"), ("7-9 am", "7-9 am"), ("7-10 am", "7-10 am"), ("7-11 am", "7-11 am"), 
+    ("7 am-12 pm", "7 am-12 pm"), ("7 am-1 pm", "7 am-1 pm"), ("7 am-2 pm", "7 am-2 pm"), 
+    ("7 am-3 pm", "7 am-3 pm"), ("7 am-4 pm", "7 am-4 pm"), ("7 am-5 pm", "7 am-5 pm"), 
+    ("7 am-6 pm", "7 am-6 pm"), ("8-9 am", "8-9 am"), ("8-10 am", "8-10 am"), ("8-11 am", "8-11 am"), 
+    ("8 am-12 pm", "8 am-12 pm"), ("8 am-1 pm", "8 am-1 pm"), ("8 am-2 pm", "8 am-2 pm"), 
+    ("8 am-3 pm", "8 am-3 pm"), ("8 am-4 pm", "8 am-4 pm"), ("8 am-5 pm", "8 am-5 pm"), 
+    ("8 am-6 pm", "8 am-6 pm"), ("9-10 am", "9-10 am"), ("9-11 am", "9-11 am"), 
+    ("9 am-12 pm", "9 am-12 pm"), ("9 am-1 pm", "9 am-1 pm"), ("9 am-2 pm", "9 am-2 pm"), 
+    ("9 am-3 pm", "9 am-3 pm"), ("9 am-4 pm", "9 am-4 pm"), ("9 am-5 pm", "9 am-5 pm"), 
+    ("9 am-6 pm", "9 am-6 pm"), ("10-11 am", "10-11 am"), ("10 am-12 pm", "10 am-12 pm"), 
+    ("10 am-1 pm", "10 am-1 pm"), ("10 am-2 pm", "10 am-2 pm"), ("10 am-3 pm", "10 am-3 pm"), 
+    ("10 am-4 pm", "10 am-4 pm"), ("10 am-5 pm", "10 am-5 pm"), ("10 am-6 pm", "10 am-6 pm"), 
+    ("11 am-12 pm", "11 am-12 pm"), ("11 am-1 pm", "11 am-1 pm"), ("11 am-2 pm", "11 am-2 pm"), 
+    ("11 am-3 pm", "11 am-3 pm"), ("11 am-4 pm", "11 am-4 pm"), ("11 am-5 pm", "11 am-5 pm"), 
+    ("11 am-6 pm", "11 am-6 pm"), ("12-1 pm", "12-1 pm"), ("12-2 pm", "12-2 pm"), ("12-3 pm", "12-3 pm"), 
+    ("12-4 pm", "12-4 pm"), ("12-5 pm", "12-5 pm"), ("12-6 pm", "12-6 pm"), ("1-2 pm", "1-2 pm"), 
+    ("1-3 pm", "1-3 pm"), ("1-4 pm", "1-4 pm"), ("1-5 pm", "1-5 pm"), ("1-6 pm", "1-6 pm"),
+    ("2-3 pm", "2-3 pm"), ("2-4 pm", "2-4 pm"), ("2-5 pm", "2-5 pm"), ("2-6 pm", "2-6 pm"),
+    ("3-4 pm", "3-4 pm"), ("3-5 pm", "3-5 pm"), ("3-6 pm", "3-6 pm"), ("4-5 pm", "4-5 pm"), 
+    ("4-6 pm", "4-6 pm"), ("5-6 pm", "5-6 pm")] 
+    availability_monday = SelectMultipleField('', choices=availability_times)
+    backup_monday = SelectMultipleField('', choices=availability_times)
+    availability_tuesday = SelectMultipleField('', choices=availability_times)
+    backup_tuesday = SelectMultipleField('', choices=availability_times)
+    availability_wednesday = SelectMultipleField('', choices=availability_times)
+    backup_wednesday = SelectMultipleField('', choices=availability_times)
+    availability_thursday = SelectMultipleField('', choices=availability_times)
+    backup_thursday = SelectMultipleField('', choices=availability_times)
+    availability_friday = SelectMultipleField('', choices=availability_times)
+    backup_friday = SelectMultipleField('', choices=availability_times)
+    availability_saturday = SelectMultipleField('', choices=availability_times)
+    backup_saturday = SelectMultipleField('', choices=availability_times)
+    availability_sunday = SelectMultipleField('', choices=availability_times)
+    backup_sunday = SelectMultipleField('', choices=availability_times)
     submit = SubmitField("Save")
 
 
