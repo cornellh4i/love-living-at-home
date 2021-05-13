@@ -74,7 +74,6 @@
         <div id="covid" style="display:none;">
           {{ f.render_form_field(form.covid_service) }}
         </div>
-        <!-- <p id="p">paragraph!</p> -->
         <div id="transportation">
           {{ f.render_form_field(form.transportation_service) }}
         </div>
@@ -88,17 +87,40 @@
     <!-- <div class="two column row"> -->
     <!-- <div class="eight wide column"> -->
     {{ f.render_form_field(form.destination) }}
-    <!-- </div> -->
-    <!-- <div class="right floated four wide column"> -->
     <button type="button" class="ui inverted violet fluid button" id="show-new-destination">
-      Add new destination</button>
-    <!-- </div> -->
-    <!-- </div> -->
-    <!-- </div> -->
-    <div>{{ f.render_form_field(form.duration) }}</div>
+      Add new address</button>
+
+    {{ f.render_form_field(form.duration) }}
+    <button type="button" class="ui inverted violet fluid button" id="show-new-service-provider">
+      Add New Service Provider</button>
+    <div class="four fields">
+      <div class="field">
+        <button class="ui purple basic button" type="button">Send Request</button>
+      </div>
+      <div class="field">
+        <button class="ui purple basic button" type="button">Send Request</button>
+      </div>
+      <div class="field">
+        <button class="ui purple basic button" type="button">Send Request</button>
+      </div>
+      <div class="field">
+        <button class="ui purple basic button" type="button">Send Request</button>
+      </div>
+    </div>
+
   </div>
 
-  <div class="twelve wide column">
+  <div id="new-service-provider" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">Add Service Provider</div>
+    <div class="content">
+      <h3>Add New Service Provider</h3>
+    </div>
+  </div>
+
+  <p id="special-instructions" style="display:none;">{{form.special_instructions_list}} </p>
+
+  <div class="twelve wide column" id="special-instructions-div">
     {{ f.render_form_field(form.special_instructions) }}
 
   </div>
@@ -118,10 +140,6 @@
 
   <div class="twelve wide column">
     {{ f.render_form_field(form.person_to_cc) }}
-  </div>
-
-  <div class="form_errors">
-    {{ form.requesting_member.data }}
   </div>
 
   <div id="new-destination" class="ui modal">
@@ -156,6 +174,38 @@
     </div>
   </div>
 
+  <script>
+    $('#show-new-destination').click(function () {
+      $('#new-destination').modal('show');
+    });
+
+    $('#show-new-service-provider').click(function () {
+      $('#new-service-provider').modal('show');
+    });
+
+    function serviceChoices() {
+      let service_category = document.getElementById("service_category").value;
+      if (service_category === "1") {
+        document.getElementById("covid").style.display = "initial";
+        document.getElementById("transportation").style.display = "none";
+      } else if (service_category === "0") {
+        document.getElementById("covid").style.display = "none"
+        document.getElementById("transportation").style.display = "initial"
+      }
+    }
+
+    function specialInstructions() {
+      let member_id = document.getElementById("member").value.toString();
+      $('#special-instructions-div').empty();
+      let str = document.getElementById("special-instructions").innerHTML;
+      let obj = JSON.parse(str);
+      $('#special-instructions-div').append('<p>Special Instructions:</p>');
+      $('#special-instructions-div').append('<textarea name="special_instructions" class="ui textArea" >' + obj[member_id] + '</textarea>');
+      special_input = obj[member_id];
+    }
+  </script>
+
+
   <div class="twelve wide column">
 
     {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
@@ -169,31 +219,4 @@
   </div>
 </div>
 
-<script>
-  $('#show-new-destination').click(function () {
-    $('#new-destination').modal('show');
-  });
-
-  function serviceChoices() {
-    let service_category = document.getElementById("service_category").value;
-    // document.getElementById("p").style.display = "none";
-    if (service_category === "1") {
-      document.getElementById("covid").style.display = "initial";
-      document.getElementById("transportation").style.display = "none";
-    } else if (service_category === "0") {
-      document.getElementById("covid").style.display = "none"
-      document.getElementById("transportation").style.display = "initial"
-    }
-  }
-
-  // function specialInstructions() {
-  //   let special_instructions = document.getElementById("special_instructions");
-  //   let obj = JSON.parse(special_instructions.innerText);
-  //   let p = document.createElement('p');
-  //   p.innerText = special_instructions.innerText;
-  //   document.getElementById('p').appendChild(p);
-  //   let id = document.getElementById('member').value;
-
-  // }
-</script>
 {% endblock %}

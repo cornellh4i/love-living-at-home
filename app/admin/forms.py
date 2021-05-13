@@ -124,12 +124,13 @@ class TransportationRequestForm(FlaskForm):
     def specialInstructionsQuery():
         return db.session.query(Member).order_by()
 
-    special_instructions_list = []
+    special_instructions_list = {}
 
     date_created = DateField('Date Created:', default = date.today, 
         render_kw={'readonly': True})
     requesting_member = SelectMultipleField(
         'Requesting Member',
+        render_kw={'onchange': "specialInstructions()"},
         id = 'member',
         validators=[InputRequired()],
         coerce = int)
@@ -172,7 +173,7 @@ class TransportationRequestForm(FlaskForm):
         'Destination:',
         validators=[InputRequired()], coerce=int)
 
-    special_instructions = TextAreaField('Special Instructions:')
+    special_instructions = TextAreaField('Special Instructions:', id = "special-instructions-text")
 
     follow_up_date = DateField('Follow Up Date:')
     status = QuerySelectField(
