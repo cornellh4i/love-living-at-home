@@ -219,13 +219,7 @@ def search_request():
 @admin_required
 def create_request():
     return render_template('admin/request_manager/create_request.html')
-
-@admin.route("/modify-transportation-request", methods=['GET', 'POST'])
-@admin_required
-def modify_transportation_request():
-    application_standard_id = request.args.get('member') # gets value from the getJson()
-    return None
-
+    
 # Create a new Transportation service request.
 @admin.route('/create-request/transportation-request', methods=['Get', 'POST'])
 @admin_required
