@@ -435,13 +435,13 @@ def invite_volunteer():
             preferred_name=form.preferred_name.data,
             birthday=form.birthday.data,
             gender=form.gender.data,
+            primary_address_id = address.id,
             primary_phone_number=form.home_phone.data,
-            # email=form.email.data,
+            email_address=form.email.data,
             emergency_contact_name=form.emergency_contact_name.data,
             emergency_contact_phone_number=form.emergency_contact_phone_number.data,
             emergency_contact_email_address=form.emergency_contact_email_address.data,
             preferred_contact_method=form.contact_preference.data,
-            #primary_address_id = address.id,
             type_id=2,  # What should we set volunteer type id as???
             general_notes=form.notes.data,
             rating=1,  # Why is this not null before the user even creates a volunteer?
