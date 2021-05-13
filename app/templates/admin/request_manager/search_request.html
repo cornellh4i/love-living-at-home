@@ -35,6 +35,7 @@
   .request_box {
     width: 840px;
     padding: 100px;
+    height: 210px;
     border: 1px solid gray;
     margin: 0;
   }
@@ -48,7 +49,7 @@
   }
 
   .divleft {
-    float: left 
+    float: left
   }
 
   .divright {
@@ -59,7 +60,7 @@
     position: relative;
     width: 140px;
     height: 131px;
-    border: 1px solid gray; 
+    border: 1px solid gray;
     overflow: hidden;
     margin: -60px;
     text-align: center;
@@ -97,15 +98,71 @@
     font-size: x-large;
   }
 
-  .name_box{
-    position: relative;
-    width: 140px;
-    height: 131px; 
+  .name {
+    width: auto;
+    height: 25px;
     overflow: hidden;
-    margin: 240px;
-    
+    margin-left: 150px;
+    margin-top: -120px;
+    text-align: left;
+    font-weight: bold;
+    font-size: large;
+    color: mediumslateblue;
   }
-   
+
+  .service_provider {
+    width: 150px;
+    height: 25px;
+    overflow: hidden;
+    margin-left: 150px;
+    margin-top: 20px;
+    text-align: left;
+    font-weight: bold;
+    font-size: medium;
+  }
+
+  .service_provider_name {
+    width: auto;
+    height: 25px;
+    overflow: hidden;
+    margin-left: 150px;
+    margin-top: 5px;
+    margin-bottom: -40px;
+    text-align: left;
+    font-size: medium;
+  }
+
+  .type {
+    width: 150px;
+    height: 20px;
+    overflow: hidden;
+    margin-left: 360px;
+    margin-top: -130px;
+    text-align: left;
+    font-weight: bold;
+    font-size: small;
+  }
+
+  .small_text {
+    width: auto;
+    height: 50px;
+    overflow: hidden;
+    margin-left: 360px;
+    margin-top: 10px;
+    margin-bottom: -40px;
+    text-align: left;
+    font-size: small;
+  }
+
+  .vertical_line {
+    border-left: 2px solid darkgrey;
+    height: 180px;
+    margin-left: 575px;
+    margin-top: -185px;
+    margin-bottom: -700px;
+    /* position:absolute;
+    left: 50%; */
+  }
 </style>
 
 <div class="content-section">
@@ -416,7 +473,7 @@
       </div>
     </div>
 
-    <h2 class="header" class ="divleft">Search Results</h2>
+    <h2 class="header" class="divleft">Search Results</h2>
     <div id="" class="divright">(0 Results Found)</div>
 
     <p>
@@ -427,7 +484,7 @@
       <div class="field">
         <label>Sort By:</label>
         <select class="ui search dropdown" name="sortby">
-          <option value="">Choose filter</option>
+          <option value="">Choose Filter</option>
           <option value=0>Create Date</option>
         </select>
       </div>
@@ -435,34 +492,42 @@
 
       <div class="field">
         <div class="request_number_box">
-          
+
           <div class="divleft"><b>Request #6163</b></div>
-         
+
           <div class="divright"><b>Status: Confirmed</b></div>
         </div>
       </div>
       <div class="field">
         <div class="request_box" class="float-container">
-          <div class = "field">
-             <div class="date_box"></div>
-             <div class="day_box">Saturday</div>
-             <div class="date_number_box">03/16</div>
-             <div class="time_box">2:40 PM - 3:20 PM</div>
+          <div class="field">
+            <div class="date_box"></div>
+            <div class="day_box">Saturday</div>
+            <div class="date_number_box">03/16</div>
+            <div class="time_box">2:40 PM - 3:20 PM</div>
+            <div class="name">Randy Warren</div>
+            <div class="service_provider">Service Provider:</div>
+            <div class="service_provider_name">Cheryl Lewis</div>
+            <div class="type">Type:</div>
+            <div class="small_text">Member's Home Request</div>
+            <div class="small_text">Coronavirus Support Phone Call</div>
+            <br> </br>
+            <div class="small_text">Created Date: 03/04/2021</div>
+            <div class="small_text">Modified Date: 03/05/2021</div>
+            <div class="vertical_line"></div>
           </div>
-          <div class="divleft" class="name_box">
-            <!-- Randy Warren  -->
+
+          <div class="divleft">
+
           </div>
           <div class="divleft">
-            
-          </div>
-          <div class="divleft">
-            
+
           </div>
         </div>
       </div>
     </div>
 
-
+    <!--<div class="divleft"><b>Request #{{request.id}}</b></div>-->
 
 
 

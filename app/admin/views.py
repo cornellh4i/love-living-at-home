@@ -231,7 +231,16 @@ def search_request():
     provider_type = select_all(request.form.getlist('providertype'), 'providertype')
     requesting_member = request.form.get('requestingmem') 
     service_provider = request.form.get('serviceprov') 
-    data = Request.query.all()
+    # data = Request.query.all()
+
+    # provider type and service provider??
+    data = Request.query.filter_by(type_id = request_type, status_id = request_status, 
+    service_category_id = service_category, requesting_member_id = requesting_member)
+
+    # for req in data:
+    #     stat_id = req.status_id
+    #     request_status = RequestStatus.query.filter_by(id = stat_id).first()
+
     return render_template('admin/request_manager/search_request.html', title = 'Search Request', form = form, data = data)
 
 
