@@ -73,99 +73,103 @@ function loadControl(month, year) {
 
     // body of the calendar
     var tbl = document.querySelector("#calendarBody");
-    // clearing all previous cells
-    tbl.innerHTML = "";
+    if (tbl) {
 
 
-    selectYear.value = year;
-    selectMonth.value = month;
+        // clearing all previous cells
+        tbl.innerHTML = "";
 
-    // creating the date cells here
-    let date = 1;
 
-    // add the selected dates here to preselect
-    //selectedDates.push((month + 1).toString() + '/' + date.toString() + '/' + year.toString());
+        selectYear.value = year;
+        selectMonth.value = month;
 
-    // there will be maximum 6 rows for any month
-    for (let rowIterator = 0; rowIterator < 6; rowIterator++) {
+        // creating the date cells here
+        let date = 1;
 
-        // creates a new table row and adds it to the table body
-        let row = document.createElement("tr");
+        // add the selected dates here to preselect
+        //selectedDates.push((month + 1).toString() + '/' + date.toString() + '/' + year.toString());
 
-        //creating individual cells, filing them up with data.
-        for (let cellIterated = 0; cellIterated < 7 && date <= daysInMonth(month, year); cellIterated++) {
+        // there will be maximum 6 rows for any month
+        for (let rowIterator = 0; rowIterator < 6; rowIterator++) {
 
-            // create a table data cell
-            cell = document.createElement("td");
-            let textNode = "";
+            // creates a new table row and adds it to the table body
+            let row = document.createElement("tr");
 
-            // check if this is the valid date for the month
-            if (rowIterator !== 0 || cellIterated >= firstDay) {
-                cell.id = (month + 1).toString() + '/' + date.toString() + '/' + year.toString();
-                cell.class = "clickable";
-                textNode = date;
+            //creating individual cells, filing them up with data.
+            for (let cellIterated = 0; cellIterated < 7 && date <= daysInMonth(month, year); cellIterated++) {
 
-                // this means that highlightToday is set to true and the date being iterated it todays date,
-                // in such a scenario we will give it a background color
-                if (highlightToday
-                    && date === today.getDate() && year === today.getFullYear() && month === today.getMonth()) {
-                    cell.classList.add("today-color");
+                // create a table data cell
+                cell = document.createElement("td");
+                let textNode = "";
+
+                // check if this is the valid date for the month
+                if (rowIterator !== 0 || cellIterated >= firstDay) {
+                    cell.id = (month + 1).toString() + '/' + date.toString() + '/' + year.toString();
+                    cell.class = "clickable";
+                    textNode = date;
+
+                    // this means that highlightToday is set to true and the date being iterated it todays date,
+                    // in such a scenario we will give it a background color
+                    if (highlightToday
+                        && date === today.getDate() && year === today.getFullYear() && month === today.getMonth()) {
+                        cell.classList.add("today-color");
+                    }
+
+                    // set the previous dates to be selected
+                    // if the selectedDates array has the dates, it means they were selected earlier. 
+                    // add the background to it.
+                    if (selectedDates.indexOf((month + 1).toString() + '/' + date.toString() + '/' + year.toString()) >= 0) {
+                        cell.classList.add(highlightClass);
+                    }
+
+                    date++;
                 }
 
-                // set the previous dates to be selected
-                // if the selectedDates array has the dates, it means they were selected earlier. 
-                // add the background to it.
-                if (selectedDates.indexOf((month + 1).toString() + '/' + date.toString() + '/' + year.toString()) >= 0) {
-                    cell.classList.add(highlightClass);
-                }
-
-                date++;
+                cellText = document.createTextNode(textNode);
+                cell.appendChild(cellText);
+                row.appendChild(cell);
             }
 
-            cellText = document.createTextNode(textNode);
-            cell.appendChild(cellText);
-            row.appendChild(cell);
+            tbl.appendChild(row); // appending each row into calendar body.
         }
 
-        tbl.appendChild(row); // appending each row into calendar body.
-    }
+        // this adds the button panel at the bottom of the calendar
+        addButtonPanel(tbl);
 
-    // this adds the button panel at the bottom of the calendar
-    addButtonPanel(tbl);
-
-    // function when the date cells are clicked
-    $("#calendarBody tr td").click(function (e) {
-        var id = $(this).attr('id');
-        // check the if cell clicked has a date
-        // those with an id, have the date
-        if (typeof id !== typeof undefined) {
-            var classes = $(this).attr('class');
-            if (typeof classes === typeof undefined || !classes.includes(highlightClass)) {
-                var selectedDate = new Date(id);
-                selectedDates.push((selectedDate.getMonth() + 1).toString() + '/' + selectedDate.getDate().toString() + '/' + selectedDate.getFullYear());
-            }
-            else {
-                var index = selectedDates.indexOf(id);
-                if (index > -1) {
-                    selectedDates.splice(index, 1);
+        // function when the date cells are clicked
+        $("#calendarBody tr td").click(function (e) {
+            var id = $(this).attr('id');
+            // check the if cell clicked has a date
+            // those with an id, have the date
+            if (typeof id !== typeof undefined) {
+                var classes = $(this).attr('class');
+                if (typeof classes === typeof undefined || !classes.includes(highlightClass)) {
+                    var selectedDate = new Date(id);
+                    selectedDates.push((selectedDate.getMonth() + 1).toString() + '/' + selectedDate.getDate().toString() + '/' + selectedDate.getFullYear());
                 }
+                else {
+                    var index = selectedDates.indexOf(id);
+                    if (index > -1) {
+                        selectedDates.splice(index, 1);
+                    }
+                }
+
+                $(this).toggleClass(highlightClass);
             }
 
-            $(this).toggleClass(highlightClass);
-        }
+            // sort the selected dates array based on the latest date first
+            var sortedArray = selectedDates.sort((a, b) => {
+                return new Date(a) - new Date(b);
+            });
 
-        // sort the selected dates array based on the latest date first
-        var sortedArray = selectedDates.sort((a, b) => {
-            return new Date(a) - new Date(b);
+            // update the selectedValues text input
+            document.getElementById('selectedValues').innerHTML = datesToString(sortedArray);
         });
 
-        // update the selectedValues text input
-        document.getElementById('selectedValues').innerHTML = datesToString(sortedArray);
-    });
 
-
-    var $dropBox = $('#parent');
-    $dropBox.show();
+        var $dropBox = $('#parent');
+        $dropBox.show();
+    }
 }
 
 
@@ -177,15 +181,16 @@ function daysInMonth(iMonth, iYear) {
 // adds the months to the dropdown
 function addMonths(selectedMonth) {
     var select = document.getElementById("month");
+    if (select) {
+        if (months.length > 0) {
+            return;
+        }
 
-    if (months.length > 0) {
-        return;
-    }
-
-    for (var month = startMonth; month <= endMonth; month++) {
-        var monthInstance = dictionaryMonth[month];
-        months.push(monthInstance[0]);
-        select.options[select.options.length] = new Option(monthInstance[0], monthInstance[1], parseInt(monthInstance[1]) === parseInt(selectedMonth));
+        for (var month = startMonth; month <= endMonth; month++) {
+            var monthInstance = dictionaryMonth[month];
+            months.push(monthInstance[0]);
+            select.options[select.options.length] = new Option(monthInstance[0], monthInstance[1], parseInt(monthInstance[1]) === parseInt(selectedMonth));
+        }
     }
 }
 
@@ -198,10 +203,11 @@ function addYears(selectedYear) {
     }
 
     var select = document.getElementById("year");
-
-    for (var year = minYear; year <= maxYear; year++) {
-        years.push(year);
-        select.options[select.options.length] = new Option(year, year, parseInt(year) === parseInt(selectedYear));
+    if (select) {
+        for (var year = minYear; year <= maxYear; year++) {
+            years.push(year);
+            select.options[select.options.length] = new Option(year, year, parseInt(year) === parseInt(selectedYear));
+        }
     }
 }
 
