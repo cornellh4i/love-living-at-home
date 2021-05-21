@@ -14,8 +14,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              IsFullyVetted, AddAvailability, Reviews, EditServiceForm, EditMetroAreaForm)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import (EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category, MetroArea, 
-    IsFullyVetted, AddAvailability, Reviews, Staffer, EditServiceForm)
+from app.models import (EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, MetroArea, Staffer)
 import json
 
 
