@@ -467,3 +467,27 @@ def new_metro_area():
         return redirect(url_for('admin.registered_metro_areas'))
 
     return render_template('admin/system_manager/manage_metro_area.html', form=form)
+
+@admin.route("/generate-report", methods=['GET'])
+@login_required
+@admin_required
+def generate_report():
+    import pandas as pd, numpy as np
+    from jinja2 import Environment, FileSystemLoader
+    from weasyprint import HTML
+
+    data = pd.DataFrame()
+    data['Col1'] = np.arange(1,50)
+    data['Col2'] = np.arange(2,51)
+
+    env = Environment(loader=FileSystemLoader('.'))
+    template = env.get_template("./app/templates/admin/report.html")
+    template_vars = {"title" : "Love Living at Home",
+                     "data": data.to_html()}
+    html_out = template.render(template_vars)
+    HTML(string=html_out).write_pdf("./app/my_report.pdf", stylesheets=["./app/assets/styles/report.css"])
+    try:
+        return send_file("my_report.pdf", as_attachment=True)
+    except FileNotFoundError:
+        flash('Successfully generated report.', 'error')
+        abort(404)
