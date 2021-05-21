@@ -17,7 +17,6 @@ from app.email import send_email
 from app.models import (EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, MetroArea, Staffer, LocalResource, Volunteer, ProvidedService)
 import json
 
-
 admin = Blueprint('admin', __name__)
 
 
@@ -266,14 +265,41 @@ def update_editor_contents():
 
     return 'OK', 200
 
+def select_all(selection, field):
+    if '-1' in selection:
+        if field == 'requesttype':
+            return [0, 1, 2] 
+        if field == 'requeststatus':
+            return [0, 1, 2, 3]
+        if field == 'servicecategory':
+            return [0, 1, 2, 3, 4, 5, 6, 7]
+        if field == 'providertype':
+            return [0, 1, 2]
+    return list(map(int, selection))
 
-# @admin.route('/request-manager')
-@admin.route('/search-request', methods=['POST', 'GET'])
+
+@admin.route('/search-request', methods=['POST','GET'])
 @login_required
 @admin_required
 def search_request():
     form = SearchRequestForm()
-    return render_template('admin/request_manager/search_request.html', title='Search Request', form=form)
+    request_type = select_all(request.form.getlist('requesttype'), 'requesttype')
+    request_status = select_all(request.form.getlist('requeststatus'), 'requeststatus')
+    service_category = select_all(request.form.getlist('servicecategory'), 'servicecategory')
+    provider_type = select_all(request.form.getlist('providertype'), 'providertype')
+    requesting_member = request.form.get('requestingmem') 
+    service_provider = request.form.get('serviceprov') 
+    # data = Request.query.all()
+
+    # provider type and service provider??
+    data = Request.query.filter_by(type_id = request_type, status_id = request_status, 
+    service_category_id = service_category, requesting_member_id = requesting_member)
+
+    # for req in data:
+    #     stat_id = req.status_id
+    #     request_status = RequestStatus.query.filter_by(id = stat_id).first()
+
+    return render_template('admin/request_manager/search_request.html', title = 'Search Request', form = form, data = data)
 
 
 # Create a new service request.
