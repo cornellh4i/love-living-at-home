@@ -17,26 +17,47 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     get_flashed_messages(category_filter=['form-check-email']), 'info':
     get_flashed_messages(category_filter=['form-info']), 'success':
     get_flashed_messages(category_filter=['form-success']) } %} {{
-    f.begin_form(form, flashes) }} {{
-    f.render_form_field(form.organization_name) }} {{
-    f.render_form_field(form.address) }} {{
-    f.render_form_field(form.phone_number) }}
+    f.begin_form(form, flashes) }} 
 
-    <div class="field">{{ f.render_form_input(form.email) }}</div>
+    <div class="ui header">General Information</div>
+    {{ f.render_form_field(form.first_name) }} 
+    {{ f.render_form_field(form.middle_initial) }} 
+    {{ f.render_form_field(form.last_name) }} 
+    {{ f.render_form_field(form.salutation) }} 
+    {{ f.render_form_field(form.company_name) }} 
 
-    <div class="two fields">
+    <div class="ui header">Primary Address</div>
+    <div class="field">
+      <label>Address</label>
       <div class="field">
-        <button class="fluid inverted violet ui button" id="show-availability">
-          Availability
-        </button>
+        {{ form.primary_address1(placeholder = form.primary_address1.label.text) }}
       </div>
-
       <div class="field">
-        <button class="fluid inverted violet ui button" id="show-reviews">
-          Reviews
-        </button>
+        {{ form.primary_address2(placeholder = form.primary_address2.label.text) }}
       </div>
     </div>
+
+    <div class="three fields">
+      {{ f.render_form_field(form.primary_city) }}
+      {{ f.render_form_field(form.primary_state) }}
+      {{ f.render_form_field(form.primary_zip_code) }}
+    </div>
+
+    {{ f.render_form_field(form.primary_country) }}
+    {{ f.render_form_field(form.primary_metro_area) }}
+
+
+    <div class="ui header">Contact Information</div>
+    {{ f.render_form_field(form.primary_phone_number) }}
+    {{ f.render_form_field(form.secondary_phone_number) }}
+    {{ f.render_form_input(form.email) }}
+
+    <br><br/>
+    <div class="inline fields">
+      {{ f.render_form_field(form.preferred_contact_method)}}
+    </div>
+
+    {{ f.render_form_field(form.website) }}
 
     {{ f.form_message(flashes['error'], header='Something went wrong.',
     class='error') }} {{ f.form_message(flashes['warning'], header='Check your
@@ -48,147 +69,9 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   </div>
 </div>
 
-<div class="ui fullscreen modal" id="availability">
-  <i class="close icon"></i>
-  <div class="header">Add Availability</div>
-  <div class="content">
-    {% set flashes = { 'error':
-    get_flashed_messages(category_filter=['form-error']), 'warning':
-    get_flashed_messages(category_filter=['form-check-email']), 'info':
-    get_flashed_messages(category_filter=['form-info']), 'success':
-    get_flashed_messages(category_filter=['form-success']) } %} {{
-    f.begin_form(add_availability, flashes) }}
-    <table class="ui definition table">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Monday</th>
-          <th>Tuesday</th>
-          <th>Wednesday</th>
-          <th>Thursday</th>
-          <th>Friday</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>8AM - 11AM</td>
-          <td>{{ f.render_form_field(add_availability.availability_m1) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_t1) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_w1) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_th1) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_f1) }}</td>
-        </tr>
-        <tr>
-          <td>11AM - 2PM</td>
-          <td>{{ f.render_form_field(add_availability.availability_m2) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_t2) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_w2) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_th2) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_f2) }}</td>
-        </tr>
-        <tr>
-          <td>2PM - 5PM</td>
-          <td>{{ f.render_form_field(add_availability.availability_m3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_t3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_w3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_th3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_f3) }}</td>
-        </tr>
-        <tr>
-          <td>5PM - 8PM</td>
-          <td>{{ f.render_form_field(add_availability.availability_m3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_t3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_w3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_th3) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_f3) }}</td>
-        </tr>
-        <tr>
-          <td>8PM - 12AM</td>
-          <td>{{ f.render_form_field(add_availability.availability_m4) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_t4) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_w4) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_th4) }}</td>
-          <td>{{ f.render_form_field(add_availability.availability_f4) }}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    {{ f.form_message(flashes['error'], header='Something went wrong.',
-    class='error') }}
-    {{ f.form_message(flashes['warning'], header='Check your
-    email.', class='warning') }}
-    {{ f.form_message(flashes['info'],
-    header='Information', class='info') }}
-    {{ f.form_message(flashes['success'],
-    header='Success!', class='success') }}
-    {% for field in form |
-    selectattr('type', 'equalto', 'SubmitField') %} {{
-    f.render_form_field(add_availability.submit) }}
-    {% endfor %}
-    {{ f.end_form() }}
-  </div>
-</div>
-
-<div class="ui modal" id="reviews">
-  <i class="close icon"></i>
-  <div class="header">Reviews</div>
-
-  {% set flashes = { 'error':
-  get_flashed_messages(category_filter=['form-error']), 'warning':
-  get_flashed_messages(category_filter=['form-check-email']), 'info':
-  get_flashed_messages(category_filter=['form-info']), 'success':
-  get_flashed_messages(category_filter=['form-success']) } %} {{
-  f.begin_form(reviews, flashes) }}
-
-  <div class="ui styled fluid accordion">
-    <div class="active title">
-      <i class="dropdown icon"></i>
-      Add A Review
-    </div>
-    <div class="active content">
-      <div class="two fields">
-        <div class="field">
-          {{ f.render_form_field(reviews.reviewer_name) }}
-        </div>
-        <div class="field">
-          <label>Rating:</label>
-          <div class="ui massive star rating" data-max-rating="5"></div>
-        </div>
-      </div>
-      {{ f.render_form_field(reviews.notes) }}
-    </div>
-    <div class="title">
-      <i class="dropdown icon"></i>
-      Previous Reviews
-    </div>
-    <div class="content">
-      <div class="transition hidden">
-        <div class="ui form">{{ f.render_form_field(reviews.notes) }}</div>
-      </div>
-    </div>
-
-    {{ f.form_message(flashes['error'], header='Something went wrong.',
-    class='error') }} {{ f.form_message(flashes['warning'], header='Check your
-    email.', class='warning') }} {{ f.form_message(flashes['info'],
-    header='Information', class='info') }} {{ f.form_message(flashes['success'],
-    header='Success!', class='success') }} {% for field in form |
-    selectattr('type', 'equalto', 'SubmitField') %} {{
-    f.render_form_field(reviews.submit) }} {% endfor %} {{ f.end_form() }}
-  </div>
-
   <script>
-    $('#show-availability').click(function () {
-      $('#availability').modal('show');
-    });
-
-    $('#show-reviews').click(function () {
-      $('#reviews').modal('show');
-    });
-
-    $('.ui.accordion').accordion({ exclusive: false });
-
-    $('.ui.rating').rating();
+    $('.ui.radio.checkbox')
+    .checkbox();
   </script>
 
   {% endblock %}
-</div>

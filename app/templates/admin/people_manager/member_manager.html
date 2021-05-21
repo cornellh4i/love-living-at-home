@@ -36,13 +36,19 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     {{ f.render_form_field(form.preferred_name) }}
 
     <div class="two fields">
+    {{ f.render_form_field(form.member_number)}}
+    {{ f.render_form_field(form.expiration_date) }}
+    </div>
+
+    <div class="two fields">
       {{ f.render_form_field(form.salutation) }}
-      {{ f.render_form_field(form.pronoun) }}
+      {{ f.render_form_field(form.gender) }}
+      {{ f.render_form_field(form.birthday) }}
     </div>
 
     <div class="ui header">Primary Address</div>
     <div class="field">
-      <label>Address</label>
+      <label>Address*</label>
       <div class="field">
         {{ form.primary_address1(placeholder = form.primary_address1.label.text) }}
       </div>
@@ -87,6 +93,9 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     {{ f.render_form_field(form.home_phone_number) }}
     {{ f.render_form_field(form.cell_number) }}
     {{ f.render_form_field(form.email) }}
+    
+    <div class="inline fields">
+    {{ f.render_form_field(form.preferred_contact_method)}}</div>
 
     <div class="ui header">Emergency Contact Information</div>
     {{ f.render_form_field(form.emergency_contact_name)}}
@@ -94,7 +103,6 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     {{ f.render_form_field(form.emergency_contact_phone_number) }}
     {{ f.render_form_field(form.emergency_contact_email_address) }}
 
-    {{ f.render_form_field(form.expiration_date) }}
     {{ f.render_form_field(form.volunteer_notes) }}
     {{ f.render_form_field(form.staffer_notes)}}
 
@@ -106,3 +114,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   </div>
 </div>
 {% endblock %}
+
+<script>
+
+</script>

@@ -5,24 +5,25 @@ NUM_VOLUNTEERS=100
 class Volunteer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ## Personal Information
+    salutation = db.Column(db.String(20))
     first_name = db.Column(db.String(80), nullable=False)
     middle_initial = db.Column(db.String(5))
     last_name = db.Column(db.String(80), nullable=False)
     preferred_name = db.Column(db.String(80))
     gender = db.Column(db.String(80))
-    birthdate = db.Column(db.Date(), nullable=False)
+    birthday = db.Column(db.Date, nullable=False)
     ## Contact Information
     primary_address_id = db.Column(db.Integer(),
-                           db.ForeignKey("address.id"),
-                           nullable=False)
+                          db.ForeignKey("address.id"),
+                          nullable=False)
     secondary_address_id = db.Column(db.Integer(),
-                           db.ForeignKey("address.id"))
+                          db.ForeignKey("address.id"))
     metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
 
-    primary_phone_number = db.Column(db.String(10), nullable=False)
+    primary_phone_number = db.Column(db.String(64), nullable=False)
     secondary_phone_number = db.Column(db.String(10))
 
-    organization_name = db.Column(db.String(80))
+    #organization_name = db.Column(db.String(80))
     email_address = db.Column(db.String(80))
     preferred_contact_method = db.Column(db.String(80), nullable=False) # One of: ['phone', 'email', 'phone and email'], implement as checkboxes
 
@@ -58,7 +59,7 @@ class Volunteer(db.Model):
             v = Volunteer(
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
-                birthdate=datetime.strptime(
+                birthday=datetime.strptime(
                     fake.date(), "%Y-%m-%d").date(),
                 primary_address_id=-1,
                 primary_phone_number=fake.phone_number(),
