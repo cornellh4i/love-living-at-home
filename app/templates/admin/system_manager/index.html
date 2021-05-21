@@ -107,7 +107,7 @@ description=None, icon=None) %}
   }
 
   #parent {
-    border: 2px solid rgba(0, 0, 0, .125);
+    border: 2px dotted rgba(0, 0, 0, .125);
     border-radius: .25rem;
     padding: 5px;
   }
@@ -141,8 +141,8 @@ description=None, icon=None) %}
 </style>
 
 
-<div class="ui stackable centered grid container">
-  <div class="twelve wide column">
+<div class="ui container stackable grid centered">
+  <div class="sixteen wide column">
     <h2 class="ui header">
       Admin Dashboard
     </h2>
@@ -166,15 +166,44 @@ description=None, icon=None) %}
       description='Add/Remove/Edit Metro Areas', icon='add user icon') }}
       {{ dashboard_option('Edit Destination Addresses', 'admin.index',
       description='Add/Remove/Edit Destination Addresses', icon='add user icon') }}
-      {{ dashboard_option('Generate Reports', 'admin.generate_report',
-      description='Generate monthly reports.', icon='add user icon') }}
-      {{ dashboard_option('Edit System Email', 'admin.index',
+      {{ dashboard_option('Email Configuration', 'admin.index',
       description='Edit the email address from which LLH emails are sent.', icon='add user icon') }}
+    </div>
+    <h1>Report Integration</h1>
+    <button class="ui inverted violet fluid button" id="show-report">
+      Report
+    </button>
+
+    <div class="ui modal" id="report">
+      <i class="close icon"></i>
+      <div class="header">Generate Report</div>
+      <div class="content">
+        <div class="ui form">
+          <div class="field">
+            <label>Report Type</label>
+            <select class="ui fluid dropdown">
+              <option value="a">Completed Volunteer Services by Service Category</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Report File Name</label>
+            <input type="text" name="filename" placeholder="Report">
+          </div>
+        </div>
+        <hr />
+        <div class="actions">
+          <div class="positive ui approve button"
+            onclick="window.location.href = '{{ url_for('admin.generate_report') }}';">
+            Run Report
+          </div>
+          <div class="negative ui deny button">Cancel</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div style="width: 100%;">
-    <div type="text" id="selectedValues" class="date-values" readonly></div>
+  <div>
+    <h1>Calendar Integration</h1>
     <div id="parent" class="container" style="display:none;">
       <div class="ui cards">
         <div class="ui card">
@@ -217,11 +246,16 @@ description=None, icon=None) %}
         </div>
       </div>
     </div>
-  </div>
 
+  </div>
+  <div id="selectedValues" class="ui container date-values" readonly></div>
 
 </div>
 
 
-
+<script>
+  $('#show-report').click(function () {
+    $('#report').modal('show');
+  });
+</script>
 {% endblock %}
