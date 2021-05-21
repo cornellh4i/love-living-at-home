@@ -1,3 +1,5 @@
+from app.models.request import RequestDurationType
+from operator import __truediv__
 from flask import (Blueprint, abort, flash, redirect, render_template, request,
                    url_for, send_file)
 from flask_login import current_user, login_required
@@ -12,7 +14,9 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              IsFullyVetted, AddAvailability, Reviews, EditServiceForm, EditMetroAreaForm)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category, MetroArea
+from app.models import (EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, service_category, MetroArea, 
+    IsFullyVetted, AddAvailability, Reviews, Staffer, EditServiceForm)
+import json
 
 
 admin = Blueprint('admin', __name__)
@@ -24,14 +28,6 @@ admin = Blueprint('admin', __name__)
 def index():
     """Admin dashboard page."""
     return render_template('admin/system_manager/index.html')
-
-
-@admin.route('/request-manager')
-@login_required
-@admin_required
-def request_manager():
-    """Request Manager Page."""
-    return render_template('admin/request_manager/layouts/base.html')
 
 
 @admin.route('/people-manager')
@@ -210,6 +206,7 @@ def update_editor_contents():
     return 'OK', 200
 
 
+# @admin.route('/request-manager')
 @admin.route('/search-request', methods=['POST', 'GET'])
 @login_required
 @admin_required
@@ -223,37 +220,45 @@ def search_request():
 @admin_required
 def create_request():
     return render_template('admin/request_manager/create_request.html')
-
-
+    
 # Create a new Transportation service request.
 @admin.route('/create-request/transportation-request', methods=['Get', 'POST'])
 @admin_required
 def create_transportation_request():
     form = TransportationRequestForm()
+    form.requesting_member.multiple = True
+    form.requesting_member.choices = [(member.id, member.first_name + " " + member.last_name) for member in Member.query.all()]
+    form.duration.choices = [(request_duration_type.id, request_duration_type.name) for request_duration_type in RequestDurationType.query.all()]
+    form.destination.choices = [(address.id, address.name + " - " + address.street_address) for address in Address.query.all()]
+    form.starting_location.choices = [(address.id, address.name + " " + address.street_address) for address in Address.query.all()]
+    form.special_instructions_list = json.dumps({ str(member.id)  :  member.volunteer_notes  for member in Member.query.all()})
+    form.responsible_staffer.choices = [(staffer.id, staffer.first_name + " " + staffer.last_name) for staffer in Staffer.query.all()]
     if form.validate_on_submit():
+        flash(request.method, 'success')
+        special_input = request.form.get('special_instructions')
         transportation_request = Request(
                                          type_id = 1,
                                          status_id=form.status.data.id,
-                                         #update later to short description
                                          short_description=form.description.data,
                                          created_date=form.date_created.data,
-                                         # modified_date=,
                                          requested_date=form.requested_date.data,
                                          initial_pickup_time=form.initial_pickup.data,
                                          appointment_time=form.appointment.data,
                                          return_pickup_time=form.return_pickup.data,
                                          drop_off_time=form.drop_off.data,
-                                         is_date_time_flexible=form.time_flexible.data == 'Yes',
-                                         duration_type_id=0,
+                                         is_date_time_flexible=form.time_flexible.data,
+                                         duration_type_id=form.duration.data,
                                          service_category_id=form.service_category.data.id,
-                                         service_id=form.service.data.id,
-                                         starting_address_id=form.starting_location.data,
-                                         destination_address_id=form.destination.data.id,
+                                         service_id= form.transportation_service.data.id
+                                            if form.service_category.data.id == 0 
+                                            else form.covid_service.data.id,
+                                         starting_address=form.starting_location.data,
+                                         destination_address_id=form.destination.data,
                                          # Will be updated in the future for multiple ppl
-                                         requesting_member_id=form.requesting_member.data[0].id,
-                                         special_instructions=form.special_instructions.data,
+                                         requesting_member_id=form.requesting_member.data[0],
+                                         special_instructions=special_input,
                                          followup_date=form.follow_up_date.data,
-                                         responsible_staffer_id=form.responsible_staffer.data,
+                                         responsible_staffer_id =form.responsible_staffer.data,
                                          contact_log_priority_id=form.contact_log_priority.data.id,
                                          cc_email=form.person_to_cc.data)
         db.session.add(transportation_request)
@@ -262,12 +267,13 @@ def create_transportation_request():
             'Successfully submitted a new transportation request', 
             'form-success')
         return redirect(url_for('admin.index'))
+    # elif (len(form.errors) > 0):
     else:
+        flash(request.method, 'error')
         flash(form.errors, 'error')
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
                            form=form)
-
 
 @admin.route('/invite-member', methods=['GET', 'POST'])
 @login_required

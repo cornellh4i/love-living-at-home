@@ -47,9 +47,7 @@ class Request(db.Model):
                            db.ForeignKey('service.id'),
                            nullable=False)
     # Location Info
-    starting_address_id = db.Column(db.Integer,
-                                    db.ForeignKey('address.id'),
-                                    nullable=False)
+    starting_address = db.Column(db.String(200), nullable=True)
     destination_address_id = db.Column(db.Integer,
                                        db.ForeignKey('address.id'),
                                        nullable=False)
@@ -64,14 +62,13 @@ class Request(db.Model):
                               default=datetime.utcnow().date())
     # Staffer Info
     responsible_staffer_id = db.Column(db.Integer,
-                                       db.ForeignKey('staffer.id'),
-                                       nullable=False)
+                                       db.ForeignKey('staffer.id'))
     # Contact Info
     contact_log_priority_id = db.Column(
         db.Integer,
         db.ForeignKey('contact_log_priority_type.id'),
         nullable=False)
-    cc_email = db.Column(db.String(120), unique=True, nullable=False)
+    cc_email = db.Column(db.String(120), unique=False, nullable=False)
 
     def __repr__(self):
         return f"Request('{self.created_date}, '{self.cc_email}')"

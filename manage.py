@@ -60,6 +60,7 @@ def add_fake_data(number_users):
     Address.generate_fake(count=10)
     Member.generate_fake(count=10)
     VolunteerAvailability.import_fake()
+    Staffer.generate_fake(count = 10)
 
 
 @manager.command
