@@ -1,5 +1,5 @@
 from flask import (Blueprint, abort, flash, redirect, render_template, request,
-                   url_for)
+                   url_for, send_file)
 from flask_login import current_user, login_required
 from flask_rq import get_queue
 
@@ -357,8 +357,8 @@ def registered_services():
                            services=services)
 
 
-@admin.route('/services/<int:service_id>', methods=['GET', 'POST'])
-@admin.route('/services/<int:service_id>/info', methods=['GET', 'POST'])
+# @admin.route('/services/<int:service_id>', methods=['GET', 'POST'])
+@admin.route('/services/info/<int:service_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def service_info(service_id):
@@ -379,7 +379,7 @@ def service_info(service_id):
     return render_template('admin/system_manager/manage_service.html', service=service, form=form)
 
 
-@admin.route('/services/<int:service_id>/_delete')
+@admin.route('/services/_delete/<int:service_id>')
 @login_required
 @admin_required
 def delete_service(service_id):
@@ -420,8 +420,8 @@ def registered_metro_areas():
                            metro_areas=metro_areas)
 
 
-@admin.route('/metro-areas/<int:metro_area_id>', methods=['GET', 'POST'])
-@admin.route('/metro-areas/<int:metro_area_id>/info', methods=['GET', 'POST'])
+# @admin.route('/metro-areas/<int:metro_area_id>', methods=['GET', 'POST'])
+@admin.route('/metro-areas/info/<int:metro_area_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def metro_area_info(metro_area_id):
