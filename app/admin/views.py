@@ -97,7 +97,10 @@ def people_manager():
                            add_availability=add_availability,
                            add_vetting=add_vetting,
                            service_form = service_form, 
-                           category_dict = category_dict, reviews = reviews, members=members, volunteers=volunteers)
+                           category_dict = category_dict, 
+                           reviews = reviews, 
+                           members=members, 
+                           volunteers=volunteers)
 
 
 @admin.route('/new-user', methods=['GET', 'POST'])
