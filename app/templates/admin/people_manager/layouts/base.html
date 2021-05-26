@@ -44,20 +44,9 @@ description=None, icon=None) %}
 
 <!-- Content -->
 {% block content %}
-<div class="ui stackable centered grid container">
-  <div class="four wide column">
-    <h2>People Manager</h2>
-  </div>
-  <div class="twelve wide column">
-    <div class="ui three column stackable grid">
-      {{ dashboard_option('Add Member', 'admin.invite_member', icon='add user icon') }}
-      {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', icon='add user icon') }}
-      {{ dashboard_option('Add Local Resource', 'admin.invite_contractor', icon='add user icon') }}
-    </div>
-  </div>
-</div>
-
 <div class="ui container">
+  <h2 class="ui header">People Manager</h2>
+
   <div class="ui tabular menu">
     <a class="item active" data-tab="member">Members</a>
     <a class="item" data-tab="volunteer">Volunteers</a>
