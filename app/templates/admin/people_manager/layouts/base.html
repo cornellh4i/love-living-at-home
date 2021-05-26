@@ -33,6 +33,18 @@ description=None, icon=None) %}
       onclick="window.location.href = '{{ url_for('admin.invite_member', member_id=m.id) }}';"></i>
   </div>
 </div>
+{% endmacro %}
+
+{% macro volunteer_card(name) %}
+<div class="content">
+  <div class="header">{{name}}
+    <i class=" comment outline icon right floated" style="cursor: pointer"></i>
+    <i class="clock outline icon right floated" style="cursor: pointer"></i>
+    <i class="check square outline icon right floated" style="cursor: pointer"></i>
+    <i class="handshake outline icon right floated" style="cursor: pointer"></i>
+    <i class="pencil icon right floated"></i>
+  </div>
+</div>
 <div class="content">~info about person~</div>
 {% endmacro %}
 
@@ -126,13 +138,7 @@ description=None, icon=None) %}
 
 
       <div class="ui fluid card">
-        <div class="content">
-          <div class="header">Alina Kim
-            {{ manage_volunteer() }}
-          </div>
-        </div>
-
-
+        {{volunteer_card("Alina Kim")}}
       </div>
     </div>
   </div>
