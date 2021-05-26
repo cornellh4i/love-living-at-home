@@ -18,11 +18,16 @@ description=None, icon=None) %}
 </a>
 {% endmacro %}
 
+{% macro manage_member(member_id) %}
+<i class="pencil icon right floated" style="cursor: pointer"
+  onclick="window.location.href = '{{ url_for('admin.invite_member', member_id=member_id) }}';"></i>
+{% endmacro %}
+
 {% macro manage_volunteer() %}
-<i class="comment outline icon right floated" style = "cursor: pointer"></i>
-<i class="clock outline icon right floated" style = "cursor: pointer"></i>
-<i class="check square outline icon right floated" style = "cursor: pointer"></i>
-<i class="handshake outline icon right floated" style = "cursor: pointer"></i>
+<i class=" comment outline icon right floated" style="cursor: pointer"></i>
+<i class="clock outline icon right floated" style="cursor: pointer"></i>
+<i class="check square outline icon right floated" style="cursor: pointer"></i>
+<i class="handshake outline icon right floated" style="cursor: pointer"></i>
 <i class="pencil icon right floated"></i>
 {% endmacro %}
 
@@ -44,7 +49,12 @@ description=None, icon=None) %}
 <div class="ui stackable centered grid container">
   <div class="four wide column">
     <!-- <form class="ui form"> -->
-
+    <div class="ui search item">
+      <div class="ui transparent icon input">
+        <input id="search-people" type="text" placeholder="Search people...">
+        <i class="search icon"></i>
+      </div>
+    </div>
     <h3>Filters</h3>
 
     <div class="attached ui top segment">
@@ -98,15 +108,19 @@ description=None, icon=None) %}
 
   <div class="twelve wide column">
     <h3>Search Results</h3>
-    <div class="ui segment">
+
+    <div class="ui segment search-results">
+      {% for m in members %}
       <div class="ui fluid card">
         <div class="content">
-          <div class="header">Angela Jin
-            {{ manage_volunteer() }}
+          <div class="header">{{m.first_name + ' ' + m.last_name}}
+            {{ manage_member(m.id) }}
           </div>
         </div>
         <div class="content">~info about person~</div>
       </div>
+      {% endfor %}
+
 
       <div class="ui fluid card">
         <div class="content">
@@ -120,170 +134,29 @@ description=None, icon=None) %}
     </div>
   </div>
 
-   <!-- Service Categories Pop Up -->
+  <!-- Service Categories Pop Up -->
   <div class="ui modal" id="services">
     <i class="close icon"></i>
     <div class="header">Services Provided By</div>
-    {% set flashes = 
-      { 'error': get_flashed_messages(category_filter=['form-error']), 
-      'warning': get_flashed_messages(category_filter=['form-check-email']), 
-      'info': get_flashed_messages(category_filter=['form-info']), 
-      'success': get_flashed_messages(category_filter=['form-success']) } 
-    %} 
+    {% set flashes =
+    { 'error': get_flashed_messages(category_filter=['form-error']),
+    'warning': get_flashed_messages(category_filter=['form-check-email']),
+    'info': get_flashed_messages(category_filter=['form-info']),
+    'success': get_flashed_messages(category_filter=['form-success']) }
+    %}
     {{ f.begin_form(service_form, flashes) }}
-    <div class = "content">
+    <div class="content">
       <div class="ui styled fluid accordion">
         {% for key, value in category_dict.items() %}
-          <div class="title">
-            <i class="dropdown icon"></i>
-            {{ key }}
-          </div>
-          <div class="content">
-          {{ service_form|attr(key)() }}
-          </div>
-          {% endfor %}
-      </div>
-      <div class = "actions">
-        {{ f.form_message(flashes['error'], header='Something went wrong.',
-        class='error') }}
-        {{ f.form_message(flashes['warning'], header='Check your
-        email.', class='warning') }}
-        {{ f.form_message(flashes['info'],
-        header='Information', class='info') }}
-        {{ f.form_message(flashes['success'],
-        header='Success!', class='success') }} 
-        {{ f.render_form_field(service_form.submit) }}
-      </div>
-    </div>
-    {{ f.end_form() }}
-  </div>  
-
-  <!-- Vettings Pop Up -->
-  <div class="ui modal" id="vettings">
-    <i class="close icon"></i>
-    <div class="ui center aligned header">Vettings</div>
+        <div class="title">
+          <i class="dropdown icon"></i>
+          {{ key }}
+        </div>
         <div class="content">
-          {% set flashes = 
-            { 'error': get_flashed_messages(category_filter=['form-error']), 
-            'warning': get_flashed_messages(category_filter=['form-check-email']), 
-            'info': get_flashed_messages(category_filter=['form-info']), 
-            'success': get_flashed_messages(category_filter=['form-success']) } 
-          %} 
-          {{ f.begin_form(add_vetting, flashes) }}
-          <div class="ui two column stackable grid">
-            <h3 class="eight wide column">Service Vettings</h3>
-            <div class="eight wide column" style = "text-align:right"> 
-              {{f.render_form_field(add_vetting.volunteer_fully_vetted_checkbox) }}
-            </div>
-          </div>
-
-          <div class="ui attached segment">
-            <h3 class="ui top attached header">
-              Notes
-            </h3>
-            <div class="ui fluid attached segment">
-              <p>{{f.render_form_field(add_vetting.vetting_notes)}}</p>
-            </div>
-            {{ f.form_message(flashes['error'], header='Something went wrong.',
-            class='error') }}
-            {{ f.form_message(flashes['warning'], header='Check your
-            email.', class='warning') }}
-            {{ f.form_message(flashes['info'],
-            header='Information', class='info') }}
-            {{ f.form_message(flashes['success'],
-            header='Success!', class='success') }} 
-            {{ f.render_form_field(add_vetting.submit) }}
-          </div>
-       </div>
-        {{ f.end_form() }}
-    </div>
-  </div>
-  
-  <!-- Availability Pop Up -->
-  <div class="ui fullscreen modal" id="availability">
-    <i class="close icon"></i>
-    <div class="header">Add Availability</div>
-    <div class="content">
-      
-      {% set flashes = 
-        { 'error': get_flashed_messages(category_filter=['form-error']), 
-        'warning': get_flashed_messages(category_filter=['form-check-email']), 
-        'info': get_flashed_messages(category_filter=['form-info']), 
-        'success': get_flashed_messages(category_filter=['form-success']) } 
-      %} 
-
-      {{ f.begin_form(add_availability, flashes) }}
-
-      <div class="ui header">Monday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_monday) }}</span>
+          {{ service_form|attr(key)() }}
         </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_monday) }}</span>
-        </div>
-
-      <div class="ui header">Tuesday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_tuesday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_tuesday) }}</span>
-        </div>
-
-      <div class="ui header">Wednesday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_wednesday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_wednesday) }}</span>
-        </div>
-
-      <div class="ui header">Thursday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_thursday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_thursday) }}</span>
-        </div>
-       
-      <div class="ui header">Friday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_friday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_friday) }}</span>
-        </div>
-
-      <div class="ui header">Saturday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_saturday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_saturday) }}</span>
-        </div>
-
-      <div class="ui header">Sunday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_sunday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_sunday) }}</span>
-        </div>
-       
+        {% endfor %}
+      </div>
       <div class="actions">
         {{ f.form_message(flashes['error'], header='Something went wrong.',
         class='error') }}
@@ -293,158 +166,313 @@ description=None, icon=None) %}
         header='Information', class='info') }}
         {{ f.form_message(flashes['success'],
         header='Success!', class='success') }}
-        {{ f.render_form_field(add_availability.submit) }}
+        {{ f.render_form_field(service_form.submit) }}
       </div>
-      {{ f.end_form() }}
     </div>
+    {{ f.end_form() }}
   </div>
 
-  <!-- Reviews Pop Up -->
-  <div class="ui modal" id="reviews">
+  <!-- Vettings Pop Up -->
+  <div class="ui modal" id="vettings">
     <i class="close icon"></i>
-    <div class="header">Reviews</div>
-  
-    {% set flashes = { 'error':
-    get_flashed_messages(category_filter=['form-error']), 'warning':
-    get_flashed_messages(category_filter=['form-check-email']), 'info':
-    get_flashed_messages(category_filter=['form-info']), 'success':
-    get_flashed_messages(category_filter=['form-success']) } %} {{
-    f.begin_form(reviews, flashes) }}
-  
-    <div class="ui styled fluid accordion">
-      <div class="active title">
-        <i class="dropdown icon"></i>
-        Add A Review
-      </div>
-      <div class="active content">
-        <div class="two fields">
-          <div class="field">
-            {{ f.render_form_field(reviews.reviewer_name) }}
-          </div>
-          <div class="field">
-            <label>Rating:</label>
-            <div class="ui massive star rating" data-max-rating="5"></div>
-          </div>
-        </div>
-        {{ f.render_form_field(reviews.notes) }}
-      </div>
-      <div class="title">
-        <i class="dropdown icon"></i>
-        Previous Reviews
-      </div>
-      <div class="content">
-        <div class="transition hidden">
-          <div class="ui form">{{ f.render_form_field(reviews.notes) }}</div>
+    <div class="ui center aligned header">Vettings</div>
+    <div class="content">
+      {% set flashes =
+      { 'error': get_flashed_messages(category_filter=['form-error']),
+      'warning': get_flashed_messages(category_filter=['form-check-email']),
+      'info': get_flashed_messages(category_filter=['form-info']),
+      'success': get_flashed_messages(category_filter=['form-success']) }
+      %}
+      {{ f.begin_form(add_vetting, flashes) }}
+      <div class="ui two column stackable grid">
+        <h3 class="eight wide column">Service Vettings</h3>
+        <div class="eight wide column" style="text-align:right">
+          {{f.render_form_field(add_vetting.volunteer_fully_vetted_checkbox) }}
         </div>
       </div>
 
-      <div class="actions">
+      <div class="ui attached segment">
+        <h3 class="ui top attached header">
+          Notes
+        </h3>
+        <div class="ui fluid attached segment">
+          <p>{{f.render_form_field(add_vetting.vetting_notes)}}</p>
+        </div>
         {{ f.form_message(flashes['error'], header='Something went wrong.',
-        class='error') }} 
+        class='error') }}
         {{ f.form_message(flashes['warning'], header='Check your
-        email.', class='warning') }} 
+        email.', class='warning') }}
         {{ f.form_message(flashes['info'],
-        header='Information', class='info') }} 
+        header='Information', class='info') }}
         {{ f.form_message(flashes['success'],
-        header='Success!', class='success') }}  
-        {{f.render_form_field(reviews.submit) }}
+        header='Success!', class='success') }}
+        {{ f.render_form_field(add_vetting.submit) }}
       </div>
-      {{ f.end_form() }}
-      
-    </div>  
+    </div>
+    {{ f.end_form() }}
   </div>
+</div>
 
-  <script language='javascript'>
-    $(document).ready(function () {
-      $('.ui.accordion').accordion();
-    });
+<!-- Availability Pop Up -->
+<div class="ui fullscreen modal" id="availability">
+  <i class="close icon"></i>
+  <div class="header">Add Availability</div>
+  <div class="content">
 
-    $(document)
-      .ready(function () {
-        // seems a little sketch -- hard coded so that the "Members" is the first selected option.
-        $('#volunteer-filter-form').hide()
-        $('#local-resource-filter-form').hide()
+    {% set flashes =
+    { 'error': get_flashed_messages(category_filter=['form-error']),
+    'warning': get_flashed_messages(category_filter=['form-check-email']),
+    'info': get_flashed_messages(category_filter=['form-info']),
+    'success': get_flashed_messages(category_filter=['form-success']) }
+    %}
 
-        $('.ui.menu .ui.dropdown').dropdown({
-          on: 'hover'
-        });
-        $('.ui.menu a.item')
-          .on('click', function () {
-            $(this)
-              .addClass('active')
-              .siblings()
-              .removeClass('active')
-              ;
-          })
-          ;
+    {{ f.begin_form(add_availability, flashes) }}
 
-        // is there a cleaner way than to just list out all three cases?
-        $('a.item#member-menu-item')
-          .on('click', function () {
-            // window.alert("HI");
-            $('#member-filter-form')
-              .show();
-            $('#volunteer-filter-form')
-              .hide();
-            $('#local-resource-filter-form')
-              .hide();
-          })
-          ;
+    <div class="ui header">Monday:</div>
+    <div class="ui segment">
+      <a class="ui purple ribbon label">Available:</a>
+      <span>{{ f.render_form_field(add_availability.availability_monday) }}</span>
+    </div>
+    <div class="ui segment">
+      <a class="ui purple ribbon label">Available For Backup:</a>
+      <span>{{ f.render_form_field(add_availability.backup_monday) }}</span>
+    </div>
 
-        $('a.item#volunteer-menu-item')
-          .on('click', function () {
-            // if ($(this).hasClass('active')) {
-            //   window.alert("Volunteer");
-            // }
-            $('#member-filter-form')
-              .hide();
-            $('#volunteer-filter-form')
-              .show();
-            $('#local-resource-filter-form')
-              .hide();
-          })
-          ;
+    <div class="ui header">Tuesday:</div>
+    <div class="ui segment">
+      <a class="ui purple ribbon label">Available:</a>
+      <span>{{ f.render_form_field(add_availability.availability_tuesday) }}</span>
+    </div>
+    <div class="ui segment">
+      <a class="ui purple ribbon label">Available For Backup:</a>
+      <span>{{ f.render_form_field(add_availability.backup_tuesday) }}</span>
+    </div>
 
-        $('a.item#local-resource-menu-item')
-          .on('click', function () {
-            // if ($(this).hasClass('active')) {
-            //   window.alert("Volunteer");
-            // }
-            $('#member-filter-form')
-              .hide();
-            $('#volunteer-filter-form')
-              .hide();
-            $('#local-resource-filter-form')
-              .show();
-          })
-          ;
+    <div class="ui header">Wednesday:</div>
+    <div class="ui segment">
+      <a class="ui purple ribbon label">Available:</a>
+      <span>{{ f.render_form_field(add_availability.availability_wednesday) }}</span>
+    </div>
+    <div class="ui segment">
+      <a class="ui purple ribbon label">Available For Backup:</a>
+      <span>{{ f.render_form_field(add_availability.backup_wednesday) }}</span>
+    </div>
 
-      })
+    <div class="ui header">Thursday:</div>
+    <div class="ui segment">
+      <a class="ui purple ribbon label">Available:</a>
+      <span>{{ f.render_form_field(add_availability.availability_thursday) }}</span>
+    </div>
+    <div class="ui segment">
+      <a class="ui purple ribbon label">Available For Backup:</a>
+      <span>{{ f.render_form_field(add_availability.backup_thursday) }}</span>
+    </div>
 
-    $('i.handshake.outline.icon.right.floated').click(function () {
-      $('#services').modal('show');
-    });
+    <div class="ui header">Friday:</div>
+    <div class="ui segment">
+      <a class="ui purple ribbon label">Available:</a>
+      <span>{{ f.render_form_field(add_availability.availability_friday) }}</span>
+    </div>
+    <div class="ui segment">
+      <a class="ui purple ribbon label">Available For Backup:</a>
+      <span>{{ f.render_form_field(add_availability.backup_friday) }}</span>
+    </div>
 
-    $('i.check.square.outline.icon.right.floated').click(function () {
-      $('#vettings').modal('show');
-    });
-    
-    $('#context1 .menu .item').tab({
-     context: $('#context1'),
-    });
+    <div class="ui header">Saturday:</div>
+    <div class="ui segment">
+      <a class="ui purple ribbon label">Available:</a>
+      <span>{{ f.render_form_field(add_availability.availability_saturday) }}</span>
+    </div>
+    <div class="ui segment">
+      <a class="ui purple ribbon label">Available For Backup:</a>
+      <span>{{ f.render_form_field(add_availability.backup_saturday) }}</span>
+    </div>
 
-    $('i.clock.outline.icon.right.floated').click(function () {
-      $('#availability').modal('show');
-    });
+    <div class="ui header">Sunday:</div>
+    <div class="ui segment">
+      <a class="ui purple ribbon label">Available:</a>
+      <span>{{ f.render_form_field(add_availability.availability_sunday) }}</span>
+    </div>
+    <div class="ui segment">
+      <a class="ui purple ribbon label">Available For Backup:</a>
+      <span>{{ f.render_form_field(add_availability.backup_sunday) }}</span>
+    </div>
 
-    $('i.comment.outline.icon.right.floated').click(function () {
-      $('#reviews').modal('show');
-    });
-    
-    $('.ui.accordion').accordion({ exclusive: false });
+    <div class="actions">
+      {{ f.form_message(flashes['error'], header='Something went wrong.',
+      class='error') }}
+      {{ f.form_message(flashes['warning'], header='Check your
+      email.', class='warning') }}
+      {{ f.form_message(flashes['info'],
+      header='Information', class='info') }}
+      {{ f.form_message(flashes['success'],
+      header='Success!', class='success') }}
+      {{ f.render_form_field(add_availability.submit) }}
+    </div>
+    {{ f.end_form() }}
+  </div>
+</div>
 
-    $('.ui.rating').rating();
+<!-- Reviews Pop Up -->
+<div class="ui modal" id="reviews">
+  <i class="close icon"></i>
+  <div class="header">Reviews</div>
 
-  </script>
+  {% set flashes = { 'error':
+  get_flashed_messages(category_filter=['form-error']), 'warning':
+  get_flashed_messages(category_filter=['form-check-email']), 'info':
+  get_flashed_messages(category_filter=['form-info']), 'success':
+  get_flashed_messages(category_filter=['form-success']) } %} {{
+  f.begin_form(reviews, flashes) }}
 
-  {% endblock %}   
+  <div class="ui styled fluid accordion">
+    <div class="active title">
+      <i class="dropdown icon"></i>
+      Add A Review
+    </div>
+    <div class="active content">
+      <div class="two fields">
+        <div class="field">
+          {{ f.render_form_field(reviews.reviewer_name) }}
+        </div>
+        <div class="field">
+          <label>Rating:</label>
+          <div class="ui massive star rating" data-max-rating="5"></div>
+        </div>
+      </div>
+      {{ f.render_form_field(reviews.notes) }}
+    </div>
+    <div class="title">
+      <i class="dropdown icon"></i>
+      Previous Reviews
+    </div>
+    <div class="content">
+      <div class="transition hidden">
+        <div class="ui form">{{ f.render_form_field(reviews.notes) }}</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      {{ f.form_message(flashes['error'], header='Something went wrong.',
+      class='error') }}
+      {{ f.form_message(flashes['warning'], header='Check your
+      email.', class='warning') }}
+      {{ f.form_message(flashes['info'],
+      header='Information', class='info') }}
+      {{ f.form_message(flashes['success'],
+      header='Success!', class='success') }}
+      {{f.render_form_field(reviews.submit) }}
+    </div>
+    {{ f.end_form() }}
+
+  </div>
+</div>
+
+<script language='javascript'>
+  $(document).ready(function () {
+    $('.ui.accordion').accordion();
+  });
+
+  $(document)
+    .ready(function () {
+      // seems a little sketch -- hard coded so that the "Members" is the first selected option.
+      $('#volunteer-filter-form').hide()
+      $('#local-resource-filter-form').hide()
+
+      $('.ui.menu .ui.dropdown').dropdown({
+        on: 'hover'
+      });
+      $('.ui.menu a.item')
+        .on('click', function () {
+          $(this)
+            .addClass('active')
+            .siblings()
+            .removeClass('active')
+            ;
+        })
+        ;
+
+      // is there a cleaner way than to just list out all three cases?
+      $('a.item#member-menu-item')
+        .on('click', function () {
+          // window.alert("HI");
+          $('#member-filter-form')
+            .show();
+          $('#volunteer-filter-form')
+            .hide();
+          $('#local-resource-filter-form')
+            .hide();
+        })
+        ;
+
+      $('a.item#volunteer-menu-item')
+        .on('click', function () {
+          // if ($(this).hasClass('active')) {
+          //   window.alert("Volunteer");
+          // }
+          $('#member-filter-form')
+            .hide();
+          $('#volunteer-filter-form')
+            .show();
+          $('#local-resource-filter-form')
+            .hide();
+        })
+        ;
+
+      $('a.item#local-resource-menu-item')
+        .on('click', function () {
+          // if ($(this).hasClass('active')) {
+          //   window.alert("Volunteer");
+          // }
+          $('#member-filter-form')
+            .hide();
+          $('#volunteer-filter-form')
+            .hide();
+          $('#local-resource-filter-form')
+            .show();
+        })
+        ;
+
+      $('#search-people').keyup(function () {
+        // window.alert("HI");
+        var searchText = $(this).val();
+        if (searchText.length > 0) {
+          $('.search-results .header:icontains(' + searchText + ')').closest('.card').addClass('positive');
+          $('.card.positive .header').not(':icontains(' + searchText + ')').removeClass('positive');
+          $('.search-results .header').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
+          $('.card.hidden .header:icontains(' + searchText + ')').removeClass('hidden').show();
+        } else {
+          $('.card.positive').removeClass('positive');
+          $('.card.hidden').removeClass('hidden').show();
+        }
+      });
+
+    })
+
+  $('i.handshake.outline.icon.right.floated').click(function () {
+    $('#services').modal('show');
+  });
+
+  $('i.check.square.outline.icon.right.floated').click(function () {
+    $('#vettings').modal('show');
+  });
+
+  $('#context1 .menu .item').tab({
+    context: $('#context1'),
+  });
+
+  $('i.clock.outline.icon.right.floated').click(function () {
+    $('#availability').modal('show');
+  });
+
+  $('i.comment.outline.icon.right.floated').click(function () {
+    $('#reviews').modal('show');
+  });
+
+  $('.ui.accordion').accordion({ exclusive: false });
+
+  $('.ui.rating').rating();
+
+</script>
+
+{% endblock %}

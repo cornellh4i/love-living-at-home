@@ -91,11 +91,12 @@ def people_manager():
                 db.session.commit()
             flash('Services provided by {} successfully updated'.format(volunteer.first_name), 'form-success')
 
+    members=Member.query.all()
     return render_template('admin/people_manager/layouts/base.html',
                            add_availability=add_availability,
                            add_vetting=add_vetting,
                            service_form = service_form, 
-                           category_dict = category_dict, reviews = reviews)
+                           category_dict = category_dict, reviews = reviews, members=members)
 
 
 @admin.route('/new-user', methods=['GET', 'POST'])
@@ -361,12 +362,18 @@ def create_transportation_request():
                            title='Transportation Request',
                            form=form)
 
-@admin.route('/invite-member', methods=['GET', 'POST'])
+@admin.route('/invite-member', methods=['GET'])
+@admin.route('/invite-member/<int:member_id>', methods=['GET'])
 @login_required
 @admin_required
-def invite_member():
+def invite_member(member_id = None):
     """Page for member management."""
+    member = None
     form = MemberManager()
+    if member_id is not None: 
+        member = Member.query.filter_by(id=member_id).first()
+        form = MemberManager(first_name = member.first_name, last_name = member.last_name)
+        
     if form.validate_on_submit():
         secondary_address = False
         if (form.secondary_as_primary_checkbox.data):
