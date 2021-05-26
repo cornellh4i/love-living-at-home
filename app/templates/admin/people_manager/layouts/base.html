@@ -1,5 +1,7 @@
 {% extends 'layouts/base.html' %}
 {% import 'macros/form_macros.html' as f %}
+
+<!-- Macros -->
 {% macro dashboard_option(title, endpoint,
 description=None, icon=None) %}
 <a class="column" href="{{ url_for(endpoint) }}">
@@ -40,8 +42,7 @@ description=None, icon=None) %}
 <div class="content">~info about person~</div>
 {% endmacro %}
 
-
-
+<!-- Content -->
 {% block content %}
 <div class="ui stackable centered grid container">
   <div class="four wide column">
@@ -57,7 +58,6 @@ description=None, icon=None) %}
 </div>
 <div class="ui stackable centered grid container">
   <div class="four wide column">
-    <!-- <form class="ui form"> -->
     <div class="ui search item">
       <div class="ui transparent icon input">
         <input id="search-people" type="text" placeholder="Search people...">
@@ -101,8 +101,6 @@ description=None, icon=None) %}
           <label>Organization:</label>
           <input id="search-name" type="text" placeholder="Search organization..." />
         </div>
-
-
       </form>
 
       <form class="ui form" id="volunteer-filter-form">
