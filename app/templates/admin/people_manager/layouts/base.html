@@ -18,17 +18,22 @@ description=None, icon=None) %}
 </a>
 {% endmacro %}
 
-{% macro manage_member(member_id) %}
-<i class="pencil icon right floated" style="cursor: pointer"
-  onclick="window.location.href = '{{ url_for('admin.invite_member', member_id=member_id) }}';"></i>
-{% endmacro %}
-
 {% macro manage_volunteer() %}
 <i class=" comment outline icon right floated" style="cursor: pointer"></i>
 <i class="clock outline icon right floated" style="cursor: pointer"></i>
 <i class="check square outline icon right floated" style="cursor: pointer"></i>
 <i class="handshake outline icon right floated" style="cursor: pointer"></i>
 <i class="pencil icon right floated"></i>
+{% endmacro %}
+
+{% macro member_card(m) %}
+<div class="content">
+  <div class="header">{{m.first_name + ' ' + m.last_name}}
+    <i class="pencil icon right floated" style="cursor: pointer"
+      onclick="window.location.href = '{{ url_for('admin.invite_member', member_id=m.id) }}';"></i>
+  </div>
+</div>
+<div class="content">~info about person~</div>
 {% endmacro %}
 
 
@@ -112,12 +117,10 @@ description=None, icon=None) %}
     <div class="ui segment search-results">
       {% for m in members %}
       <div class="ui fluid card">
-        <div class="content">
-          <div class="header">{{m.first_name + ' ' + m.last_name}}
-            {{ manage_member(m.id) }}
-          </div>
-        </div>
-        <div class="content">~info about person~</div>
+        {{member_card(m)}}
+
+
+
       </div>
       {% endfor %}
 
