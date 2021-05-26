@@ -321,7 +321,6 @@ def create_transportation_request():
     form.special_instructions_list = json.dumps({ str(member.id)  :  member.volunteer_notes  for member in Member.query.all()})
     form.responsible_staffer.choices = [(staffer.id, staffer.first_name + " " + staffer.last_name) for staffer in Staffer.query.all()]
     if form.validate_on_submit():
-        flash(request.method, 'success')
         special_input = request.form.get('special_instructions')
         transportation_request = Request(
                                          type_id = 1,
@@ -352,12 +351,12 @@ def create_transportation_request():
         db.session.commit()
         flash(
             'Successfully submitted a new transportation request',
-            'form-success')
+            'success')
         return redirect(url_for('admin.index'))
     # elif (len(form.errors) > 0):
-    else:
-        flash(request.method, 'error')
-        flash(form.errors, 'error')
+    # else:
+        # flash(request.method, 'error')
+        # flash(form.errors, 'error')
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
                            form=form)
