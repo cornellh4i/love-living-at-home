@@ -93,6 +93,7 @@ def people_manager():
 
     members=Member.query.all()
     volunteers=Volunteer.query.all()
+    local_resources=LocalResource.query.all()
     return render_template('admin/people_manager/layouts/base.html',
                            add_availability=add_availability,
                            add_vetting=add_vetting,
@@ -100,7 +101,8 @@ def people_manager():
                            category_dict = category_dict, 
                            reviews = reviews, 
                            members=members, 
-                           volunteers=volunteers)
+                           volunteers=volunteers,
+                           local_resources=local_resources)
 
 
 @admin.route('/new-user', methods=['GET', 'POST'])
