@@ -92,11 +92,12 @@ def people_manager():
             flash('Services provided by {} successfully updated'.format(volunteer.first_name), 'form-success')
 
     members=Member.query.all()
+    volunteers=Volunteer.query.all()
     return render_template('admin/people_manager/layouts/base.html',
                            add_availability=add_availability,
                            add_vetting=add_vetting,
                            service_form = service_form, 
-                           category_dict = category_dict, reviews = reviews, members=members)
+                           category_dict = category_dict, reviews = reviews, members=members, volunteers=volunteers)
 
 
 @admin.route('/new-user', methods=['GET', 'POST'])
