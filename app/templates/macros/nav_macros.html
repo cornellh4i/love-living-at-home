@@ -61,7 +61,7 @@ manage their account and logout (account routes). Otherwise, it links to registe
 
 {% macro mobile_nav(current_user, dropdown=None) %}
 <div class="mobile only row">
-  <div class="ui fixed inverted black main menu">
+  <div class="ui fixed inverted main menu" style="background-color: #253E71;">
     {{ header_items(current_user) }}
     <div class="right menu">
       <a class="icon item" id="open-nav"><i class="sidebar icon"></i></a>
@@ -82,7 +82,7 @@ manage their account and logout (account routes). Otherwise, it links to registe
 {{ render_menu_items([item]) }}
 {% elif item | length == 2 %}
 <div class="ui dropdown item" onClick="changeMenu(this)">{{ item[0] }} <i class="dropdown icon"></i>
-  <div class="inverted black menu">
+  <div class="inverted menu">
     {{ create_dropdown(item[1]) }}
   </div>
 </div>
@@ -92,7 +92,7 @@ manage their account and logout (account routes). Otherwise, it links to registe
 
 {% macro desktop_nav(current_user, dropdown=None) %}
 <div class="computer tablet only row">
-  <div class="ui fixed inverted black main menu">
+  <div class="ui fixed inverted main menu" style="background-color: #253E71;">
     <div class="ui container">
       {{ header_items(current_user) }}
       {{ create_dropdown(dropdown) }}
