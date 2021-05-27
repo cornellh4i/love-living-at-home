@@ -63,7 +63,6 @@ description=None, icon=None) %}
       Non-Member Volunteer
       {% endif %}
     </div>
-
   </div>
   <div class="four wide column">
     {% if v.is_fully_vetted %}
@@ -75,6 +74,12 @@ description=None, icon=None) %}
       <i class="x icon"></i>Not Fully Vetted
     </div>
     {% endif %}
+  </div>
+  <div class="four wide column">
+
+  </div>
+  <div class="four wide column right aligned">
+    {{v.primary_phone_number}}
   </div>
 </div>
 {% endmacro %}
