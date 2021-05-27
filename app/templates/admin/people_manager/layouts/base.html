@@ -44,6 +44,7 @@ description=None, icon=None) %}
 {% endif %}
 <div class="content">
   <div class="header">{{ name }}
+    <i class="trash alternate outline icon right floated" style="cursor: pointer"></i>
     <i class=" comment outline icon right floated" style="cursor: pointer"></i>
     <i class="clock outline icon right floated" style="cursor: pointer"></i>
     <i class="calendar minus outline icon right floated" style="cursor: pointer"></i>
@@ -640,22 +641,36 @@ description=None, icon=None) %}
         //     }
         //   });
         // }
-
-        $('#search-people').keyup(function () {
-          //   filterPeople();
-          var searchText = $(this).val();
-          if (searchText.length > 0) {
-            $('.search-results .header:icontains(' + searchText + ')').closest('.card').addClass('positive');
-            $('.card.positive .header').not(':icontains(' + searchText + ')').removeClass('positive');
-            $('.search-results .header').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
-            $('.card.hidden .header:icontains(' + searchText + ')').removeClass('hidden').show();
-          } else {
-            $('.card.positive').removeClass('positive');
-            $('.card.hidden').removeClass('hidden').show();
-          }
-        });
+        
+        // $('#search-people').keyup(function () {
+        //   //   filterPeople();
+        //   var searchText = $(this).val();
+        //   if (searchText.length > 0) {
+        //     $('.search-results .header:icontains(' + searchText + ')').closest('.card').addClass('positive');
+        //     $('.card.positive .header').not(':icontains(' + searchText + ')').removeClass('positive');
+        //     $('.search-results .header').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
+        //     $('.card.hidden .header:icontains(' + searchText + ')').removeClass('hidden').show();
+        //   } else {
+        //     $('.card.positive').removeClass('positive');
+        //     $('.card.hidden').removeClass('hidden').show();
+        //   }
+        // });
 
       })
+
+    $('.tab #search-people').keyup(function () {
+        //   filterPeople();
+        var searchText = $(this).val();
+        if (searchText.length > 0) {
+          $('.search-results .header:icontains(' + searchText + ')').closest('.card').addClass('positive');
+          $('.card.positive .header').not(':icontains(' + searchText + ')').removeClass('positive');
+          $('.search-results .header').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
+          $('.card.hidden .header:icontains(' + searchText + ')').removeClass('hidden').show();
+        } else {
+          $('.card.positive').removeClass('positive');
+          $('.card.hidden').removeClass('hidden').show();
+        }
+      });
 
     $('i.handshake.outline.icon.right.floated').click(function () {
       $('#services').modal('show');
