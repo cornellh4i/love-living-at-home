@@ -95,6 +95,7 @@ def setup_general():
     Service.insert_services()
     ServiceCategory.insert_categories()
     MetroArea.insert_metro_areas()
+    LocalResource.insert_local_resources()
 
     # Set up first admin user
     admin_query = Role.query.filter_by(name='Administrator')
