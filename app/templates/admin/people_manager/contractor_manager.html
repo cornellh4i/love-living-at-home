@@ -8,8 +8,8 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
       Back to dashboard
     </a>
     <h2 class="ui header">
-      Contractor Manager
-      <div class="sub header">Create a new contractor account</div>
+      Local Resource Manager
+      <div class="sub header">Create a new local resource profile</div>
     </h2>
 
     {% set flashes = { 'error':
@@ -17,14 +17,14 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     get_flashed_messages(category_filter=['form-check-email']), 'info':
     get_flashed_messages(category_filter=['form-info']), 'success':
     get_flashed_messages(category_filter=['form-success']) } %} {{
-    f.begin_form(form, flashes) }} 
+    f.begin_form(form, flashes) }}
 
     <div class="ui header">General Information</div>
-    {{ f.render_form_field(form.first_name) }} 
-    {{ f.render_form_field(form.middle_initial) }} 
-    {{ f.render_form_field(form.last_name) }} 
-    {{ f.render_form_field(form.salutation) }} 
-    {{ f.render_form_field(form.company_name) }} 
+    {{ f.render_form_field(form.first_name) }}
+    {{ f.render_form_field(form.middle_initial) }}
+    {{ f.render_form_field(form.last_name) }}
+    {{ f.render_form_field(form.salutation) }}
+    {{ f.render_form_field(form.company_name) }}
 
     <div class="ui header">Primary Address</div>
     <div class="field">
@@ -52,7 +52,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     {{ f.render_form_field(form.secondary_phone_number) }}
     {{ f.render_form_input(form.email) }}
 
-    <br><br/>
+    <br><br />
     <div class="inline fields">
       {{ f.render_form_field(form.preferred_contact_method)}}
     </div>
@@ -69,9 +69,9 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   </div>
 </div>
 
-  <script>
-    $('.ui.radio.checkbox')
+<script>
+  $('.ui.radio.checkbox')
     .checkbox();
-  </script>
+</script>
 
-  {% endblock %}
+{% endblock %}
