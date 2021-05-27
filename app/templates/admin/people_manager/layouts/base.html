@@ -76,7 +76,6 @@ description=None, icon=None) %}
     {% endif %}
   </div>
   <div class="four wide column">
-
   </div>
   <div class="four wide column right aligned">
     {{v.primary_phone_number}}
@@ -91,7 +90,19 @@ description=None, icon=None) %}
       onclick="window.location.href = '{{ url_for('admin.invite_contractor', local_resource_id=lr.id) }}';"></i>
   </div>
 </div>
-<div class="content">~info about local resource~</div>
+<div class="content ui grid" style="padding:0">
+  <div class="four wide column">
+    {% if lr.contact_first_name and lr.contact_last_name %}
+    <b>Contact:</b>
+    {{lr.contact_first_name + ' ' + lr.contact_last_name}}
+    {% else %}
+    <i>No contact person</i>
+    {% endif %}
+  </div>
+  <div class="eight wide column">
+  </div>
+  <div class="four wide column right aligned">{{lr.primary_phone_number}}</div>
+</div>
 {% endmacro %}
 
 <!-- Content -->
