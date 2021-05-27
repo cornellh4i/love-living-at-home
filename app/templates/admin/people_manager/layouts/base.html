@@ -45,7 +45,7 @@ description=None, icon=None) %}
 <div class="content">
   <div class="header">{{ name }}
     <i class="trash alternate outline icon right floated" style="cursor: pointer"></i>
-    <i class=" comment outline icon right floated" style="cursor: pointer"></i>
+    <i class="comment outline icon right floated" style="cursor: pointer"></i>
     <i class="clock outline icon right floated" style="cursor: pointer"></i>
     <i class="calendar minus outline icon right floated" style="cursor: pointer"></i>
     <i class="check square outline icon right floated" style="cursor: pointer"></i>
@@ -88,6 +88,9 @@ description=None, icon=None) %}
 {% macro local_resource_card(lr) %}
 <div class="content">
   <div class="header">{{lr.company_name}}
+    <i class="trash alternate outline icon right floated" style="cursor: pointer"></i>
+    <i class="comment outline icon right floated" style="cursor: pointer"></i>
+    <i class="clock outline icon right floated" style="cursor: pointer"></i>
     <i class="pencil icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.invite_contractor', local_resource_id=lr.id) }}';"></i>
   </div>
@@ -308,6 +311,7 @@ description=None, icon=None) %}
         </div>
       </div>
     </div>
+
     <!-- Service Categories Pop Up -->
     <div class="ui modal" id="services">
       <i class="close icon"></i>
@@ -430,71 +434,71 @@ description=None, icon=None) %}
         <div class="ui header">Monday:</div>
         <div class="ui segment">
           <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_monday) }}</span>
+          <span>{{ f.render_custom_select(add_availability.availability_monday) }}</span>
         </div>
         <div class="ui segment">
           <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_monday) }}</span>
+          <span>{{ f.render_custom_select(add_availability.backup_monday) }}</span>
         </div>
 
         <div class="ui header">Tuesday:</div>
         <div class="ui segment">
           <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_tuesday) }}</span>
+          <span>{{ f.render_custom_select(add_availability.availability_tuesday) }}</span>
         </div>
         <div class="ui segment">
           <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_tuesday) }}</span>
+          <span>{{ f.render_custom_select(add_availability.backup_tuesday) }}</span>
         </div>
 
         <div class="ui header">Wednesday:</div>
         <div class="ui segment">
           <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_wednesday) }}</span>
+          <span>{{ f.render_custom_select(add_availability.availability_wednesday) }}</span>
         </div>
         <div class="ui segment">
           <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_wednesday) }}</span>
+          <span>{{ f.render_custom_select(add_availability.backup_wednesday) }}</span>
         </div>
 
         <div class="ui header">Thursday:</div>
         <div class="ui segment">
           <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_thursday) }}</span>
+          <span>{{ f.render_custom_select(add_availability.availability_thursday) }}</span>
         </div>
         <div class="ui segment">
           <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_thursday) }}</span>
+          <span>{{ f.render_custom_select(add_availability.backup_thursday) }}</span>
         </div>
 
         <div class="ui header">Friday:</div>
         <div class="ui segment">
           <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_friday) }}</span>
+          <span>{{ f.render_custom_select(add_availability.availability_friday) }}</span>
         </div>
         <div class="ui segment">
           <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_friday) }}</span>
+          <span>{{ f.render_custom_select(add_availability.backup_friday) }}</span>
         </div>
 
         <div class="ui header">Saturday:</div>
         <div class="ui segment">
           <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_saturday) }}</span>
+          <span>{{ f.render_custom_select(add_availability.availability_saturday) }}</span>
         </div>
         <div class="ui segment">
           <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_saturday) }}</span>
+          <span>{{ f.render_custom_select(add_availability.backup_saturday) }}</span>
         </div>
 
         <div class="ui header">Sunday:</div>
         <div class="ui segment">
           <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_sunday) }}</span>
+          <span>{{ f.render_custom_select(add_availability.availability_sunday) }}</span>
         </div>
         <div class="ui segment">
           <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_sunday) }}</span>
+          <span>{{ f.render_custom_select(add_availability.backup_sunday) }}</span>
         </div>
 
         <div class="actions">
