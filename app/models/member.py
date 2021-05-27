@@ -52,7 +52,7 @@ class Member(db.Model):
         seed()
         for i in range(count):
             m = Member(
-                member_number=1,
+                member_number=i+1,
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
                 gender=choice(['Male', 'Female', 'Unspecified', 'Does Not Wish to Answer']),
