@@ -46,6 +46,7 @@ description=None, icon=None) %}
   <div class="header">{{ name }}
     <i class=" comment outline icon right floated" style="cursor: pointer"></i>
     <i class="clock outline icon right floated" style="cursor: pointer"></i>
+    <i class="calendar minus outline icon right floated" style="cursor: pointer"></i>
     <i class="check square outline icon right floated" style="cursor: pointer"></i>
     <i class="handshake outline icon right floated" style="cursor: pointer"></i>
     <i class="pencil icon right floated" style="cursor: pointer"
@@ -107,6 +108,127 @@ description=None, icon=None) %}
 
 <!-- Content -->
 {% block content %}
+<style>
+  .highlight {
+    background-color: lightblue;
+  }
+
+  #calendar-body td:empty {
+    cursor: text;
+    border: none;
+  }
+
+  #calendar-body td {
+    cursor: pointer;
+  }
+
+  #calendar thead {
+    border-bottom: 2px solid #cecece;
+  }
+
+  #calendar th {
+    border: none;
+    text-align: center;
+    padding: 0;
+    width: 10%;
+  }
+
+  #calendar td {
+    border: 1px solid rgba(0, 0, 0, .125);
+    text-align: center;
+    padding: 5px;
+    width: 10%;
+  }
+
+  .previous {
+    margin-top: 4%;
+    margin-left: 2%;
+  }
+
+  .next {
+    margin-top: 4%;
+    margin-right: 2%;
+  }
+
+  .round {
+    border-radius: 50%;
+  }
+
+  .month-selected {
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.2;
+    color: inherit;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+
+
+  #calendar-header {
+    margin-bottom: 0px;
+    background-color: #e7e7e7;
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+  }
+
+  .header-row {
+    background-color: lightgray;
+    margin: 0px;
+    padding: 5px;
+  }
+
+  #monthAndYear {
+    border-bottom: none;
+    background-color: transparent;
+    padding-left: 14px;
+    padding-right: 14px;
+    display: none;
+  }
+
+  #previous,
+  #next {
+    color: darkslategrey;
+  }
+
+  .today-color {
+    background-color: #D3D3D3;
+  }
+
+  #parent {
+    border: 2px dotted rgba(0, 0, 0, .125);
+    border-radius: .25rem;
+    padding: 5px;
+  }
+
+  .buttonPanel td {
+    border: none !important;
+    padding: 6px 0 0 0 !important;
+  }
+
+  .buttonPanel td div:nth-of-type(odd) {
+    padding: 5px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .buttonPanel td div:nth-of-type(even) {
+    padding: 5px;
+    width: 100%;
+    text-align: right;
+  }
+
+  .buttonPanel-row {
+    margin: 0;
+    border-top: 2px solid lightgray;
+  }
+
+  #calendarBody {
+    cursor: pointer;
+    user-select: none;
+  }
+</style>
+
 <div class="ui container">
   <h2 class="ui header">People Manager</h2>
 
@@ -444,70 +566,126 @@ description=None, icon=None) %}
       </div>
     </div>
 
-    <script language='javascript'>
-      $(document).ready(function () {
-        $('.ui.accordion').accordion();
-        $('.ui.checkbox').checkbox();
-      });
+    <div class="ui modal" id="vacation_calendar">
+      <i class="close icon"></i>
+      <div class="header">Vacation Calendar</div>
+      <div id="parent" class="ui container" style="display:none;">
+        <div class="ui cards">
+          <div class="ui centered card">
+            <div class="ui header mini form" id="calendar-header">
+              <div class="four fields">
+                <div class="field previous">
+                  <a href="#" id="previous" onclick="previous()">
+                    <i class="ui icon angle left" aria-hidden="true"></i>
+                  </a>
+                </div>
+                <div class="field">
+                  <select class="fluid" name="month" id="month" onchange="change()">
+                  </select>
+                </div>
+                <div class="field">
+                  <select class="ui dropdown fluid" name="year" id="year" onchange="change()">
+                  </select>
 
-      $(document)
-        .ready(function () {
-          $('.menu .item').tab();
+                </div>
+                <div class="field next">
+                  <a href="#" id="next" onclick="next()">
+                    <i class="ui icon angle right" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="description">
+              <table id="calendar">
+                <thead>
+                  <tr>
+                    <th>S</th>
+                    <th>M</th>
+                    <th>T</th>
+                    <th>W</th>
+                    <th>T</th>
+                    <th>F</th>
+                    <th>S</th>
+                  </tr>
+                </thead>
+                <tbody id="calendarBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
 
-          // function filterPeople() {
-          //   let peopleFilter = $('#role-field').val();
-          //   $('.card').each(function () {
-          //     $this = $(this);
-          //     $this.show();
+    </div>
+  </div>
+  <script language='javascript'>
+    $(document).ready(function () {
+      $('.ui.accordion').accordion();
+      $('.ui.checkbox').checkbox();
+    });
 
-          //     // Filter by role
-          //     let role = this.getAttribute('data-role');
-          //     if (role != peopleFilter) {
-          //       $this.hide();
-          //     }
-          //   });
-          // }
+    $(document)
+      .ready(function () {
+        $('.menu .item').tab();
 
-          $('#search-people').keyup(function () {
-            //   filterPeople();
-            var searchText = $(this).val();
-            if (searchText.length > 0) {
-              $('.search-results .header:icontains(' + searchText + ')').closest('.card').addClass('positive');
-              $('.card.positive .header').not(':icontains(' + searchText + ')').removeClass('positive');
-              $('.search-results .header').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
-              $('.card.hidden .header:icontains(' + searchText + ')').removeClass('hidden').show();
-            } else {
-              $('.card.positive').removeClass('positive');
-              $('.card.hidden').removeClass('hidden').show();
-            }
-          });
+        // function filterPeople() {
+        //   let peopleFilter = $('#role-field').val();
+        //   $('.card').each(function () {
+        //     $this = $(this);
+        //     $this.show();
 
-        })
+        //     // Filter by role
+        //     let role = this.getAttribute('data-role');
+        //     if (role != peopleFilter) {
+        //       $this.hide();
+        //     }
+        //   });
+        // }
 
-      $('i.handshake.outline.icon.right.floated').click(function () {
-        $('#services').modal('show');
-      });
+        $('#search-people').keyup(function () {
+          //   filterPeople();
+          var searchText = $(this).val();
+          if (searchText.length > 0) {
+            $('.search-results .header:icontains(' + searchText + ')').closest('.card').addClass('positive');
+            $('.card.positive .header').not(':icontains(' + searchText + ')').removeClass('positive');
+            $('.search-results .header').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
+            $('.card.hidden .header:icontains(' + searchText + ')').removeClass('hidden').show();
+          } else {
+            $('.card.positive').removeClass('positive');
+            $('.card.hidden').removeClass('hidden').show();
+          }
+        });
 
-      $('i.check.square.outline.icon.right.floated').click(function () {
-        $('#vettings').modal('show');
-      });
+      })
 
-      $('#context1 .menu .item').tab({
-        context: $('#context1'),
-      });
+    $('i.handshake.outline.icon.right.floated').click(function () {
+      $('#services').modal('show');
+    });
 
-      $('i.clock.outline.icon.right.floated').click(function () {
-        $('#availability').modal('show');
-      });
+    $('i.check.square.outline.icon.right.floated').click(function () {
+      $('#vettings').modal('show');
+    });
 
-      $('i.comment.outline.icon.right.floated').click(function () {
-        $('#reviews').modal('show');
-      });
+    $('#context1 .menu .item').tab({
+      context: $('#context1'),
+    });
 
-      $('.ui.accordion').accordion({ exclusive: false });
+    $('i.clock.outline.icon.right.floated').click(function () {
+      $('#availability').modal('show');
+    });
 
-      $('.ui.rating').rating();
+    $('i.calendar.minus.outline.icon.right.floated').click(function () {
+      $('#vacation_calendar').modal('show');
+    });
 
-    </script>
 
-    {% endblock %}
+    $('i.comment.outline.icon.right.floated').click(function () {
+      $('#reviews').modal('show');
+    });
+
+    $('.ui.accordion').accordion({ exclusive: false });
+
+    $('.ui.rating').rating();
+
+  </script>
+
+  {% endblock %}
