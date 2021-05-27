@@ -36,8 +36,8 @@ class Member(db.Model):
     volunteer_notes = db.Column(db.Text)
     # Notes about this member that only the staffers can see.
     staffer_notes = db.Column(db.Text)
-    requests = db.relationship('Request', backref='member', lazy='dynamic')
-    reviews_given = db.relationship('Review', backref='member', lazy='dynamic')
+    # requests = db.relationship('Request', backref='member', lazy='dynamic')
+    # reviews_given = db.relationship('Review', backref='member', lazy='dynamic')
 
     @staticmethod
     def generate_fake(count=100, **kwargs):
@@ -52,12 +52,13 @@ class Member(db.Model):
         seed()
         for i in range(count):
             m = Member(
+                member_number=1,
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
                 gender=choice(['Male', 'Female', 'Unspecified', 'Does Not Wish to Answer']),
                 birthdate=datetime.strptime(
                     fake.date(), "%Y-%m-%d").date(),
-                primary_address_id=-1,
+                primary_address_id=1,
                 primary_phone_number=fake.phone_number(),
                 secondary_phone_number=choice([fake.phone_number(), None]),
                 email_address=choice([fake.email(), None]),
@@ -71,7 +72,8 @@ class Member(db.Model):
             try:
                 db.session.commit()
             except IntegrityError:
+                print("ERROR")
                 db.session.rollback()
 
     def __repr__(self):
-        return f"Member('{self.first_name}' , '{self.last_name}','{self.email_address}')"
+        return f"Member('{self.first_name}' , '{self.last_name}')"

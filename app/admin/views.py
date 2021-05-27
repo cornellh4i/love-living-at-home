@@ -373,12 +373,34 @@ def create_transportation_request():
 @login_required
 @admin_required
 def invite_member(member_id = None):
+    import datetime
     """Page for member management."""
     member = None
     form = MemberManager()
     if member_id is not None: 
         member = Member.query.filter_by(id=member_id).first()
-        form = MemberManager(first_name = member.first_name, last_name = member.last_name)
+        # get the address information from Address table
+        primary_address=Address.query.filter_by(id=member.primary_address_id).first()
+        primary_address1 = primary_address.street_address
+        primary_city=primary_address.city
+        primary_state=primary_address.state
+        primary_zip_code=primary_address.zipcode
+        primary_metro_area=primary_address.metro_area
+        form = MemberManager(
+            first_name=member.first_name, 
+            last_name=member.last_name,
+            member_number=member.member_number,
+            gender=member.gender,
+            birthdate=member.birthdate,
+            primary_address1=primary_address1,
+            primary_city=primary_city,
+            primary_state=primary_state,
+            primary_zip_code=primary_zip_code,
+            primary_metro_area=primary_metro_area,
+            primary_phone_number=member.primary_phone_number,
+            preferred_contact_method=member.preferred_contact_method,
+            membership_expiration_date=member.membership_expiration_date,
+        )
         
     if form.validate_on_submit():
         secondary_address = False
@@ -409,30 +431,58 @@ def invite_member(member_id = None):
         if secondary_address:
             db.session.add(secondary_address)
             db.session.commit()
-        member = Member(salutation=form.salutation.data,
-                        primary_address_id=address.id,
-                        secondary_address_id=secondary_address.id if secondary_address else None,
-                        metro_area_id=metro.id,
-                        first_name=form.first_name.data,
-                        middle_initial=form.middle_initial.data,
-                        last_name=form.last_name.data,
-                        preferred_name=form.preferred_name.data,
-                        gender=form.gender.data,
-                        birthdate=form.birthdate.data,
-                        primary_phone_number=form.primary_phone_number.data,
-                        secondary_phone_number=form.secondary_phone_number.data,
-                        email_address=form.email.data,
-                        preferred_contact_method=form.preferred_contact_method.data,
-                        emergency_contact_name=form.emergency_contact_name.data,
-                        emergency_contact_phone_number=form.emergency_contact_phone_number.data,
-                        emergency_contact_email_address=form.emergency_contact_email_address.data,
-                        emergency_contact_relation=form.emergency_contact_relationship.data,
-                        membership_expiration_date=form.expiration_date.data,
-                        member_number=form.member_number.data,
-                        volunteer_notes=form.volunteer_notes.data,
-                        staffer_notes=form.staffer_notes.data)
-        db.session.add(member)
-        db.session.commit()
+        
+        if member is not None:
+            # updated_member = member
+            member.salutation=form.salutation.data,
+            member.primary_address_id=int(address.id)
+            member.secondary_address_id=secondary_address.id if secondary_address else None,
+            member.metro_area_id=metro.id,
+            member.first_name=form.first_name.data,
+            member.middle_initial=form.middle_initial.data,
+            member.last_name=form.last_name.data,
+            member.preferred_name=form.preferred_name.data,
+            member.gender=form.gender.data,
+            member.birthdate=form.birthdate.data,
+            member.primary_phone_number=form.primary_phone_number.data,
+            member.secondary_phone_number=form.secondary_phone_number.data,
+            member.email_address=form.email.data,
+            member.preferred_contact_method=form.preferred_contact_method.data,
+            member.emergency_contact_name=form.emergency_contact_name.data,
+            member.emergency_contact_phone_number=form.emergency_contact_phone_number.data,
+            member.emergency_contact_email_address=form.emergency_contact_email_address.data,
+            member.emergency_contact_relation=form.emergency_contact_relationship.data,
+            member.membership_expiration_date=form.membership_expiration_date.data,
+            member.member_number=form.member_number.data,
+            member.volunteer_notes=form.volunteer_notes.data,
+            member.staffer_notes=form.staffer_notes.data
+            db.session.add(member)
+            db.session.commit()
+        else:
+            member = Member(salutation=form.salutation.data,
+                            primary_address_id=address.id,
+                            secondary_address_id=secondary_address.id if secondary_address else None,
+                            metro_area_id=metro.id,
+                            first_name=form.first_name.data,
+                            middle_initial=form.middle_initial.data,
+                            last_name=form.last_name.data,
+                            preferred_name=form.preferred_name.data,
+                            gender=form.gender.data,
+                            birthdate=form.birthdate.data,
+                            primary_phone_number=form.primary_phone_number.data,
+                            secondary_phone_number=form.secondary_phone_number.data,
+                            email_address=form.email.data,
+                            preferred_contact_method=form.preferred_contact_method.data,
+                            emergency_contact_name=form.emergency_contact_name.data,
+                            emergency_contact_phone_number=form.emergency_contact_phone_number.data,
+                            emergency_contact_email_address=form.emergency_contact_email_address.data,
+                            emergency_contact_relation=form.emergency_contact_relationship.data,
+                            membership_expiration_date=form.membership_expiration_date.data,
+                            member_number=form.member_number.data,
+                            volunteer_notes=form.volunteer_notes.data,
+                            staffer_notes=form.staffer_notes.data)
+            db.session.add(member)
+            db.session.commit()
         flash('Member {} successfully created'.format(form.first_name.data),
               'form-success')
     return render_template('admin/people_manager/member_manager.html', form=form)

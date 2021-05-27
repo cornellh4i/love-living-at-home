@@ -260,7 +260,8 @@ class MemberManager(FlaskForm):
                          validators=[InputRequired()])
 
     primary_country = StringField('Country', default="United States")
-
+    
+    # One Address object:
     primary_address1 = StringField('Street address or P.O. Box',
                                    validators=[InputRequired(),
                                                Length(max=200)])
@@ -301,18 +302,18 @@ class MemberManager(FlaskForm):
                                        validators=[Optional()])
     
     # Contact Information
-    primary_phone_number = IntegerField('Primary Phone Number',
+    primary_phone_number = StringField('Primary Phone Number',
                                  widget=widgets.Input(input_type="tel"),
                                  validators=[InputRequired()])
-    secondary_phone_number = IntegerField('Secondary Phone Number',
+    secondary_phone_number = StringField('Secondary Phone Number',
                                    widget=widgets.Input(input_type="tel"),
                                    validators=[Optional()])
     email = EmailField('Email',
                        validators=[Optional(),
                                    Length(1, 64),
                                    Email()])
-    preferred_contact_method = RadioField('Preferred Contact Method *', \
-        choices=[('phone', 'Phone'), ('email', 'Email'), ('phone_and_email', \
+    preferred_contact_method = RadioField('Preferred Contact Method *', 
+        choices=[('phone', 'Phone'), ('email', 'Email'), ('phone and email', 
             'Phone and Email')])
     
     # Emergency Contact Information
@@ -330,9 +331,9 @@ class MemberManager(FlaskForm):
                              Length(1, 64),
                              Email()])
 
-    expiration_date = DateField("Member Expiration Date: ", validators=[
-        InputRequired()])
-    member_number = IntegerField(validators=[Optional()])
+    membership_expiration_date = DateField("Member Expiration Date: ", 
+        validators=[InputRequired()])
+    member_number = IntegerField(validators=[InputRequired()])
     volunteer_notes = TextAreaField('Notes for Volunteers',
                                     validators=[Optional(),
                                                 Length(max=500)])
@@ -409,7 +410,7 @@ class VolunteerManager(FlaskForm):
                                    Length(1, 64),
                                    Email()])
     contact_preference = RadioField('Preferred Contact Method', choices=[(
-        'phone', "Phone"), ('email', "Email"), ('phone_and_email', "Phone and Email")])
+        'phone', "Phone"), ('email', "Email"), ('phone and email', "Phone and Email")])
 
     notes = TextAreaField("Notes for Office Staff", validators=[Optional()])
 
