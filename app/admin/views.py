@@ -368,8 +368,8 @@ def create_transportation_request():
                            title='Transportation Request',
                            form=form)
 
-@admin.route('/invite-member', methods=['GET'])
-@admin.route('/invite-member/<int:member_id>', methods=['GET'])
+@admin.route('/invite-member', methods=['GET', 'POST'])
+@admin.route('/invite-member/<int:member_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def invite_member(member_id = None):
@@ -418,9 +418,9 @@ def invite_member(member_id = None):
                         last_name=form.last_name.data,
                         preferred_name=form.preferred_name.data,
                         gender=form.gender.data,
-                        birthdate=form.birthday.data,
-                        primary_phone_number=form.primary_phone.data,
-                        secondary_phone_number=form.cell_number.data,
+                        birthdate=form.birthdate.data,
+                        primary_phone_number=form.primary_phone_number.data,
+                        secondary_phone_number=form.secondary_phone_number.data,
                         email_address=form.email.data,
                         preferred_contact_method=form.preferred_contact_method.data,
                         emergency_contact_name=form.emergency_contact_name.data,

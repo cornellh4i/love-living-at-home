@@ -308,7 +308,7 @@ class MemberManager(FlaskForm):
                                    widget=widgets.Input(input_type="tel"),
                                    validators=[Optional()])
     email = EmailField('Email',
-                       validators=[InputRequired(),
+                       validators=[Optional(),
                                    Length(1, 64),
                                    Email()])
     preferred_contact_method = RadioField('Preferred Contact Method *', \
