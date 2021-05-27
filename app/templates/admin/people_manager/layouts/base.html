@@ -27,7 +27,8 @@ description=None, icon=None) %}
   {% else %}
   {% set name = m.first_name + ' ' + m.last_name %}
   {% endif %}
-  <div class="header">{{ name }}
+  <div class="header">{{ name + " (" + m.member_number|string + ")"}}
+    <i class="trash alternate outline icon right floated" style="cursor: pointer"></i>
     <i class="pencil icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.invite_member', member_id=m.id) }}';">
     </i>
