@@ -37,6 +37,7 @@ const dictionaryMonth =
 const highlightClass = 'highlight';
 
 $(document).ready(function (e) {
+    console.log("Document ready")
     today = new Date();
     currentMonth = today.getMonth();
     currentYear = today.getFullYear();
@@ -58,6 +59,7 @@ function previous() {
 }
 
 function change() {
+    window.alert("change() called");
     currentYear = parseInt(selectYear.value);
     currentMonth = parseInt(selectMonth.value);
     loadControl(currentMonth, currentYear);
@@ -65,7 +67,7 @@ function change() {
 
 
 function loadControl(month, year) {
-
+    console.log("loadControl")
     addMonths(month);
     addYears(year);
 
@@ -74,11 +76,8 @@ function loadControl(month, year) {
     // body of the calendar
     var tbl = document.querySelector("#calendarBody");
     if (tbl) {
-
-
         // clearing all previous cells
         tbl.innerHTML = "";
-
 
         selectYear.value = year;
         selectMonth.value = month;
@@ -180,16 +179,20 @@ function daysInMonth(iMonth, iYear) {
 
 // adds the months to the dropdown
 function addMonths(selectedMonth) {
+    console.log("Adding months");
     var select = document.getElementById("month");
     if (select) {
+        console.log("Select found");
         if (months.length > 0) {
             return;
         }
 
         for (var month = startMonth; month <= endMonth; month++) {
+            console.log(month);
             var monthInstance = dictionaryMonth[month];
             months.push(monthInstance[0]);
             select.options[select.options.length] = new Option(monthInstance[0], monthInstance[1], parseInt(monthInstance[1]) === parseInt(selectedMonth));
+            console.log(select.options);
         }
     }
 }

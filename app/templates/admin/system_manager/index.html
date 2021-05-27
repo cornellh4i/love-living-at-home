@@ -202,53 +202,6 @@ description=None, icon=None) %}
     </div>
   </div>
 
-  <div>
-    <h1>Calendar Integration</h1>
-    <div id="parent" class="container" style="display:none;">
-      <div class="ui cards">
-        <div class="ui card">
-          <div class="ui header mini form" id="calendar-header">
-            <div class="four fields">
-              <div class="field previous">
-                <a href="#" id="previous" onclick="previous()">
-                  <i class="ui icon angle left" aria-hidden="true"></i>
-                </a>
-              </div>
-              <div class="field">
-                <select class="ui fluid" name="month" id="month" onchange="change()"></select>
-              </div>
-              <div class="field">
-                <select class="ui fluid" name="year" id="year" onchange="change()"></select>
-              </div>
-              <div class="field next">
-                <a href="#" id="next" onclick="next()">
-                  <i class="ui icon angle right" aria-hidden="true"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="description">
-            <table id="calendar">
-              <thead>
-                <tr>
-                  <th>S</th>
-                  <th>M</th>
-                  <th>T</th>
-                  <th>W</th>
-                  <th>T</th>
-                  <th>F</th>
-                  <th>S</th>
-                </tr>
-              </thead>
-              <tbody id="calendarBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <div id="selectedValues" class="ui container date-values" readonly></div>
 
 </div>
 
