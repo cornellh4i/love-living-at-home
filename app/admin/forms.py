@@ -12,6 +12,17 @@ from app import db
 from app.models import Role, User, ServiceCategory, Service, Staffer, RequestStatus, ContactLogPriorityType, Member, Address, RequestDurationType
 from datetime import date
 
+salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
+                   ("mr", "Mr")]    
+genders = [("female", "Female"), ("male", "Male"), ("unspecified",
+                                    "Unspecified"), ("no_answer", "Does not wish to answer")]
+
+countries = [('united_states', 'United States'), ('b', "B"), ('c', 'C')]
+states = [("ny", "NY")]
+time_zones = [("est", "Eastern Time (US & Canada) (UTC-05:00)"),
+            ("b", "B"), ("c", "C")]
+metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
+
 class ChangeUserEmailForm(FlaskForm):
     email = EmailField('New email',
                        validators=[InputRequired(),
@@ -228,33 +239,25 @@ class MultiCheckboxField(SelectMultipleField):
 
 
 class MemberManager(FlaskForm):
-    first_name = StringField('First name *',
+    first_name = StringField('First Name',
                              validators=[InputRequired(),
                                          Length(1, 64)])
     middle_initial = StringField('Middle Initial',
                                  validators=[Length(min=0, max=1)])
-    last_name = StringField('Last name *',
+    last_name = StringField('Last Name',
                             validators=[InputRequired(),
                                         Length(1, 64)])
     preferred_name = StringField(
         'Preferred Name', validators=[Optional(),
                                       Length(min=1, max=30)])
-    salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
-                   ("mr", "Mr")]
+    
     salutation = SelectField("Salutation", choices=salutations)
 
-    birthday = DateField("Birthday ", validators=[
+    birthdate = DateField("Birthdate", validators=[
         InputRequired()])
-    genders = [("female", "Female"), ("male", "Male"), ("unspecified",
-                                                        "Unspecified"), ("no_answer", "Does not wish to answer")]
-    gender = SelectField("Gender *", choices=genders,
-                         validators=[InputRequired()])
 
-    countries = [('united_states', 'United States'), ('b', "B"), ('c', 'C')]
-    states = [("ny", "NY")]
-    time_zones = [("est", "Eastern Time (US & Canada) (UTC-05:00)"),
-                  ("b", "B"), ("c", "C")]
-    metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
+    gender = SelectField("Gender", choices=genders,
+                         validators=[InputRequired()])
 
     primary_country = SelectField('Country', choices=countries)
     primary_address1 = StringField('Street address or P.O. Box',
@@ -273,9 +276,7 @@ class MemberManager(FlaskForm):
     primary_metro_area = SelectField('Metro Area',
                                      choices=metro_areas,
                                      validators=[Optional()])
-    primary_phone = IntegerField('Phone Number',
-                                 widget=widgets.Input(input_type="tel"),
-                                 validators=[InputRequired()])
+
 
     secondary_as_primary_checkbox = BooleanField(
         'Use this address instead of the primary address',
@@ -297,34 +298,34 @@ class MemberManager(FlaskForm):
     secondary_metro_area = SelectField('Metro Area',
                                        choices=metro_areas,
                                        validators=[Optional()])
-    secondary_phone = IntegerField('Phone Number',
+    
+    # Contact Information
+    primary_phone_number = IntegerField('Primary Phone Number',
+                                 widget=widgets.Input(input_type="tel"),
+                                 validators=[InputRequired()])
+    secondary_phone_number = IntegerField('Secondary Phone Number',
                                    widget=widgets.Input(input_type="tel"),
                                    validators=[Optional()])
-
-    home_phone_number = IntegerField('Home Phone #',
-                                     widget=widgets.Input(input_type="tel"),
-                                     validators=[Optional()])
-    cell_number = IntegerField('Cell Phone Number',
-                               widget=widgets.Input(input_type="tel"),
-                               validators=[Optional()])
     email = EmailField('Email',
                        validators=[InputRequired(),
                                    Length(1, 64),
                                    Email()])
-
-    preferred_contact_method = RadioField(choices=[(
-        'phone', 'Phone'), ('email', 'Email'), ('phone_and_email', 'Phone and Email')])
+    preferred_contact_method = RadioField('Preferred Contact Method *', \
+        choices=[('phone', 'Phone'), ('email', 'Email'), ('phone_and_email', \
+            'Phone and Email')])
+    
+    # Emergency Contact Information
     emergency_contact_name = StringField(
         'Contact Name', validators=[Optional(),
                                     Length(1, 64)])
     emergency_contact_relationship = StringField(
-        'Relationship', validators=[Optional(), Length(1, 64)])
+        'Relationship to Member', validators=[Optional(), Length(1, 64)])
     emergency_contact_phone_number = IntegerField(
-        'Phone Number',
+        'Phone Number of Contact',
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()])
     emergency_contact_email_address = EmailField(
-        'Email', validators=[Optional(),
+        'Email Address of Contact', validators=[Optional(),
                              Length(1, 64),
                              Email()])
 
@@ -425,12 +426,12 @@ class AddServiceVetting(FlaskForm):
 
 
 class ContractorManager(FlaskForm):
-    first_name = StringField('First name *',
+    first_name = StringField('First name',
                              validators=[InputRequired(),
                                          Length(1, 64)])
     middle_initial = StringField('Middle Initial',
                                  validators=[Length(min=0, max=1)])
-    last_name = StringField('Last name *',
+    last_name = StringField('Last name',
                             validators=[InputRequired(),
                                         Length(1, 64)])
     salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
