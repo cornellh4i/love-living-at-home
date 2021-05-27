@@ -439,9 +439,10 @@ def invite_member(member_id = None):
 
 
 @admin.route('/invite-volunteer', methods=['GET', 'POST'])
+@admin.route('/invite-volunteer/<int:volunteer_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def invite_volunteer():
+def invite_volunteer(volunteer_id=None):
     """Invites a user to create a volunteer account"""
     service_categories = sorted([(category.name, category.request_type_id, category.id)
                                 for category in ServiceCategory.query.all()],
@@ -461,7 +462,14 @@ def invite_volunteer():
             category[0], choices=choices)
     for key, value in category_dict.items():
         setattr(VolunteerManager, key, value)
+    
+    # for editing existing Volunteer profiles
+    volunteer = None
     form = VolunteerManager()
+    if volunteer_id is not None:
+        volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
+        form = VolunteerManager(first_name=volunteer.first_name, 
+        last_name=volunteer.last_name)
     service_ids = []
     if form.validate_on_submit():
         for key, value in category_dict.items():

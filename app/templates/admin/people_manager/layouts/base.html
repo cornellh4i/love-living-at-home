@@ -24,7 +24,8 @@ description=None, icon=None) %}
 <div class="content">
   <div class="header">{{m.first_name + ' ' + m.last_name}}
     <i class="pencil icon right floated" style="cursor: pointer"
-      onclick="window.location.href = '{{ url_for('admin.invite_member', member_id=m.id) }}';"></i>
+      onclick="window.location.href = '{{ url_for('admin.invite_member', member_id=m.id) }}';">
+    </i>
   </div>
 </div>
 {% endmacro %}
@@ -36,7 +37,9 @@ description=None, icon=None) %}
     <i class="clock outline icon right floated" style="cursor: pointer"></i>
     <i class="check square outline icon right floated" style="cursor: pointer"></i>
     <i class="handshake outline icon right floated" style="cursor: pointer"></i>
-    <i class="pencil icon right floated"></i>
+    <i class="pencil icon right floated" style="cursor: pointer"
+      onclick="window.location.href = '{{ url_for('admin.invite_volunteer', volunteer_id=v.id) }}';">
+    </i>
   </div>
 </div>
 <div class="content">~info about person~</div>
