@@ -11,7 +11,7 @@ class Volunteer(db.Model):
     last_name = db.Column(db.String(80), nullable=False)
     preferred_name = db.Column(db.String(80))
     gender = db.Column(db.String(80))
-    birthday = db.Column(db.Date, nullable=False)
+    birthdate = db.Column(db.Date, nullable=False)
     ## Contact Information
     primary_address_id = db.Column(db.Integer(),
                           db.ForeignKey("address.id"),
@@ -59,12 +59,12 @@ class Volunteer(db.Model):
             v = Volunteer(
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
-                birthday=datetime.strptime(
+                birthdate=datetime.strptime(
                     fake.date(), "%Y-%m-%d").date(),
-                primary_address_id=-1,
+                primary_address_id=1,
                 primary_phone_number=fake.phone_number(),
                 email_address=choice([fake.email(), None]),
-                type_id=choice([0, 1, 2]),
+                type_id=choice([0, 1]),
                 rating=random() * 5.0,  
                 is_fully_vetted=choice([True, False]),
                 vettings=choice([fake.text(), None]),
@@ -90,7 +90,7 @@ class VolunteerType(db.Model):
 
     @staticmethod
     def insert_types():
-        types = ['Member Volunteer', 'Non-Member Volunteer', 'Local Resource']
+        types = ['Member Volunteer', 'Non-Member Volunteer']
         for t in types:
             volunteer_type = VolunteerType.query.filter_by(name=t).first()
             if volunteer_type is None:

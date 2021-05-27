@@ -347,8 +347,6 @@ class MemberManager(FlaskForm):
 
 
 class VolunteerManager(FlaskForm):
-    salutations = [("", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
-                   ("mr", "Mr")]
     salutation = SelectField("Salutation", choices=salutations)
 
     first_name = StringField(
@@ -359,15 +357,12 @@ class VolunteerManager(FlaskForm):
     last_name = StringField(
         'Last Name', validators=[InputRequired(),
                                  Length(min=1, max=30)])
-    salutations = [("", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
-                   ("mr", "Mr")]
-    salutation = SelectField("Salutation", choices=salutations)
 
     gender = SelectField("Gender",
                          validators=[InputRequired()],
                          choices=[("male", "Male"), ('female', "Female"), ("unspecified", "Unspecified"), ("no_answer", "Do not wish to answer")])
 
-    birthday = DateField("Birthday ", validators=[InputRequired()])
+    birthdate = DateField("Birthdate ", validators=[InputRequired()])
     # make this a stringfield or select field?
     preferred_name = StringField(
         'Preferred Name', validators=[Optional(),
@@ -394,7 +389,7 @@ class VolunteerManager(FlaskForm):
                                     Length(1, 64)])
     emergency_contact_relationship = StringField(
         'Relationship', validators=[Optional(), Length(1, 64)])
-    emergency_contact_phone_number = IntegerField(
+    emergency_contact_phone_number = StringField(
         'Phone Number',
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()])
@@ -403,13 +398,15 @@ class VolunteerManager(FlaskForm):
                              Length(1, 64),
                              Email()])
     # now under contact info
-    home_phone = IntegerField("Primary Phone Number", widget=widgets.Input(input_type="tel"),
+    primary_phone_number = StringField("Primary Phone Number", widget=widgets.Input(input_type="tel"),
                               validators=[InputRequired()])
-    email = EmailField('Email',
-                       validators=[InputRequired(),
+    secondary_phone_number = StringField("Secondary Phone Number", widget=widgets.Input(input_type="tel"),
+                              validators=[Optional()])
+    email_address = EmailField('Email',
+                       validators=[Optional(),
                                    Length(1, 64),
                                    Email()])
-    contact_preference = RadioField('Preferred Contact Method', choices=[(
+    preferred_contact_method = RadioField('Preferred Contact Method', choices=[(
         'phone', "Phone"), ('email', "Email"), ('phone and email', "Phone and Email")])
 
     notes = TextAreaField("Notes for Office Staff", validators=[Optional()])

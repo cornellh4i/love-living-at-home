@@ -37,8 +37,13 @@ description=None, icon=None) %}
 {% endmacro %}
 
 {% macro volunteer_card(v) %}
+{% if v.middle_initial %}
+{% set name = v.first_name + ' ' + v.middle_initial + '. ' + v.last_name %}
+{% else %}
+{% set name = v.first_name + ' ' + v.last_name %}
+{% endif %}
 <div class="content">
-  <div class="header">{{v.first_name + ' ' + v.last_name}}
+  <div class="header">{{ name }}
     <i class=" comment outline icon right floated" style="cursor: pointer"></i>
     <i class="clock outline icon right floated" style="cursor: pointer"></i>
     <i class="check square outline icon right floated" style="cursor: pointer"></i>
@@ -48,7 +53,30 @@ description=None, icon=None) %}
     </i>
   </div>
 </div>
-<div class="content">~info about person~</div>
+<div class="content ui grid" style="padding:0">
+
+  <div class="four wide column">
+    <div class="ui label">
+      {% if v.type_id == 0 %}
+      Member Volunteer
+      {% else %}
+      Non-Member Volunteer
+      {% endif %}
+    </div>
+
+  </div>
+  <div class="four wide column">
+    {% if v.is_fully_vetted %}
+    <div class="ui label green">
+      <i class="check icon"></i>Fully Vetted
+    </div>
+    {% else %}
+    <div class="ui label red">
+      <i class="x icon"></i>Not Fully Vetted
+    </div>
+    {% endif %}
+  </div>
+</div>
 {% endmacro %}
 
 {% macro local_resource_card(lr) %}

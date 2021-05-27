@@ -521,8 +521,25 @@ def invite_volunteer(volunteer_id=None):
     form = VolunteerManager()
     if volunteer_id is not None:
         volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
-        form = VolunteerManager(first_name=volunteer.first_name, 
-        last_name=volunteer.last_name)
+        primary_address=Address.query.filter_by(id=volunteer.primary_address_id).first()
+        primary_address1 = primary_address.street_address
+        primary_city=primary_address.city
+        primary_state=primary_address.state
+        primary_zip_code=primary_address.zipcode
+        primary_metro_area=primary_address.metro_area
+        form = VolunteerManager(
+            first_name=volunteer.first_name, 
+            last_name=volunteer.last_name,
+            gender=volunteer.gender,
+            birthdate=volunteer.birthdate,
+            primary_address1=primary_address1,
+            primary_city=primary_city,
+            primary_state=primary_state,
+            primary_zip_code=primary_zip_code,
+            primary_metro_area=primary_metro_area,
+            primary_phone_number=volunteer.primary_phone_number,
+            preferred_contact_method=volunteer.preferred_contact_method)
+
     service_ids = []
     if form.validate_on_submit():
         for key, value in category_dict.items():
@@ -537,29 +554,58 @@ def invite_volunteer(volunteer_id=None):
                           city=form.primary_city.data)
         db.session.add(address)
         db.session.commit()
-        volunteer = Volunteer(
-            salutation=form.salutation.data,
-            first_name=form.first_name.data,
-            middle_initial=form.middle_initial.data,
-            last_name=form.last_name.data,
-            preferred_name=form.preferred_name.data,
-            birthday=form.birthday.data,
-            gender=form.gender.data,
-            primary_address_id = address.id,
-            primary_phone_number=form.home_phone.data,
-            email_address=form.email.data,
-            emergency_contact_name=form.emergency_contact_name.data,
-            emergency_contact_phone_number=form.emergency_contact_phone_number.data,
-            emergency_contact_email_address=form.emergency_contact_email_address.data,
-            emergency_contact_relationship = form.emergency_contact_relationship.data,
-            preferred_contact_method=form.contact_preference.data,
-            type_id=2,  # What should we set volunteer type id as???
-            general_notes=form.notes.data,
-            rating=1,  # Why is this not null before the user even creates a volunteer?
-            is_fully_vetted=False, #What should be default? 
-        )
-        db.session.add(volunteer)
-        db.session.commit()
+
+        if volunteer is not None:
+            updated_volunteer = volunteer
+            updated_volunteer.salutation=form.salutation.data
+            updated_volunteer.primary_address_id=int(address.id)
+            # updated_volunteer.secondary_address_id=secondary_address.id if secondary_address else None
+            # updated_volunteer.metro_area_id=metro.id
+            updated_volunteer.first_name=form.first_name.data
+            updated_volunteer.middle_initial=form.middle_initial.data
+            updated_volunteer.last_name=form.last_name.data
+            updated_volunteer.preferred_name=form.preferred_name.data
+            updated_volunteer.gender=form.gender.data
+            updated_volunteer.birthdate=form.birthdate.data
+            updated_volunteer.primary_phone_number=form.primary_phone_number.data
+            updated_volunteer.secondary_phone_number=form.secondary_phone_number.data
+            updated_volunteer.email_address=form.email_address.data
+            updated_volunteer.preferred_contact_method=form.preferred_contact_method.data
+            updated_volunteer.emergency_contact_name=form.emergency_contact_name.data
+            updated_volunteer.emergency_contact_phone_number=form.emergency_contact_phone_number.data
+            updated_volunteer.emergency_contact_email_address=form.emergency_contact_email_address.data
+            updated_volunteer.emergency_contact_relation=form.emergency_contact_relationship.data
+            updated_volunteer.general_notes=form.notes.data
+            db.session.add(updated_volunteer)
+            db.session.commit()
+            flash('Volunteer {} successfully updated'.format(form.first_name.data),
+              'success')
+        else:
+            volunteer = Volunteer(
+                salutation=form.salutation.data,
+                first_name=form.first_name.data,
+                middle_initial=form.middle_initial.data,
+                last_name=form.last_name.data,
+                preferred_name=form.preferred_name.data,
+                birthday=form.birthday.data,
+                gender=form.gender.data,
+                primary_address_id = address.id,
+                primary_phone_number=form.primary_phone.data,
+                email_address=form.email.data,
+                emergency_contact_name=form.emergency_contact_name.data,
+                emergency_contact_phone_number=form.emergency_contact_phone_number.data,
+                emergency_contact_email_address=form.emergency_contact_email_address.data,
+                emergency_contact_relationship = form.emergency_contact_relationship.data,
+                preferred_contact_method=form.contact_preference.data,
+                type_id=0,  # What should we set volunteer type id as???
+                general_notes=form.notes.data,
+                rating=1,  # Why is this not null before the user even creates a volunteer?
+                is_fully_vetted=False, #What should be default? 
+            )
+            db.session.add(volunteer)
+            db.session.commit()
+        return redirect(url_for('admin.people_manager'))
+
         for service in service_ids:
             provided_service = ProvidedService(
                 service_id=service, volunteer_id=volunteer.id)

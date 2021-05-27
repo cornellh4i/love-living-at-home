@@ -4,6 +4,7 @@
     background: white;
     color: indigo;
   }
+
   .ui.item.menu .active.item {
     background: indigo;
     color: white;
@@ -14,10 +15,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 %} {% block content %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
-    <a
-      class="ui basic compact button"
-      href="{{ url_for('admin.people_manager') }}"
-    >
+    <a class="ui basic compact button" href="{{ url_for('admin.people_manager') }}">
       <i class="caret left icon"></i>
       Back to dashboard
     </a>
@@ -34,15 +32,15 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     f.begin_form(form, flashes) }}
 
     <div class="three fields">
-      {{ f.render_form_field(form.first_name) }} 
-      {{ f.render_form_field(form.middle_initial) }} 
+      {{ f.render_form_field(form.first_name) }}
+      {{ f.render_form_field(form.middle_initial) }}
       {{f.render_form_field(form.last_name) }}
     </div>
-    {{ f.render_form_field(form.preferred_name) }} 
+    {{ f.render_form_field(form.preferred_name) }}
     <div class="three fields">
-     {{f.render_form_field(form.salutation) }}
-     {{f.render_form_field(form.gender)}}
-     {{f.render_form_field(form.birthday)}}
+      {{f.render_form_field(form.salutation) }}
+      {{f.render_form_field(form.gender)}}
+      {{f.render_form_field(form.birthdate)}}
     </div>
 
     <div class="ui header">Primary Address</div>
@@ -69,14 +67,16 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     {{ f.render_form_field(form.emergency_contact_email_address) }}
 
     <div class="ui header">Contact Information</div>
-     {{
-    f.render_form_field(form.home_phone) }} {{ f.render_form_field(form.email)
+    {{ f.render_form_field(form.primary_phone_number) }}
+    {{ f.render_form_field(form.secondary_phone_number) }}
+
+    {{ f.render_form_field(form.email_address)
     }}
     <div class="inline fields">
-    {{ f.render_form_field(form.contact_preference) }} 
-  </div>
+      {{ f.render_form_field(form.preferred_contact_method) }}
+    </div>
 
-<!-- 
+    <!-- 
     <div class="field">
       <i class="ui inverted violet fluid button" id="show-services">
         Services
@@ -85,18 +85,18 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 
     <!-- <div class="ui modal" id="services">
       <i class="close icon"></i> -->
-    <div class = "field">
+    <div class="field">
       <div class="ui header">Services Provided By</div>
       <div class="ui styled fluid accordion">
         {% for key, value in category_dict.items() %}
-          <div class="title">
-            <i class="dropdown icon"></i>
-            {{ key }}
-          </div>
-          <div class="content">
+        <div class="title">
+          <i class="dropdown icon"></i>
+          {{ key }}
+        </div>
+        <div class="content">
           {{ form|attr(key)() }}
-          </div>
-          {% endfor %}
+        </div>
+        {% endfor %}
       </div>
     </div>
     <!-- </div> -->
@@ -106,8 +106,8 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     f.form_message(flashes['warning'], header='Check your email.',
     class='warning') }} {{ f.form_message(flashes['info'], header='Information',
     class='info') }} {{ f.form_message(flashes['success'], header='Success!',
-    class='success') }} 
-    
+    class='success') }}
+
     {{f.render_form_field(form.submit)}} {{
     f.end_form() }} {% if form.password %} {{ check.password_check('password',
     0) }} {% endif %}
@@ -122,4 +122,3 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   $('.ui.accordion').accordion({ exclusive: false });
 </script>
 {% endblock %}
-
