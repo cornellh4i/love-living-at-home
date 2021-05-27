@@ -22,7 +22,12 @@ description=None, icon=None) %}
 
 {% macro member_card(m) %}
 <div class="content">
-  <div class="header">{{m.first_name + ' ' + m.last_name}}
+  {% if m.middle_initial %}
+  {% set name = m.first_name + ' ' + m.middle_initial + '. ' + m.last_name %}
+  {% else %}
+  {% set name = m.first_name + ' ' + m.last_name %}
+  {% endif %}
+  <div class="header">{{ name }}
     <i class="pencil icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.invite_member', member_id=m.id) }}';">
     </i>

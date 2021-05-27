@@ -36,8 +36,8 @@ class Member(db.Model):
     volunteer_notes = db.Column(db.Text)
     # Notes about this member that only the staffers can see.
     staffer_notes = db.Column(db.Text)
-    # requests = db.relationship('Request', backref='member', lazy='dynamic')
-    # reviews_given = db.relationship('Review', backref='member', lazy='dynamic')
+    requests = db.relationship('Request', backref='member', lazy='dynamic')
+    reviews_given = db.relationship('Review', backref='member', lazy='dynamic')
 
     @staticmethod
     def generate_fake(count=100, **kwargs):
@@ -76,4 +76,4 @@ class Member(db.Model):
                 db.session.rollback()
 
     def __repr__(self):
-        return f"Member('{self.first_name}' , '{self.last_name}')"
+        return f"Member('{self.member_number}')"
