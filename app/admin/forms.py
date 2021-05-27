@@ -259,7 +259,8 @@ class MemberManager(FlaskForm):
     gender = SelectField("Gender", choices=genders,
                          validators=[InputRequired()])
 
-    primary_country = SelectField('Country', choices=countries)
+    primary_country = StringField('Country', default="United States")
+
     primary_address1 = StringField('Street address or P.O. Box',
                                    validators=[InputRequired(),
                                                Length(max=200)])
@@ -281,7 +282,7 @@ class MemberManager(FlaskForm):
     secondary_as_primary_checkbox = BooleanField(
         'Use this address instead of the primary address',
         validators=[Optional()])
-    secondary_country = SelectField('Country', choices=countries)
+    secondary_country = StringField('Country', default="United States")
     secondary_address1 = StringField('Street address or P.O. Box',
                                      validators=[Optional(),
                                                  Length(max=200)])
