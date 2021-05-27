@@ -1,6 +1,88 @@
 {% extends "admin/request_manager/layouts/base.html" %}
 {% import 'macros/form_macros.html' as f %}
 
+{% macro request_card(request_num) %}
+<!-- <div class="request-card"> -->
+<!-- <div class="field">
+    <div class="request_number_box">
+      <div class="divleft"><b>Request #{{request_num}}</b></div>
+      <div class="divright"><b>Status: Confirmed</b></div>
+    </div>
+  </div>
+  <div class="field">
+    <div class="request_box" class="float-container">
+      <div class="field">
+        <div class="date_box"></div>
+        <div class="day_box">Saturday</div>
+        <div class="date_number_box">03/16</div>
+        <div class="time_box">2:40 PM - 3:20 PM</div>
+        <div class="name">Randy Warren</div>
+        <div class="service_provider">Service Provider:</div>
+        <div class="service_provider_name">Cheryl Lewis</div>
+        <div class="type">Type:</div>
+        <div class="small_text">Member's Home Request</div>
+        <div class="small_text">Coronavirus Support Phone Call</div>
+        <br> </br>
+        <div class="small_text">Created Date: 03/04/2021</div>
+        <div class="small_text">Modified Date: 03/05/2021</div>
+        <div><i class="check icon"></i></div>
+      </div>
+      <div class="divleft">
+      </div>
+      <div class="divleft">
+
+      </div>
+    </div>
+  </div>
+</div> -->
+<div class="ui one cards" style="margin-top:20px">
+  <div class="ui card">
+    <div class="content" style="background-color: burlywood;">
+      <div class="header">
+        Request #{{request_num}}
+        <div class="ui right floated ">
+          <div class="ui green label">Confirmed</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="content">
+      <div class="ui grid">
+        <div class="four wide column">
+          <div class="ui card">
+            <div class="content">
+              <div class="header">Saturday</div>
+            </div>
+            <div class="content">
+              <h2>03/16</h2>
+            </div>
+            <div class="extra content">
+              <h3>2:40 PM - 3:20 PM</h3>
+            </div>
+          </div>
+        </div>
+        <div class="six wide column">
+          <h2>Randy Warren</h2>
+          <h3><em>Volunteer:</em> Cheryl Lewis</h3>
+          <div class="ui label" style="margin-bottom: 5px">Member's Home</div>
+
+          <div class="ui label">Coronavirus Support Phone Call</div>
+        </div>
+        <div class="six wide column">
+          <div>
+            <b style="font-size:1.3em">Created Date:</b>
+            <p>03/04/2021</p>
+          </div>
+          <div style="margin-top: 10px">
+            <b style="font-size:1.3em">Modified Date:</b>
+            <p>03/05/2021</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
 {% block request_content %}
 
 <style>
@@ -490,47 +572,12 @@
         </select>
       </div>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-      <div class="field">
-        <div class="request_number_box">
-
-          <div class="divleft"><b>Request #6163</b></div>
-
-          <div class="divright"><b>Status: Confirmed</b></div>
-        </div>
-      </div>
-      <div class="field">
-        <div class="request_box" class="float-container">
-          <div class="field">
-            <div class="date_box"></div>
-            <div class="day_box">Saturday</div>
-            <div class="date_number_box">03/16</div>
-            <div class="time_box">2:40 PM - 3:20 PM</div>
-            <div class="name">Randy Warren</div>
-            <div class="service_provider">Service Provider:</div>
-            <div class="service_provider_name">Cheryl Lewis</div>
-            <div class="type">Type:</div>
-            <div class="small_text">Member's Home Request</div>
-            <div class="small_text">Coronavirus Support Phone Call</div>
-            <br> </br>
-            <div class="small_text">Created Date: 03/04/2021</div>
-            <div class="small_text">Modified Date: 03/05/2021</div>
-            <div class="vertical_line"></div>
-          </div>
-
-          <div class="divleft">
-
-          </div>
-          <div class="divleft">
-
-          </div>
-        </div>
-      </div>
     </div>
-
-    <!--<div class="divleft"><b>Request #{{request.id}}</b></div>-->
     {{f.end_form()}}
-    <!-- form.data-->
+    {{request_card(6163)}}
+
+
+</div>
 </div>
 
 {% endblock %}

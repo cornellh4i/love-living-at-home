@@ -12,7 +12,7 @@
 'success': get_flashed_messages(category_filter=['form-success'])
 } %}
 
-{{ f.begin_form(form, flashes) }}
+{{ f.begin_form(form, flashes, extra_classes="large") }}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
     <h2 class="ui center aligned header">
