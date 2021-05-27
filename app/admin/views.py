@@ -521,11 +521,17 @@ def invite_volunteer(volunteer_id=None):
 
 
 @admin.route('/invite-contractor', methods=['GET', 'POST'])
+@admin.route('/invite-contractor/<int:local_resource_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def invite_contractor():
+def invite_contractor(local_resource_id=None):
     """Page for contactor management."""
+    local_resource=None
     form = ContractorManager()
+    if local_resource_id is not None: 
+        local_resource = LocalResource.query.filter_by(id=local_resource_id).first()
+        form = ContractorManager(company_name=local_resource.company_name)
+        
     if form.validate_on_submit():
         address = None
         if form.primary_address1.data:

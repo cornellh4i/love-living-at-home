@@ -49,7 +49,7 @@ description=None, icon=None) %}
 <div class="content">
   <div class="header">{{lr.company_name}}
     <i class="pencil icon right floated" style="cursor: pointer"
-      onclick="window.location.href = '{{ url_for('admin.invite_contractor') }}';"></i>
+      onclick="window.location.href = '{{ url_for('admin.invite_contractor', local_resource_id=lr.id) }}';"></i>
   </div>
 </div>
 <div class="content">~info about local resource~</div>
