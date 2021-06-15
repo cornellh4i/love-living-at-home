@@ -1,38 +1,51 @@
 from .. import db
 
+NUM_VOLUNTEERS=100
 
 class Volunteer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ## Personal Information
+    salutation = db.Column(db.String(20))
     first_name = db.Column(db.String(80), nullable=False)
     middle_initial = db.Column(db.String(5))
     last_name = db.Column(db.String(80), nullable=False)
     preferred_name = db.Column(db.String(80))
     gender = db.Column(db.String(80))
-
+    birthdate = db.Column(db.Date, nullable=False)
     ## Contact Information
-    address_id = db.Column(db.Integer(),
-                           db.ForeignKey("address.id"),
-                           nullable=False)
+    primary_address_id = db.Column(db.Integer(),
+                          db.ForeignKey("address.id"),
+                          nullable=False)
+    secondary_address_id = db.Column(db.Integer(),
+                          db.ForeignKey("address.id"))
     metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
 
-    phone_number = db.Column(db.String(10), nullable=False)
-    email_address = db.Column(db.String(80), nullable=False)
+    primary_phone_number = db.Column(db.String(64), nullable=False)
+    secondary_phone_number = db.Column(db.String(10))
+
+    #organization_name = db.Column(db.String(80))
+    email_address = db.Column(db.String(80))
+    preferred_contact_method = db.Column(db.String(80), nullable=False) # One of: ['phone', 'email', 'phone and email'], implement as checkboxes
 
     ## Volunteer-Specific Information
     type_id = db.Column(db.Integer(),
                         db.ForeignKey("volunteer_type.id"),
                         nullable=False)
-    last_service_date = db.Column(db.Date(), nullable=False)  # Is this useful?
-    rating = db.Column(db.Integer(), nullable=False)
+                    
+    rating = db.Column(db.Float(), nullable=False)
     is_fully_vetted = db.Column(db.Boolean(), nullable=False)
-    preferred_contact_method_id = db.Column(db.Integer(),
-                                            db.ForeignKey("contact_method.id"),
-                                            nullable=False)
+    vettings = db.Column(db.Text)
+    
+    ## Emergency Contact Information
+    emergency_contact_name = db.Column(db.String(64))
+    emergency_contact_phone_number = db.Column(db.String(64))
+    emergency_contact_email_address = db.Column(db.String(64))
+    emergency_contact_relation = db.Column(db.String(64)) 
+
     general_notes = db.Column(db.String(255), nullable=False)
 
     @staticmethod
-    def generate_fake(count=100, **kwargs):
+    def generate_fake(count=NUM_VOLUNTEERS, **kwargs):
         """Generate a number of fake users for testing."""
         from sqlalchemy.exc import IntegrityError
         from random import seed, choice, random
@@ -46,16 +59,16 @@ class Volunteer(db.Model):
             v = Volunteer(
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
-                address_id=-1,
-                phone_number=fake.phone_number(),
-                email_address=fake.email(),
-                type_id=-1,
-                last_service_date=datetime.strptime(
-                    fake.date(),
-                    "%Y-%m-%d").date(),  # would they like this to be required?
-                rating=random() * 5.0,  # would they like this to be required?
+                birthdate=datetime.strptime(
+                    fake.date(), "%Y-%m-%d").date(),
+                primary_address_id=1,
+                primary_phone_number=fake.phone_number(),
+                email_address=choice([fake.email(), None]),
+                type_id=choice([0, 1]),
+                rating=random() * 5.0,  
                 is_fully_vetted=choice([True, False]),
-                preferred_contact_method_id=-1,
+                vettings=choice([fake.text(), None]),
+                preferred_contact_method=choice(['phone', 'email', 'phone and email']),
                 general_notes=fake.text(),
                 **kwargs)
             db.session.add(v)
@@ -65,7 +78,7 @@ class Volunteer(db.Model):
                 db.session.rollback()
 
     def __repr__(self):
-        return f"Volunteer('{self.first_name}', '{self.last_name}')"
+        return f"Volunteer('{self.first_name} {self.last_name}')"
 
 
 class VolunteerType(db.Model):
@@ -77,7 +90,7 @@ class VolunteerType(db.Model):
 
     @staticmethod
     def insert_types():
-        types = ['Member Volunteer', 'Non-Member Volunteer', 'Local Resource']
+        types = ['Member Volunteer', 'Non-Member Volunteer']
         for t in types:
             volunteer_type = VolunteerType.query.filter_by(name=t).first()
             if volunteer_type is None:
@@ -97,18 +110,42 @@ class VolunteerAvailability(db.Model):
                              nullable=False)
     day_of_week = db.Column(
         db.String(20), nullable=False
-    )  # one of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-    time_period_id = db.Column(db.Integer,
-                               db.ForeignKey('time_period.id'),
-                               unique=True,
-                               nullable=False)
+    )  # one of ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun']
+    start_hour = db.Column(db.Integer, nullable=False) # 24-hour time [0-23] (e.g., if '13', then this entry is for 1-2pm).
+    end_hour = db.Column(db.Integer, nullable=False) # same as start_hour: should be in range [0, 23]
     availability_status_id = db.Column(db.Integer,
                                        db.ForeignKey('availability_status.id'),
-                                       unique=True,
                                        nullable=False)
 
+    @staticmethod
+    def import_fake (**kwargs):
+        """Generate a number of fake users for testing."""
+        from sqlalchemy.exc import IntegrityError
+        import pandas as pd
+
+        availability_df = pd.read_csv('./app/data/out/fake_volunteer_availabilities.csv')
+        num_rows = len(availability_df)
+        print(num_rows)
+        for i in range(num_rows):
+            row = availability_df.iloc[i]
+            a = VolunteerAvailability(
+                volunteer_id=int(row['volunteer_id']),
+                day_of_week=row['day_of_week'],
+                start_hour=int(row['start_hour']),
+                end_hour=int(row['end_hour']),
+                availability_status_id=int(row['availability_status_id']),
+                **kwargs)
+            print(a)
+            db.session.add(a)
+            try:
+                db.session.commit()
+                print("Committed " + str(i))
+            except IntegrityError:
+                db.session.rollback()
+            
+
     def __repr__(self):
-        return f"VolunteerAvailability('{self.day}')"
+        return f"VolunteerAvailability('{self.day_of_week}: {self.start_hour} - {self.end_hour}')"
 
 
 class AvailabilityStatus(db.Model):
@@ -117,10 +154,7 @@ class AvailabilityStatus(db.Model):
 
     @staticmethod
     def insert_statuses():
-        statuses = [
-            'Most likely available', 'Not available',
-            'Backup - might be available', 'Call me if really desperate'
-        ]
+        statuses = ['Available', 'Available for Backup']
         for s in statuses:
             availability_status = AvailabilityStatus.query.filter_by(
                 name=s).first()
@@ -130,28 +164,8 @@ class AvailabilityStatus(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return f"AvailabilityStatus('{self.name}')"
+        return f"AvailabilityStatus('[{self.id}] {self.name}')"
 
-
-class TimePeriod(db.Model):
-    id = db.Column(db.Integer, nullable=False, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-
-    @staticmethod
-    def insert_time_periods():
-        time_periods = [
-            'Morning 8-11', 'Lunchtime 11-2', 'Afternoon 2-5', 'Evening 5-8',
-            'Night 8-Midnight'
-        ]
-        for tp in time_periods:
-            time_period = TimePeriod.query.filter_by(name=tp).first()
-            if time_period is None:
-                time_period = TimePeriod(name=tp)
-            db.session.add(time_period)
-        db.session.commit()
-
-    def __repr__(self):
-        return f"TimePeriod('{self.name}')"
 
 
 # For Vacation Calendar
@@ -165,14 +179,3 @@ class VolunteerVacationDay(db.Model):
     def __repr__(self):
         return f"VolunteerVacationDay('{self.date}')"
 
-
-# For Creating Services
-class ContactMethod(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-    volunteers = db.relationship("Volunteer",
-                                 backref="contact_method",
-                                 lazy=True)
-
-    def __repr__(self):
-        return f"ContactMethod('{self.name}')"

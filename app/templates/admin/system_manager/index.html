@@ -19,12 +19,140 @@ description=None, icon=None) %}
 {% endmacro %}
 
 {% block content %}
-<div class="ui stackable centered grid container">
-  <div class="twelve wide column">
+<style>
+  .highlight {
+    background-color: lightblue;
+  }
+
+  #calendar-body td:empty {
+    cursor: text;
+    border: none;
+  }
+
+  #calendar-body td {
+    cursor: pointer;
+  }
+
+  #calendar thead {
+    border-bottom: 2px solid #cecece;
+  }
+
+  #calendar th {
+    border: none;
+    text-align: center;
+    padding: 0;
+    width: 10%;
+  }
+
+  #calendar td {
+    border: 1px solid rgba(0, 0, 0, .125);
+    text-align: center;
+    padding: 5px;
+    width: 10%;
+  }
+
+  .previous {
+    margin-top: 4%;
+    margin-left: 2%;
+  }
+
+  .next {
+    margin-top: 4%;
+    margin-right: 2%;
+  }
+
+  .round {
+    border-radius: 50%;
+  }
+
+  .month-selected {
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.2;
+    color: inherit;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+
+
+  #calendar-header {
+    margin-bottom: 0px;
+    background-color: #e7e7e7;
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+  }
+
+  .header-row {
+    background-color: lightgray;
+    margin: 0px;
+    padding: 5px;
+  }
+
+  #monthAndYear {
+    border-bottom: none;
+    background-color: transparent;
+    padding-left: 14px;
+    padding-right: 14px;
+    display: none;
+  }
+
+  #previous,
+  #next {
+    color: darkslategrey;
+  }
+
+  .today-color {
+    background-color: #D3D3D3;
+  }
+
+  #parent {
+    border: 2px dotted rgba(0, 0, 0, .125);
+    border-radius: .25rem;
+    padding: 5px;
+  }
+
+  .buttonPanel td {
+    border: none !important;
+    padding: 6px 0 0 0 !important;
+  }
+
+  .buttonPanel td div:nth-of-type(odd) {
+    padding: 5px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .buttonPanel td div:nth-of-type(even) {
+    padding: 5px;
+    width: 100%;
+    text-align: right;
+  }
+
+  .buttonPanel-row {
+    margin: 0;
+    border-top: 2px solid lightgray;
+  }
+
+  #calendarBody {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  #show-report {
+    background-color: white;
+    border: solid 1px lightgray;
+    color: #253E71;
+  }
+</style>
+
+
+<div class="ui container stackable grid centered">
+  <div class="sixteen wide column">
     <h2 class="ui header">
       Admin Dashboard
     </h2>
-    <h3>Account Manager</h3>
+    <h2>Account Management</h2>
     <div class="ui three column stackable grid">
       {{ dashboard_option('Registered User', 'admin.registered_users',
       description='View and manage user accounts', icon='users icon') }}
@@ -33,21 +161,59 @@ description=None, icon=None) %}
       {{ dashboard_option('Invite New User', 'admin.invite_user',
       description='Invites a new user to create their own account', icon='add user icon') }}
     </div>
-    <hr />
-    <h3>System Manager</h3>
+
+    <h2>System Configuration</h2>
     <div class="ui two column stackable grid">
-      {{ dashboard_option('Edit Services', 'admin.index',
+      {{ dashboard_option('Edit Services', 'admin.registered_services',
       description='Add/Remove/Edit Services', icon='users icon') }}
       {{ dashboard_option('Edit Service Categories', 'admin.index',
       description='Add/Remove/Edit Service Categories', icon='add user icon') }}
-      {{ dashboard_option('Edit Metro Areas', 'admin.index',
+      {{ dashboard_option('Edit Metro Areas', 'admin.registered_metro_areas',
       description='Add/Remove/Edit Metro Areas', icon='add user icon') }}
       {{ dashboard_option('Edit Destination Addresses', 'admin.index',
       description='Add/Remove/Edit Destination Addresses', icon='add user icon') }}
-      {{ dashboard_option('Generate Reports', 'admin.index',
-      description='Generate monthly reports.', icon='add user icon') }}
-      {{ dashboard_option('Edit System Email', 'admin.index',
-      description='Edit the email address from which LLH emails are sent.', icon='add user icon') }}
+    </div>
+
+    <h2>Additional Actions</h2>
+    <button class="ui fluid large button" id="show-report">
+      <h3>Generate Report</h3>
+    </button>
+
+    <div class="ui modal" id="report">
+      <i class="close icon"></i>
+      <div class="header">Generate Report</div>
+      <div class="content">
+        <div class="ui large form">
+          <div class="field">
+            <label>Report Type</label>
+            <select class="ui fluid dropdown">
+              <option value="a">Completed Volunteer Services by Service Category</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Report File Name</label>
+            <input type="text" name="filename" placeholder="Report">
+          </div>
+        </div>
+        <hr />
+        <div class="actions">
+          <div class="positive ui approve button"
+            onclick="window.location.href = '{{ url_for('admin.generate_report') }}';">
+            Run Report
+          </div>
+          <div class="negative ui deny button">Cancel</div>
+        </div>
+      </div>
     </div>
   </div>
-  {% endblock %}
+
+
+</div>
+
+
+<script>
+  $('#show-report').click(function () {
+    $('#report').modal('show');
+  });
+</script>
+{% endblock %}

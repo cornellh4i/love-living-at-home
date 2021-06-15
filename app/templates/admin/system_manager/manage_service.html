@@ -1,0 +1,25 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+
+{% block content %}
+<div class="ui stackable centered grid container">
+  <div class="twelve wide column">
+    <a class="ui basic compact button" href="{{ url_for('admin.registered_services') }}">
+      <i class="caret left icon"></i>
+      Back to all services
+    </a>
+    <h2 class="ui header">
+
+      {% if service %}
+      {{ service.name }}
+      <div class="sub header">View and manage {{ service.name }}.</div>
+      {% else %}
+      <div class="sub header">Add a new service</div>
+      {% endif %}
+    </h2>
+  </div>
+  <div class="twelve wide column">
+    {{ f.render_form(form) }}
+  </div>
+</div>
+{% endblock content %}

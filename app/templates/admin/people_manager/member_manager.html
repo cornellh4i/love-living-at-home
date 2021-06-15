@@ -28,46 +28,77 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     {{ f.form_message(flashes['success'], header='Success!', class='success') }}
 
 
-    {{ f.render_form_field(form.first_name) }}
-    {{ f.render_form_field(form.middle_initial) }}
-    {{ f.render_form_field(form.last_name) }}
+    <div class="three fields">
+      {{ f.render_form_field(form.first_name, extra_classes="required") }}
+      {{ f.render_form_field(form.middle_initial) }}
+      {{ f.render_form_field(form.last_name, extra_classes="required") }}
+    </div>
     {{ f.render_form_field(form.preferred_name) }}
-    {{ f.render_form_field(form.salutation) }}
-    {{ f.render_form_field(form.pronoun) }}
+
+    <div class="two fields">
+      {{ f.render_form_field(form.member_number, extra_classes="required")}}
+      {{ f.render_form_field(form.membership_expiration_date, extra_classes="required") }}
+    </div>
+
+    <div class="two fields">
+      {{ f.render_form_field(form.salutation) }}
+      {{ f.render_form_field(form.gender, extra_classes="required") }}
+      {{ f.render_form_field(form.birthdate, extra_classes="required") }}
+    </div>
 
     <div class="ui header">Primary Address</div>
-    {{ f.render_form_field(form.primary_country) }}
-    {{ f.render_form_field(form.primary_address1) }}
-    {{ f.render_form_field(form.primary_address2) }}
-    {{ f.render_form_field(form.primary_city) }}
-    {{ f.render_form_field(form.primary_state) }}
-    {{ f.render_form_field(form.primary_zip_code) }}
-    {{ f.render_form_field(form.primary_time_zone) }}
+    <div class="field required">
+      <label>Address</label>
+      <div class="field required">
+        {{ form.primary_address1(placeholder = form.primary_address1.label.text) }}
+      </div>
+      <div class="field">
+        {{ form.primary_address2(placeholder = form.primary_address2.label.text) }}
+      </div>
+    </div>
+
+    <div class="three fields">
+      {{ f.render_form_field(form.primary_city, extra_classes="required") }}
+      {{ f.render_form_field(form.primary_state, extra_classes="required") }}
+      {{ f.render_form_field(form.primary_zip_code, extra_classes="required") }}
+    </div>
+
+    {{ f.render_form_field(form.primary_country, extra_classes="required") }}
     {{ f.render_form_field(form.primary_metro_area) }}
-    {{ f.render_form_field(form.primary_phone) }}
 
     <div class="ui header">Secondary Address</div>
     {{ f.render_form_field(form.secondary_as_primary_checkbox) }}
+    <div class="field">
+      <label>Address</label>
+      <div class="field">
+        {{ form.secondary_address1(placeholder = form.secondary_address1.label.text) }}
+      </div>
+      <div class="field">
+        {{ form.secondary_address2(placeholder = form.secondary_address2.label.text) }}
+      </div>
+    </div>
+
+    <div class="three fields">
+      {{ f.render_form_field(form.secondary_city) }}
+      {{ f.render_form_field(form.secondary_state) }}
+      {{ f.render_form_field(form.secondary_zip_code) }}
+    </div>
+
     {{ f.render_form_field(form.secondary_country) }}
-    {{ f.render_form_field(form.secondary_address1) }}
-    {{ f.render_form_field(form.secondary_address2) }}
-    {{ f.render_form_field(form.secondary_city) }}
-    {{ f.render_form_field(form.secondary_state) }}
-    {{ f.render_form_field(form.secondary_zip_code) }}
-    {{ f.render_form_field(form.secondary_time_zone) }}
     {{ f.render_form_field(form.secondary_metro_area) }}
-    {{ f.render_form_field(form.secondary_phone) }}
 
     <div class="ui header">Contact Information</div>
-    {{ f.render_form_field(form.phone_number) }}
-    {{ f.render_form_field(form.cell_number) }}
+    {{ f.render_form_field(form.primary_phone_number, extra_classes="required") }}
+    {{ f.render_form_field(form.secondary_phone_number) }}
     {{ f.render_form_field(form.email) }}
+    {{ f.render_form_field(form.preferred_contact_method, extra_classes="inline fields") }}
 
     <div class="ui header">Emergency Contact Information</div>
     {{ f.render_form_field(form.emergency_contact_name)}}
     {{ f.render_form_field(form.emergency_contact_relationship) }}
     {{ f.render_form_field(form.emergency_contact_phone_number) }}
     {{ f.render_form_field(form.emergency_contact_email_address) }}
+
     {{ f.render_form_field(form.volunteer_notes) }}
     {{ f.render_form_field(form.staffer_notes)}}
 
@@ -79,3 +110,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   </div>
 </div>
 {% endblock %}
+
+<script>
+
+</script>

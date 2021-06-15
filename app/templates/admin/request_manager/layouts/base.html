@@ -6,6 +6,7 @@
 ]%}
 
 
+
 {% block content %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
@@ -19,7 +20,10 @@
         href="{{ url_for('admin.create_request') }}">Create Requests</a>
     </div>
     {% block request_content %}
-    {% endblock %}
+
+    {% endblock request_content %}
   </div>
+
 </div>
-{% endblock %}
+
+{% endblock content %}

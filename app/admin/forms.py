@@ -1,40 +1,27 @@
-from datetime import datetime
-
 from flask_wtf import FlaskForm
 from wtforms import SelectMultipleField, ValidationError, widgets
-from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 
-from wtforms.fields import (BooleanField, DateTimeField, IntegerField,
+from wtforms.fields import (BooleanField, IntegerField,
                             PasswordField, RadioField, SelectField, SelectMultipleField,
                             StringField, SubmitField, TextAreaField)
 from wtforms.fields.html5 import DateField, EmailField, TimeField, IntegerField
 from wtforms.validators import Email, EqualTo, InputRequired, Length, Optional, DataRequired
 
 from app import db
-from app.models import Role, User
+from app.models import Role, User, ServiceCategory, Service, Staffer, RequestStatus, ContactLogPriorityType, Member, Address, RequestDurationType
+from datetime import date
 
-serviceCategories = [('Select', 'Select'),
-                     ('Coronavirus Community Support',
-                      'Coronavirus Community Support'),
-                     ('Transportation', 'Transportation')]
+salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
+                   ("mr", "Mr")]    
+genders = [("female", "Female"), ("male", "Male"), ("unspecified",
+                                    "Unspecified"), ("no_answer", "Does not wish to answer")]
 
-covidServices = [('Select', 'Select'), ('General Errands', 'General Errands'),
-                 ('Grocery Shopping', 'Grocery Shopping'),
-                 ('Prescription Pickup', 'Prescription Pickup')]
-
-transportationServices = [
-    ('Select', 'Select'), ('Event Carpool', 'Event Carpool'),
-    ('hack4impact test service', 'hack4impact test service'),
-    ('Long Dist Non-Med Professional', 'Long Dist Non-Med Professional'),
-    ('Long Dist. Med Professional', 'Long Dist Med Professional'),
-    ('Vol Driver Family/Friend Visit', 'Vol Driver Family/Friend Visit'),
-    ('Vol Driver LLH Programs/Events', 'Vol Driver LLH Programs/Events'),
-    ('Vol Driver Local Medical Appt', 'Vol Driver Local Medical Appt'),
-    ('Vol Driver Shopping/Errands', 'Vol Driver Shopping/Errands'),
-    ('Vol Driver Local Bus/Airport', 'Vol Driver Local Bus/Airport'),
-    ('Vol Driver Misc. Trip', 'Vol Driver Misc. Trip')
-]
-
+countries = [('united_states', 'United States'), ('b', "B"), ('c', 'C')]
+states = [("ny", "NY")]
+time_zones = [("est", "Eastern Time (US & Canada) (UTC-05:00)"),
+            ("b", "B"), ("c", "C")]
+metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
 
 class ChangeUserEmailForm(FlaskForm):
     email = EmailField('New email',
@@ -92,63 +79,158 @@ class NewUserForm(InviteUserForm):
 
 
 class SearchRequestForm(FlaskForm):
+    request_type = SelectMultipleField('Request Type', choices=[(-1, 'Select All'), (0, 'Transportation Request'),
+                                                                (1, 'Member\'s Home Request'), (2, 'Office Time Request')], validators=[DataRequired()])
 
-    request_type = SelectMultipleField('Request Type', choices = [ (0,'Transportation Request'), 
-    (1,'Member\'s Home Request'), (2, 'Office Time Request')], validators = [DataRequired()])
+    request_status = SelectMultipleField('Request Status', choices=[(0, 'Requested'), (
+        1, 'Confirmed'), (2, 'Completed'), (3, 'Cancelled')], validators=[DataRequired()])
 
+    request_status = SelectMultipleField('Request Status', choices=[
+                                         (-1, 'Select All'), (0, 'Requested'), (1, 'Confirmed'), (2, 'Completed'), (3, 'Cancelled')], validators=[DataRequired()])
 
-    request_status = SelectMultipleField('Request Status', choices = 
-    [(0, 'Requested'), (1, 'Confirmed'), (2, 'Completed'), (3, 'Cancelled')], validators = [DataRequired()])
+    service_category = SelectMultipleField('Service Category', choices=[(-1, 'Select All'), (0, 'COVID Community Support'), (1, 'Professional Home/Garden Service'),
+                                                                        (2, 'Professional In-Home Support'), (3, 'Technical Support'),
+                                                                        (4, 'Transportation'), (5, 'Village Admin'), (6,
+                                                                                                                      'Volunteer Home/Garden Service'),
+                                                                        (7, 'Volunteer In-Home Support')], validators=[DataRequired()])
 
-    service_category = SelectMultipleField('Service Category', choices =
-    [(0, 'COVID Community Support'), (1, 'Professional Home/Garden Service'),
-    (2, 'Professional In-Home Support'), (3, 'Technical Support'), 
-    (4, 'Transportation'), (5, 'Village Admin'), (6, 'Volunteer Home/Garden Service'),
-    (7, 'Volunteer In-Home Support')], validators = [DataRequired()])
+    provider_type = SelectMultipleField('Provider Type', choices=[
+                                        (-1, 'Select All'), (0, 'Non-Member Volunteer'), (1, 'Member Volunteer'), (2, 'Contractor')], validators=[DataRequired()])
 
-    provider_type = SelectMultipleField('Provider Type', choices = 
-    [(0, 'Non-Member Volunteer'), (1, 'Member Volunteer'), (2, 'Contractor')], validators = [DataRequired()])
+    requesting_member = SelectField('Requesting Member', choices=[(0, 'Nat Peuly'), (1, 'Sohni Uthra'), (2, 'Angela Jin'),
+                                                                  (3, 'Alina Kim')], validators=[DataRequired()])
 
-    requesting_member = SelectField('Requesting Member', choices = [(0, 'Nat Peuly'), (1, 'Sohni Uthra')], validators=[DataRequired()])
+    service_provider = SelectField('Service Provider', choices=[(0, 'Nat Peuly'), (1, 'Sohni Uthra'), (2, 'Angela Jin'),
+                                                                (3, 'Alina Kim')], validators=[DataRequired()])
 
-    service_provider = SelectField('Service Provider', choices = [(0, 'Nat Peuly'), (1, 'Sohni Uthra')], validators=[DataRequired()])
+    show = RadioField('Show', choices=[(0, 'Undated'), (1, 'Dated')])
 
-    # """service_req_from = IntegerField('Service Req # from', default=0)
-    # service_req_to = IntegerField('to', default=0)
+    time_period = SelectField('Time Period', choices=[(0, 'Today'), (1, 'This Week'), (
+        2, 'This Month'), (3, 'Future Dates')], validators=[DataRequired()])
 
-    # priority = RadioField('High priority', choices=['Yes', 'No', 'Both'])
-    # show = RadioField('Show', choices=['Undated', 'Dated', 'Both'])
+    start_date = DateField('Start Date', validators=[
+                           InputRequired()], format='%Y-%M-%D')
+    end_date = DateField('End Date', validators=[
+                         InputRequired()], format='%Y-%M-%D')
 
-    # search = SubmitField('Search')
-    # reset = SubmitField('Reset')"""
+    apply_filters = SubmitField('Apply Filters')
+    reset_filters = SubmitField('Reset Filters')
+
+    def get_status(id):
+        for i in range(len(request_status.choices)): 
+            if id == request_status.choices[i][0]:
+                return request_status.choices[i][1]
+        
 
     
 class TransportationRequestForm(FlaskForm):
-    date_created = DateField('Date Created',
-                             format='%Y-%M-%D',
-                             default=datetime.today)
-    requested_date = DateField('Requested Date',
-                               validators=[InputRequired()],
-                               format='%Y-%M-%D')
-    initial_pickup = TimeField('Inital Pickup', format='%H:%M')
-    appointment = TimeField('Appointment', format='%H:%M')
-    return_pickup = TimeField('Return Pickup', format='%H:%M')
-    drop_off = TimeField('Drop Off', format='%H:%M')
-    time_flexible = RadioField('Is Date/Time Flexible?',
-                               choices=[('Yes', 'Yes'), ('No', 'No')])
-    priority = RadioField('High priority?',
-                          choices=[('Yes', 'Yes'), ('No', 'No')])
-    description = TextAreaField('Short description')
-    service_category = SelectField('Service Category',
-                                   choices=serviceCategories)
-    covidService = SelectField('Service', choices=covidServices)
-    transportationService = SelectField('Service',
-                                        choices=transportationServices)
-    starting_location = StringField('Starting Location')
-    destination = StringField('Destination')
+    categoryId = 0
 
-    submit = SubmitField('Save')
-    cancel = SubmitField('Cancel')
+    def selectedCategory():
+        return db.session.query(ServiceCategory).order_by().filter(ServiceCategory.request_type_id == 0)
+
+    def covid_services():
+        return db.session.query(Service).order_by().filter(Service.category_id == 1)
+
+    def transportation_services():
+        return db.session.query(Service).order_by().filter(Service.category_id == 0)
+
+    def stafferQuery():
+        return db.session.query(Staffer).order_by()
+
+    def statusQuery():
+        return db.session.query(RequestStatus).order_by()
+
+    def contactLogQuery():
+        return db.session.query(ContactLogPriorityType).order_by()
+
+    def specialInstructionsQuery():
+        return db.session.query(Member).order_by()
+
+    special_instructions_list = {}
+
+    date_created = DateField('Date Created:', default = date.today, 
+        render_kw={'readonly': True})
+    requesting_member = SelectMultipleField(
+        'Requesting Member',
+        render_kw={'onchange': "specialInstructions()"},
+        id = 'member',
+        validators=[InputRequired()],
+        coerce = int)
+    requested_date = DateField('Requested Date',
+                               validators=[InputRequired()])
+    initial_pickup = TimeField('Inital Pickup:', format='%H:%M',
+                               validators=[InputRequired()])
+    appointment = TimeField('Appointment:', format='%H:%M',
+                            validators=[InputRequired()])
+    return_pickup = TimeField('Return Pickup:', format='%H:%M')
+    drop_off = TimeField('Drop Off:', format='%H:%M')
+    time_flexible = RadioField('Is Date/Time Flexible?',
+                               choices=[(True, 'Yes'), (False, 'No')],  coerce=lambda x: x == 'True')
+    description = TextAreaField('Short description (included in email):')
+
+    service_category = QuerySelectField(
+        'Service Category:',
+        render_kw={'onchange': "serviceChoices()"},
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=selectedCategory)
+
+    covid_service = QuerySelectField(
+        'Service:',
+        id = "covid_service",
+        render_kw={'onchange': "serviceChoices()"},
+        validators=[Optional()],
+        get_label='name',
+        query_factory=covid_services)
+
+    transportation_service = QuerySelectField(
+        'Service:',
+        render_kw={'onchange': "serviceChoices()"},
+        id = "transportation_service",
+        validators=[Optional()],
+        get_label='name',
+        query_factory=transportation_services)
+
+    starting_location = StringField(
+        'Pickup Location:',
+        validators=[InputRequired()])
+
+    special_instructions = TextAreaField('Special Instructions:', id = "special-instructions-text")
+
+    follow_up_date = DateField('Follow Up Date:')
+    status = QuerySelectField(
+        'Status:',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=statusQuery)
+    
+    responsible_staffer = SelectField('Responsible Staffer:',
+        coerce=int)
+
+    contact_log_priority = QuerySelectField(
+        'Contact Log Priority:',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=contactLogQuery)
+
+    person_to_cc = EmailField('Person to cc',
+                       validators=[Length(0, 64), Optional()])
+    destination = SelectField(
+        'Destination:',
+        validators=[InputRequired()], coerce=int)
+    duration = RadioField('Duration:', coerce=int)
+
+    destination_name = StringField('Destination Name:')
+    street_address1 = StringField('Street Address:')
+    street_address2 = StringField('Apt, Unit, Building, Floor, etc:')
+    city = StringField('City:')
+    state = StringField('State/Province:')
+    zip = StringField('Zip:')
+    country = StringField('Country:')
+    add_address = SubmitField('Add Address')
+
+    submit = SubmitField("Submit")
 
 
 class MultiCheckboxField(SelectMultipleField):
@@ -157,107 +239,101 @@ class MultiCheckboxField(SelectMultipleField):
 
 
 class MemberManager(FlaskForm):
-    first_name = StringField('First name',
+    first_name = StringField('First Name',
                              validators=[InputRequired(),
                                          Length(1, 64)])
     middle_initial = StringField('Middle Initial',
                                  validators=[Length(min=0, max=1)])
-    last_name = StringField('Last name',
+    last_name = StringField('Last Name',
                             validators=[InputRequired(),
                                         Length(1, 64)])
     preferred_name = StringField(
         'Preferred Name', validators=[Optional(),
                                       Length(min=1, max=30)])
-    salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
-                   ("mr", "Mr")]
+    
     salutation = SelectField("Salutation", choices=salutations)
 
-    pronoun = StringField("Pronoun",
-                          validators=[InputRequired(),
-                                      Length(min=1, max=30)])
+    birthdate = DateField("Birthdate", validators=[
+        InputRequired()])
 
-    countries = [('united_states', 'United States'), ('b', "B"), ('c', 'C')]
-    states = [('none', ""), ("ny", "NY")]
-    time_zones = [("est", "Eastern Time (US & Canada) (UTC-05:00)"),
-                  ("b", "B"), ("c", "C")]
-    metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
+    gender = SelectField("Gender", choices=genders,
+                         validators=[InputRequired()])
 
-    primary_country = SelectField('Country', choices=countries)
-    primary_address1 = StringField('Address 1',
-                                   validators=[Optional(),
+    primary_country = StringField('Country', default="United States")
+    
+    # One Address object:
+    primary_address1 = StringField('Street address or P.O. Box',
+                                   validators=[InputRequired(),
                                                Length(max=200)])
-    primary_address2 = StringField('Address 2',
+    primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
                                    validators=[Optional(),
                                                Length(max=200)])
     primary_city = StringField('City',
-                               validators=[Optional(),
+                               validators=[InputRequired(),
                                            Length(max=200)])
     primary_state = SelectField('State', choices=states)
     primary_zip_code = StringField('Zip Code',
                                    validators=[Optional(),
                                                Length(max=45)])
-    primary_time_zone = SelectField('Timezone',
-                                    choices=time_zones,
-                                    validators=[Optional()])
     primary_metro_area = SelectField('Metro Area',
                                      choices=metro_areas,
                                      validators=[Optional()])
-    primary_phone = IntegerField('Phone Number',
-                                 widget=widgets.Input(input_type="tel"),
-                                 validators=[Optional()])
+
 
     secondary_as_primary_checkbox = BooleanField(
         'Use this address instead of the primary address',
         validators=[Optional()])
-    secondary_country = SelectField('Country', choices=countries)
-    secondary_address1 = StringField('Address 1',
+    secondary_country = StringField('Country', default="United States")
+    secondary_address1 = StringField('Street address or P.O. Box',
                                      validators=[Optional(),
                                                  Length(max=200)])
-    secondary_address2 = StringField('Address 2',
+    secondary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
                                      validators=[Optional(),
                                                  Length(max=200)])
     secondary_city = StringField('City',
                                  validators=[Optional(),
                                              Length(max=200)])
     secondary_state = SelectField('State', choices=states)
-    secondary_zip_code = TextAreaField('Zip Code',
-                                       validators=[Optional(),
-                                                   Length(max=45)])
-    secondary_time_zone = SelectField('Timezone',
-                                      choices=time_zones,
-                                      validators=[Optional()])
+    secondary_zip_code = StringField('Zip Code',
+                                     validators=[Optional(),
+                                                 Length(max=45)])
     secondary_metro_area = SelectField('Metro Area',
                                        choices=metro_areas,
                                        validators=[Optional()])
-    secondary_phone = IntegerField('Phone Number',
+    
+    # Contact Information
+    primary_phone_number = StringField('Primary Phone Number',
+                                 widget=widgets.Input(input_type="tel"),
+                                 validators=[InputRequired()])
+    secondary_phone_number = StringField('Secondary Phone Number',
                                    widget=widgets.Input(input_type="tel"),
                                    validators=[Optional()])
-
-    phone_number = IntegerField('Phone Number',
-                                widget=widgets.Input(input_type="tel"),
-                                validators=[Optional()])
-    cell_number = IntegerField('Cell Phone Number',
-                               widget=widgets.Input(input_type="tel"),
-                               validators=[Optional()])
     email = EmailField('Email',
-                       validators=[InputRequired(),
+                       validators=[Optional(),
                                    Length(1, 64),
                                    Email()])
-
+    preferred_contact_method = RadioField('Preferred Contact Method *', 
+        choices=[('phone', 'Phone'), ('email', 'Email'), ('phone and email', 
+            'Phone and Email')])
+    
+    # Emergency Contact Information
     emergency_contact_name = StringField(
-        'Contact Name', validators=[InputRequired(),
+        'Contact Name', validators=[Optional(),
                                     Length(1, 64)])
     emergency_contact_relationship = StringField(
-        'Relationship', validators=[Optional(), Length(1, 64)])
+        'Relationship to Member', validators=[Optional(), Length(1, 64)])
     emergency_contact_phone_number = IntegerField(
-        'Phone Number',
+        'Phone Number of Contact',
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()])
     emergency_contact_email_address = EmailField(
-        'Email', validators=[InputRequired(),
+        'Email Address of Contact', validators=[Optional(),
                              Length(1, 64),
                              Email()])
 
+    membership_expiration_date = DateField("Member Expiration Date: ", 
+        validators=[InputRequired()])
+    member_number = IntegerField(validators=[InputRequired()])
     volunteer_notes = TextAreaField('Notes for Volunteers',
                                     validators=[Optional(),
                                                 Length(max=500)])
@@ -268,15 +344,11 @@ class MemberManager(FlaskForm):
 
     submit = SubmitField("Submit")
 
-    def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
-            raise ValidationError('Email already registered.')
 
 
 class VolunteerManager(FlaskForm):
-    salutations = [("", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
-                   ("mr", "Mr")]
     salutation = SelectField("Salutation", choices=salutations)
+
     first_name = StringField(
         'First Name', validators=[InputRequired(),
                                   Length(min=1, max=30)])
@@ -285,90 +357,195 @@ class VolunteerManager(FlaskForm):
     last_name = StringField(
         'Last Name', validators=[InputRequired(),
                                  Length(min=1, max=30)])
+
     gender = SelectField("Gender",
                          validators=[InputRequired()],
-                         choices=[("male", "Male"), ('female', "Female")])
+                         choices=[("male", "Male"), ('female', "Female"), ("unspecified", "Unspecified"), ("no_answer", "Do not wish to answer")])
 
+    birthdate = DateField("Birthdate ", validators=[InputRequired()])
     # make this a stringfield or select field?
-    pronoun = StringField("Pronouns",
-                          validators=[InputRequired(),
-                                      Length(min=1, max=30)])
     preferred_name = StringField(
         'Preferred Name', validators=[Optional(),
                                       Length(min=1, max=30)])
-    primary_address1 = StringField(
-        'Address', validators=[InputRequired(),
-                               Length(max=200)])
-
+    # address
+    primary_address1 = StringField('Street address or P.O. Box',
+                                   validators=[InputRequired(),
+                                               Length(max=200)])
+    primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
+                                   validators=[Optional(),
+                                               Length(max=200)])
+    primary_city = StringField('City',
+                               validators=[InputRequired(),
+                                           Length(max=200)])
+    primary_state = StringField('State',
+                                validators=[InputRequired(),
+                                            Length(max=200)])
+    primary_zip_code = StringField('Zip Code',
+                                   validators=[Optional(),
+                                               Length(max=45)])
+    # emergency contact
+    emergency_contact_name = StringField(
+        'Contact Name', validators=[Optional(),
+                                    Length(1, 64)])
+    emergency_contact_relationship = StringField(
+        'Relationship', validators=[Optional(), Length(1, 64)])
+    emergency_contact_phone_number = StringField(
+        'Phone Number',
+        widget=widgets.Input(input_type="tel"),
+        validators=[Optional()])
+    emergency_contact_email_address = EmailField(
+        'Email', validators=[Optional(),
+                             Length(1, 64),
+                             Email()])
     # now under contact info
-    home_phone = IntegerField(widget=widgets.Input(input_type="tel"),
+    primary_phone_number = StringField("Primary Phone Number", widget=widgets.Input(input_type="tel"),
                               validators=[InputRequired()])
-    email = EmailField('Email',
-                       validators=[InputRequired(),
+    secondary_phone_number = StringField("Secondary Phone Number", widget=widgets.Input(input_type="tel"),
+                              validators=[Optional()])
+    email_address = EmailField('Email',
+                       validators=[Optional(),
                                    Length(1, 64),
                                    Email()])
+    preferred_contact_method = RadioField('Preferred Contact Method', choices=[(
+        'phone', "Phone"), ('email', "Email"), ('phone and email', "Phone and Email")])
 
-    # What is another way to say Services willing to do
-    files = [("alarm", "Alarm/Locks/Security"),
-             ("bill", "Bill Paying/Paperwork"), ("auto", "Auto Repair"),
-             ("remote", "Coronavirus Remote Assistance")]
-    services = MultiCheckboxField('Services willing to do', choices=files)
-    times = [("morning 8-11", "Morning 8-11"),
-             ("morning 11-2", "Lunchtime 11-2"),
-             ("afternoon 2-5", "Afternoon 2-5"),
-             ("evening 5-8", "Evening 5-8"),
-             ("night 8-midnight", "Night 8-Midnight")]
-    availability_time = MultiCheckboxField('Availability Time', choices=times)
-    days = [("monday", "Monday"), ("tuesday", "Tuesday"),
-            ("wednesday", "Wednesday"), ("thursday", "Thursday"),
-            ("friday", "Friday"), ("saturday", "Saturday"),
-            ("sunday", "Sunday")]
-    availability_day = MultiCheckboxField('Availability Day', choices=days)
-    vettings = TextAreaField("Vettings", validators=[Optional()])
-
-    # make a history of completed and pending services
     notes = TextAreaField("Notes for Office Staff", validators=[Optional()])
 
     submit = SubmitField("Submit")
 
-    def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
-            raise ValidationError('Email already registered.')
 
-    submit = SubmitField("Submit")
+
+class AddServiceVetting(FlaskForm):
+    vetting_notes = TextAreaField(
+        "", render_kw={"rows": 15, "cols": 105}, validators=[Optional()])
+    volunteer_fully_vetted_checkbox = BooleanField(
+        'Is Fully Vetted?',
+        validators=[Optional()])
+    submit = SubmitField("Save")
 
 
 class ContractorManager(FlaskForm):
-    organization_name = StringField(
-        'Organization Name',
-        validators=[InputRequired(), Length(min=1, max=30)])
-    address = StringField('Address', validators=[Optional(), Length(max=200)])
-    phone_number = IntegerField('Phone Number',
-                                widget=widgets.Input(input_type="tel"),
-                                validators=[Optional()])
+    first_name = StringField('First name',
+                             validators=[InputRequired(),
+                                         Length(1, 64)])
+    middle_initial = StringField('Middle Initial',
+                                 validators=[Length(min=0, max=1)])
+    last_name = StringField('Last name',
+                            validators=[InputRequired(),
+                                        Length(1, 64)])
+    salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
+                   ("mr", "Mr")]
+    salutation = SelectField("Salutation", choices=salutations)
+    company_name = StringField(
+        'Company',
+        validators=[Optional(), Length(min=1, max=30)])
+
+    countries = [('united_states', 'United States'), ('b', "B"), ('c', 'C')]
+    states = [('none', ""), ("ny", "NY")]
+    time_zones = [("est", "Eastern Time (US & Canada) (UTC-05:00)"),
+                  ("b", "B"), ("c", "C")]
+    metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
+
+    primary_country = SelectField('Country', choices=countries)
+    primary_address1 = StringField('Street address or P.O. Box',
+                                   validators=[Optional(),
+                                               Length(max=200)])
+    primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
+                                   validators=[Optional(),
+                                               Length(max=200)])
+    primary_city = StringField('City',
+                               validators=[Optional(),
+                                           Length(max=200)])
+    primary_state = SelectField('State', choices=states)
+    primary_zip_code = StringField('Zip Code',
+                                   validators=[Optional(),
+                                               Length(max=45)])
+    primary_metro_area = SelectField('Metro Area',
+                                     choices=metro_areas,
+                                     validators=[Optional()])
+    primary_phone_number = IntegerField('Primary Phone Number',
+                                        widget=widgets.Input(input_type="tel"),
+                                        validators=[InputRequired()])
+    secondary_phone_number = IntegerField('Secondary Phone Number',
+                                          widget=widgets.Input(
+                                              input_type="tel"),
+                                          validators=[Optional()])
     email = EmailField('Email',
-                       validators=[InputRequired(),
+                       validators=[Optional(),
                                    Length(1, 64),
                                    Email()])
 
-    # Is there a better way to record availability in one variable
-    times = [("morning 8-11", "Morning 8-11"),
-             ("morning 11-2", "Lunchtime 11-2"),
-             ("afternoon 2-5", "Afternoon 2-5"),
-             ("evening 5-8", "Evening 5-8"),
-             ("night 8-midnight", "Night 8-Midnight")]
-    availability_time = MultiCheckboxField('Availability Time', choices=times)
-    days = [("monday", "Monday"), ("tuesday", "Tuesday"),
-            ("wednesday", "Wednesday"), ("thursday", "Thursday"),
-            ("friday", "Friday"), ("saturday", "Saturday"),
-            ("sunday", "Sunday")]
-    availability_day = MultiCheckboxField('Availability Day', choices=days)
-    reviews = TextAreaField('Reviews',
-                            validators=[Optional(),
-                                        Length(max=500)])
+    preferred_contact_method = RadioField(choices=[(
+        'phone', 'Phone'), ('email', 'Email'), ('phone_and_email', 'Phone and Email')])
 
+    website = StringField(
+        'Website',
+        validators=[Optional(), Length(min=1, max=30)])
     submit = SubmitField("Submit")
 
-    def validate_email(self, field):
-        if User.query.filter_by(email=field.data).first():
-            raise ValidationError('Email already registered.')
+class Reviews(FlaskForm):
+    reviewer_name = StringField('Name of Reviewer',
+                                validators=[InputRequired(), Length(min=1, max=30)])
+    notes = TextAreaField('Notes', validators=[Optional(), Length(max=500)])
+    submit = SubmitField("Save")
+
+
+class AddAvailability(FlaskForm):
+    availability_times = [("7 am", "7 am"), ("8 am", "8 am"), ("9 am", "9 am"), 
+    ("10 am", "10 am"), ("11 am", "11 am"), ("12 pm", "12 pm"), ("1 pm", "1 pm"), 
+    ("2 pm", "2 pm"), ("3 pm", "3 pm"), ("4 pm", "4 pm"), ("5 pm", "5 pm"), ("6 pm", "6 pm"),
+    ("7-8 am", "7-8 am"), ("7-9 am", "7-9 am"), ("7-10 am", "7-10 am"), ("7-11 am", "7-11 am"), 
+    ("7 am-12 pm", "7 am-12 pm"), ("7 am-1 pm", "7 am-1 pm"), ("7 am-2 pm", "7 am-2 pm"), 
+    ("7 am-3 pm", "7 am-3 pm"), ("7 am-4 pm", "7 am-4 pm"), ("7 am-5 pm", "7 am-5 pm"), 
+    ("7 am-6 pm", "7 am-6 pm"), ("8-9 am", "8-9 am"), ("8-10 am", "8-10 am"), ("8-11 am", "8-11 am"), 
+    ("8 am-12 pm", "8 am-12 pm"), ("8 am-1 pm", "8 am-1 pm"), ("8 am-2 pm", "8 am-2 pm"), 
+    ("8 am-3 pm", "8 am-3 pm"), ("8 am-4 pm", "8 am-4 pm"), ("8 am-5 pm", "8 am-5 pm"), 
+    ("8 am-6 pm", "8 am-6 pm"), ("9-10 am", "9-10 am"), ("9-11 am", "9-11 am"), 
+    ("9 am-12 pm", "9 am-12 pm"), ("9 am-1 pm", "9 am-1 pm"), ("9 am-2 pm", "9 am-2 pm"), 
+    ("9 am-3 pm", "9 am-3 pm"), ("9 am-4 pm", "9 am-4 pm"), ("9 am-5 pm", "9 am-5 pm"), 
+    ("9 am-6 pm", "9 am-6 pm"), ("10-11 am", "10-11 am"), ("10 am-12 pm", "10 am-12 pm"), 
+    ("10 am-1 pm", "10 am-1 pm"), ("10 am-2 pm", "10 am-2 pm"), ("10 am-3 pm", "10 am-3 pm"), 
+    ("10 am-4 pm", "10 am-4 pm"), ("10 am-5 pm", "10 am-5 pm"), ("10 am-6 pm", "10 am-6 pm"), 
+    ("11 am-12 pm", "11 am-12 pm"), ("11 am-1 pm", "11 am-1 pm"), ("11 am-2 pm", "11 am-2 pm"), 
+    ("11 am-3 pm", "11 am-3 pm"), ("11 am-4 pm", "11 am-4 pm"), ("11 am-5 pm", "11 am-5 pm"), 
+    ("11 am-6 pm", "11 am-6 pm"), ("12-1 pm", "12-1 pm"), ("12-2 pm", "12-2 pm"), ("12-3 pm", "12-3 pm"), 
+    ("12-4 pm", "12-4 pm"), ("12-5 pm", "12-5 pm"), ("12-6 pm", "12-6 pm"), ("1-2 pm", "1-2 pm"), 
+    ("1-3 pm", "1-3 pm"), ("1-4 pm", "1-4 pm"), ("1-5 pm", "1-5 pm"), ("1-6 pm", "1-6 pm"),
+    ("2-3 pm", "2-3 pm"), ("2-4 pm", "2-4 pm"), ("2-5 pm", "2-5 pm"), ("2-6 pm", "2-6 pm"),
+    ("3-4 pm", "3-4 pm"), ("3-5 pm", "3-5 pm"), ("3-6 pm", "3-6 pm"), ("4-5 pm", "4-5 pm"), 
+    ("4-6 pm", "4-6 pm"), ("5-6 pm", "5-6 pm")] 
+    availability_monday = SelectMultipleField('', choices=availability_times)
+    backup_monday = SelectMultipleField('', choices=availability_times)
+    availability_tuesday = SelectMultipleField('', choices=availability_times)
+    backup_tuesday = SelectMultipleField('', choices=availability_times)
+    availability_wednesday = SelectMultipleField('', choices=availability_times)
+    backup_wednesday = SelectMultipleField('', choices=availability_times)
+    availability_thursday = SelectMultipleField('', choices=availability_times)
+    backup_thursday = SelectMultipleField('', choices=availability_times)
+    availability_friday = SelectMultipleField('', choices=availability_times)
+    backup_friday = SelectMultipleField('', choices=availability_times)
+    availability_saturday = SelectMultipleField('', choices=availability_times)
+    backup_saturday = SelectMultipleField('', choices=availability_times)
+    availability_sunday = SelectMultipleField('', choices=availability_times)
+    backup_sunday = SelectMultipleField('', choices=availability_times)
+    submit = SubmitField("Save")
+
+
+class EditServiceForm(FlaskForm):
+    name = StringField('Service Name', validators=[
+                       InputRequired(), Length(1, 200)])
+    category = QuerySelectField(
+        'Category Name',
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=lambda: db.session.query(ServiceCategory).order_by('name'))
+    submit = SubmitField('Save Service Information')
+
+
+class EditMetroAreaForm(FlaskForm):
+    name = StringField('Metro Area Name', validators=[
+                       InputRequired(), Length(1, 200)])
+    submit = SubmitField('Save Metro Area Information')
+
+class AddServiceToVolunteer(FlaskForm):
+    submit = SubmitField('Save')

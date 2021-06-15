@@ -23,16 +23,16 @@ class Request(db.Model):
                                nullable=False,
                                default=datetime.utcnow().date())
     # Time Info
-    initial_pickup_time = db.Column(db.DateTime,
+    initial_pickup_time = db.Column(db.Time,
                                     nullable=False,
                                     default=datetime.utcnow().time())
-    appointment_time = db.Column(db.DateTime,
+    appointment_time = db.Column(db.Time,
                                  nullable=False,
                                  default=datetime.utcnow().time())
-    return_pickup_time = db.Column(db.DateTime,
+    return_pickup_time = db.Column(db.Time,
                                    nullable=False,
                                    default=datetime.utcnow().time())
-    drop_off_time = db.Column(db.DateTime,
+    drop_off_time = db.Column(db.Time,
                               nullable=False,
                               default=datetime.utcnow().time())
     is_date_time_flexible = db.Column(db.Boolean, nullable=False)
@@ -47,11 +47,9 @@ class Request(db.Model):
                            db.ForeignKey('service.id'),
                            nullable=False)
     # Location Info
-    starting_address_id = db.Column(db.Integer,
-                                    db.ForeignKey('address.id'),
-                                    nullable=False)
+    starting_address = db.Column(db.String(200), nullable=True)
     destination_address_id = db.Column(db.Integer,
-                                       db.ForeignKey('contact_method.id'),
+                                       db.ForeignKey('address.id'),
                                        nullable=False)
     # Member Info
     requesting_member_id = db.Column(db.Integer,
@@ -64,14 +62,13 @@ class Request(db.Model):
                               default=datetime.utcnow().date())
     # Staffer Info
     responsible_staffer_id = db.Column(db.Integer,
-                                       db.ForeignKey('staffer.id'),
-                                       nullable=False)
+                                       db.ForeignKey('staffer.id'))
     # Contact Info
     contact_log_priority_id = db.Column(
         db.Integer,
         db.ForeignKey('contact_log_priority_type.id'),
         nullable=False)
-    cc_email = db.Column(db.String(120), unique=True, nullable=False)
+    cc_email = db.Column(db.String(120), unique=False, nullable=False)
 
     def __repr__(self):
         return f"Request('{self.created_date}, '{self.cc_email}')"
