@@ -57,7 +57,7 @@ def add_fake_data(number_users):
     """
     User.generate_fake(count=number_users)
     Volunteer.generate_fake(count=10)
-    Address.generate_fake(count=200)
+    Address.generate_fake(count=400)
     Member.generate_fake(count=10)
     VolunteerAvailability.import_fake()
     Staffer.generate_fake(count = 10)
