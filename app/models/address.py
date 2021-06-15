@@ -13,7 +13,7 @@ class Address(db.Model):
     metro_area = db.Column(db.String(64))
 
     @staticmethod
-    def generate_fake(count=5, **kwargs):
+    def generate_fake(count=200, **kwargs):
         """Generate a number of fake addresses for testing."""
         from sqlalchemy.exc import IntegrityError
         from random import seed, choice, random
