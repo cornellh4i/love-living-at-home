@@ -20,8 +20,8 @@ class Volunteer(db.Model):
                           db.ForeignKey("address.id"))
     metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
 
-    primary_phone_number = db.Column(db.String(64), nullable=False)
-    secondary_phone_number = db.Column(db.String(10))
+    primary_phone_number = db.Column(db.String(20), nullable=False)
+    secondary_phone_number = db.Column(db.String(20))
 
     #organization_name = db.Column(db.String(80))
     email_address = db.Column(db.String(80))

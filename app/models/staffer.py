@@ -15,7 +15,7 @@ class Staffer(db.Model):
     middle_initial = db.Column(db.String(5))
     last_name = db.Column(db.String(80), nullable=False)
     ## Contact Information
-    phone_number = db.Column(db.String(10))
+    phone_number = db.Column(db.String(20))
     email_address = db.Column(db.String(80), nullable=False)
 
     requests_created = db.relationship("Request", backref="staffer", lazy=True)

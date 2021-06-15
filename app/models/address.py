@@ -24,7 +24,7 @@ class Address(db.Model):
 
         seed()
         for i in range(count):
-            a = Address(name=fake.company(),
+            a = Address(id=i, name=fake.company(),
                         street_address=fake.street_address(),
                         city=fake.city(),
                         **kwargs)
