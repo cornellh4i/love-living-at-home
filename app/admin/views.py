@@ -797,9 +797,9 @@ def generate_report():
     template_vars = {"title" : "Love Living at Home",
                      "data": data.to_html()}
     html_out = template.render(template_vars)
-    HTML(string=html_out).write_pdf("./app/my_report.pdf", stylesheets=["./app/assets/styles/report.css"])
+    HTML(string=html_out).write_pdf("./app/may_report.pdf", stylesheets=["./app/assets/styles/report.css"])
     try:
-        return send_file("my_report.pdf", as_attachment=True)
+        return send_file("may_report.pdf", as_attachment=True)
     except FileNotFoundError:
-        flash('Successfully generated report.', 'error')
+        flash('Failed to generate report.', 'error')
         abort(404)
