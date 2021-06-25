@@ -61,8 +61,7 @@ class Request(db.Model):
                               nullable=False,
                               default=datetime.utcnow().date())
     # Staffer Info
-    responsible_staffer_id = db.Column(db.Integer,
-                                       db.ForeignKey('staffer.id'))
+    responsible_staffer_id = db.Column(db.Integer, db.ForeignKey('staffer.id'))
     # Contact Info
     contact_log_priority_id = db.Column(
         db.Integer,
