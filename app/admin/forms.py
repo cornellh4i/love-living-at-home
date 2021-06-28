@@ -85,24 +85,10 @@ class NewUserForm(InviteUserForm):
 
 
 class SearchRequestForm(FlaskForm):
-    request_type = QuerySelectMultipleField(
-        'Request Type',
-        validators=[InputRequired()],
-        get_label='name',
-        query_factory=lambda: db.session.query(RequestType).order_by('name'))
+    request_type = SelectMultipleField('Request Type')
+    request_status = SelectMultipleField('Request Status')
+    service_category = SelectMultipleField('Service Category')
 
-    request_status = QuerySelectMultipleField(
-        'Request Status',
-        validators=[InputRequired()],
-        get_label='name',
-        query_factory=lambda: db.session.query(RequestStatus).order_by('name'))
-
-    service_category = QuerySelectMultipleField(
-        'Service Category',
-        validators=[InputRequired()],
-        get_label='name',
-        query_factory=lambda: db.session.query(ServiceCategory).order_by('name'
-                                                                         ))
     volunteer_type = QuerySelectMultipleField(
         'Volunteer Type',
         validators=[InputRequired()],
