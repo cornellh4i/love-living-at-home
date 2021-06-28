@@ -1,14 +1,21 @@
 {% extends "admin/request_manager/layouts/base.html" %}
 {% import 'macros/form_macros.html' as f %}
 
-{% macro request_card(request_num, request_status) %}
-<div class="ui one cards" style="margin-top:20px">
+{% macro request_card(request_num, request_status, requested_date, start_time, end_time, member_name, volunteer_name,
+request_type, service, created_date, modified_date ) %}
+<div class="ui one cards request-card" style="margin-top:20px">
   <div class="ui card">
     <div class="content" style="background-color: burlywood;">
       <div class="header">
         Request #{{request_num}}
         <div class="ui right floated ">
+          {% if request_status == "Requested" %}
+          <div class="ui yellow label">{{request_status}}</div>
+          {% elif request_status == "Confirmed" %}
           <div class="ui green label">{{request_status}}</div>
+          {% else %}
+          <div class="ui red label">{{request_status}}</div>
+          {% endif %}
         </div>
       </div>
 
@@ -21,28 +28,28 @@
               <div class="header">Saturday</div>
             </div>
             <div class="content">
-              <h2>03/16</h2>
+              <h2>{{requested_date}}</h2>
             </div>
             <div class="extra content">
-              <h3>2:40 PM - 3:20 PM</h3>
+              <h3>{{start_time}} - {{end_time}} PM</h3>
             </div>
           </div>
         </div>
         <div class="six wide column">
-          <h2>Randy Warren</h2>
-          <h3><em>Volunteer:</em> Cheryl Lewis</h3>
-          <div class="ui label" style="margin-bottom: 5px">Member's Home</div>
+          <h2>{{member_name}}</h2>
+          <h3><em>Volunteer:</em> {{volunteer_name}}</h3>
+          <div class="ui label" style="margin-bottom: 5px" id="request-type">{{request_type}}</div>
 
-          <div class="ui label">Coronavirus Support Phone Call</div>
+          <div class="ui label">{{service}}</div>
         </div>
         <div class="six wide column">
           <div>
             <b style="font-size:1.3em">Created Date:</b>
-            <p>03/04/2021</p>
+            <p>{{created_date}}</p>
           </div>
           <div style="margin-top: 10px">
             <b style="font-size:1.3em">Modified Date:</b>
-            <p>03/05/2021</p>
+            <p>{{modified_date}}</p>
           </div>
         </div>
       </div>
@@ -50,9 +57,32 @@
   </div>
 </div>
 {% endmacro %}
-{% block request_content %}
 
+{% macro filter_select_field(field) %}
+<div class="field no label clearable" id="{{field.name}}">
+  {{field.label}}
+  <div class="ui multiple selection dropdown ">
+    <i class="dropdown icon"></i>
+
+    <div class="default text">All</div>
+    <div class="menu">
+      {% for choice in field.choices %}
+      <div class="item" data-value="{{choice[0]}}">{{choice[1]}}</div>
+      {% endfor %}
+    </div>
+
+  </div>
+
+
+</div>
+{% endmacro %}
+
+{% block request_content %}
 <style>
+  .ui.multiple.selection.dropdown .menu .item.active {
+    background-color: lightgray;
+  }
+
   .container {
     /* Center the content */
     align-items: center;
@@ -217,7 +247,7 @@
 
 
 <div class="content-section">
-  <form method="POST" action="">
+  <form method="POST" action="" id="search-form" class="ui form">
     {{ form.hidden_tag() }}
 
     <h2 class="header">Search Criteria</h2>
@@ -231,107 +261,106 @@
 
     {{ f.begin_form(form, flashes) }}
 
-    <div class="ui form">
-      <div class="ui three column stackable grid">
-        <div class="five wide column">
-          {{ f.render_form_field(form.request_type, extra_classes="inline") }}
-
-        </div>
-        <div class="five wide column">
-          {{ f.render_form_field(form.service_category, extra_classes="inline") }}
-        </div>
-        <div class="five wide column">
-          {{ f.render_form_field(form.request_status, extra_classes="inline") }}
-        </div>
-
-      </div>
-      <div class="ui two column stackable grid">
-        <div class="eight wide column">
-          <div class="field">
-            <label> {{form.requesting_member.label}}</label>
-            <select class="ui multiple search selection dropdown">
-              <option value="">Type Name Here</option>
-              {% for choice in form.requesting_member.choices %}
-              <option value={{ choice[0] }}>{{choice[1]}}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="field">
-            <label> {{form.volunteer.label}}</label>
-            <select class="ui multiple search selection dropdown">
-              <option value="">Type Name Here</option>
-              {% for choice in form.volunteer.choices %}
-              <option value={{ choice[0] }}>{{choice[1]}}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="field">
-            <label> {{form.local_resource.label}}</label>
-            <select class="ui multiple search selection dropdown">
-              <option value="">Type Name Here</option>
-              {% for choice in form.local_resource.choices %}
-              <option value={{ choice[0] }}>{{choice[1]}}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-        <div class="eight wide column">
-          <div class="inline fields">
-            <label>{{ form.show.label }}:</label>
-            {% for subfield in form.show %}
-            <tr>
-              <td>{{ subfield }}</td>
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <td>{{ subfield.label }}</td>
-            </tr>
-            {% endfor %}
-          </div>
-
-          <label>{{ form.time_period.label }}</label>
-          <div class="inline fields">
-            <button class="container" id="leftbutton">
-              <div class="triangle left_triangle"></div>
-            </button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <select class="ui dropdown" id="timePeriod" name="timePeriod">
-              <option value="">Nothing Selected</option>
-              {% for choice in form.time_period.choices %}
-              <option value={{ choice[0] }}>{{choice[1]}}</option>
-              {% endfor %}
-            </select>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <button class="container" id="rightbutton">
-              <div class="triangle right_triangle"></div>
-            </button>
-            <!-- </div>  -->
-          </div>
-          <div class="fields">
-
-            <div class="field">
-              <label>{{ form.start_date.label }}:</label>
-              <input type="date" id="startdate" name="trip-start" class="setDate" value="">
-            </div>
-            <div class="field">
-              <label>{{form.end_date.label}}:</label>
-              <input type="date" id="enddate" name="trip-start" value="">
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-      <div class="ui one column centered grid">
-        {{f.render_form_field(form.apply_filters)}}
+    <div class="ui three column stackable grid">
+      <div class="five wide column">
+        {{filter_select_field(form.request_type)}}
       </div>
 
-      <script type="text/javascript">
-        $(document).ready(function () {
-          // this applies the search to the entire text (not just the beginning)
-          $('.ui.dropdown').dropdown({ fullTextSearch: true });
-        });
-      </script>
+      <div class="five wide column">
+        {{filter_select_field(form.service_category)}}
+
+      </div>
+      <div class="five wide column">
+        {{filter_select_field(form.request_status)}}
+      </div>
 
     </div>
+    <div class="ui two column stackable grid">
+      <div class="eight wide column">
+        <div class="field">
+          <label> {{form.requesting_member.label}}</label>
+          <select class="ui multiple search selection dropdown">
+            <option value="">Type Name Here</option>
+            {% for choice in form.requesting_member.choices %}
+            <option value={{ choice[0] }}>{{choice[1]}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label> {{form.volunteer.label}}</label>
+          <select class="ui multiple search selection dropdown">
+            <option value="">Type Name Here</option>
+            {% for choice in form.volunteer.choices %}
+            <option value={{ choice[0] }}>{{choice[1]}}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label> {{form.local_resource.label}}</label>
+          <select class="ui multiple search selection dropdown">
+            <option value="">Type Name Here</option>
+            {% for choice in form.local_resource.choices %}
+            <option value={{ choice[0] }}>{{choice[1]}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="eight wide column">
+        <div class="inline fields">
+          <label>{{ form.show.label }}:</label>
+          {% for subfield in form.show %}
+          <tr>
+            <td>{{ subfield }}</td>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <td>{{ subfield.label }}</td>
+          </tr>
+          {% endfor %}
+        </div>
+
+        <label>{{ form.time_period.label }}</label>
+        <div class="inline fields">
+          <button class="container" id="leftbutton">
+            <div class="triangle left_triangle"></div>
+          </button>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <select class="ui dropdown" id="timePeriod" name="timePeriod">
+            <option value="">Nothing Selected</option>
+            {% for choice in form.time_period.choices %}
+            <option value={{ choice[0] }}>{{choice[1]}}</option>
+            {% endfor %}
+          </select>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <button class="container" id="rightbutton">
+            <div class="triangle right_triangle"></div>
+          </button>
+          <!-- </div>  -->
+        </div>
+        <div class="fields">
+
+          <div class="field">
+            <label>{{ form.start_date.label }}:</label>
+            <input type="date" id="startdate" name="trip-start" class="setDate" value="">
+          </div>
+          <div class="field">
+            <label>{{form.end_date.label}}:</label>
+            <input type="date" id="enddate" name="trip-start" value="">
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    <div class="ui one column centered grid">
+      {{f.render_form_field(form.apply_filters)}}
+    </div>
+
+    <script type="text/javascript">
+      $(document).ready(function () {
+        // this applies the search to the entire text (not just the beginning)
+        $('.ui.dropdown').dropdown({ fullTextSearch: true });
+      });
+    </script>
+
 </div>
 
 <h2 class="header" class="divleft">Search Results</h2>
@@ -352,11 +381,47 @@
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 {{f.end_form()}}
-{{request_card(6163, request_status)}}
+<div id="request-search-results">
+  {{request_card(6724, "Requested", "06/17", "12:00 PM", "12:00 PM", "Anne Rodda", "Fran Spadafora Manzella",
+  "Member's Home", "Pet Care -Vol", "06/15/2021", "N/A" )}}
+
+  {{request_card(6697, "Confirmed", "06/21", "11:30 AM", "12:40 PM", "Randy Warden", "Hank Dullea",
+  "Transportation", "Vol Driver Local Medical Appt", "06/11/2021", "06/18/2021" )}}
+</div>
 </div>
 </div>
 <script text="text/javascript">
   $(document).ready(function () {
+    $('.no.label .ui.multiple.selection.dropdown')
+      .dropdown({
+        useLabels: false
+      });
+
+
+    $('#search-form').submit(function (e) {
+      // request_types_filter = $("request_type").val();
+      // window.alert(request_types_filter);
+      request_types_filter = [];
+      service_category_filter = [];
+      request_status_filter = [];
+
+      $('#request_type .menu .item.active').each(function () {
+        selected_value = $(this).attr('data-value');
+        request_types_filter.push(selected_value);
+      });
+
+      $('.request-card').each(function () {
+        $this = $(this);
+        $this.show();
+
+        let request_type = $this.find('#request-type').html()
+        if (!request_types_filter.includes(request_type)) {
+          $this.hide();
+        }
+      });
+      return false;
+    })
+
     document.getElementById("leftbutton").onclick = function () {
 
       var option = document.getElementById("timePeriod").value;
