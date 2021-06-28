@@ -2,13 +2,13 @@
 {% import 'macros/form_macros.html' as f %}
 
 {% macro request_card(request_num, request_status, requested_date, start_time, end_time, member_name, volunteer_name,
-request_type, service, created_date, modified_date ) %}
+request_type, service, created_date, modified_date, service_category ) %}
 <div class="ui one cards request-card" style="margin-top:20px">
   <div class="ui card">
     <div class="content" style="background-color: burlywood;">
       <div class="header">
         Request #{{request_num}}
-        <div class="ui right floated ">
+        <div class="ui right floated request-status-value">
           {% if request_status == "Requested" %}
           <div class="ui yellow label">{{request_status}}</div>
           {% elif request_status == "Confirmed" %}
@@ -38,9 +38,12 @@ request_type, service, created_date, modified_date ) %}
         <div class="six wide column">
           <h2>{{member_name}}</h2>
           <h3><em>Volunteer:</em> {{volunteer_name}}</h3>
-          <div class="ui label" style="margin-bottom: 5px" id="request-type">{{request_type}}</div>
+          <div class="ui label request-type-value" style="margin-bottom: 5px">{{request_type}}</div>
 
-          <div class="ui label">{{service}}</div>
+          <div class="ui label">
+            <span class="service-category-value">{{service_category}}</span>:
+            <div class="detail">{{service}}</div>
+          </div>
         </div>
         <div class="six wide column">
           <div>
@@ -383,10 +386,10 @@ request_type, service, created_date, modified_date ) %}
 {{f.end_form()}}
 <div id="request-search-results">
   {{request_card(6724, "Requested", "06/17", "12:00 PM", "12:00 PM", "Anne Rodda", "Fran Spadafora Manzella",
-  "Member's Home", "Pet Care -Vol", "06/15/2021", "N/A" )}}
+  "Member's Home", "Pet Care -Vol", "06/15/2021", "N/A", "Volunteer In-Home Support" )}}
 
   {{request_card(6697, "Confirmed", "06/21", "11:30 AM", "12:40 PM", "Randy Warden", "Hank Dullea",
-  "Transportation", "Vol Driver Local Medical Appt", "06/11/2021", "06/18/2021" )}}
+  "Transportation", "Vol Driver Local Medical Appt", "06/11/2021", "06/18/2021", "Transportation" )}}
 </div>
 </div>
 </div>
@@ -401,23 +404,44 @@ request_type, service, created_date, modified_date ) %}
     $('#search-form').submit(function (e) {
       // request_types_filter = $("request_type").val();
       // window.alert(request_types_filter);
-      request_types_filter = [];
+      request_type_filter = [];
       service_category_filter = [];
       request_status_filter = [];
 
+      // grab filters from relevant form fields
       $('#request_type .menu .item.active').each(function () {
         selected_value = $(this).attr('data-value');
-        request_types_filter.push(selected_value);
+        request_type_filter.push(selected_value);
       });
+      $('#service_category .menu .item.active').each(function () {
+        selected_value = $(this).attr('data-value');
+        service_category_filter.push(selected_value);
+      });
+      $('#request_status .menu .item.active').each(function () {
+        selected_value = $(this).attr('data-value');
+        request_status_filter.push(selected_value);
+      });
+
 
       $('.request-card').each(function () {
         $this = $(this);
         $this.show();
 
-        let request_type = $this.find('#request-type').html()
-        if (!request_types_filter.includes(request_type)) {
+        let request_type = $this.find('.request-type-value').html();
+        if (request_type_filter.length > 0 && !request_type_filter.includes(request_type)) {
           $this.hide();
         }
+
+        let service_category = $this.find('.service-category-value').html();
+        if (service_category_filter.length > 0 && !service_category_filter.includes(service_category)) {
+          $this.hide();
+        }
+
+        let request_status = $this.find('.request-status-value').find('div').html();
+        if (request_status_filter.length > 0 && !request_status_filter.includes(request_status)) {
+          $this.hide();
+        }
+
       });
       return false;
     })
