@@ -1,0 +1,149 @@
+
+.ui.multiple.selection.dropdown .menu .item.active {
+  background-color: lightgray;
+}
+
+.container {
+  /* Center the content */
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+#leftbutton,
+#rightbutton {
+  margin: 5px
+}
+
+
+.request_box {
+  width: 840px;
+  padding: 100px;
+  height: 210px;
+  border: 1px solid gray;
+  margin: 0;
+}
+
+.request_number_box {
+  background-color: tan;
+  width: 840px;
+  padding: 20px;
+  margin: 0px;
+  margin-top: 20px;
+}
+
+.divleft {
+  float: left
+}
+
+.divright {
+  float: right
+}
+
+.date_box {
+  position: relative;
+  width: 140px;
+  height: 131px;
+  border: 1px solid gray;
+  overflow: hidden;
+  margin: -60px;
+  text-align: center;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.day_box {
+  width: 140px;
+  height: 25px;
+  background-color: gainsboro;
+  margin: -60px;
+  margin-top: -130px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.time_box {
+  width: 140px;
+  height: 35px;
+  background-color: gainsboro;
+  margin: -60px;
+  margin-top: 95px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.date_number_box {
+  width: 140px;
+  height: 5px;
+  margin: -60px;
+  margin-top: 90px;
+  text-align: center;
+  font-weight: bold;
+  font-size: x-large;
+}
+
+.name {
+  width: auto;
+  height: 25px;
+  overflow: hidden;
+  margin-left: 150px;
+  margin-top: -120px;
+  text-align: left;
+  font-weight: bold;
+  font-size: large;
+  color: mediumslateblue;
+}
+
+.service_provider {
+  width: 150px;
+  height: 25px;
+  overflow: hidden;
+  margin-left: 150px;
+  margin-top: 20px;
+  text-align: left;
+  font-weight: bold;
+  font-size: medium;
+}
+
+.service_provider_name {
+  width: auto;
+  height: 25px;
+  overflow: hidden;
+  margin-left: 150px;
+  margin-top: 5px;
+  margin-bottom: -40px;
+  text-align: left;
+  font-size: medium;
+}
+
+.type {
+  width: 150px;
+  height: 20px;
+  overflow: hidden;
+  margin-left: 360px;
+  margin-top: -130px;
+  text-align: left;
+  font-weight: bold;
+  font-size: small;
+}
+
+.small_text {
+  width: auto;
+  height: 50px;
+  overflow: hidden;
+  margin-left: 360px;
+  margin-top: 10px;
+  margin-bottom: -40px;
+  text-align: left;
+  font-size: small;
+}
+
+.vertical_line {
+  border-left: 2px solid darkgrey;
+  height: 180px;
+  margin-left: 575px;
+  margin-top: -185px;
+  margin-bottom: -700px;
+  /* position:absolute;
+  left: 50%; */
+}
