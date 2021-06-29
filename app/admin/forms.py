@@ -88,32 +88,25 @@ class SearchRequestForm(FlaskForm):
     request_type = SelectMultipleField('Request Type')
     request_status = SelectMultipleField('Request Status')
     service_category = SelectMultipleField('Service Category')
+    requesting_member = SelectMultipleField('Requesting Member(s)')
+    volunteer = SelectMultipleField('Volunteer(s)')
+    local_resource = SelectMultipleField('Local Resource(s)')
 
     volunteer_type = QuerySelectMultipleField(
         'Volunteer Type',
-        validators=[InputRequired()],
         get_label='name',
         query_factory=lambda: db.session.query(VolunteerType).order_by('name'))
-    requesting_member = SelectMultipleField('Requesting Member(s)',
-                                            validators=[InputRequired()])
-    volunteer = SelectMultipleField('Volunteer(s)',
-                                    validators=[InputRequired()])
-    local_resource = SelectMultipleField('Local Resource(s)',
-                                         validators=[InputRequired()])
 
     show = RadioField('Show',
                       choices=[(0, 'Undated'), (1, 'Dated'), (2, 'Both')])
 
     time_period = SelectField('Time Period',
                               choices=[(0, 'Today'), (1, 'This Week'),
-                                       (2, 'This Month'), (3, 'Future Dates')],
-                              validators=[DataRequired()])
+                                       (2, 'This Month'), (3, 'Future Dates')])
 
     start_date = DateField('Start Date',
-                           validators=[InputRequired()],
                            format='%Y-%M-%D')
     end_date = DateField('End Date',
-                         validators=[InputRequired()],
                          format='%Y-%M-%D')
 
     apply_filters = SubmitField('Apply Filters')
