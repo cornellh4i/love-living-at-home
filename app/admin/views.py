@@ -306,24 +306,21 @@ def search_request():
     form.request_type.choices = [(request_type.name, request_type.name) for request_type in RequestType.query.all()]
     form.request_status.choices = [(request_status.name, request_status.name) for request_status in RequestStatus.query.all()]
     form.service_category.choices = [(service_category.name, service_category.name) for service_category in ServiceCategory.query.all()]
-
     form.requesting_member.choices = [
         (member.id, member.first_name + " " + member.last_name)
         for member in Member.query.all()
-    ]
-    form.volunteer.choices = [
-        (volunteer.id, volunteer.first_name + " " + volunteer.last_name)
-        for volunteer in Volunteer.query.all()
-    ]
-    form.local_resource.choices = [
-        (local_resource.id, local_resource.company_name)
+    ] + [(-1, "Randy Warden"), (-2, "Anne Rodda")]
+
+    service_providers = [
+        ('volunteer', volunteer.id, volunteer.first_name + " " + volunteer.last_name)
+        for volunteer in Volunteer.query.all()] + [('volunteer', -1,"Hank Dullea"), ('volunteer', -2, "Fran Spadafora Manzella")] + [('local-resource', local_resource.id, local_resource.company_name) 
         for local_resource in LocalResource.query.all()
-    ]
+    ] # TODO -- what is required from local resources
 
     return render_template('admin/request_manager/search_request.html',
                            title='Search Request',
-                           form=form,
-                           request_status="Confirmed")
+                           form=form, service_providers=service_providers
+                           )
 
 
 # Create a new service request.
