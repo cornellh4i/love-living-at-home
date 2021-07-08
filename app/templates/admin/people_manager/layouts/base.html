@@ -46,7 +46,8 @@ description=None, icon=None) %}
   <div class="header">{{ name }}
     <i class="trash alternate outline icon right floated" style="cursor: pointer"></i>
     <i class="comment outline icon right floated" style="cursor: pointer"></i>
-    <i class="clock outline icon right floated" style="cursor: pointer"></i>
+    <i class="clock outline icon right floated" style="cursor: pointer"
+      onclick="window.location.href = '{{ url_for('admin.add_availability', availability_id=v.availability_id) }}';"></i>
     <i class="calendar minus outline icon right floated" style="cursor: pointer"></i>
     <i class="check square outline icon right floated" style="cursor: pointer"></i>
     <i class="handshake outline icon right floated" style="cursor: pointer"></i>
@@ -90,7 +91,8 @@ description=None, icon=None) %}
   <div class="header">{{lr.company_name}}
     <i class="trash alternate outline icon right floated" style="cursor: pointer"></i>
     <i class="comment outline icon right floated" style="cursor: pointer"></i>
-    <i class="clock outline icon right floated" style="cursor: pointer"></i>
+    <i class="clock outline icon right floated" style="cursor: pointer"
+      onclick="window.location.href = '{{ url_for('admin.add_availability', availability_id=lr.availability_id) }}';"></i>
     <i class="pencil icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.invite_contractor', local_resource_id=lr.id) }}';"></i>
   </div>
@@ -416,7 +418,7 @@ description=None, icon=None) %}
       </div>
     </div>
 
-    <!-- Availability Pop Up -->
+    <!-- Availability Pop Up
     <div class="ui fullscreen modal" id="availability">
       <i class="close icon"></i>
       <div class="header">Add Availability</div>
@@ -515,7 +517,7 @@ description=None, icon=None) %}
         {{ f.end_form() }}
       </div>
     </div>
-
+     -->
     <!-- Reviews Pop Up -->
     <div class="ui modal" id="reviews">
       <i class="close icon"></i>
@@ -684,18 +686,17 @@ description=None, icon=None) %}
       $('#vettings').modal('show');
     });
 
-    $('#context1 .menu .item').tab({
+    $('#context1.menu.item').tab({
       context: $('#context1'),
     });
 
-    $('i.clock.outline.icon.right.floated').click(function () {
-      $('#availability').modal('show');
-    });
+    // $('i.clock.outline.icon.right.floated').click(function () {
+    //   $('#availability').modal('show');
+    // });
 
     $('i.calendar.minus.outline.icon.right.floated').click(function () {
       $('#vacation_calendar').modal('show');
     });
-
 
     $('i.comment.outline.icon.right.floated').click(function () {
       $('#reviews').modal('show');

@@ -14,7 +14,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
                              AddAvailability, Reviews, EditServiceForm, MultiCheckboxField, EditMetroAreaForm, AddServiceToVolunteer)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import (EditableHTML, Role, User, Member, Address, ServiceCategory, Service,  Request, MetroArea, Staffer, LocalResource, Volunteer, ProvidedService)
+from app.models import (EditableHTML, Role, User, Member, Address, ServiceCategory, Service, Request, MetroArea, Staffer, LocalResource, Volunteer, ProvidedService, Availability)
 import json
 
 admin = Blueprint('admin', __name__)
@@ -655,6 +655,72 @@ def invite_contractor(local_resource_id=None):
         flash('Contractor {} successfully invited'.format(
             form.last_name.data), 'form-success')
     return render_template('admin/people_manager/contractor_manager.html', form=form)
+
+@admin.route('/add-availability', methods=['GET', 'POST'])
+@admin.route('/add-availability/<int:availability_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def add_availability(availability_id=None):
+    """Page for availability management."""
+    availability=None
+    form = AddAvailability()
+    if availability_id is not None: 
+        availability = Availability.query.filter_by(id=availability_id).first()
+        form = AddAvailability(
+            availability_monday=availability.availability_monday, 
+            backup_monday=availability.backup_monday,
+            availability_tuesday=availability.availability_tuesday, 
+            backup_tuesday=availability.backup_tuesday,
+            availability_wednesday=availability.availability_wednesday, 
+            backup_wednesday=availability.backup_wednesday,
+            availability_thursday=availability.availability_thursday, 
+            backup_thursday=availability.backup_thursday,
+            availability_friday=availability.availability_friday, 
+            backup_friday=availability.backup_friday,
+            availability_saturday=availability.availability_saturday, 
+            backup_saturday=availability.backup_saturday,
+            availability_sunday=availability.availability_sunday, 
+            backup_sunday=availability.backup_sunday)
+        
+    if form.validate_on_submit():
+        if availability is not None:
+            updated_availability = availability
+            updated_availability.availability_monday=form.availability_monday.data,
+            updated_availability.backup_monday=form.backup_monday.data,
+            updated_availability.availability_tuesday=form.availability_tuesday.data,
+            updated_availability.backup_tuesday=form.backup_tuesday.data,
+            updated_availability.availability_wednesday=form.availability_wednesday.data,
+            updated_availability.backup_wednesday=form.backup_wednesday.data,
+            updated_availability.availability_thursday=form.availability_thursday.data,
+            updated_availability.backup_thursday=form.backup_thursday.data,
+            updated_availability.availability_friday=form.availability_friday.data,
+            updated_availability.backup_friday=form.backup_friday.data,
+            updated_availability.availability_saturday=form.availability_saturday.data,
+            updated_availability.backup_saturday=form.backup_saturday.data,
+            updated_availability.availability_sunday=form.availability_sunday.data,
+            updated_availability.backup_sunday=form.backup_sunday.data
+            db.session.add(updated_availability)
+            db.session.commit()
+        else:
+            availability = Availability(availability_monday=form.availability_monday.data,
+                                        backup_monday=form.backup_monday.data,
+                                        availability_tuesday=form.availability_tuesday.data,
+                                        backup_tuesday=form.backup_tuesday.data,
+                                        availability_wednesday=form.availability_wednesday.data,
+                                        backup_wednesday=form.backup_wednesday.data,
+                                        availability_thursday=form.availability_thursday.data,
+                                        backup_thursday=form.backup_thursday.data,
+                                        availability_friday=form.availability_friday.data,
+                                        backup_friday=form.backup_friday.data,
+                                        availability_saturday=form.availability_saturday.data,
+                                        backup_saturday=form.backup_saturday.data,
+                                        availability_sunday=form.availability_sunday.data,
+                                        backup_sunday=form.backup_sunday.data)
+            db.session.add(availability)
+            db.session.commit()
+        flash('Availability {} successfully added'.format(
+            form.last_name.data), 'form-success')
+    return render_template('admin/people_manager/availability.html', form=form)
 
 
 @admin.route('/services')

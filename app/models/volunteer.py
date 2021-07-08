@@ -42,6 +42,9 @@ class Volunteer(db.Model):
     emergency_contact_email_address = db.Column(db.String(64))
     emergency_contact_relation = db.Column(db.String(64)) 
 
+    # Availability information
+    availability_id = db.Column(db.Integer(), db.ForeignKey("availability.id"), nullable=False)
+
     general_notes = db.Column(db.String(255), nullable=False)
 
     @staticmethod
@@ -69,6 +72,7 @@ class Volunteer(db.Model):
                 is_fully_vetted=choice([True, False]),
                 vettings=choice([fake.text(), None]),
                 preferred_contact_method=choice(['phone', 'email', 'phone and email']),
+                availability_id=1,
                 general_notes=fake.text(),
                 **kwargs)
             db.session.add(v)

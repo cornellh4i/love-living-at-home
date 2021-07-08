@@ -20,6 +20,10 @@ class LocalResource(db.Model):
     preferred_contact_method=db.Column(db.String(80))
     website = db.Column(db.String(80))
     reviews_received = db.relationship('Review', backref='local_resource', lazy='dynamic')
+    # Availability information
+    availability_id = db.Column(db.Integer(),
+                          db.ForeignKey("availability.id"),
+                          nullable=False)
 
     @staticmethod
     def get_local_resources():

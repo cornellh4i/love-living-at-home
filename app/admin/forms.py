@@ -491,7 +491,7 @@ class Reviews(FlaskForm):
 
 
 class AddAvailability(FlaskForm):
-    availability_times = [("7am-8am", "7am-8am"), ("7am-9am", "7am-9am"), ("7am-10am", "7am-10am"), 
+    availability_times = [("N/A", "N/A"), ("7am-8am", "7am-8am"), ("7am-9am", "7am-9am"), ("7am-10am", "7am-10am"), 
     ("7am-11am", "7am-11am"), ("7am-12pm", "7am-12pm"), ("7am-1pm", "7am-1pm"), ("7am-2pm", "7am-2pm"), 
     ("7am-3pm", "7am-3pm"), ("7am-4pm", "7am-4pm"), ("7am-5pm", "7am-5pm"), 
     ("7am-6pm", "7am-6pm"), ("8am-9am", "8am-9am"), ("8am-10am", "8am-10am"), ("8am-11am", "8am-11am"), 
