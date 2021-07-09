@@ -1,7 +1,8 @@
 {% extends "admin/request_manager/layouts/base.html" %}
 {% import 'macros/form_macros.html' as f %}
 
-{% macro request_card(request_num, request_status, requested_date, start_time, end_time, member_name, volunteer_name,
+{% macro request_card(request_num, request_status, requested_date, start_time,
+end_time, member_name, volunteer_name,
 request_type, service, created_date, modified_date, service_category, member_number, is_volunteer ) %}
 <div class="ui one cards request-card" style="margin-top:20px">
   <div class="ui card">
@@ -205,14 +206,15 @@ request_type, service, created_date, modified_date, service_category, member_num
 
 <hr />
 <div id="request-search-results">
-  {{request_card(6724, "Requested", "06/17", "12:00 PM", "12:00 PM", "Anne Rodda", "Fran Spadafora Manzella",
-  "Member's Home", "Pet Care -Vol", "06/15/2021", "N/A", "Volunteer In-Home Support", -2 )}}
-
-  {{request_card(6697, "Confirmed", "06/21", "11:30 AM", "12:40 PM", "Randy Warden", "Hank Dullea",
-  "Transportation", "Vol Driver Local Medical Appt", "06/11/2021", "06/18/2021", "Transportation", -1 )}}
-
-  {{request_card(6725, "Canceled", "", "12:00 PM", "12:00 PM", "Anne Rodda", "Hank Dullea",
-  "Member's Home", "Pet Care -Vol", "06/15/2021", "N/A", "Volunteer In-Home Support", -2 )}}
+  {% for request in requests %}
+  {{request_card(
+  request.request_num, request.request_status,
+  request.requested_date, request.start_time,
+  request.end_time, request.member_name, request.volunteer_name,
+  request.request_type, request.service, request.created_date,
+  request.modified_date, request.service_category, request.member_number)
+  }}
+  {% endfor %}
 </div>
 
 {% assets 'search_request_js' %}

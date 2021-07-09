@@ -317,9 +317,39 @@ def search_request():
         for local_resource in LocalResource.query.all()
     ] # TODO -- what is required from local resources
 
+    requests = [
+                {'request_num': 6724, 
+                    'request_status': "Requested", 
+                    'requested_date': "06/17", 
+                    'start_time':"12:00 PM", 
+                    'end_time': "12:00 PM", 
+                    'member_name': "Anne Rodda", 
+                    'volunteer_name': "Fran Spadafora Manzella", 
+                    'request_type': "Member's Home", 
+                    'service': "Pet Care -Vol", 
+                    'created_date': "06/15/2021", 
+                    'modified_date': "N/A", 
+                    'service_category': "Volunteer In-Home Support", 
+                    'member_number': -2 
+                },
+                {'request_num': 6697, 
+                    'request_status': "Confirmed", 
+                    'requested_date': "06/21", 
+                    'start_time':"11:30 AM", 
+                    'end_time': "12:40 PM", 
+                    'member_name': "Randy Warden", 
+                    'volunteer_name': "Hank Dullea", 
+                    'request_type': "Transportation", 
+                    'service': "Vol Driver Local Medical Appt", 
+                    'created_date': "06/11/2021", 
+                    'modified_date': "06/18/2021", 
+                    'service_category': "Transportation", 
+                    'member_number': -1
+                }
+                ]
     return render_template('admin/request_manager/search_request.html',
                            title='Search Request',
-                           form=form, service_providers=service_providers
+                           form=form, service_providers=service_providers, requests=requests
                            )
 
 
@@ -340,6 +370,10 @@ def create_transportation_request():
         (member.id, member.first_name + " " + member.last_name)
         for member in Member.query.all()
     ]
+    form.service_provider.choices = [
+        (volunteer.id, volunteer.first_name + " " + volunteer.last_name)
+        for volunteer in Volunteer.query.all()] + [(-1,"Hank Dullea"), (-2, "Fran Spadafora Manzella")] 
+
     form.duration.choices = [
         (request_duration_type.id, request_duration_type.name)
         for request_duration_type in RequestDurationType.query.all()

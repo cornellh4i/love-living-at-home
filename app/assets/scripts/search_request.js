@@ -54,6 +54,7 @@ $(document).ready(function () {
 
     window.alert(Date.parse(start_date));
     window.alert(Date.parse("2021-06-29"));
+    window.alert(new Date());
 
     $('.request-card').each(function () {
       $this = $(this);

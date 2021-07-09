@@ -157,6 +157,12 @@ class TransportationRequestForm(FlaskForm):
         id='member',
         validators=[InputRequired()],
         coerce=int)
+        
+    service_provider = SelectMultipleField(
+        'Service Provider',
+        id='service_provider',
+        validators=[InputRequired()])
+
     requested_date = DateField('Requested Date', validators=[InputRequired()])
     initial_pickup = TimeField('Inital Pickup:',
                                format='%H:%M',
