@@ -61,6 +61,7 @@ def add_fake_data(number_users):
     Member.generate_fake(count=10)
     VolunteerAvailability.import_fake()
     Staffer.generate_fake(count = 10)
+    Availability.generate_fake(count = 10)
 
 
 @manager.command
