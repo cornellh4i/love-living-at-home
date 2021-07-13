@@ -56,7 +56,8 @@ class Member(db.Model):
         seed()
         for i in range(count):
             m = Member(
-                member_number=i + 1,
+                id=i,
+                member_number=i,
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
                 gender=choice([

@@ -13,13 +13,13 @@ class Request(db.Model):
                           nullable=False)
     short_description = db.Column(db.Text, nullable=False)
     # Date Info
-    created_date = db.Column(db.DateTime,
+    created_date = db.Column(db.Date,
                              nullable=False,
                              default=datetime.utcnow().date())
-    modified_date = db.Column(db.DateTime,
+    modified_date = db.Column(db.Date,
                               nullable=False,
                               default=datetime.utcnow().date())
-    requested_date = db.Column(db.DateTime,
+    requested_date = db.Column(db.Date,
                                nullable=False, # can this be null?
                                default=datetime.utcnow().date())
     # Time Info
@@ -57,7 +57,7 @@ class Request(db.Model):
                                      nullable=False)
     # Misc.
     special_instructions = db.Column(db.Text, nullable=False)
-    followup_date = db.Column(db.DateTime,
+    followup_date = db.Column(db.Date,
                               nullable=False,
                               default=datetime.utcnow().date())
     # Staffer Info
@@ -104,10 +104,10 @@ class RequestStatus(db.Model):
     @staticmethod
     def insert_statuses():
         statuses = ['Requested', 'Confirmed', 'Completed', 'Cancelled']
-        for s in statuses:
+        for i, s in enumerate(statuses):
             request_status = RequestStatus.query.filter_by(name=s).first()
             if request_status is None:
-                request_status = RequestStatus(name=s)
+                request_status = RequestStatus(id=i, name=s)
             db.session.add(request_status)
         db.session.commit()
 

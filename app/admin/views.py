@@ -1,4 +1,4 @@
-import json
+import json, time
 from operator import __truediv__
 
 from flask import (Blueprint, abort, flash, redirect, render_template, request,
@@ -17,7 +17,8 @@ from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import (Address, EditableHTML, LocalResource, Member,
-                        MetroArea, ProvidedService, Request, RequestType, RequestDurationType, RequestStatus, Role, Service,
+                        MetroArea, ProvidedService, Request, RequestType, RequestDurationType, RequestVolunteerRecord,
+                        RequestStatus, Role, Service,
                         ServiceCategory, Staffer, User, Volunteer)
 
 admin = Blueprint('admin', __name__)
@@ -313,7 +314,7 @@ def search_request():
 
     service_providers = [
         ('volunteer', volunteer.id, volunteer.first_name + " " + volunteer.last_name)
-        for volunteer in Volunteer.query.all()] + [('volunteer', -1,"Hank Dullea"), ('volunteer', -2, "Fran Spadafora Manzella")] + [('local-resource', local_resource.id, local_resource.company_name) 
+        for volunteer in Volunteer.query.all()] + [('local-resource', local_resource.id, local_resource.company_name) 
         for local_resource in LocalResource.query.all()
     ] # TODO -- what is required from local resources
 
@@ -321,6 +322,7 @@ def search_request():
                 {'request_num': 6724, 
                     'request_status': "Requested", 
                     'requested_date': "06/17", 
+                    'requested_day_of_week': "Saturday",
                     'start_time':"12:00 PM", 
                     'end_time': "12:00 PM", 
                     'member_name': "Anne Rodda", 
@@ -335,6 +337,7 @@ def search_request():
                 {'request_num': 6697, 
                     'request_status': "Confirmed", 
                     'requested_date': "06/21", 
+                    'requested_day_of_week': "Wednesday",
                     'start_time':"11:30 AM", 
                     'end_time': "12:40 PM", 
                     'member_name': "Randy Warden", 
@@ -347,9 +350,35 @@ def search_request():
                     'member_number': -1
                 }
                 ]
+    db_requests = Request.query.all()
+    formatted_db_requests=[]
+    for db_req in db_requests:
+        member = Member.query.get(db_req.requesting_member_id)
+        
+        request_volunteer_record = RequestVolunteerRecord.query.filter_by(request_id=db_req.id).first()
+        volunteer = Volunteer.query.get(request_volunteer_record.volunteer_id)
+
+        formatted_db_requests.append(
+            {'request_num': db_req.id, 
+                    'request_status': RequestStatus.query.get(db_req.status_id).name,
+                    'requested_date': db_req.requested_date.strftime("%m/%d"), 
+                    'requested_day_of_week': db_req.requested_date.strftime("%A"),
+                    'start_time':db_req.initial_pickup_time.strftime( "%I:%M %p" ), 
+                    'end_time': db_req.drop_off_time.strftime( "%I:%M %p" ), 
+                    'member_name': f"{member.first_name} {member.last_name}",
+                    'member_number': member.member_number,
+                    'volunteer_name': f"{volunteer.first_name} {volunteer.last_name}", 
+                    'request_type': RequestType.query.get(db_req.type_id).name, 
+                    'service_category': ServiceCategory.query.get(db_req.service_category_id).name, 
+                    'service': Service.query.get(db_req.service_id).name, 
+                    'created_date': db_req.created_date.strftime("%m/%d/%Y"), 
+                    'modified_date': db_req.modified_date.strftime("%m/%d/%Y")
+                })
+
+    requests.extend(formatted_db_requests)
     return render_template('admin/request_manager/search_request.html',
                            title='Search Request',
-                           form=form, service_providers=service_providers, requests=requests
+                           form=form, service_providers=service_providers, requests=requests, num_requests=len(requests)
                            )
 
 
@@ -372,7 +401,7 @@ def create_transportation_request():
     ]
     form.service_provider.choices = [
         (volunteer.id, volunteer.first_name + " " + volunteer.last_name)
-        for volunteer in Volunteer.query.all()] + [(-1,"Hank Dullea"), (-2, "Fran Spadafora Manzella")] 
+        for volunteer in Volunteer.query.all()]
 
     form.duration.choices = [
         (request_duration_type.id, request_duration_type.name)
@@ -396,7 +425,7 @@ def create_transportation_request():
     if form.validate_on_submit():
         special_input = request.form.get('special_instructions')
         transportation_request = Request(
-            type_id=1,
+            type_id=0,
             status_id=form.status.data.id,
             short_description=form.description.data,
             created_date=form.date_created.data,
@@ -421,8 +450,18 @@ def create_transportation_request():
             cc_email=form.person_to_cc.data)
         db.session.add(transportation_request)
         db.session.commit()
+        print(form.service_provider.data)
+        request_volunteer_record = RequestVolunteerRecord(
+            request_id=transportation_request.id, 
+            volunteer_id=form.service_provider.data[0], 
+            status_id=-1, 
+            staffer_id=-1, 
+            updated_datetime=form.date_created.data)
+        db.session.add(request_volunteer_record)
+        db.session.commit()
+
         flash('Successfully submitted a new transportation request', 'success')
-        return redirect(url_for('admin.index'))
+        return redirect(url_for('admin.search_request'))
     # elif (len(form.errors) > 0):
     # else:
     # flash(request.method, 'error')
