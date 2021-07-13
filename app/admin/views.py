@@ -368,6 +368,7 @@ def search_request():
                     'member_name': f"{member.first_name} {member.last_name}",
                     'member_number': member.member_number,
                     'volunteer_name': f"{volunteer.first_name} {volunteer.last_name}", 
+                    'volunteer_id': volunteer.id,
                     'request_type': RequestType.query.get(db_req.type_id).name, 
                     'service_category': ServiceCategory.query.get(db_req.service_category_id).name, 
                     'service': Service.query.get(db_req.service_id).name, 
