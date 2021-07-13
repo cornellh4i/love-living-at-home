@@ -10,8 +10,8 @@ class RequestMemberRecord(db.Model):
                            db.ForeignKey('request.id'),
                            nullable=False)
     member_id = db.Column(db.Integer,
-                             db.ForeignKey('member.id'),
-                             nullable=False)
-    
+                          db.ForeignKey('member.id'),
+                          nullable=False)
+
     def __repr__(self):
         return f"RequestMemberRecord('Request ID: {self.request_id}, Member ID: {self.member_id}')"

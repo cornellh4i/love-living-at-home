@@ -32,10 +32,11 @@ class Staffer(db.Model):
 
         seed()
         for i in range(count):
-            a = Staffer(first_name=fake.first_name(),
-                        last_name= fake.last_name(),
-                        phone_number = fake.phone_number(),
-                        email_address = fake.email(),
+            a = Staffer(id=i,
+                        first_name=fake.first_name(),
+                        last_name=fake.last_name(),
+                        phone_number=fake.phone_number(),
+                        email_address=fake.email(),
                         **kwargs)
             db.session.add(a)
             try:
