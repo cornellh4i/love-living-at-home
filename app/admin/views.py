@@ -701,6 +701,8 @@ def add_availability(availability_id=None):
             updated_availability.backup_sunday=form.backup_sunday.data
             db.session.add(updated_availability)
             db.session.commit()
+            flash('Availability for {} successfully updated'.format(
+                form.last_name.data), 'form-success')
         else:
             availability = Availability(availability_monday=form.availability_monday.data,
                                         backup_monday=form.backup_monday.data,
@@ -718,8 +720,8 @@ def add_availability(availability_id=None):
                                         backup_sunday=form.backup_sunday.data)
             db.session.add(availability)
             db.session.commit()
-        flash('Availability {} successfully added'.format(
-            form.last_name.data), 'form-success')
+            flash('Availability {} successfully added'.format(
+                form.last_name.data), 'form-success')
     return render_template('admin/people_manager/availability.html', form=form)
 
 

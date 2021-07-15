@@ -19,7 +19,7 @@ class Availability(db.Model):
     backup_sunday = db.Column(db.String(64))
 
     @staticmethod
-    def import_fake (count=5, **kwargs):
+    def generate_fake (count=5, **kwargs):
         """Generate fake availability data for testing."""
         from sqlalchemy.exc import IntegrityError
 

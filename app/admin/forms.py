@@ -491,7 +491,7 @@ class Reviews(FlaskForm):
 
 
 class AddAvailability(FlaskForm):
-    availability_times = [("N/A", "N/A"), ("7am-8am", "7am-8am"), ("7am-9am", "7am-9am"), ("7am-10am", "7am-10am"), 
+    availability_times = [("Unavailable", "Unavailable"), ("7am-8am", "7am-8am"), ("7am-9am", "7am-9am"), ("7am-10am", "7am-10am"), 
     ("7am-11am", "7am-11am"), ("7am-12pm", "7am-12pm"), ("7am-1pm", "7am-1pm"), ("7am-2pm", "7am-2pm"), 
     ("7am-3pm", "7am-3pm"), ("7am-4pm", "7am-4pm"), ("7am-5pm", "7am-5pm"), 
     ("7am-6pm", "7am-6pm"), ("8am-9am", "8am-9am"), ("8am-10am", "8am-10am"), ("8am-11am", "8am-11am"), 
@@ -511,20 +511,20 @@ class AddAvailability(FlaskForm):
     ("2pm-3pm", "2pm-3pm"), ("2pm-4pm", "2pm-4pm"), ("2pm-5pm", "2pm-5pm"), ("2pm-6pm", "2pm-6pm"), 
     ("3pm-4pm", "3pm-4pm"), ("3pm-5pm", "3pm-5pm"), ("3pm-6pm", "3pm-6pm"), ("4pm-5pm", "4pm-5pm"), 
     ("4pm-6pm", "4pm-6pm"), ("5pm-6pm", "5pm-6pm")] 
-    availability_monday = SelectMultipleField('', choices=availability_times)
-    backup_monday = SelectMultipleField('', choices=availability_times)
-    availability_tuesday = SelectMultipleField('', choices=availability_times)
-    backup_tuesday = SelectMultipleField('', choices=availability_times)
-    availability_wednesday = SelectMultipleField('', choices=availability_times)
-    backup_wednesday = SelectMultipleField('', choices=availability_times)
-    availability_thursday = SelectMultipleField('', choices=availability_times)
-    backup_thursday = SelectMultipleField('', choices=availability_times)
-    availability_friday = SelectMultipleField('', choices=availability_times)
-    backup_friday = SelectMultipleField('', choices=availability_times)
-    availability_saturday = SelectMultipleField('', choices=availability_times)
-    backup_saturday = SelectMultipleField('', choices=availability_times)
-    availability_sunday = SelectMultipleField('', choices=availability_times)
-    backup_sunday = SelectMultipleField('', choices=availability_times)
+    availability_monday = SelectField('', choices=availability_times)
+    backup_monday = SelectField('', choices=availability_times)
+    availability_tuesday = SelectField('', choices=availability_times)
+    backup_tuesday = SelectField('', choices=availability_times)
+    availability_wednesday = SelectField('', choices=availability_times)
+    backup_wednesday = SelectField('', choices=availability_times)
+    availability_thursday = SelectField('', choices=availability_times)
+    backup_thursday = SelectField('', choices=availability_times)
+    availability_friday = SelectField('', choices=availability_times)
+    backup_friday = SelectField('', choices=availability_times)
+    availability_saturday = SelectField('', choices=availability_times)
+    backup_saturday = SelectField('', choices=availability_times)
+    availability_sunday = SelectField('', choices=availability_times)
+    backup_sunday = SelectField('', choices=availability_times)
     submit = SubmitField("Save")
 
 
