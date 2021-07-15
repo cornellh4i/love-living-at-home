@@ -47,7 +47,7 @@ description=None, icon=None) %}
     <i class="trash alternate outline icon right floated" style="cursor: pointer"></i>
     <i class="comment outline icon right floated" style="cursor: pointer"></i>
     <i class="clock outline icon right floated" style="cursor: pointer"
-      onclick="window.location.href = '{{ url_for('admin.add_availability', availability_id=v.availability_id) }}';"></i>
+      onclick="window.location.href = '{{ url_for('admin.add_availability_volunteer', volunteer_id=v.id) }}';"></i>
     <i class="calendar minus outline icon right floated" style="cursor: pointer"></i>
     <i class="check square outline icon right floated" style="cursor: pointer"></i>
     <i class="handshake outline icon right floated" style="cursor: pointer"></i>
@@ -92,7 +92,7 @@ description=None, icon=None) %}
     <i class="trash alternate outline icon right floated" style="cursor: pointer"></i>
     <i class="comment outline icon right floated" style="cursor: pointer"></i>
     <i class="clock outline icon right floated" style="cursor: pointer"
-      onclick="window.location.href = '{{ url_for('admin.add_availability', availability_id=lr.availability_id) }}';"></i>
+      onclick="window.location.href = '{{ url_for('admin.add_availability_local_resource', local_resource_id=lr.id) }}';"></i>
     <i class="pencil icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.invite_contractor', local_resource_id=lr.id) }}';"></i>
   </div>
@@ -243,11 +243,14 @@ description=None, icon=None) %}
     <a class="item" data-tab="volunteer">Volunteers</a>
     <a class="item" data-tab="local-resource">Local Resources</a>
   </div>
+  
+  <!-- Member Tab -->
   <div class="ui tab active" data-tab="member">
     <div class="ui stackable centered grid container">
       <div class="four wide column">
         {{ dashboard_option('Add Member', 'admin.invite_member', icon='add user icon') }}
-
+        
+        <!-- Search Box -->
         <h3>Search:</h3>
         <div class="ui search item">
           <div class="ui transparent icon input">
@@ -255,6 +258,8 @@ description=None, icon=None) %}
             <i class="search icon"></i>
           </div>
         </div>
+
+        <!-- Filter Box -->
         <h3>Filters</h3>
         <div class="attached ui top segment">
           <form class="ui form" id="member-filter-form">
@@ -277,6 +282,7 @@ description=None, icon=None) %}
         </div>
       </div>
 
+      <!-- Search Results -->
       <div class="twelve wide column">
         <h3>Search Results</h3>
         <div class="ui segment search-results">
@@ -289,10 +295,14 @@ description=None, icon=None) %}
       </div>
     </div>
   </div>
+  
+  <!-- Volunteer Tab -->
   <div class="ui tab" data-tab="volunteer">
     <div class="ui stackable centered grid container">
       <div class="four wide column">
         {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', icon='add user icon') }}
+        
+        <!-- Search Box -->
         <h3>Search:</h3>
         <div class="ui search item">
           <div class="ui transparent icon input">
@@ -300,8 +310,31 @@ description=None, icon=None) %}
             <i class="search icon"></i>
           </div>
         </div>
+
+        <!-- Filter Box -->
+        <h3>Filters</h3>
+        <div class="attached ui top segment">
+          <form class="ui form" id="member-filter-form">
+            <div class="grouped fields">
+              <label>Vetting Status:</label>
+              <div class="field">
+                <div class="ui checkbox">
+                  <input type="checkbox" name="volunteer_type" />
+                  <label>Fully Vetted</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui checkbox">
+                  <input type="checkbox" name="volunteer_type" />
+                  <label>Not Fully Vetted</label>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
 
+      <!-- Search Results -->
       <div class="twelve wide column">
         <h3>Search Results</h3>
         <div class="ui segment search-results">
@@ -313,6 +346,33 @@ description=None, icon=None) %}
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Local Resource Tab -->
+  <div class="ui tab" data-tab="local-resource">
+    <div class="ui stackable centered grid container">
+      <div class="four wide column">
+        {{ dashboard_option('Add Local Resource', 'admin.invite_contractor', icon='add user icon') }}
+        <h3>Search:</h3>
+        <div class="ui search item">
+          <div class="ui transparent icon input">
+            <input id="search-people" type="text" placeholder="Enter name...">
+            <i class="search icon"></i>
+          </div>
+        </div>
+      </div>
+      <div class="twelve wide column">
+        <h3>Search Results</h3>
+        <div class="ui segment search-results">
+          {% for lr in local_resources %}
+          <div class="ui fluid card" data-role={{"Local Resource"}}>
+            {{local_resource_card(lr)}}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
 
     <!-- Service Categories Pop Up -->
     <div class="ui modal" id="services">
@@ -392,31 +452,6 @@ description=None, icon=None) %}
       {{ f.end_form() }}
     </div>
   </div>
-
-  <div class="ui tab" data-tab="local-resource">
-    <div class="ui stackable centered grid container">
-      <div class="four wide column">
-        {{ dashboard_option('Add Local Resource', 'admin.invite_contractor', icon='add user icon') }}
-        <h3>Search:</h3>
-        <div class="ui search item">
-          <div class="ui transparent icon input">
-            <input id="search-people" type="text" placeholder="Enter name...">
-            <i class="search icon"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="twelve wide column">
-        <h3>Search Results</h3>
-        <div class="ui segment search-results">
-          {% for lr in local_resources %}
-          <div class="ui fluid card" data-role={{"Local Resource"}}>
-            {{local_resource_card(lr)}}
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
 
     <!-- Availability Pop Up
     <div class="ui fullscreen modal" id="availability">
@@ -518,6 +553,7 @@ description=None, icon=None) %}
       </div>
     </div>
      -->
+
     <!-- Reviews Pop Up -->
     <div class="ui modal" id="reviews">
       <i class="close icon"></i>
@@ -573,6 +609,7 @@ description=None, icon=None) %}
       </div>
     </div>
 
+    <!-- Vacation Calendar Pop Up -->
     <div class="ui modal" id="vacation_calendar">
       <i class="close icon"></i>
       <div class="header">Vacation Calendar</div>

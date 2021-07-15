@@ -59,7 +59,6 @@ def add_fake_data(number_users):
     Volunteer.generate_fake(count=10)
     Address.generate_fake(count=10)
     Member.generate_fake(count=10)
-    VolunteerAvailability.import_fake()
     Staffer.generate_fake(count = 10)
     Availability.generate_fake(count = 10)
 
@@ -82,7 +81,6 @@ def setup_general():
     Role.insert_roles()
     # Volunteer related
     VolunteerType.insert_types()
-    AvailabilityStatus.insert_statuses()
     # TimePeriod.insert_time_periods()
     # Request related
     RequestDurationType.insert_types()

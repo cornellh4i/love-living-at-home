@@ -40,10 +40,10 @@ class Volunteer(db.Model):
     emergency_contact_name = db.Column(db.String(64))
     emergency_contact_phone_number = db.Column(db.String(64))
     emergency_contact_email_address = db.Column(db.String(64))
-    emergency_contact_relation = db.Column(db.String(64)) 
+    emergency_contact_relationship = db.Column(db.String(64)) 
 
     # Availability information
-    availability_id = db.Column(db.Integer(), db.ForeignKey("availability.id"), nullable=False)
+    availability_id = db.Column(db.Integer(), db.ForeignKey("availability.id"))
 
     general_notes = db.Column(db.String(255), nullable=False)
 
@@ -104,73 +104,6 @@ class VolunteerType(db.Model):
 
     def __repr__(self):
         return f"VolunteerType('{self.name}')"
-
-
-# For Availability
-class VolunteerAvailability(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    volunteer_id = db.Column(db.Integer,
-                             db.ForeignKey('volunteer.id'),
-                             nullable=False)
-    day_of_week = db.Column(
-        db.String(20), nullable=False
-    )  # one of ['Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat', 'Sun']
-    start_hour = db.Column(db.Integer, nullable=False) # 24-hour time [0-23] (e.g., if '13', then this entry is for 1-2pm).
-    end_hour = db.Column(db.Integer, nullable=False) # same as start_hour: should be in range [0, 23]
-    availability_status_id = db.Column(db.Integer,
-                                       db.ForeignKey('availability_status.id'),
-                                       nullable=False)
-
-    @staticmethod
-    def import_fake (**kwargs):
-        """Generate a number of fake users for testing."""
-        from sqlalchemy.exc import IntegrityError
-        import pandas as pd
-
-        availability_df = pd.read_csv('./app/data/out/fake_volunteer_availabilities.csv')
-        num_rows = len(availability_df)
-        print(num_rows)
-        for i in range(num_rows):
-            row = availability_df.iloc[i]
-            a = VolunteerAvailability(
-                volunteer_id=int(row['volunteer_id']),
-                day_of_week=row['day_of_week'],
-                start_hour=int(row['start_hour']),
-                end_hour=int(row['end_hour']),
-                availability_status_id=int(row['availability_status_id']),
-                **kwargs)
-            print(a)
-            db.session.add(a)
-            try:
-                db.session.commit()
-                print("Committed " + str(i))
-            except IntegrityError:
-                db.session.rollback()
-            
-
-    def __repr__(self):
-        return f"VolunteerAvailability('{self.day_of_week}: {self.start_hour} - {self.end_hour}')"
-
-
-class AvailabilityStatus(db.Model):
-    id = db.Column(db.Integer, nullable=False, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-
-    @staticmethod
-    def insert_statuses():
-        statuses = ['Available', 'Available for Backup']
-        for s in statuses:
-            availability_status = AvailabilityStatus.query.filter_by(
-                name=s).first()
-            if availability_status is None:
-                availability_status = AvailabilityStatus(name=s)
-            db.session.add(availability_status)
-        db.session.commit()
-
-    def __repr__(self):
-        return f"AvailabilityStatus('[{self.id}] {self.name}')"
-
-
 
 # For Vacation Calendar
 class VolunteerVacationDay(db.Model):

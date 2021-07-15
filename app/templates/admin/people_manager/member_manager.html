@@ -1,6 +1,7 @@
-{% extends 'layouts/base.html' %} {% import 'macros/form_macros.html' as f %} {%
-import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
-%} {% block content %}
+{% extends 'layouts/base.html' %} 
+{% import 'macros/form_macros.html' as f %} 
+{% import 'macros/check_password.html' as check %} 
+{% block content %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
     <a class="ui basic compact button" href="{{ url_for('admin.people_manager') }}">
@@ -18,7 +19,6 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     'info': get_flashed_messages(category_filter=['form-info']),
     'success': get_flashed_messages(category_filter=['form-success'])
     } %}
-
 
     {{ f.begin_form(form, flashes) }}
 

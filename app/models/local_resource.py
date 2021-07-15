@@ -22,8 +22,7 @@ class LocalResource(db.Model):
     reviews_received = db.relationship('Review', backref='local_resource', lazy='dynamic')
     # Availability information
     availability_id = db.Column(db.Integer(),
-                          db.ForeignKey("availability.id"),
-                          nullable=False)
+                          db.ForeignKey("availability.id"))
 
     @staticmethod
     def get_local_resources():

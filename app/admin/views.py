@@ -451,7 +451,7 @@ def invite_member(member_id = None):
             updated_member.emergency_contact_name=form.emergency_contact_name.data
             updated_member.emergency_contact_phone_number=form.emergency_contact_phone_number.data
             updated_member.emergency_contact_email_address=form.emergency_contact_email_address.data
-            updated_member.emergency_contact_relation=form.emergency_contact_relationship.data
+            updated_member.emergency_contact_relationship=form.emergency_contact_relationship.data
             updated_member.membership_expiration_date=form.membership_expiration_date.data
             updated_member.member_number=form.member_number.data
             updated_member.volunteer_notes=form.volunteer_notes.data
@@ -478,7 +478,7 @@ def invite_member(member_id = None):
                             emergency_contact_name=form.emergency_contact_name.data,
                             emergency_contact_phone_number=form.emergency_contact_phone_number.data,
                             emergency_contact_email_address=form.emergency_contact_email_address.data,
-                            emergency_contact_relation=form.emergency_contact_relationship.data,
+                            emergency_contact_relationship=form.emergency_contact_relationship.data,
                             membership_expiration_date=form.membership_expiration_date.data,
                             member_number=form.member_number.data,
                             volunteer_notes=form.volunteer_notes.data,
@@ -574,7 +574,7 @@ def invite_volunteer(volunteer_id=None):
             updated_volunteer.emergency_contact_name=form.emergency_contact_name.data
             updated_volunteer.emergency_contact_phone_number=form.emergency_contact_phone_number.data
             updated_volunteer.emergency_contact_email_address=form.emergency_contact_email_address.data
-            updated_volunteer.emergency_contact_relation=form.emergency_contact_relationship.data
+            updated_volunteer.emergency_contact_relationship=form.emergency_contact_relationship.data
             updated_volunteer.general_notes=form.notes.data
             db.session.add(updated_volunteer)
             db.session.commit()
@@ -587,16 +587,16 @@ def invite_volunteer(volunteer_id=None):
                 middle_initial=form.middle_initial.data,
                 last_name=form.last_name.data,
                 preferred_name=form.preferred_name.data,
-                birthday=form.birthday.data,
+                birthdate=form.birthdate.data,
                 gender=form.gender.data,
                 primary_address_id = address.id,
-                primary_phone_number=form.primary_phone.data,
-                email_address=form.email.data,
+                primary_phone_number=form.primary_phone_number.data,
+                email_address=form.email_address.data,
                 emergency_contact_name=form.emergency_contact_name.data,
                 emergency_contact_phone_number=form.emergency_contact_phone_number.data,
                 emergency_contact_email_address=form.emergency_contact_email_address.data,
                 emergency_contact_relationship = form.emergency_contact_relationship.data,
-                preferred_contact_method=form.contact_preference.data,
+                preferred_contact_method=form.preferred_contact_method.data,
                 type_id=0,  # What should we set volunteer type id as???
                 general_notes=form.notes.data,
                 rating=1,  # Why is this not null before the user even creates a volunteer?
@@ -654,14 +654,91 @@ def invite_contractor(local_resource_id=None):
         db.session.commit()
         flash('Contractor {} successfully invited'.format(
             form.last_name.data), 'form-success')
+        return redirect(url_for('admin.people_manager'))
     return render_template('admin/people_manager/contractor_manager.html', form=form)
 
-@admin.route('/add-availability', methods=['GET', 'POST'])
-@admin.route('/add-availability/<int:availability_id>', methods=['GET', 'POST'])
+@admin.route('/add-availability-volunteer/<int:volunteer_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def add_availability(availability_id=None):
+def add_availability_volunteer(volunteer_id=None, availability_id=None):
     """Page for availability management."""
+    volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
+    availability_id=volunteer.availability_id
+    availability=None
+    form = AddAvailability()
+    if availability_id is not None: 
+        availability = Availability.query.filter_by(id=availability_id).first()
+        form = AddAvailability(
+            availability_monday=availability.availability_monday, 
+            backup_monday=availability.backup_monday,
+            availability_tuesday=availability.availability_tuesday, 
+            backup_tuesday=availability.backup_tuesday,
+            availability_wednesday=availability.availability_wednesday, 
+            backup_wednesday=availability.backup_wednesday,
+            availability_thursday=availability.availability_thursday, 
+            backup_thursday=availability.backup_thursday,
+            availability_friday=availability.availability_friday, 
+            backup_friday=availability.backup_friday,
+            availability_saturday=availability.availability_saturday, 
+            backup_saturday=availability.backup_saturday,
+            availability_sunday=availability.availability_sunday, 
+            backup_sunday=availability.backup_sunday)
+        
+    if form.validate_on_submit():   
+        if availability is not None:
+            updated_availability = availability
+            updated_availability.availability_monday=form.availability_monday.data,
+            updated_availability.backup_monday=form.backup_monday.data,
+            updated_availability.availability_tuesday=form.availability_tuesday.data,
+            updated_availability.backup_tuesday=form.backup_tuesday.data,
+            updated_availability.availability_wednesday=form.availability_wednesday.data,
+            updated_availability.backup_wednesday=form.backup_wednesday.data,
+            updated_availability.availability_thursday=form.availability_thursday.data,
+            updated_availability.backup_thursday=form.backup_thursday.data,
+            updated_availability.availability_friday=form.availability_friday.data,
+            updated_availability.backup_friday=form.backup_friday.data,
+            updated_availability.availability_saturday=form.availability_saturday.data,
+            updated_availability.backup_saturday=form.backup_saturday.data,
+            updated_availability.availability_sunday=form.availability_sunday.data,
+            updated_availability.backup_sunday=form.backup_sunday.data
+            db.session.add(updated_availability)
+            db.session.commit()
+            flash('Availability for {} successfully updated'.format(
+                volunteer.last_name), 'success')
+        else:
+            availability = Availability(availability_monday=form.availability_monday.data,
+                                        backup_monday=form.backup_monday.data,
+                                        availability_tuesday=form.availability_tuesday.data,
+                                        backup_tuesday=form.backup_tuesday.data,
+                                        availability_wednesday=form.availability_wednesday.data,
+                                        backup_wednesday=form.backup_wednesday.data,
+                                        availability_thursday=form.availability_thursday.data,
+                                        backup_thursday=form.backup_thursday.data,
+                                        availability_friday=form.availability_friday.data,
+                                        backup_friday=form.backup_friday.data,
+                                        availability_saturday=form.availability_saturday.data,
+                                        backup_saturday=form.backup_saturday.data,
+                                        availability_sunday=form.availability_sunday.data,
+                                        backup_sunday=form.backup_sunday.data)
+            db.session.add(availability)
+            db.session.commit()
+            updated_volunteer = volunteer
+            updated_volunteer.availability_id=int(availability.id)
+            db.session.add(updated_volunteer)
+            db.session.commit()
+            flash('Availability for {} successfully added'.format(
+                volunteer.last_name), 'success')
+        return redirect(url_for('admin.people_manager'))
+    
+    return render_template('admin/people_manager/availability.html', form=form)
+    
+@admin.route('/add-availability-local-resource/<int:local_resource_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def add_availability_local_resource(local_resource_id=None, availability_id=None):
+    """Page for availability management."""
+    localResource = LocalResource.query.filter_by(id=local_resource_id).first()
+    availability_id=localResource.availability_id
     availability=None
     form = AddAvailability()
     if availability_id is not None: 
@@ -702,7 +779,7 @@ def add_availability(availability_id=None):
             db.session.add(updated_availability)
             db.session.commit()
             flash('Availability for {} successfully updated'.format(
-                form.last_name.data), 'form-success')
+                localResource.company_name), 'form-success')
         else:
             availability = Availability(availability_monday=form.availability_monday.data,
                                         backup_monday=form.backup_monday.data,
@@ -719,9 +796,13 @@ def add_availability(availability_id=None):
                                         availability_sunday=form.availability_sunday.data,
                                         backup_sunday=form.backup_sunday.data)
             db.session.add(availability)
+            updated_localResource = localResource
+            updated_localResource.availability_id=int(availability.id)
+            db.session.add(updated_localResource)
             db.session.commit()
             flash('Availability {} successfully added'.format(
-                form.last_name.data), 'form-success')
+                localResource.company_name), 'form-success')
+        return redirect(url_for('admin.people_manager'))
     return render_template('admin/people_manager/availability.html', form=form)
 
 

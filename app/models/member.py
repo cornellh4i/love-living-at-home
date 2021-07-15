@@ -28,7 +28,7 @@ class Member(db.Model):
     emergency_contact_name = db.Column(db.String(64))
     emergency_contact_phone_number = db.Column(db.String(64))
     emergency_contact_email_address = db.Column(db.String(64))
-    emergency_contact_relation = db.Column(db.String(64)) 
+    emergency_contact_relationship = db.Column(db.String(64)) 
     ## Membership Info
     membership_expiration_date = db.Column(db.Date, nullable=False)
     ## Service Notes
