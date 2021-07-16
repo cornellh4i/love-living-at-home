@@ -3,7 +3,7 @@
 
 {% macro request_card(request_num, request_status, requested_date, requested_day_of_week, start_time,
 end_time, member_name, volunteer_name,
-request_type, service, created_date, modified_date, service_category, member_number, volunteer_id ) %}
+request_type, service, created_date, modified_date, service_category, member_number, volunteer_id, is_volunteer ) %}
 <div class="ui one cards request-card" style="margin-top:20px">
   <div class="ui card">
     <div class="content" style="background-color: burlywood;">
@@ -42,7 +42,11 @@ request_type, service, created_date, modified_date, service_category, member_num
         </div>
         <div class="six wide column">
           <h2><span class="requesting-member-value" data-value="{{member_number}}">{{member_name}}</span></h2>
-          <h3><em>Volunteer:</em>
+          <h3> <em><span class="service-provider-role-value">{% if is_volunteer %}
+                Volunteer
+                {% else %}
+                Local Resource
+                {% endif %}</span>:</em>
             <span class="service-provider-value" data-value="{{volunteer_id}}">{{volunteer_name}}</span>
           </h3>
           <div class="ui label request-type-value" style="margin-bottom: 5px">{{request_type}}</div>
@@ -213,7 +217,7 @@ request_type, service, created_date, modified_date, service_category, member_num
   request.start_time,
   request.end_time, request.member_name, request.volunteer_name,
   request.request_type, request.service, request.created_date,
-  request.modified_date, request.service_category, request.member_number, request.volunteer_id)
+  request.modified_date, request.service_category, request.member_number, request.volunteer_id, request.is_volunteer)
   }}
   {% endfor %}
 </div>
