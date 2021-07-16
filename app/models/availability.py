@@ -3,20 +3,20 @@ from .. import db
 class Availability(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ## Availabilites
-    availability_monday = db.Column(db.String(64))
+    availability_monday = db.Column(db.String(64), default='Unavailable')
     backup_monday = db.Column(db.String(64), default='Unavailable')
-    availability_tuesday = db.Column(db.String(64))
-    backup_tuesday = db.Column(db.String(64))
-    availability_wednesday = db.Column(db.String(64))
-    backup_wednesday = db.Column(db.String(64))
-    availability_thursday = db.Column(db.String(64))
-    backup_thursday = db.Column(db.String(64))
-    availability_friday = db.Column(db.String(64))
-    backup_friday = db.Column(db.String(64))
-    availability_saturday = db.Column(db.String(64))
-    backup_saturday = db.Column(db.String(64))
-    availability_sunday = db.Column(db.String(64))
-    backup_sunday = db.Column(db.String(64))
+    availability_tuesday = db.Column(db.String(64), default='Unavailable')
+    backup_tuesday = db.Column(db.String(64), default='Unavailable')
+    availability_wednesday = db.Column(db.String(64), default='Unavailable')
+    backup_wednesday = db.Column(db.String(64), default='Unavailable')
+    availability_thursday = db.Column(db.String(64), default='Unavailable')
+    backup_thursday = db.Column(db.String(64), default='Unavailable')
+    availability_friday = db.Column(db.String(64), default='Unavailable')
+    backup_friday = db.Column(db.String(64), default='Unavailable')
+    availability_saturday = db.Column(db.String(64), default='Unavailable')
+    backup_saturday = db.Column(db.String(64), default='Unavailable')
+    availability_sunday = db.Column(db.String(64), default='Unavailable')
+    backup_sunday = db.Column(db.String(64), default='Unavailable')
 
     @staticmethod
     def generate_fake (count=5, **kwargs):
