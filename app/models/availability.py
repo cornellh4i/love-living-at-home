@@ -4,7 +4,7 @@ class Availability(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ## Availabilites
     availability_monday = db.Column(db.String(64))
-    backup_monday = db.Column(db.String(64))
+    backup_monday = db.Column(db.String(64), default='Unavailable')
     availability_tuesday = db.Column(db.String(64))
     backup_tuesday = db.Column(db.String(64))
     availability_wednesday = db.Column(db.String(64))
