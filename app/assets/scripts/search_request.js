@@ -14,7 +14,6 @@ $(document).ready(function () {
             $this.hide();
           }
         });
-
     }
   });
 
@@ -29,6 +28,7 @@ $(document).ready(function () {
     request_status_filter = [];
     requesting_member_filter = [];
     volunteer_filter = [];
+    local_resource_filter = [];
 
     // grab filters from relevant form fields
     $('#request_type .menu .item.active').each(function () {
@@ -48,13 +48,27 @@ $(document).ready(function () {
       requesting_member_filter.push(selected_value);
     });
 
+    $('#service-provider-menu .item.active').each(function () {
+      volunteer_id = $(this).attr('data-id');
+      role = $(this).attr('data-role'); // either "volunteer" or "local-resource"
+      id = $(this).attr('data-id');
+      if (role == "volunteer") {
+        volunteer_id = id;
+        volunteer_filter.push(volunteer_id);
+      }
+      else if (role == "local-resource") {
+        local_resource_id = id;
+        local_resource_filter.push(local_resource_id);
+      }
+    });
+
     let date_option_filter = $('#date-options').find('[name="date-options"]:checked').val();
     let start_date = $('#startdate').val();
     let end_date = $('#enddate').val()
 
-    window.alert(Date.parse(start_date));
-    window.alert(Date.parse("2021-06-29"));
-    window.alert(new Date());
+    // window.alert(Date.parse(start_date));
+    // window.alert(Date.parse("2021-06-29"));
+    // window.alert(new Date());
 
     $('.request-card').each(function () {
       $this = $(this);
@@ -73,6 +87,11 @@ $(document).ready(function () {
       }
       let requesting_member = $this.find('.requesting-member-value').attr('data-value');
       if (requesting_member_filter.length > 0 && !requesting_member_filter.includes(requesting_member)) {
+        $this.hide();
+      }
+
+      let volunteer_id = $this.find('.service-provider-value').attr('data-value');
+      if (volunteer_filter.length > 0 && !volunteer_filter.includes(volunteer_id)) {
         $this.hide();
       }
     });
