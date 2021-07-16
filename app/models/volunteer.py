@@ -1,3 +1,4 @@
+from app.models.availability import Availability
 from .. import db
 
 NUM_VOLUNTEERS=100
@@ -44,7 +45,7 @@ class Volunteer(db.Model):
 
     # Availability information
     availability_id = db.Column(db.Integer(), db.ForeignKey("availability.id"))
-
+    
     general_notes = db.Column(db.String(255), nullable=False)
 
     @staticmethod
@@ -72,7 +73,7 @@ class Volunteer(db.Model):
                 is_fully_vetted=choice([True, False]),
                 vettings=choice([fake.text(), None]),
                 preferred_contact_method=choice(['phone', 'email', 'phone and email']),
-                availability_id=1,
+                availability_id=choice([1, 2, 3]),
                 general_notes=fake.text(),
                 **kwargs)
             db.session.add(v)

@@ -15,7 +15,7 @@ from app.admin.forms import (ChangeAccountTypeForm, ChangeUserEmailForm,
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import (EditableHTML, Role, User, Member, Address, ServiceCategory, Service, Request, MetroArea, Staffer, LocalResource, Volunteer, ProvidedService, Availability)
-import json
+import json, sys
 
 admin = Blueprint('admin', __name__)
 
@@ -316,7 +316,7 @@ def create_request():
     return render_template('admin/request_manager/create_request.html')
     
 # Create a new Transportation service request.
-@admin.route('/create-request/transportation-request', methods=['Get', 'POST'])
+@admin.route('/create-request/transportation-request', methods=['GET', 'POST'])
 @admin_required
 def create_transportation_request():
     form = TransportationRequestForm()
@@ -660,13 +660,17 @@ def invite_contractor(local_resource_id=None):
 @admin.route('/add-availability-volunteer/<int:volunteer_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def add_availability_volunteer(volunteer_id=None, availability_id=None):
+def add_availability_volunteer(volunteer_id=None):
     """Page for availability management."""
+    print('Hello world!', file=sys.stderr)
+
     volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
     availability_id=volunteer.availability_id
     availability=None
     form = AddAvailability()
     if availability_id is not None: 
+        print(f'Availability ID is {availability_id}', file=sys.stderr)
+
         availability = Availability.query.filter_by(id=availability_id).first()
         form = AddAvailability(
             availability_monday=availability.availability_monday, 
@@ -683,29 +687,36 @@ def add_availability_volunteer(volunteer_id=None, availability_id=None):
             backup_saturday=availability.backup_saturday,
             availability_sunday=availability.availability_sunday, 
             backup_sunday=availability.backup_sunday)
-        
-    if form.validate_on_submit():   
+    print(form.errors, file=sys.stderr)
+
+    if form.is_submitted():
+        print("submitted", file=sys.stderr)
+
+
+    if form.validate_on_submit():  
+        print('Form validate on submit.', file=sys.stderr)
+
         if availability is not None:
+            print("if", file=sys.stderr)
             updated_availability = availability
-            updated_availability.availability_monday=form.availability_monday.data,
-            updated_availability.backup_monday=form.backup_monday.data,
-            updated_availability.availability_tuesday=form.availability_tuesday.data,
-            updated_availability.backup_tuesday=form.backup_tuesday.data,
-            updated_availability.availability_wednesday=form.availability_wednesday.data,
-            updated_availability.backup_wednesday=form.backup_wednesday.data,
-            updated_availability.availability_thursday=form.availability_thursday.data,
-            updated_availability.backup_thursday=form.backup_thursday.data,
-            updated_availability.availability_friday=form.availability_friday.data,
-            updated_availability.backup_friday=form.backup_friday.data,
-            updated_availability.availability_saturday=form.availability_saturday.data,
-            updated_availability.backup_saturday=form.backup_saturday.data,
-            updated_availability.availability_sunday=form.availability_sunday.data,
+            updated_availability.availability_monday=form.availability_monday.data
+            updated_availability.backup_monday=form.backup_monday.data
+            updated_availability.availability_tuesday=form.availability_tuesday.data
+            updated_availability.backup_tuesday=form.backup_tuesday.data
+            updated_availability.availability_wednesday=form.availability_wednesday.data
+            updated_availability.backup_wednesday=form.backup_wednesday.data
+            updated_availability.availability_thursday=form.availability_thursday.data
+            updated_availability.backup_thursday=form.backup_thursday.data
+            updated_availability.availability_friday=form.availability_friday.data
+            updated_availability.backup_friday=form.backup_friday.data
+            updated_availability.availability_saturday=form.availability_saturday.data
+            updated_availability.backup_saturday=form.backup_saturday.data
+            updated_availability.availability_sunday=form.availability_sunday.data
             updated_availability.backup_sunday=form.backup_sunday.data
             db.session.add(updated_availability)
             db.session.commit()
-            flash('Availability for {} successfully updated'.format(
-                volunteer.last_name), 'success')
         else:
+            print("else", file=sys.stderr)
             availability = Availability(availability_monday=form.availability_monday.data,
                                         backup_monday=form.backup_monday.data,
                                         availability_tuesday=form.availability_tuesday.data,
@@ -726,10 +737,15 @@ def add_availability_volunteer(volunteer_id=None, availability_id=None):
             updated_volunteer.availability_id=int(availability.id)
             db.session.add(updated_volunteer)
             db.session.commit()
-            flash('Availability for {} successfully added'.format(
-                volunteer.last_name), 'success')
+        flash(
+            'Availability successfully added',
+            'success')
+            # flash('Availability for {} successfully added'.format(
+            #     volunteer.last_name), 'success')
         return redirect(url_for('admin.people_manager'))
-    
+    else:
+        print(form.errors, file=sys.stderr)
+        print(form.backup_monday.data, file=sys.stderr)
     return render_template('admin/people_manager/availability.html', form=form)
     
 @admin.route('/add-availability-local-resource/<int:local_resource_id>', methods=['GET', 'POST'])

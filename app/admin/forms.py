@@ -512,7 +512,7 @@ class AddAvailability(FlaskForm):
     ("3pm-4pm", "3pm-4pm"), ("3pm-5pm", "3pm-5pm"), ("3pm-6pm", "3pm-6pm"), ("4pm-5pm", "4pm-5pm"), 
     ("4pm-6pm", "4pm-6pm"), ("5pm-6pm", "5pm-6pm")] 
     availability_monday = SelectField('', choices=availability_times)
-    backup_monday = SelectField('', choices=availability_times)
+    backup_monday = SelectField('', choices=availability_times, default='Unavailable')
     availability_tuesday = SelectField('', choices=availability_times)
     backup_tuesday = SelectField('', choices=availability_times)
     availability_wednesday = SelectField('', choices=availability_times)
