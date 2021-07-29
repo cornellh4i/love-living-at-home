@@ -1,17 +1,3 @@
-<style>
-  .ui.item.menu,
-  .ui.item.menu .item {
-    background: white;
-    color: indigo;
-  }
-
-  .ui.item.menu .active.item {
-    background: indigo;
-    color: white;
-  }
-</style>
-
-
 {% extends 'layouts/base.html' %} 
 {% import 'macros/form_macros.html' as f %} 
 {% import 'macros/check_password.html' as check %} 
@@ -51,10 +37,7 @@
     <div class="field">
       <label>Address</label>
       <div class="field">
-        {{ form.primary_address1(placeholder = form.primary_address1.label.text) }}
-      </div>
-      <div class="field">
-        {{ form.primary_address2(placeholder = form.primary_address2.label.text) }}
+        {{ form.street_address(placeholder = form.street_address.label.text) }}
       </div>
     </div>
 
@@ -126,3 +109,16 @@
   $('.ui.accordion').accordion({ exclusive: false });
 </script>
 {% endblock %}
+
+<style>
+  .ui.item.menu,
+  .ui.item.menu .item {
+    background: white;
+    color: indigo;
+  }
+
+  .ui.item.menu .active.item {
+    background: indigo;
+    color: white;
+  }
+</style>

@@ -368,11 +368,8 @@ class VolunteerManager(FlaskForm):
         'Preferred Name', validators=[Optional(),
                                       Length(min=1, max=30)])
     # address
-    primary_address1 = StringField('Street address or P.O. Box',
+    street_address = StringField('Street address or P.O. Box',
                                    validators=[InputRequired(),
-                                               Length(max=200)])
-    primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
-                                   validators=[Optional(),
                                                Length(max=200)])
     primary_city = StringField('City',
                                validators=[InputRequired(),
@@ -447,10 +444,7 @@ class ContractorManager(FlaskForm):
     metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
 
     primary_country = SelectField('Country', choices=countries)
-    primary_address1 = StringField('Street address or P.O. Box',
-                                   validators=[Optional(),
-                                               Length(max=200)])
-    primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
+    street_address = StringField('Street address or P.O. Box',
                                    validators=[Optional(),
                                                Length(max=200)])
     primary_city = StringField('City',

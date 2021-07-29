@@ -20,13 +20,16 @@ class Volunteer(db.Model):
     secondary_address_id = db.Column(db.Integer(),
                           db.ForeignKey("address.id"))
     metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
-
     primary_phone_number = db.Column(db.String(64), nullable=False)
     secondary_phone_number = db.Column(db.String(10))
-
-    #organization_name = db.Column(db.String(80))
     email_address = db.Column(db.String(80))
-    preferred_contact_method = db.Column(db.String(80), nullable=False) # One of: ['phone', 'email', 'phone and email'], implement as checkboxes
+    preferred_contact_method = db.Column(db.String(80), nullable=False) # One of: ['phone', 'email', 'phone and email']
+    
+    ## Emergency Contact Information
+    emergency_contact_name = db.Column(db.String(64))
+    emergency_contact_phone_number = db.Column(db.String(64))
+    emergency_contact_email_address = db.Column(db.String(64))
+    emergency_contact_relationship = db.Column(db.String(64)) 
 
     ## Volunteer-Specific Information
     type_id = db.Column(db.Integer(),
@@ -36,14 +39,6 @@ class Volunteer(db.Model):
     rating = db.Column(db.Float(), nullable=False)
     is_fully_vetted = db.Column(db.Boolean(), nullable=False)
     vettings = db.Column(db.Text)
-    
-    ## Emergency Contact Information
-    emergency_contact_name = db.Column(db.String(64))
-    emergency_contact_phone_number = db.Column(db.String(64))
-    emergency_contact_email_address = db.Column(db.String(64))
-    emergency_contact_relationship = db.Column(db.String(64)) 
-
-    # Availability information
     availability_id = db.Column(db.Integer(), db.ForeignKey("availability.id"))
     
     general_notes = db.Column(db.String(255), nullable=False)
