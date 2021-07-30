@@ -592,7 +592,7 @@ def invite_volunteer(volunteer_id=None):
         else:
             availability = Availability()
             db.session.add(availability)
-            db.session.commit() 
+            db.session.commit()
 
             volunteer = Volunteer(
                 salutation=form.salutation.data,
@@ -839,7 +839,7 @@ def add_availability_local_resource(local_resource_id=None):
         db.session.commit()
 
         flash('Availability for {} successfully updated'.format(
-            localResource.company_name), 'form-success')
+            localResource.company_name), 'success')
         return redirect(url_for('admin.people_manager'))
     else:
         print(form.errors, file=sys.stderr)
