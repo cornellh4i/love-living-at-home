@@ -56,11 +56,13 @@ def add_fake_data(number_users):
     Adds fake data to the database.
     """
     User.generate_fake(count=number_users)
-    Volunteer.generate_fake(count=10)
     Address.generate_fake(count=400)
-    Member.generate_fake(count=10)
+    Volunteer.generate_fake(count=10)
+    print("Generating Fake Members")
+    # Member.generate_fake(count=10)
     VolunteerAvailability.import_fake()
     Staffer.generate_fake(count=10)
+    LocalResource.insert_local_resources()
 
 
 @manager.command
@@ -95,7 +97,6 @@ def setup_general():
     Service.insert_services()
     ServiceCategory.insert_categories()
     MetroArea.insert_metro_areas()
-    LocalResource.insert_local_resources()
 
     # Set up first admin user
     admin_query = Role.query.filter_by(name='Administrator')
