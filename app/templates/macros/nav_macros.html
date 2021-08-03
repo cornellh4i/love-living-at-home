@@ -25,19 +25,11 @@ render_menu_items.
 ('main.about', 'About', 'info')
 ]%}
 {% set user = [] %}
-{% set managers = [] %}
 {% if current_user.is_authenticated %}
 {% set user = ([(current_user.role.index + '.index', current_user.role.name + ' Dashboard', 'user')]) %}
 {% endif %}
 
-{% if current_user.is_admin() %}
-{% set managers = ([
-(current_user.role.index + '.search_request', 'Request Manager', 'handshake outline'),
-(current_user.role.index + '.people_manager', 'People Manager', 'address book
-')
-]) %}
-{% endif %}
-{{ render_menu_items( endpoints + user + managers ) }}
+{{ render_menu_items( endpoints + user ) }}
 {% endmacro %}
 
 {# This renders the right hand side of the navigation bar. If the user is logged in, it links to
@@ -81,7 +73,8 @@ manage their account and logout (account routes). Otherwise, it links to registe
 {% if item | length == 3 %}
 {{ render_menu_items([item]) }}
 {% elif item | length == 2 %}
-<div class="ui dropdown item" onClick="changeMenu(this)">{{ item[0] }} <i class="dropdown icon"></i>
+<div class="ui dropdown item" onClick="changeMenu(this)"><i class="{{ item[0][1] }} icon"></i>{{ item[0][0] }} <i
+    class="dropdown icon"></i>
   <div class="inverted menu">
     {{ create_dropdown(item[1]) }}
   </div>
