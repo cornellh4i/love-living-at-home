@@ -197,6 +197,9 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
           </div>
         </div>
       </div>
+      <div class="field" style="padding: 0; margin: 0">
+        {{ f.render_form_field(form.date_type) }}
+      </div>
       <div class="inline fields" style="padding: 0; margin: 0">
         <div class="ui icon button" id="leftbutton">
           <i class="caret left icon"></i>
@@ -212,7 +215,7 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
         </div>
       </div>
       <div class="fields" style="padding: 0; margin: 0">
-        <div class="field">
+        <div class="field" style="padding:0">
           <label style="margin-bottom: 0">{{ form.start_date.label }}:</label>
           <input type="date" id="startdate" name="trip-start" class="setDate" value="">
         </div>
