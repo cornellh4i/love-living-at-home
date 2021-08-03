@@ -97,49 +97,51 @@ $(document).ready(function () {
     });
 
 
-    document.getElementById("leftbutton").onclick = function () {
-      var option = document.getElementById("timePeriod").value;
-      var start_date = document.getElementById("startdate").value;
-      var end_date = document.getElementById("enddate").value;
-      var date_values = start_date.split("-");
-      var year = parseInt(date_values[0]);
-      var month = parseInt(date_values[1]) - 1;
-      var date = parseInt(date_values[2]);
-      var current = new Date(year, month, date);
 
-      switch (option) {
-        case '0':
-          var yesterday = new Date(current);
-          yesterday.setDate(yesterday.getDate() - 1)
-          var new_date = yesterday.getFullYear() + '-' + ("0" + (yesterday.getMonth() + 1)).slice(-2) + '-' + ("0" + yesterday.getDate()).slice(-2);
-          var end_date = new_date;
-          break;
-        case '1':
-          var week_ = current.getDate() - 7;
-          var last_week = new Date(current.setDate(week_));
-          var end_week = new Date(current.setDate(current.getDate() + 7));
-          var new_date = last_week.getFullYear() + '-' + ("0" + (last_week.getMonth() + 1)).slice(-2) + '-' + ("0" + last_week.getDate()).slice(-2);
-          var end_date = end_week.getFullYear() + '-' + ("0" + (end_week.getMonth() + 1)).slice(-2) + '-' + ("0" + end_week.getDate()).slice(-2);
-          break;
-        case '2':
-          var month_ = current.getMonth() - 1;
-          var last_month = new Date(current.setMonth(month_));
-          var end_month = new Date(current.setMonth(current.getMonth() + 1));
-          var new_date = last_month.getFullYear() + '-' + ("0" + (last_month.getMonth() + 1)).slice(-2) + '-' + ("0" + last_month.getDate()).slice(-2);
-          var end_date = end_month.getFullYear() + '-' + ("0" + (end_month.getMonth() + 1)).slice(-2) + '-' + ("0" + end_month.getDate()).slice(-2);
-          break;
-        default:
-          var new_date = start_date;
-      }
-
-      var dateControl = document.querySelector('#startdate');
-      dateControl.value = new_date;
-
-      var dateControl2 = document.querySelector('#enddate');
-      dateControl2.value = end_date;
-    }
   });
 
+  // L and R arrows to control date selection
+  $("#leftbutton").click(function () {
+    var option = document.getElementById("timePeriod").value;
+    var start_date = document.getElementById("startdate").value;
+    var end_date = document.getElementById("enddate").value;
+    var date_values = start_date.split("-");
+    var year = parseInt(date_values[0]);
+    var month = parseInt(date_values[1]) - 1;
+    var date = parseInt(date_values[2]);
+    var current = new Date(year, month, date);
+
+    switch (option) {
+      case '0':
+        var yesterday = new Date(current);
+        yesterday.setDate(yesterday.getDate() - 1)
+        var new_date = yesterday.getFullYear() + '-' + ("0" + (yesterday.getMonth() + 1)).slice(-2) + '-' + ("0" + yesterday.getDate()).slice(-2);
+        var end_date = new_date;
+        break;
+      case '1':
+        var week_ = current.getDate() - 7;
+        var last_week = new Date(current.setDate(week_));
+        var end_week = new Date(current.setDate(current.getDate() + 7));
+        var new_date = last_week.getFullYear() + '-' + ("0" + (last_week.getMonth() + 1)).slice(-2) + '-' + ("0" + last_week.getDate()).slice(-2);
+        var end_date = end_week.getFullYear() + '-' + ("0" + (end_week.getMonth() + 1)).slice(-2) + '-' + ("0" + end_week.getDate()).slice(-2);
+        break;
+      case '2':
+        var month_ = current.getMonth() - 1;
+        var last_month = new Date(current.setMonth(month_));
+        var end_month = new Date(current.setMonth(current.getMonth() + 1));
+        var new_date = last_month.getFullYear() + '-' + ("0" + (last_month.getMonth() + 1)).slice(-2) + '-' + ("0" + last_month.getDate()).slice(-2);
+        var end_date = end_month.getFullYear() + '-' + ("0" + (end_month.getMonth() + 1)).slice(-2) + '-' + ("0" + end_month.getDate()).slice(-2);
+        break;
+      default:
+        var new_date = start_date;
+    }
+
+    var dateControl = document.querySelector('#startdate');
+    dateControl.value = new_date;
+
+    var dateControl2 = document.querySelector('#enddate');
+    dateControl2.value = end_date;
+  });
   $("#rightbutton").click(function () {
     var option = document.getElementById("timePeriod").value;
     var start_date = document.getElementById("startdate").value;
