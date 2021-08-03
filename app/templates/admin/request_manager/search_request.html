@@ -120,7 +120,7 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
 {% endassets %}
 
 <div class="content-section">
-  <h2 class="header">Search Criteria</h2>
+  <h3 class="header">Search Criteria</h3>
 
   {% set flashes = {
   'error': get_flashed_messages(category_filter=['form-error']),
@@ -233,8 +233,8 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
   {{f.end_form()}}
 
 
-  <h2 class="header" class="divleft">Search Results</h2>
-  <div id="" class="divright">({{num_requests}} Results Found)</div>
+  <h3 class="header">Search Results</h3><span style="float: right">({{num_requests}} Results
+    Found)</span>
 
   <hr />
   <div id="request-search-results">

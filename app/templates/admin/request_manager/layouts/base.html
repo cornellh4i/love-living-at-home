@@ -10,12 +10,6 @@
 {% block content %}
 <div class="ui stackable centered grid container">
   <div class="sixteen wide column">
-    <div class="ui two item menu">
-      <a class="item {% if request.endpoint == 'admin.search_request' %}active{% endif %}"
-        href="{{ url_for('admin.search_request') }}">Search Requests</a>
-      <a class="item {% if request.endpoint in endpoints%}active{% endif %}"
-        href="{{ url_for('admin.create_request') }}">Create Requests</a>
-    </div>
     {% block request_content %}
 
     {% endblock request_content %}
