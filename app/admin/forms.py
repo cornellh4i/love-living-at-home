@@ -91,14 +91,11 @@ class SearchRequestForm(FlaskForm):
     requesting_member = SelectMultipleField('Requesting Member(s)')
     volunteer = SelectMultipleField('Volunteer(s)')
     local_resource = SelectMultipleField('Local Resource(s)')
-
+    dated_filter = SelectMultipleField('Show...')
     volunteer_type = QuerySelectMultipleField(
         'Volunteer Type',
         get_label='name',
         query_factory=lambda: db.session.query(VolunteerType).order_by('name'))
-
-    show = RadioField('Show',
-                      choices=[(0, 'Undated'), (1, 'Dated'), (2, 'Both')])
 
     time_period = SelectField('Time Period',
                               choices=[(0, 'Today'), (1, 'This Week'),

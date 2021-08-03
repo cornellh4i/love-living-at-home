@@ -307,6 +307,7 @@ def search_request():
     form.request_type.choices = [(request_type.name, request_type.name) for request_type in RequestType.query.all()]
     form.request_status.choices = [(request_status.name, request_status.name) for request_status in RequestStatus.query.all()]
     form.service_category.choices = [(service_category.name, service_category.name) for service_category in ServiceCategory.query.all()]
+    form.dated_filter.choices = [(0, 'Dated'), (1, 'Undated')]
     form.requesting_member.choices = [
         (member.id, member.first_name + " " + member.last_name)
         for member in Member.query.all()
