@@ -107,14 +107,11 @@ class SearchRequestForm(FlaskForm):
     end_date = DateField('End Date',
                          format='%Y-%M-%D')
 
+    request_number = StringField('Request #')
+
     apply_filters = SubmitField('Apply Filters')
 
     # reset_filters = SubmitField('Reset Filters')
-
-    def get_status(id):
-        for i in range(len(request_status.choices)):
-            if id == request_status.choices[i][0]:
-                return request_status.choices[i][1]
 
 
 class TransportationRequestForm(FlaskForm):

@@ -29,6 +29,7 @@ $(document).ready(function () {
     requesting_member_filter = [];
     volunteer_filter = [];
     local_resource_filter = [];
+    request_number_filter = null;
 
     // grab filters from relevant form fields
     $('#request_type .menu .item.active').each(function () {
@@ -47,7 +48,6 @@ $(document).ready(function () {
       selected_value = $(this).attr('data-value');
       requesting_member_filter.push(selected_value);
     });
-
     $('#service-provider-menu .item.active').each(function () {
       volunteer_id = $(this).attr('data-id');
       role = $(this).attr('data-role'); // either "volunteer" or "local-resource"
@@ -61,6 +61,8 @@ $(document).ready(function () {
         local_resource_filter.push(local_resource_id);
       }
     });
+    request_number_filter = document.getElementById("request_number").value;
+
 
     let date_option_filter = $('#date-options').find('[name="date-options"]:checked').val();
     let start_date = $('#startdate').val();
@@ -92,6 +94,11 @@ $(document).ready(function () {
 
       let volunteer_id = $this.find('.service-provider-value').attr('data-value');
       if (volunteer_filter.length > 0 && !volunteer_filter.includes(volunteer_id)) {
+        $this.hide();
+      }
+
+      let request_number = $this.find('.request-number-value').html();
+      if (request_number_filter && request_number_filter !== request_number) {
         $this.hide();
       }
     });

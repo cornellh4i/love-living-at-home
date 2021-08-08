@@ -28,7 +28,7 @@ modified_date, service_category, member_number, volunteer_id, is_volunteer ) %}
   <div class="ui card">
     <div class="content" style="background-color: burlywood;">
       <div class="header">
-        Request #{{request_num}}
+        Request #<span class="request-number-value">{{request_num}}</span>
         <div class="ui right floated request-status-value">
           {% if request_status == "Requested" %}
           <div class="ui yellow label">{{request_status}}</div>
@@ -132,7 +132,7 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
 
   <div class="ui three column stackable grid">
     <div class="five wide column" style="padding-top: 0; padding-bottom:0">
-      {{filter_select_field(form.service_category, false)}}
+      {{filter_select_field(form.request_type, false)}}
     </div>
     <div class="five wide column" style="padding-top: 0; padding-bottom:0">
       {{filter_select_field(form.service_category, false)}}
@@ -176,10 +176,7 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
           </div>
         </div>
       </div>
-      <div class="field">
-        <label style="margin-bottom:0">Request #</label>
-        <input type="text">
-      </div>
+      {{f.render_form_field(form.request_number)}}
     </div>
     <div class="eight wide column" style="padding-top: 0.3; padding-bottom: 0; padding-left: 100px">
       <div class="inline fields">
