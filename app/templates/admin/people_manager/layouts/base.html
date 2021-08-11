@@ -28,7 +28,20 @@ description=None, icon=None) %}
   {% set name = m.first_name + ' ' + m.last_name %}
   {% endif %}
   <div class="header">{{ name + " (" + m.member_number|string + ")"}}
-    <i class="trash alternate outline icon right floated" style="cursor: pointer"></i>
+    <i class="trash alternate outline icon right floated delete-member" style="cursor: pointer" id={{m.id}}></i>
+
+    <div class="ui modal" id='modal-{{m.id}}'>
+      <div class="header">Delete Member</div>
+      <div class="content">Would you like to delete Member [{{m.first_name + ' ' + m.last_name}}]?</div>
+      <div class="actions">
+        <div class="positive ui approve button"
+          onclick="window.location.href = '{{ url_for('admin.delete_member', member_id=m.id) }}';">
+          Yes
+        </div>
+        <div class="negative ui deny button">No</div>
+      </div>
+    </div>
+
     <i class="pencil icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.invite_member', member_id=m.id) }}';">
     </i>
@@ -44,7 +57,20 @@ description=None, icon=None) %}
 {% endif %}
 <div class="content">
   <div class="header">{{ name }}
-    <i class="trash alternate outline icon right floated" style="cursor: pointer"></i>
+    <i class="trash alternate outline icon right floated delete-volunteer" style="cursor: pointer" id={{v.id}}></i>
+
+    <div class="ui modal" id='modal-{{v.id}}'>
+      <div class="header">Delete Volunteer</div>
+      <div class="content">Would you like to delete Volunteer [{{v.first_name + ' ' + v.last_name}}]?</div>
+      <div class="actions">
+        <div class="positive ui approve button"
+          onclick="window.location.href = '{{ url_for('admin.delete_volunteer', volunteer_id=v.id) }}';">
+          Yes
+        </div>
+        <div class="negative ui deny button">No</div>
+      </div>
+    </div>
+
     <i class="comment outline icon right floated" style="cursor: pointer"></i>
     <i class="clock outline icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.add_availability_volunteer', volunteer_id=v.id) }}';"></i>
@@ -89,7 +115,20 @@ description=None, icon=None) %}
 {% macro local_resource_card(lr) %}
 <div class="content">
   <div class="header">{{lr.company_name}}
-    <i class="trash alternate outline icon right floated" style="cursor: pointer"></i>
+    <i class="trash alternate outline icon right floated delete-local-resource" style="cursor: pointer" id={{lr.id}}></i>
+
+    <div class="ui modal" id='modal-{{lr.id}}'>
+      <div class="header">Delete Local Resource</div>
+      <div class="content">Would you like to delete Local Resource [{{lr.company_name}}]?</div>
+      <div class="actions">
+        <div class="positive ui approve button"
+          onclick="window.location.href = '{{ url_for('admin.delete_local_resource', local_resource_id=lr.id) }}';">
+          Yes
+        </div>
+        <div class="negative ui deny button">No</div>
+      </div>
+    </div>
+
     <i class="comment outline icon right floated" style="cursor: pointer"></i>
     <i class="clock outline icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.add_availability_local_resource', local_resource_id=lr.id) }}';"></i>
@@ -239,13 +278,13 @@ description=None, icon=None) %}
   <h2 class="ui header">People Manager</h2>
 
   <div class="ui tabular menu">
-    <a class="item active" data-tab="member">Members</a>
+    <a class="active item" data-tab="member">Members</a>
     <a class="item" data-tab="volunteer">Volunteers</a>
     <a class="item" data-tab="local-resource">Local Resources</a>
   </div>
   
   <!-- Member Tab -->
-  <div class="ui tab active" data-tab="member">
+  <div class="active ui tab" data-tab="member">
     <div class="ui stackable centered grid container">
       <div class="four wide column">
         {{ dashboard_option('Add Member', 'admin.invite_member', icon='add user icon') }}
@@ -457,107 +496,6 @@ description=None, icon=None) %}
     </div>
   </div>
 
-    <!-- Availability Pop Up
-    <div class="ui fullscreen modal" id="availability">
-      <i class="close icon"></i>
-      <div class="header">Add Availability</div>
-      <div class="content">
-
-        {% set flashes =
-        { 'error': get_flashed_messages(category_filter=['form-error']),
-        'warning': get_flashed_messages(category_filter=['form-check-email']),
-        'info': get_flashed_messages(category_filter=['form-info']),
-        'success': get_flashed_messages(category_filter=['form-success']) }
-        %}
-
-        {{ f.begin_form(add_availability, flashes) }}
-
-        <div class="ui header">Monday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_custom_select(add_availability.availability_monday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_custom_select(add_availability.backup_monday) }}</span>
-        </div>
-
-        <div class="ui header">Tuesday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_custom_select(add_availability.availability_tuesday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_custom_select(add_availability.backup_tuesday) }}</span>
-        </div>
-
-        <div class="ui header">Wednesday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_custom_select(add_availability.availability_wednesday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_custom_select(add_availability.backup_wednesday) }}</span>
-        </div>
-
-        <div class="ui header">Thursday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_custom_select(add_availability.availability_thursday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_custom_select(add_availability.backup_thursday) }}</span>
-        </div>
-
-        <div class="ui header">Friday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_custom_select(add_availability.availability_friday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_custom_select(add_availability.backup_friday) }}</span>
-        </div>
-
-        <div class="ui header">Saturday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_custom_select(add_availability.availability_saturday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_custom_select(add_availability.backup_saturday) }}</span>
-        </div>
-
-        <div class="ui header">Sunday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_custom_select(add_availability.availability_sunday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_custom_select(add_availability.backup_sunday) }}</span>
-        </div>
-
-        <div class="actions">
-          {{ f.form_message(flashes['error'], header='Something went wrong.',
-          class='error') }}
-          {{ f.form_message(flashes['warning'], header='Check your
-          email.', class='warning') }}
-          {{ f.form_message(flashes['info'],
-          header='Information', class='info') }}
-          {{ f.form_message(flashes['success'],
-          header='Success!', class='success') }}
-          {{ f.render_form_field(add_availability.submit) }}
-        </div>
-        {{ f.end_form() }}
-      </div>
-    </div>
-     -->
-
     <!-- Reviews Pop Up -->
     <div class="ui modal" id="reviews">
       <i class="close icon"></i>
@@ -731,10 +669,6 @@ description=None, icon=None) %}
       context: $('#context1'),
     });
 
-    // $('i.clock.outline.icon.right.floated').click(function () {
-    //   $('#availability').modal('show');
-    // });
-
     $('i.calendar.minus.outline.icon.right.floated').click(function () {
       $('#vacation_calendar').modal('show');
     });
@@ -746,6 +680,21 @@ description=None, icon=None) %}
     $('.ui.accordion').accordion({ exclusive: false });
 
     $('.ui.rating').rating();
+
+    $('.delete-member').click(function () {
+      member_id = $(this).attr('id');
+      $(`#modal-${member_id}`).modal('show');
+    });
+
+    $('.delete-volunteer').click(function () {
+      volunteer_id = $(this).attr('id');
+      $(`#modal-${volunteer_id}`).modal('show');
+    });
+
+    $('.delete-local-resource').click(function () {
+      local_resource_id = $(this).attr('id');
+      $(`#modal-${local_resource_id}`).modal('show');
+    });
 
   </script>
 

@@ -384,7 +384,6 @@ def invite_member(member_id = None):
         primary_city=primary_address.city
         primary_state=primary_address.state
         primary_zip_code=primary_address.zipcode
-        primary_metro_area=primary_address.metro_area
         form = MemberManager(
             first_name=member.first_name,
             middle_initial=member.middle_initial, 
@@ -396,7 +395,6 @@ def invite_member(member_id = None):
             primary_city=primary_city,
             primary_state=primary_state,
             primary_zip_code=primary_zip_code,
-            primary_metro_area=primary_metro_area,
             primary_phone_number=member.primary_phone_number,
             preferred_contact_method=member.preferred_contact_method,
             membership_expiration_date=member.membership_expiration_date
@@ -846,6 +844,38 @@ def add_availability_local_resource(local_resource_id=None):
         print(form.backup_monday.data, file=sys.stderr)
     return render_template('admin/people_manager/availability.html', form=form)
 
+@admin.route('/people-manager/<int:member_id>/_delete-member')
+@login_required
+@admin_required
+def delete_member(member_id):
+    """Delete a member."""
+    member = Member.query.filter_by(id=member_id).first()    
+    db.session.delete(member)
+    db.session.commit()
+    flash('Successfully deleted member {}'.format(member.first_name + '' + member.last_name), 'success')
+    return redirect(url_for('admin.people_manager'))
+
+@admin.route('/people-manager/<int:volunteer_id>/_delete-volunteer')
+@login_required
+@admin_required
+def delete_volunteer(volunteer_id):
+    """Delete a volunteer."""
+    volunteer = Volunteer.query.filter_by(id=volunteer_id).first()    
+    db.session.delete(volunteer)
+    db.session.commit()
+    flash('Successfully deleted volunteer {}'.format(volunteer.first_name + '' + volunteer.last_name), 'success')
+    return redirect(url_for('admin.people_manager'))
+
+@admin.route('/people-manager/<int:local_resource_id>/_delete-local-resource')
+@login_required
+@admin_required
+def delete_local_resource(local_resource_id):
+    """Delete a local resource."""
+    localResource = LocalResource.query.filter_by(id=local_resource_id).first()    
+    db.session.delete(localResource)
+    db.session.commit()
+    flash('Successfully deleted local resource {}'.format(localResource.company_name), 'success')
+    return redirect(url_for('admin.people_manager'))
 
 @admin.route('/services')
 @login_required
