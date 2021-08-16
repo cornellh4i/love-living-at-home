@@ -308,7 +308,7 @@ class MemberManager(FlaskForm):
     secondary_phone_number = StringField('Secondary Phone Number',
                                    widget=widgets.Input(input_type="tel"),
                                    validators=[Optional()])
-    email = EmailField('Email',
+    email_address = EmailField('Email',
                        validators=[Optional(),
                                    Length(1, 64),
                                    Email()])
@@ -464,7 +464,7 @@ class ContractorManager(FlaskForm):
                                           widget=widgets.Input(
                                               input_type="tel"),
                                           validators=[Optional()])
-    email = EmailField('Email',
+    email_address = EmailField('Email',
                        validators=[Optional(),
                                    Length(1, 64),
                                    Email()])

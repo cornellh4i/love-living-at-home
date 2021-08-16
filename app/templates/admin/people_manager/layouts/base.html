@@ -554,7 +554,9 @@ description=None, icon=None) %}
     <!-- Vacation Calendar Pop Up -->
     <div class="ui modal" id="vacation_calendar">
       <i class="close icon"></i>
-      <div class="header">Vacation Calendar</div>
+      <div class="header">Vacation Calendar</div> 
+
+      <!-- Calendar Code -->
       <div id="parent" class="ui container" style="display:none;">
         <div class="ui cards">
           <div class="ui centered card">
@@ -603,6 +605,8 @@ description=None, icon=None) %}
 
     </div>
   </div>
+
+
   <script language='javascript'>
     $(document).ready(function () {
       $('.ui.accordion').accordion();
@@ -612,7 +616,7 @@ description=None, icon=None) %}
     $(document)
       .ready(function () {
         $('.menu .item').tab();
-
+        
         // function filterPeople() {
         //   let peopleFilter = $('#role-field').val();
         //   $('.card').each(function () {
@@ -641,7 +645,15 @@ description=None, icon=None) %}
         //   }
         // });
 
-      })
+      });
+
+      $(document).ready(function(){
+          $('.ui .item').on('click', function() {
+              $('.ui .item').removeClass('active');
+              $(this).addClass('active');
+          });             
+      });
+
 
     $('.tab #search-people').keyup(function () {
         //   filterPeople();
@@ -671,7 +683,7 @@ description=None, icon=None) %}
 
     $('i.calendar.minus.outline.icon.right.floated').click(function () {
       $('#vacation_calendar').modal('show');
-    });
+    });    
 
     $('i.comment.outline.icon.right.floated').click(function () {
       $('#reviews').modal('show');

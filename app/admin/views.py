@@ -384,20 +384,44 @@ def invite_member(member_id = None):
         primary_city=primary_address.city
         primary_state=primary_address.state
         primary_zip_code=primary_address.zipcode
+        secondary_address1 = None
+        secondary_city = None
+        secondary_state = None
+        secondary_zip_code = None
+        if member.secondary_address_id is not None:
+            secondary_address=Address.query.filter_by(id=member.secondary_address_id).first()
+            secondary_address1 = secondary_address.street_address
+            secondary_city=secondary_address.city
+            secondary_state=secondary_address.state
+            secondary_zip_code=secondary_address.zipcode
         form = MemberManager(
             first_name=member.first_name,
             middle_initial=member.middle_initial, 
             last_name=member.last_name,
-            member_number=member.member_number,
+            preferred_name=member.preferred_name,
+            salutation=member.salutation,
             gender=member.gender,
             birthdate=member.birthdate,
             primary_address1=primary_address1,
             primary_city=primary_city,
             primary_state=primary_state,
             primary_zip_code=primary_zip_code,
+            secondary_address1=secondary_address1,
+            secondary_city=secondary_city,
+            secondary_state=secondary_state,
+            secondary_zip_code=secondary_zip_code,
             primary_phone_number=member.primary_phone_number,
+            secondary_phone_number=member.secondary_phone_number,
+            email_address=member.email_address,
             preferred_contact_method=member.preferred_contact_method,
-            membership_expiration_date=member.membership_expiration_date
+            emergency_contact_name=member.emergency_contact_name,
+            emergency_contact_relationship=member.emergency_contact_relationship,
+            emergency_contact_phone_number=member.emergency_contact_phone_number,
+            emergency_contact_email_address=member.emergency_contact_email_address,
+            membership_expiration_date=member.membership_expiration_date,
+            member_number=member.member_number,
+            volunteer_notes=member.volunteer_notes,
+            staffer_notes=member.staffer_notes
         )
         
     if form.validate_on_submit():
@@ -405,20 +429,29 @@ def invite_member(member_id = None):
         if (form.secondary_as_primary_checkbox.data):
             address = Address(name=form.first_name.data + " " + form.last_name.data,
                               street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
-                              city=form.secondary_city.data)
-            secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
-                                        street_address=form.primary_address1.data + " " + form.primary_address2.data,
-                                        city=form.primary_city.data)
+                              city=form.secondary_city.data,
+                              state=form.secondary_state.data,
+                              zipcode=form.secondary_zip_code.data)
+            if form.primary_address1.data:
+                secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
+                                            street_address=form.primary_address1.data + " " + form.primary_address2.data,
+                                            city=form.primary_city.data,
+                                            state=form.primary_state.data,
+                                            zipcode=form.primary_zip_code.data)
             if form.secondary_metro_area.data:
                 metro = MetroArea(name=form.secondary_metro_area.data)
         else:
             address = Address(name=form.first_name.data + " " + form.last_name.data,
-                              street_address=form.primary_address1.data + " " + form.primary_address2.data,
-                              city=form.primary_city.data)
+                                street_address=form.primary_address1.data + " " + form.primary_address2.data,
+                                city=form.primary_city.data,
+                                state=form.primary_state.data,
+                                zipcode=form.primary_zip_code.data)
             if form.secondary_address1.data:
                 secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
                                             street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
-                                            city=form.secondary_city.data)
+                                            city=form.secondary_city.data,
+                                            state=form.secondary_state.data,
+                                            zipcode=form.secondary_zip_code.data)
             if form.primary_metro_area.data:
                 metro = MetroArea(name=form.primary_metro_area.data)
         db.session.add(address)
@@ -444,7 +477,7 @@ def invite_member(member_id = None):
             updated_member.birthdate=form.birthdate.data
             updated_member.primary_phone_number=form.primary_phone_number.data
             updated_member.secondary_phone_number=form.secondary_phone_number.data
-            updated_member.email_address=form.email.data
+            updated_member.email_address=form.email_address.data
             updated_member.preferred_contact_method=form.preferred_contact_method.data
             updated_member.emergency_contact_name=form.emergency_contact_name.data
             updated_member.emergency_contact_phone_number=form.emergency_contact_phone_number.data
@@ -471,7 +504,7 @@ def invite_member(member_id = None):
                             birthdate=form.birthdate.data,
                             primary_phone_number=form.primary_phone_number.data,
                             secondary_phone_number=form.secondary_phone_number.data,
-                            email_address=form.email.data,
+                            email_address=form.email_address.data,
                             preferred_contact_method=form.preferred_contact_method.data,
                             emergency_contact_name=form.emergency_contact_name.data,
                             emergency_contact_phone_number=form.emergency_contact_phone_number.data,
@@ -662,7 +695,7 @@ def invite_contractor(local_resource_id=None):
             primary_state=primary_state,
             primary_zip_code=primary_zip_code,
             primary_phone_number=local_resource.primary_phone_number,
-            email=local_resource.email_address,
+            email_address=local_resource.email_address,
             preferred_contact_method=local_resource.preferred_contact_method,
             website=local_resource.website)
         
@@ -686,7 +719,7 @@ def invite_contractor(local_resource_id=None):
             updated_local_resource.company_name=form.company_name.data
             updated_local_resource.primary_phone_number=form.primary_phone_number.data
             updated_local_resource.secondary_phone_number=form.secondary_phone_number.data
-            updated_local_resource.email_address=form.email.data
+            updated_local_resource.email_address=form.email_address.data
             updated_local_resource.preferred_contact_method=form.preferred_contact_method.data
             updated_local_resource.website=form.website.data
             db.session.add(updated_local_resource)
@@ -707,7 +740,7 @@ def invite_contractor(local_resource_id=None):
                 company_name=form.company_name.data,
                 primary_phone_number=form.primary_phone_number.data,
                 secondary_phone_number=form.secondary_phone_number.data,
-                email_address=form.email.data,
+                email_address=form.email_address.data,
                 preferred_contact_method=form.preferred_contact_method.data,
                 website=form.website.data,
                 availability_id=availability.id
