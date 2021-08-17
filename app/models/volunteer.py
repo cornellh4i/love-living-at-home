@@ -57,6 +57,7 @@ class Volunteer(db.Model):
         seed()
         for i in range(count):
             v = Volunteer(
+                id=i,
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
                 birthdate=datetime.strptime(
@@ -77,6 +78,7 @@ class Volunteer(db.Model):
             try:
                 db.session.commit()
             except IntegrityError:
+                print("ERROR MAKING VOLUNTEERS")
                 db.session.rollback()
 
     def __repr__(self):
