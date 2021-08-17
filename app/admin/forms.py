@@ -318,6 +318,10 @@ class MemberManager(FlaskForm):
         'Secondary Phone Number',
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()])
+    email = EmailField('Email',
+                       validators=[Optional(),
+                                   Length(1, 64),
+                                   Email()])
     preferred_contact_method = RadioField('Preferred Contact Method *',
                                           choices=[('phone', 'Phone'),
                                                    ('email', 'Email'),
@@ -482,17 +486,20 @@ class ContractorManager(FlaskForm):
                                           widget=widgets.Input(
                                               input_type="tel"),
                                           validators=[Optional()])
-    email_address = EmailField('Email', validators=[Optional(),
-                                                    Length(1, 64),
-                                                    Email()])
+    email_address = EmailField('Email',
+                               validators=[Optional(),
+                                           Length(1, 64),
+                                           Email()])
     secondary_phone_number = IntegerField(
         'Secondary Phone Number',
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()]),
+
     preferred_contact_method = RadioField(
         choices=[('phone',
                   'Phone'), ('email',
                              'Email'), ('phone_and_email', 'Phone and Email')]),
+
     website = StringField('Website',
                           validators=[Optional(),
                                       Length(min=1, max=30)]),
