@@ -1,3 +1,5 @@
+from app.models.request_volunteer_record import RequestVolunteerRecord
+from app.models.request import RequestDurationType, RequestStatus, RequestType
 import json
 import time
 from operator import __truediv__
@@ -1167,7 +1169,7 @@ def metro_area_info(metro_area_id):
     if form.validate_on_submit():
         updated_metro_area = metro_area
         updated_metro_area.name = form.name.data
-        db.session.add(updated_service)
+        db.session.add(updated_metro_area)
         db.session.commit()
         flash('Metro Area {} successfully updated'.format(form.name.data),
               'form-success')
