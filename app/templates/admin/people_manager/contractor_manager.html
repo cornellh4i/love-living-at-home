@@ -1,6 +1,7 @@
-{% extends 'layouts/base.html' %} {% import 'macros/form_macros.html' as f %} {%
-import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
-%} {% block content %}
+{% extends 'layouts/base.html' %} 
+{% import 'macros/form_macros.html' as f %} 
+{% import 'macros/check_password.html' as check %} 
+{% block content %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
     <a class="ui basic compact button" href="{{ url_for('admin.people_manager') }}">
@@ -16,8 +17,14 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     get_flashed_messages(category_filter=['form-error']), 'warning':
     get_flashed_messages(category_filter=['form-check-email']), 'info':
     get_flashed_messages(category_filter=['form-info']), 'success':
-    get_flashed_messages(category_filter=['form-success']) } %} {{
-    f.begin_form(form, flashes) }}
+    get_flashed_messages(category_filter=['form-success']) } %} 
+    
+    {{ f.begin_form(form, flashes) }}
+
+    {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+    {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+    {{ f.form_message(flashes['info'], header='Information', class='info') }}
+    {{ f.form_message(flashes['success'], header='Success!', class='success') }}
 
     <div class="ui header">General Information</div>
     {{ f.render_form_field(form.first_name) }}
@@ -30,10 +37,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     <div class="field">
       <label>Address</label>
       <div class="field">
-        {{ form.primary_address1(placeholder = form.primary_address1.label.text) }}
-      </div>
-      <div class="field">
-        {{ form.primary_address2(placeholder = form.primary_address2.label.text) }}
+        {{ form.street_address(placeholder = form.street_address.label.text) }}
       </div>
     </div>
 
@@ -50,7 +54,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     <div class="ui header">Contact Information</div>
     {{ f.render_form_field(form.primary_phone_number) }}
     {{ f.render_form_field(form.secondary_phone_number) }}
-    {{ f.render_form_input(form.email) }}
+    {{ f.render_form_input(form.email_address) }}
 
     <br><br />
     <div class="inline fields">
@@ -59,13 +63,12 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
 
     {{ f.render_form_field(form.website) }}
 
-    {{ f.form_message(flashes['error'], header='Something went wrong.',
-    class='error') }} {{ f.form_message(flashes['warning'], header='Check your
-    email.', class='warning') }} {{ f.form_message(flashes['info'],
-    header='Information', class='info') }} {{ f.form_message(flashes['success'],
-    header='Success!', class='success') }} {% for field in form |
-    selectattr('type', 'equalto', 'SubmitField') %} {{
-    f.render_form_field(field) }} {% endfor %} {{ f.end_form() }}
+    {% for field in form | selectattr('type', 'equalto', 'SubmitField') %} 
+    {{f.render_form_field(field) }} 
+    {% endfor %} 
+    
+    {{ f.end_form() }}
+
   </div>
 </div>
 

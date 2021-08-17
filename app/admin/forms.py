@@ -154,7 +154,7 @@ class TransportationRequestForm(FlaskForm):
         id='member',
         validators=[InputRequired()],
         coerce=int)
-        
+
     service_provider = SelectMultipleField(
         'Service Provider',
         id='service_provider',
@@ -305,6 +305,14 @@ class MemberManager(FlaskForm):
 
     # Contact Information
     primary_phone_number = StringField('Primary Phone Number',
+<< << << < HEAD
+                                 widget=widgets.Input(input_type="tel"),
+                                 validators=[InputRequired()])
+    secondary_phone_number = StringField('Secondary Phone Number',
+                                   widget=widgets.Input(input_type="tel"),
+                                   validators=[Optional()])
+    email_address = EmailField('Email',
+== == == =
                                        widget=widgets.Input(input_type="tel"),
                                        validators=[InputRequired()])
     secondary_phone_number = StringField(
@@ -312,6 +320,7 @@ class MemberManager(FlaskForm):
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()])
     email = EmailField('Email',
+>>>>>> > main
                        validators=[Optional(),
                                    Length(1, 64),
                                    Email()])
@@ -373,211 +382,214 @@ class VolunteerManager(FlaskForm):
     preferred_name = StringField(
         'Preferred Name', validators=[Optional(),
                                       Length(min=1, max=30)])
+
     # address
-    primary_address1 = StringField(
+<< << << < HEAD
+    street_address = StringField('Street address or P.O. Box',
+                                   validators=[InputRequired(),
+== == == =
+    primary_address1=StringField(
         'Street address or P.O. Box',
         validators=[InputRequired(), Length(max=200)])
-    primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
+    primary_address2=StringField('Apt, suite, unit, building, floor, etc.',
                                    validators=[Optional(),
+>>>>>> > main
                                                Length(max=200)])
-    primary_city = StringField('City',
+    primary_city=StringField('City',
                                validators=[InputRequired(),
                                            Length(max=200)])
-    primary_state = StringField('State',
+    primary_state=StringField('State',
                                 validators=[InputRequired(),
                                             Length(max=200)])
-    primary_zip_code = StringField('Zip Code',
+    primary_zip_code=StringField('Zip Code',
                                    validators=[Optional(),
                                                Length(max=45)])
     # emergency contact
-    emergency_contact_name = StringField(
+    emergency_contact_name=StringField(
         'Contact Name', validators=[Optional(), Length(1, 64)])
-    emergency_contact_relationship = StringField(
+    emergency_contact_relationship=StringField(
         'Relationship', validators=[Optional(), Length(1, 64)])
-    emergency_contact_phone_number = StringField(
+    emergency_contact_phone_number=StringField(
         'Phone Number',
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()])
-    emergency_contact_email_address = EmailField(
+    emergency_contact_email_address=EmailField(
         'Email', validators=[Optional(), Length(1, 64),
                              Email()])
     # now under contact info
-    primary_phone_number = StringField("Primary Phone Number",
+    primary_phone_number=StringField("Primary Phone Number",
                                        widget=widgets.Input(input_type="tel"),
                                        validators=[InputRequired()])
-    secondary_phone_number = StringField(
+    secondary_phone_number=StringField(
         "Secondary Phone Number",
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()])
-    email_address = EmailField('Email',
+    email_address=EmailField('Email',
                                validators=[Optional(),
                                            Length(1, 64),
                                            Email()])
-    preferred_contact_method = RadioField('Preferred Contact Method',
+    preferred_contact_method=RadioField('Preferred Contact Method',
                                           choices=[('phone', "Phone"),
                                                    ('email', "Email"),
                                                    ('phone and email',
                                                     "Phone and Email")])
 
-    notes = TextAreaField("Notes for Office Staff", validators=[Optional()])
+    notes=TextAreaField("Notes for Office Staff", validators=[Optional()])
 
-    submit = SubmitField("Submit")
+    submit=SubmitField("Submit")
 
 
 class AddServiceVetting(FlaskForm):
-    vetting_notes = TextAreaField("",
+    vetting_notes=TextAreaField("",
                                   render_kw={
                                       "rows": 15,
                                       "cols": 105
                                   },
                                   validators=[Optional()])
-    volunteer_fully_vetted_checkbox = BooleanField('Is Fully Vetted?',
+    volunteer_fully_vetted_checkbox=BooleanField('Is Fully Vetted?',
                                                    validators=[Optional()])
-    submit = SubmitField("Save")
+    submit=SubmitField("Save")
 
 
 class ContractorManager(FlaskForm):
-    first_name = StringField('First name',
+    first_name=StringField('First name',
                              validators=[InputRequired(),
                                          Length(1, 64)])
-    middle_initial = StringField('Middle Initial',
+    middle_initial=StringField('Middle Initial',
                                  validators=[Length(min=0, max=1)])
-    last_name = StringField('Last name',
+    last_name=StringField('Last name',
                             validators=[InputRequired(),
                                         Length(1, 64)])
-    salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
+    salutations=[("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
                    ("mr", "Mr")]
-    salutation = SelectField("Salutation", choices=salutations)
-    company_name = StringField('Company',
+    salutation=SelectField("Salutation", choices=salutations)
+    company_name=StringField('Company',
                                validators=[Optional(),
                                            Length(min=1, max=30)])
 
-    countries = [('united_states', 'United States'), ('b', "B"), ('c', 'C')]
-    states = [('none', ""), ("ny", "NY")]
-    time_zones = [("est", "Eastern Time (US & Canada) (UTC-05:00)"),
+    countries=[('united_states', 'United States'), ('b', "B"), ('c', 'C')]
+    states=[('none', ""), ("ny", "NY")]
+    time_zones=[("est", "Eastern Time (US & Canada) (UTC-05:00)"),
                   ("b", "B"), ("c", "C")]
-    metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
+    metro_areas=[("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
 
-    primary_country = SelectField('Country', choices=countries)
-    primary_address1 = StringField('Street address or P.O. Box',
+    primary_country=SelectField('Country', choices=countries)
+    street_address=StringField('Street address or P.O. Box',
                                    validators=[Optional(),
                                                Length(max=200)])
-    primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
-                                   validators=[Optional(),
-                                               Length(max=200)])
-    primary_city = StringField('City',
+    primary_city=StringField('City',
                                validators=[Optional(),
                                            Length(max=200)])
-    primary_state = SelectField('State', choices=states)
-    primary_zip_code = StringField('Zip Code',
+    primary_state=SelectField('State', choices=states)
+    primary_zip_code=StringField('Zip Code',
                                    validators=[Optional(),
                                                Length(max=45)])
-    primary_metro_area = SelectField('Metro Area',
+    primary_metro_area=SelectField('Metro Area',
                                      choices=metro_areas,
                                      validators=[Optional()])
-    primary_phone_number = IntegerField('Primary Phone Number',
+    primary_phone_number=IntegerField('Primary Phone Number',
                                         widget=widgets.Input(input_type="tel"),
                                         validators=[InputRequired()])
-    secondary_phone_number = IntegerField(
+<< << << < HEAD
+    secondary_phone_number=IntegerField('Secondary Phone Number',
+                                          widget=widgets.Input(
+                                              input_type="tel"),
+                                          validators=[Optional()])
+    email_address=EmailField('Email',
+== == == =
+    secondary_phone_number=IntegerField(
         'Secondary Phone Number',
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()])
-    email = EmailField('Email',
+    email=EmailField('Email',
+>>>>>> > main
                        validators=[Optional(),
                                    Length(1, 64),
                                    Email()])
 
-    preferred_contact_method = RadioField(
+    preferred_contact_method=RadioField(
         choices=[('phone',
                   'Phone'), ('email',
                              'Email'), ('phone_and_email', 'Phone and Email')])
 
-    website = StringField('Website',
+    website=StringField('Website',
                           validators=[Optional(),
                                       Length(min=1, max=30)])
-    submit = SubmitField("Submit")
+    submit=SubmitField("Submit")
 
 
 class Reviews(FlaskForm):
-    reviewer_name = StringField(
+    reviewer_name=StringField(
         'Name of Reviewer',
         validators=[InputRequired(), Length(min=1, max=30)])
-    notes = TextAreaField('Notes', validators=[Optional(), Length(max=500)])
-    submit = SubmitField("Save")
+    notes=TextAreaField('Notes', validators=[Optional(), Length(max=500)])
+    submit=SubmitField("Save")
 
 
 class AddAvailability(FlaskForm):
-    availability_times = [
-        ("7 am", "7 am"), ("8 am", "8 am"), ("9 am", "9 am"),
-        ("10 am", "10 am"), ("11 am", "11 am"), ("12 pm", "12 pm"),
-        ("1 pm", "1 pm"), ("2 pm", "2 pm"), ("3 pm", "3 pm"), ("4 pm", "4 pm"),
-        ("5 pm", "5 pm"), ("6 pm", "6 pm"), ("7-8 am", "7-8 am"),
-        ("7-9 am", "7-9 am"), ("7-10 am", "7-10 am"), ("7-11 am", "7-11 am"),
-        ("7 am-12 pm", "7 am-12 pm"), ("7 am-1 pm", "7 am-1 pm"),
-        ("7 am-2 pm", "7 am-2 pm"), ("7 am-3 pm", "7 am-3 pm"),
-        ("7 am-4 pm", "7 am-4 pm"), ("7 am-5 pm", "7 am-5 pm"),
-        ("7 am-6 pm", "7 am-6 pm"), ("8-9 am", "8-9 am"),
-        ("8-10 am", "8-10 am"), ("8-11 am", "8-11 am"),
-        ("8 am-12 pm", "8 am-12 pm"), ("8 am-1 pm", "8 am-1 pm"),
-        ("8 am-2 pm", "8 am-2 pm"), ("8 am-3 pm", "8 am-3 pm"),
-        ("8 am-4 pm", "8 am-4 pm"), ("8 am-5 pm", "8 am-5 pm"),
-        ("8 am-6 pm", "8 am-6 pm"), ("9-10 am", "9-10 am"),
-        ("9-11 am", "9-11 am"), ("9 am-12 pm", "9 am-12 pm"),
-        ("9 am-1 pm", "9 am-1 pm"), ("9 am-2 pm", "9 am-2 pm"),
-        ("9 am-3 pm", "9 am-3 pm"), ("9 am-4 pm", "9 am-4 pm"),
-        ("9 am-5 pm", "9 am-5 pm"), ("9 am-6 pm", "9 am-6 pm"),
-        ("10-11 am", "10-11 am"), ("10 am-12 pm", "10 am-12 pm"),
-        ("10 am-1 pm", "10 am-1 pm"), ("10 am-2 pm", "10 am-2 pm"),
-        ("10 am-3 pm", "10 am-3 pm"), ("10 am-4 pm", "10 am-4 pm"),
-        ("10 am-5 pm", "10 am-5 pm"), ("10 am-6 pm", "10 am-6 pm"),
-        ("11 am-12 pm", "11 am-12 pm"), ("11 am-1 pm", "11 am-1 pm"),
-        ("11 am-2 pm", "11 am-2 pm"), ("11 am-3 pm", "11 am-3 pm"),
-        ("11 am-4 pm", "11 am-4 pm"), ("11 am-5 pm", "11 am-5 pm"),
-        ("11 am-6 pm", "11 am-6 pm"), ("12-1 pm", "12-1 pm"),
-        ("12-2 pm", "12-2 pm"), ("12-3 pm", "12-3 pm"), ("12-4 pm", "12-4 pm"),
-        ("12-5 pm", "12-5 pm"), ("12-6 pm", "12-6 pm"), ("1-2 pm", "1-2 pm"),
-        ("1-3 pm", "1-3 pm"), ("1-4 pm", "1-4 pm"), ("1-5 pm", "1-5 pm"),
-        ("1-6 pm", "1-6 pm"), ("2-3 pm", "2-3 pm"), ("2-4 pm", "2-4 pm"),
-        ("2-5 pm", "2-5 pm"), ("2-6 pm", "2-6 pm"), ("3-4 pm", "3-4 pm"),
-        ("3-5 pm", "3-5 pm"), ("3-6 pm", "3-6 pm"), ("4-5 pm", "4-5 pm"),
-        ("4-6 pm", "4-6 pm"), ("5-6 pm", "5-6 pm")
-    ]
-    availability_monday = SelectMultipleField('', choices=availability_times)
-    backup_monday = SelectMultipleField('', choices=availability_times)
-    availability_tuesday = SelectMultipleField('', choices=availability_times)
-    backup_tuesday = SelectMultipleField('', choices=availability_times)
-    availability_wednesday = SelectMultipleField('',
-                                                 choices=availability_times)
-    backup_wednesday = SelectMultipleField('', choices=availability_times)
-    availability_thursday = SelectMultipleField('', choices=availability_times)
-    backup_thursday = SelectMultipleField('', choices=availability_times)
-    availability_friday = SelectMultipleField('', choices=availability_times)
-    backup_friday = SelectMultipleField('', choices=availability_times)
-    availability_saturday = SelectMultipleField('', choices=availability_times)
-    backup_saturday = SelectMultipleField('', choices=availability_times)
-    availability_sunday = SelectMultipleField('', choices=availability_times)
-    backup_sunday = SelectMultipleField('', choices=availability_times)
-    submit = SubmitField("Save")
+    availability_times=[("Unavailable", "Unavailable"), ("7am-8am", "7am-8am"), ("7am-9am", "7am-9am"), ("7am-10am", "7am-10am"),
+    ("7am-11am", "7am-11am"), ("7am-12pm",
+     "7am-12pm"), ("7am-1pm", "7am-1pm"), ("7am-2pm", "7am-2pm"),
+    ("7am-3pm", "7am-3pm"), ("7am-4pm", "7am-4pm"), ("7am-5pm", "7am-5pm"),
+    ("7am-6pm", "7am-6pm"), ("8am-9am", "8am-9am"), ("8am-10am",
+     "8am-10am"), ("8am-11am", "8am-11am"),
+    ("8am-12pm", "8am-12pm"), ("8am-1pm", "8am-1pm"), ("8am-2pm", "8am-2pm"),
+    ("8am-3pm", "8am-3pm"), ("8am-4pm", "8am-4pm"), ("8am-5pm", "8am-5pm"),
+    ("8am-6pm", "8am-6pm"), ("9am-10am", "9am-10am"), ("9am-11am", "9am-11am"),
+    ("9am-12pm", "9am-12pm"), ("9am-1pm", "9am-1pm"), ("9am-2pm", "9am-2pm"),
+    ("9am-3pm", "9am-3pm"), ("9am-4pm", "9am-4pm"), ("9am-5pm", "9am-5pm"),
+    ("9am-6pm", "9am-6pm"), ("10am-11am", "10am-11am"), ("10am-12pm", "10am-12pm"),
+    ("10am-1pm", "10am-1pm"), ("10am-2pm", "10am-2pm"), ("10am-3pm", "10am-3pm"),
+    ("10am-4pm", "10am-4pm"), ("10am-5pm", "10am-5pm"), ("10am-6pm", "10am-6pm"),
+    ("11am-12pm", "11am-12pm"), ("11am-1pm", "11am-1pm"), ("11am-2pm", "11am-2pm"),
+    ("11am-3pm", "11am-3pm"), ("11am-4pm", "11am-4pm"), ("11am-5pm", "11am-5pm"),
+    ("11am-6pm", "11am-6pm"), ("12pm-1pm", "12pm-1pm"), ("12pm-2pm",
+     "12pm-2pm"), ("12pm-3pm", "12pm-3pm"),
+    ("12pm-4pm", "12pm-4pm"), ("12pm-5pm",
+     "12pm-5pm"), ("12pm-6pm", "12pm-6pm"), ("1pm-2pm", "1pm-2pm"),
+    ("1pm-3pm", "1pm-3pm"), ("1pm-4pm", "1pm-4pm"), ("1pm-5pm",
+     "1pm-5pm"), ("1pm-6pm", "1pm-6pm"),
+    ("2pm-3pm", "2pm-3pm"), ("2pm-4pm", "2pm-4pm"), ("2pm-5pm",
+     "2pm-5pm"), ("2pm-6pm", "2pm-6pm"),
+    ("3pm-4pm", "3pm-4pm"), ("3pm-5pm", "3pm-5pm"), ("3pm-6pm",
+     "3pm-6pm"), ("4pm-5pm", "4pm-5pm"),
+    ("4pm-6pm", "4pm-6pm"), ("5pm-6pm", "5pm-6pm")]
+    availability_monday=SelectField('', choices=availability_times)
+    backup_monday=SelectField(
+        '', choices=availability_times, default='Unavailable')
+    availability_tuesday=SelectField('', choices=availability_times)
+    backup_tuesday=SelectField('', choices=availability_times)
+    availability_wednesday=SelectField('', choices=availability_times)
+    backup_wednesday=SelectField('', choices=availability_times)
+    availability_thursday=SelectField('', choices=availability_times)
+    backup_thursday=SelectField('', choices=availability_times)
+    availability_friday=SelectField('', choices=availability_times)
+    backup_friday=SelectField('', choices=availability_times)
+    availability_saturday=SelectField('', choices=availability_times)
+    backup_saturday=SelectField('', choices=availability_times)
+    availability_sunday=SelectField('', choices=availability_times)
+    backup_sunday=SelectField('', choices=availability_times)
+    submit=SubmitField("Save")
 
 
 class EditServiceForm(FlaskForm):
-    name = StringField('Service Name',
+    name=StringField('Service Name',
                        validators=[InputRequired(),
                                    Length(1, 200)])
-    category = QuerySelectField('Category Name',
+    category=QuerySelectField('Category Name',
                                 validators=[InputRequired()],
                                 get_label='name',
                                 query_factory=lambda: db.session.query(
                                     ServiceCategory).order_by('name'))
-    submit = SubmitField('Save Service Information')
+    submit=SubmitField('Save Service Information')
 
 
 class EditMetroAreaForm(FlaskForm):
-    name = StringField('Metro Area Name',
+    name=StringField('Metro Area Name',
                        validators=[InputRequired(),
                                    Length(1, 200)])
-    submit = SubmitField('Save Metro Area Information')
+    submit=SubmitField('Save Metro Area Information')
 
 
 class AddServiceToVolunteer(FlaskForm):
-    submit = SubmitField('Save')
+    submit=SubmitField('Save')

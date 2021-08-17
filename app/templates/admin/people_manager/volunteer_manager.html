@@ -1,18 +1,7 @@
-<style>
-  .ui.item.menu,
-  .ui.item.menu .item {
-    background: white;
-    color: indigo;
-  }
-
-  .ui.item.menu .active.item {
-    background: indigo;
-    color: white;
-  }
-</style>
-{% extends 'layouts/base.html' %} {% import 'macros/form_macros.html' as f %} {%
-import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
-%} {% block content %}
+{% extends 'layouts/base.html' %} 
+{% import 'macros/form_macros.html' as f %} 
+{% import 'macros/check_password.html' as check %} 
+{% block content %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
     <a class="ui basic compact button" href="{{ url_for('admin.people_manager') }}">
@@ -29,6 +18,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     get_flashed_messages(category_filter=['form-check-email']), 'info':
     get_flashed_messages(category_filter=['form-info']), 'success':
     get_flashed_messages(category_filter=['form-success']) } %} {{
+    
     f.begin_form(form, flashes) }}
 
     <div class="three fields">
@@ -47,10 +37,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     <div class="field">
       <label>Address</label>
       <div class="field">
-        {{ form.primary_address1(placeholder = form.primary_address1.label.text) }}
-      </div>
-      <div class="field">
-        {{ form.primary_address2(placeholder = form.primary_address2.label.text) }}
+        {{ form.street_address(placeholder = form.street_address.label.text) }}
       </div>
     </div>
 
@@ -122,3 +109,16 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   $('.ui.accordion').accordion({ exclusive: false });
 </script>
 {% endblock %}
+
+<style>
+  .ui.item.menu,
+  .ui.item.menu .item {
+    background: white;
+    color: indigo;
+  }
+
+  .ui.item.menu .active.item {
+    background: indigo;
+    color: white;
+  }
+</style>

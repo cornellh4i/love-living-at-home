@@ -3,7 +3,7 @@ from .. import db
 
 class Member(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    ## Name
+    # Name
     salutation = db.Column(db.String(20))
     member_number = db.Column(db.Integer, nullable=False)
     first_name = db.Column(db.String(64), nullable=False)
@@ -14,13 +14,13 @@ class Member(db.Model):
         db.String(64), nullable=False
     )  # Dropdown: [Female, Male, Unspecified, Does not wish to answer]
     birthdate = db.Column(db.Date, nullable=False)
-    ## Location
+    # Location
     primary_address_id = db.Column(db.Integer,
                                    db.ForeignKey('address.id'),
                                    nullable=False)
     secondary_address_id = db.Column(db.Integer, db.ForeignKey('address.id'))
     metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
-    ## Contact Information
+    # Contact Information
     primary_phone_number = db.Column(db.String(80), nullable=False)
     secondary_phone_number = db.Column(db.String(80))
     email_address = db.Column(db.String(64))
@@ -28,14 +28,14 @@ class Member(db.Model):
         db.String(80), nullable=False
     )  # One of: ['phone', 'email', 'phone and email'], implement as checkboxes
 
-    ## Emergency Contact Information
+    # Emergency Contact Information
     emergency_contact_name = db.Column(db.String(64))
     emergency_contact_phone_number = db.Column(db.String(64))
     emergency_contact_email_address = db.Column(db.String(64))
-    emergency_contact_relation = db.Column(db.String(64))
-    ## Membership Info
+    emergency_contact_relationship = db.Column(db.String(64))
+    # Membership Info
     membership_expiration_date = db.Column(db.Date, nullable=False)
-    ## Service Notes
+    # Service Notes
     # Notes about this member that volunteers can see.
     volunteer_notes = db.Column(db.Text)
     # Notes about this member that only the staffers can see.
