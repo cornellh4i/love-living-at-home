@@ -62,7 +62,8 @@ $(document).ready(function () {
       }
     });
     request_number_filter = document.getElementById("request_number").value;
-
+    date_type_filter = $("input[name='date_type']:checked").val();
+    window.alert(date_type_filter);
 
     let date_option_filter = $('#date-options').find('[name="date-options"]:checked').val();
     let start_date = $('#startdate').val();
