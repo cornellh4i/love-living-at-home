@@ -307,58 +307,59 @@ def select_all(selection, field):
 @admin_required
 def search_request():
     form = SearchRequestForm()
-    form.request_type.choices = [(request_type.name, request_type.name)
-                                 for request_type in RequestType.query.all()]
-    form.request_status.choices = [(request_status.name, request_status.name)
-                                   for request_status in RequestStatus.query.all()]
-    form.service_category.choices = [(service_category.name, service_category.name)
-                                     for service_category in ServiceCategory.query.all()]
-    form.dated_filter.choices = [(0, 'Dated'), (1, 'Undated')]
+
+    # Pull choices from database
+    form.request_type.choices = [(request_type.name, request_type.name) for request_type in RequestType.query.all()]
+    form.request_status.choices = [(request_status.name, request_status.name) for request_status in RequestStatus.query.all()]
+    form.service_category.choices = [(service_category.name, service_category.name) for service_category in ServiceCategory.query.all()]
     form.requesting_member.choices = [
         (member.id, member.first_name + " " + member.last_name)
         for member in Member.query.all()
-    ] + [(-1, "Randy Warden"), (-2, "Anne Rodda")]
-
+    ] + [(-1, "Randy Warden"), (-2, "Anne Rodda")] ## temporarily added these extra members
     service_providers = [
         ('volunteer', volunteer.id, volunteer.first_name + " " + volunteer.last_name)
         for volunteer in Volunteer.query.all()] + [('local-resource', local_resource.id, local_resource.company_name)
                                                    for local_resource in LocalResource.query.all()
                                                    ]  # TODO -- what is required from local resources
 
-    requests = [
-        {'request_num': 6724,
-         'request_status': "Requested",
-         'requested_date': "06/17",
-         'requested_day_of_week': "Saturday",
-         'start_time': "12:00 PM",
-         'end_time': "12:00 PM",
-         'member_name': "Anne Rodda",
-         'volunteer_name': "Fran Spadafora Manzella",
-         'is_volunteer': True,
-         'request_type': "Member's Home",
-         'service': "Pet Care -Vol",
-                    'created_date': "06/15/2021",
-                    'modified_date': "N/A",
-                    'service_category': "Volunteer In-Home Support",
-                    'member_number': -2
-         },
-        {'request_num': 6697,
-         'request_status': "Confirmed",
-         'requested_date': "06/21",
-         'requested_day_of_week': "Wednesday",
-         'start_time': "11:30 AM",
-         'end_time': "12:40 PM",
-         'member_name': "Randy Warden",
-         'volunteer_name': "Hank Dullea",
-         'is_volunteer': True,
-         'request_type': "Transportation",
-         'service': "Vol Driver Local Medical Appt",
-                    'created_date': "06/11/2021",
-                    'modified_date': "06/18/2021",
-                    'service_category': "Transportation",
+    form.dated_filter.choices = [(0, 'Dated'), (1, 'Undated')]
+
+    temp_requests = [
+                {'request_num': 6724, 
+                    'request_status': "Requested", 
+                    'requested_date': "06/17", 
+                    'requested_day_of_week': "Saturday",
+                    'start_time':"12:00 PM", 
+                    'end_time': "12:00 PM", 
+                    'member_name': "Anne Rodda", 
+                    'volunteer_name': "Fran Spadafora Manzella", 
+                    'is_volunteer': True,
+                    'request_type': "Member's Home", 
+                    'service': "Pet Care -Vol", 
+                    'created_date': "06/15/2021", 
+                    'modified_date': "N/A", 
+                    'service_category': "Volunteer In-Home Support", 
+                    'member_number': -2 
+                },
+                {'request_num': 6697, 
+                    'request_status': "Confirmed", 
+                    'requested_date': "06/21", 
+                    'requested_day_of_week': "Wednesday",
+                    'start_time':"11:30 AM", 
+                    'end_time': "12:40 PM", 
+                    'member_name': "Randy Warden", 
+                    'volunteer_name': "Hank Dullea", 
+                    'is_volunteer': True,
+                    'request_type': "Transportation", 
+                    'service': "Vol Driver Local Medical Appt", 
+                    'created_date': "06/11/2021", 
+                    'modified_date': "06/18/2021", 
+                    'service_category': "Transportation", 
                     'member_number': -1
-         }
-    ]
+                }
+                ]
+
+    # Pull existing requests from the database and format each of them for display on front-end.
     db_requests = Request.query.all()
     formatted_db_requests = []
     for db_req in db_requests:
@@ -387,11 +388,10 @@ def search_request():
              'modified_date': db_req.modified_date.strftime("%m/%d/%Y")
              })
 
-    requests.extend(formatted_db_requests)
+    temp_requests.extend(formatted_db_requests)
     return render_template('admin/request_manager/search_request.html',
                            title='Search Request',
-                           form=form, service_providers=service_providers, requests=requests, num_requests=len(
-                               requests)
+                           form=form, service_providers=service_providers, requests=temp_requests, num_requests=len(temp_requests)
                            )
 
 
