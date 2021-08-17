@@ -58,11 +58,10 @@ def add_fake_data(number_users):
     User.generate_fake(count=number_users)
     Address.generate_fake(count=400)
     Volunteer.generate_fake(count=10)
-    print("Generating Fake Members")
-    # Member.generate_fake(count=10)
-    VolunteerAvailability.import_fake()
+    Address.generate_fake(count=300)
+    Member.generate_fake(count=10)
     Staffer.generate_fake(count=10)
-    LocalResource.insert_local_resources()
+    Availability.generate_fake(count=10)
 
 
 @manager.command
@@ -83,7 +82,6 @@ def setup_general():
     Role.insert_roles()
     # Volunteer related
     VolunteerType.insert_types()
-    AvailabilityStatus.insert_statuses()
     # TimePeriod.insert_time_periods()
     # Request related
     RequestDurationType.insert_types()

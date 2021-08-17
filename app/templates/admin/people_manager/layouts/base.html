@@ -28,7 +28,20 @@ description=None, icon=None) %}
   {% set name = m.first_name + ' ' + m.last_name %}
   {% endif %}
   <div class="header">{{ name + " (" + m.member_number|string + ")"}}
-    <i class="trash alternate outline icon right floated" style="cursor: pointer"></i>
+    <i class="trash alternate outline icon right floated delete-member" style="cursor: pointer" id={{m.id}}></i>
+
+    <div class="ui modal" id='modal-{{m.id}}'>
+      <div class="header">Delete Member</div>
+      <div class="content">Would you like to delete Member [{{m.first_name + ' ' + m.last_name}}]?</div>
+      <div class="actions">
+        <div class="positive ui approve button"
+          onclick="window.location.href = '{{ url_for('admin.delete_member', member_id=m.id) }}';">
+          Yes
+        </div>
+        <div class="negative ui deny button">No</div>
+      </div>
+    </div>
+
     <i class="pencil icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.invite_member', member_id=m.id) }}';">
     </i>
@@ -44,8 +57,23 @@ description=None, icon=None) %}
 {% endif %}
 <div class="content">
   <div class="header">{{ name }}
-    <i class=" comment outline icon right floated" style="cursor: pointer"></i>
-    <i class="clock outline icon right floated" style="cursor: pointer"></i>
+    <i class="trash alternate outline icon right floated delete-volunteer" style="cursor: pointer" id={{v.id}}></i>
+
+    <div class="ui modal" id='modal-{{v.id}}'>
+      <div class="header">Delete Volunteer</div>
+      <div class="content">Would you like to delete Volunteer [{{v.first_name + ' ' + v.last_name}}]?</div>
+      <div class="actions">
+        <div class="positive ui approve button"
+          onclick="window.location.href = '{{ url_for('admin.delete_volunteer', volunteer_id=v.id) }}';">
+          Yes
+        </div>
+        <div class="negative ui deny button">No</div>
+      </div>
+    </div>
+
+    <i class="comment outline icon right floated" style="cursor: pointer"></i>
+    <i class="clock outline icon right floated" style="cursor: pointer"
+      onclick="window.location.href = '{{ url_for('admin.add_availability_volunteer', volunteer_id=v.id) }}';"></i>
     <i class="calendar minus outline icon right floated" style="cursor: pointer"></i>
     <i class="check square outline icon right floated" style="cursor: pointer"></i>
     <i class="handshake outline icon right floated" style="cursor: pointer"></i>
@@ -87,6 +115,23 @@ description=None, icon=None) %}
 {% macro local_resource_card(lr) %}
 <div class="content">
   <div class="header">{{lr.company_name}}
+    <i class="trash alternate outline icon right floated delete-local-resource" style="cursor: pointer" id={{lr.id}}></i>
+
+    <div class="ui modal" id='modal-{{lr.id}}'>
+      <div class="header">Delete Local Resource</div>
+      <div class="content">Would you like to delete Local Resource [{{lr.company_name}}]?</div>
+      <div class="actions">
+        <div class="positive ui approve button"
+          onclick="window.location.href = '{{ url_for('admin.delete_local_resource', local_resource_id=lr.id) }}';">
+          Yes
+        </div>
+        <div class="negative ui deny button">No</div>
+      </div>
+    </div>
+
+    <i class="comment outline icon right floated" style="cursor: pointer"></i>
+    <i class="clock outline icon right floated" style="cursor: pointer"
+      onclick="window.location.href = '{{ url_for('admin.add_availability_local_resource', local_resource_id=lr.id) }}';"></i>
     <i class="pencil icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.invite_contractor', local_resource_id=lr.id) }}';"></i>
   </div>
@@ -233,15 +278,18 @@ description=None, icon=None) %}
   <h2 class="ui header">People Manager</h2>
 
   <div class="ui tabular menu">
-    <a class="item active" data-tab="member">Members</a>
+    <a class="active item" data-tab="member">Members</a>
     <a class="item" data-tab="volunteer">Volunteers</a>
     <a class="item" data-tab="local-resource">Local Resources</a>
   </div>
-  <div class="ui tab active" data-tab="member">
+  
+  <!-- Member Tab -->
+  <div class="active ui tab" data-tab="member">
     <div class="ui stackable centered grid container">
       <div class="four wide column">
         {{ dashboard_option('Add Member', 'admin.invite_member', icon='add user icon') }}
-
+        
+        <!-- Search Box -->
         <h3>Search:</h3>
         <div class="ui search item">
           <div class="ui transparent icon input">
@@ -249,6 +297,8 @@ description=None, icon=None) %}
             <i class="search icon"></i>
           </div>
         </div>
+
+        <!-- Filter Box -->
         <h3>Filters</h3>
         <div class="attached ui top segment">
           <form class="ui form" id="member-filter-form">
@@ -271,6 +321,7 @@ description=None, icon=None) %}
         </div>
       </div>
 
+      <!-- Search Results -->
       <div class="twelve wide column">
         <h3>Search Results</h3>
         <div class="ui segment search-results">
@@ -283,10 +334,14 @@ description=None, icon=None) %}
       </div>
     </div>
   </div>
+  
+  <!-- Volunteer Tab -->
   <div class="ui tab" data-tab="volunteer">
     <div class="ui stackable centered grid container">
       <div class="four wide column">
         {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', icon='add user icon') }}
+        
+        <!-- Search Box -->
         <h3>Search:</h3>
         <div class="ui search item">
           <div class="ui transparent icon input">
@@ -294,8 +349,31 @@ description=None, icon=None) %}
             <i class="search icon"></i>
           </div>
         </div>
+
+        <!-- Filter Box -->
+        <h3>Filters</h3>
+        <div class="attached ui top segment">
+          <form class="ui form" id="member-filter-form">
+            <div class="grouped fields">
+              <label>Vetting Status:</label>
+              <div class="field">
+                <div class="ui checkbox">
+                  <input type="checkbox" name="volunteer_type" />
+                  <label>Fully Vetted</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui checkbox">
+                  <input type="checkbox" name="volunteer_type" />
+                  <label>Not Fully Vetted</label>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
 
+      <!-- Search Results -->
       <div class="twelve wide column">
         <h3>Search Results</h3>
         <div class="ui segment search-results">
@@ -307,6 +385,38 @@ description=None, icon=None) %}
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Local Resource Tab -->
+  <div class="ui tab" data-tab="local-resource">
+    <div class="ui stackable centered grid container">
+      <div class="four wide column">
+        {{ dashboard_option('Add Local Resource', 'admin.invite_contractor', icon='add user icon') }}
+        
+        <!-- Search Box -->
+        <h3>Search:</h3>
+        <div class="ui search item">
+          <div class="ui transparent icon input">
+            <input id="search-people" type="text" placeholder="Enter name...">
+            <i class="search icon"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Results -->
+      <div class="twelve wide column">
+        <h3>Search Results</h3>
+        <div class="ui segment search-results">
+          {% for lr in local_resources %}
+          <div class="ui fluid card" data-role={{"Local Resource"}}>
+            {{local_resource_card(lr)}}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
     <!-- Service Categories Pop Up -->
     <div class="ui modal" id="services">
       <i class="close icon"></i>
@@ -386,131 +496,6 @@ description=None, icon=None) %}
     </div>
   </div>
 
-  <div class="ui tab" data-tab="local-resource">
-    <div class="ui stackable centered grid container">
-      <div class="four wide column">
-        {{ dashboard_option('Add Local Resource', 'admin.invite_contractor', icon='add user icon') }}
-        <h3>Search:</h3>
-        <div class="ui search item">
-          <div class="ui transparent icon input">
-            <input id="search-people" type="text" placeholder="Enter name...">
-            <i class="search icon"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="twelve wide column">
-        <h3>Search Results</h3>
-        <div class="ui segment search-results">
-          {% for lr in local_resources %}
-          <div class="ui fluid card" data-role={{"Local Resource"}}>
-            {{local_resource_card(lr)}}
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-
-    <!-- Availability Pop Up -->
-    <div class="ui fullscreen modal" id="availability">
-      <i class="close icon"></i>
-      <div class="header">Add Availability</div>
-      <div class="content">
-
-        {% set flashes =
-        { 'error': get_flashed_messages(category_filter=['form-error']),
-        'warning': get_flashed_messages(category_filter=['form-check-email']),
-        'info': get_flashed_messages(category_filter=['form-info']),
-        'success': get_flashed_messages(category_filter=['form-success']) }
-        %}
-
-        {{ f.begin_form(add_availability, flashes) }}
-
-        <div class="ui header">Monday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_monday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_monday) }}</span>
-        </div>
-
-        <div class="ui header">Tuesday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_tuesday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_tuesday) }}</span>
-        </div>
-
-        <div class="ui header">Wednesday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_wednesday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_wednesday) }}</span>
-        </div>
-
-        <div class="ui header">Thursday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_thursday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_thursday) }}</span>
-        </div>
-
-        <div class="ui header">Friday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_friday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_friday) }}</span>
-        </div>
-
-        <div class="ui header">Saturday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_saturday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_saturday) }}</span>
-        </div>
-
-        <div class="ui header">Sunday:</div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available:</a>
-          <span>{{ f.render_form_field(add_availability.availability_sunday) }}</span>
-        </div>
-        <div class="ui segment">
-          <a class="ui purple ribbon label">Available For Backup:</a>
-          <span>{{ f.render_form_field(add_availability.backup_sunday) }}</span>
-        </div>
-
-        <div class="actions">
-          {{ f.form_message(flashes['error'], header='Something went wrong.',
-          class='error') }}
-          {{ f.form_message(flashes['warning'], header='Check your
-          email.', class='warning') }}
-          {{ f.form_message(flashes['info'],
-          header='Information', class='info') }}
-          {{ f.form_message(flashes['success'],
-          header='Success!', class='success') }}
-          {{ f.render_form_field(add_availability.submit) }}
-        </div>
-        {{ f.end_form() }}
-      </div>
-    </div>
-
     <!-- Reviews Pop Up -->
     <div class="ui modal" id="reviews">
       <i class="close icon"></i>
@@ -566,9 +551,12 @@ description=None, icon=None) %}
       </div>
     </div>
 
+    <!-- Vacation Calendar Pop Up -->
     <div class="ui modal" id="vacation_calendar">
       <i class="close icon"></i>
-      <div class="header">Vacation Calendar</div>
+      <div class="header">Vacation Calendar</div> 
+
+      <!-- Calendar Code -->
       <div id="parent" class="ui container" style="display:none;">
         <div class="ui cards">
           <div class="ui centered card">
@@ -617,6 +605,8 @@ description=None, icon=None) %}
 
     </div>
   </div>
+
+
   <script language='javascript'>
     $(document).ready(function () {
       $('.ui.accordion').accordion();
@@ -626,7 +616,7 @@ description=None, icon=None) %}
     $(document)
       .ready(function () {
         $('.menu .item').tab();
-
+        
         // function filterPeople() {
         //   let peopleFilter = $('#role-field').val();
         //   $('.card').each(function () {
@@ -640,22 +630,44 @@ description=None, icon=None) %}
         //     }
         //   });
         // }
+        
+        // $('#search-people').keyup(function () {
+        //   //   filterPeople();
+        //   var searchText = $(this).val();
+        //   if (searchText.length > 0) {
+        //     $('.search-results .header:icontains(' + searchText + ')').closest('.card').addClass('positive');
+        //     $('.card.positive .header').not(':icontains(' + searchText + ')').removeClass('positive');
+        //     $('.search-results .header').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
+        //     $('.card.hidden .header:icontains(' + searchText + ')').removeClass('hidden').show();
+        //   } else {
+        //     $('.card.positive').removeClass('positive');
+        //     $('.card.hidden').removeClass('hidden').show();
+        //   }
+        // });
 
-        $('#search-people').keyup(function () {
-          //   filterPeople();
-          var searchText = $(this).val();
-          if (searchText.length > 0) {
-            $('.search-results .header:icontains(' + searchText + ')').closest('.card').addClass('positive');
-            $('.card.positive .header').not(':icontains(' + searchText + ')').removeClass('positive');
-            $('.search-results .header').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
-            $('.card.hidden .header:icontains(' + searchText + ')').removeClass('hidden').show();
-          } else {
-            $('.card.positive').removeClass('positive');
-            $('.card.hidden').removeClass('hidden').show();
-          }
-        });
+      });
 
-      })
+      $(document).ready(function(){
+          $('.ui .item').on('click', function() {
+              $('.ui .item').removeClass('active');
+              $(this).addClass('active');
+          });             
+      });
+
+
+    $('.tab #search-people').keyup(function () {
+        //   filterPeople();
+        var searchText = $(this).val();
+        if (searchText.length > 0) {
+          $('.search-results .header:icontains(' + searchText + ')').closest('.card').addClass('positive');
+          $('.card.positive .header').not(':icontains(' + searchText + ')').removeClass('positive');
+          $('.search-results .header').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
+          $('.card.hidden .header:icontains(' + searchText + ')').removeClass('hidden').show();
+        } else {
+          $('.card.positive').removeClass('positive');
+          $('.card.hidden').removeClass('hidden').show();
+        }
+      });
 
     $('i.handshake.outline.icon.right.floated').click(function () {
       $('#services').modal('show');
@@ -665,18 +677,13 @@ description=None, icon=None) %}
       $('#vettings').modal('show');
     });
 
-    $('#context1 .menu .item').tab({
+    $('#context1.menu.item').tab({
       context: $('#context1'),
-    });
-
-    $('i.clock.outline.icon.right.floated').click(function () {
-      $('#availability').modal('show');
     });
 
     $('i.calendar.minus.outline.icon.right.floated').click(function () {
       $('#vacation_calendar').modal('show');
-    });
-
+    });    
 
     $('i.comment.outline.icon.right.floated').click(function () {
       $('#reviews').modal('show');
@@ -685,6 +692,21 @@ description=None, icon=None) %}
     $('.ui.accordion').accordion({ exclusive: false });
 
     $('.ui.rating').rating();
+
+    $('.delete-member').click(function () {
+      member_id = $(this).attr('id');
+      $(`#modal-${member_id}`).modal('show');
+    });
+
+    $('.delete-volunteer').click(function () {
+      volunteer_id = $(this).attr('id');
+      $(`#modal-${volunteer_id}`).modal('show');
+    });
+
+    $('.delete-local-resource').click(function () {
+      local_resource_id = $(this).attr('id');
+      $(`#modal-${local_resource_id}`).modal('show');
+    });
 
   </script>
 

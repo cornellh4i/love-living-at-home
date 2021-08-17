@@ -1,6 +1,7 @@
-{% extends 'layouts/base.html' %} {% import 'macros/form_macros.html' as f %} {%
-import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
-%} {% block content %}
+{% extends 'layouts/base.html' %} 
+{% import 'macros/form_macros.html' as f %} 
+{% import 'macros/check_password.html' as check %} 
+{% block content %}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
     <a class="ui basic compact button" href="{{ url_for('admin.people_manager') }}">
@@ -12,13 +13,11 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
       <div class="sub header">Create a new member account</div>
     </h2>
 
-    {% set flashes = {
-    'error': get_flashed_messages(category_filter=['form-error']),
-    'warning': get_flashed_messages(category_filter=['form-check-email']),
-    'info': get_flashed_messages(category_filter=['form-info']),
-    'success': get_flashed_messages(category_filter=['form-success'])
-    } %}
-
+    {% set flashes = { 'error':
+    get_flashed_messages(category_filter=['form-error']), 'warning':
+    get_flashed_messages(category_filter=['form-check-email']), 'info':
+    get_flashed_messages(category_filter=['form-info']), 'success':
+    get_flashed_messages(category_filter=['form-success']) } %} 
 
     {{ f.begin_form(form, flashes) }}
 
@@ -90,7 +89,7 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
     <div class="ui header">Contact Information</div>
     {{ f.render_form_field(form.primary_phone_number, extra_classes="required") }}
     {{ f.render_form_field(form.secondary_phone_number) }}
-    {{ f.render_form_field(form.email) }}
+    {{ f.render_form_field(form.email_address) }}
     {{ f.render_form_field(form.preferred_contact_method, extra_classes="inline fields") }}
 
     <div class="ui header">Emergency Contact Information</div>
@@ -110,7 +109,3 @@ import 'macros/check_password.html' as check %} {% block scripts %} {% endblock
   </div>
 </div>
 {% endblock %}
-
-<script>
-
-</script>

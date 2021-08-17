@@ -2,9 +2,7 @@ from .. import db
 
 
 class ProvidedService(db.Model):
-    """
-    Represents a single service provided by a single volunteer.
-    """
+    """Represents a single service provided by a single volunteer."""
     id = db.Column(db.Integer, primary_key=True)
     service_id = db.Column(db.Integer,
                            db.ForeignKey('service.id'),
