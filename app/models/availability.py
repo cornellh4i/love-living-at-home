@@ -1,8 +1,9 @@
 from .. import db
 
+
 class Availability(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    ## Availabilites
+    # Availabilites
     availability_monday = db.Column(db.String(64), default='Unavailable')
     backup_monday = db.Column(db.String(64), default='Unavailable')
     availability_tuesday = db.Column(db.String(64), default='Unavailable')
@@ -19,16 +20,17 @@ class Availability(db.Model):
     backup_sunday = db.Column(db.String(64), default='Unavailable')
 
     @staticmethod
-    def generate_fake (count=5, **kwargs):
+    def generate_fake(count=5, **kwargs):
         """Generate fake availability data for testing."""
         from sqlalchemy.exc import IntegrityError
 
         for i in range(count):
             a = Availability(
-                availability_monday = "7am-6pm",
-                availability_tuesday = "7am-6pm",
-                availability_friday = "7am-6pm",
-                availability_sunday = "7am-6pm",
+                id=i,
+                availability_monday="7am-6pm",
+                availability_tuesday="7am-6pm",
+                availability_friday="7am-6pm",
+                availability_sunday="7am-6pm",
                 **kwargs)
             db.session.add(a)
             try:
@@ -38,4 +40,3 @@ class Availability(db.Model):
 
     def __repr__(self):
         (f"Availability('{self.id}')")
-
