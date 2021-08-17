@@ -306,11 +306,11 @@ def select_all(selection, field):
 def search_request():
     form = SearchRequestForm()
     form.request_type.choices = [(request_type.name, request_type.name)
-                                  for request_type in RequestType.query.all()]
+                                 for request_type in RequestType.query.all()]
     form.request_status.choices = [(request_status.name, request_status.name)
-                                    for request_status in RequestStatus.query.all()]
+                                   for request_status in RequestStatus.query.all()]
     form.service_category.choices = [(service_category.name, service_category.name)
-                                      for service_category in ServiceCategory.query.all()]
+                                     for service_category in ServiceCategory.query.all()]
     form.dated_filter.choices = [(0, 'Dated'), (1, 'Undated')]
     form.requesting_member.choices = [
         (member.id, member.first_name + " " + member.last_name)
@@ -320,43 +320,43 @@ def search_request():
     service_providers = [
         ('volunteer', volunteer.id, volunteer.first_name + " " + volunteer.last_name)
         for volunteer in Volunteer.query.all()] + [('local-resource', local_resource.id, local_resource.company_name)
-        for local_resource in LocalResource.query.all()
-    ]  # TODO -- what is required from local resources
+                                                   for local_resource in LocalResource.query.all()
+                                                   ]  # TODO -- what is required from local resources
 
     requests = [
-                {'request_num': 6724,
-                    'request_status': "Requested",
-                    'requested_date': "06/17",
-                    'requested_day_of_week': "Saturday",
-                    'start_time': "12:00 PM",
-                    'end_time': "12:00 PM",
-                    'member_name': "Anne Rodda",
-                    'volunteer_name': "Fran Spadafora Manzella",
-                    'is_volunteer': True,
-                    'request_type': "Member's Home",
-                    'service': "Pet Care -Vol",
+        {'request_num': 6724,
+         'request_status': "Requested",
+         'requested_date': "06/17",
+         'requested_day_of_week': "Saturday",
+         'start_time': "12:00 PM",
+         'end_time': "12:00 PM",
+         'member_name': "Anne Rodda",
+         'volunteer_name': "Fran Spadafora Manzella",
+         'is_volunteer': True,
+         'request_type': "Member's Home",
+         'service': "Pet Care -Vol",
                     'created_date': "06/15/2021",
                     'modified_date': "N/A",
                     'service_category': "Volunteer In-Home Support",
                     'member_number': -2
-                },
-                {'request_num': 6697,
-                    'request_status': "Confirmed",
-                    'requested_date': "06/21",
-                    'requested_day_of_week': "Wednesday",
-                    'start_time': "11:30 AM",
-                    'end_time': "12:40 PM",
-                    'member_name': "Randy Warden",
-                    'volunteer_name': "Hank Dullea",
-                    'is_volunteer': True,
-                    'request_type': "Transportation",
-                    'service': "Vol Driver Local Medical Appt",
+         },
+        {'request_num': 6697,
+         'request_status': "Confirmed",
+         'requested_date': "06/21",
+         'requested_day_of_week': "Wednesday",
+         'start_time': "11:30 AM",
+         'end_time': "12:40 PM",
+         'member_name': "Randy Warden",
+         'volunteer_name': "Hank Dullea",
+         'is_volunteer': True,
+         'request_type': "Transportation",
+         'service': "Vol Driver Local Medical Appt",
                     'created_date': "06/11/2021",
                     'modified_date': "06/18/2021",
                     'service_category': "Transportation",
                     'member_number': -1
-                }
-                ]
+         }
+    ]
     db_requests = Request.query.all()
     formatted_db_requests = []
     for db_req in db_requests:
@@ -368,22 +368,22 @@ def search_request():
 
         formatted_db_requests.append(
             {'request_num': db_req.id,
-                    'request_status': RequestStatus.query.get(db_req.status_id).name,
-                    'requested_date': db_req.requested_date.strftime("%m/%d"),
-                    'requested_day_of_week': db_req.requested_date.strftime("%A"),
-                    'start_time': db_req.initial_pickup_time.strftime("%I:%M %p"),
-                    'end_time': db_req.drop_off_time.strftime("%I:%M %p"),
-                    'member_name': f"{member.first_name} {member.last_name}",
-                    'member_number': member.member_number,
-                    'volunteer_name': f"{volunteer.first_name} {volunteer.last_name}",
-                    'volunteer_id': volunteer.id,
-                    'is_volunteer': True,
-                    'request_type': RequestType.query.get(db_req.type_id).name,
-                    'service_category': ServiceCategory.query.get(db_req.service_category_id).name,
-                    'service': Service.query.get(db_req.service_id).name,
-                    'created_date': db_req.created_date.strftime("%m/%d/%Y"),
-                    'modified_date': db_req.modified_date.strftime("%m/%d/%Y")
-                })
+             'request_status': RequestStatus.query.get(db_req.status_id).name,
+             'requested_date': db_req.requested_date.strftime("%m/%d"),
+             'requested_day_of_week': db_req.requested_date.strftime("%A"),
+             'start_time': db_req.initial_pickup_time.strftime("%I:%M %p"),
+             'end_time': db_req.drop_off_time.strftime("%I:%M %p"),
+             'member_name': f"{member.first_name} {member.last_name}",
+             'member_number': member.member_number,
+             'volunteer_name': f"{volunteer.first_name} {volunteer.last_name}",
+             'volunteer_id': volunteer.id,
+             'is_volunteer': True,
+             'request_type': RequestType.query.get(db_req.type_id).name,
+             'service_category': ServiceCategory.query.get(db_req.service_category_id).name,
+             'service': Service.query.get(db_req.service_id).name,
+             'created_date': db_req.created_date.strftime("%m/%d/%Y"),
+             'modified_date': db_req.modified_date.strftime("%m/%d/%Y")
+             })
 
     requests.extend(formatted_db_requests)
     return render_template('admin/request_manager/search_request.html',
@@ -562,41 +562,41 @@ def invite_member(member_id=None):
                 metro = MetroArea(name=form.secondary_metro_area.data)
         else:
             address = Address(name=form.first_name.data + " " + form.last_name.data,
-                                street_address=form.primary_address1.data + " " + form.primary_address2.data,
-                                city=form.primary_city.data,
-                                state=form.primary_state.data,
-                                zipcode=form.primary_zip_code.data)
+                              street_address=form.primary_address1.data + " " + form.primary_address2.data,
+                              city=form.primary_city.data,
+                              state=form.primary_state.data,
+                              zipcode=form.primary_zip_code.data)
             if form.secondary_address1.data:
                 secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
                                             street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
                                             city=form.secondary_city.data,
                                             state=form.secondary_state.data,
                                             zipcode=form.secondary_zip_code.data)
-            membership_expiration_date = member.membership_expiration_date)
+            membership_expiration_date = member.membership_expiration_date
 
     if form.validate_on_submit():
-        secondary_address=False
+        secondary_address = False
         if (form.secondary_as_primary_checkbox.data):
-            address=Address(
-                name = form.first_name.data + " " + form.last_name.data,
-                street_address = form.secondary_address1.data + " " +
+            address = Address(
+                name=form.first_name.data + " " + form.last_name.data,
+                street_address=form.secondary_address1.data + " " +
                 form.secondary_address2.data,
-                city = form.secondary_city.data)
-            secondary_address=Address(
-                name = form.first_name.data + " " + form.last_name.data,
-                street_address = form.primary_address1.data + " " +
+                city=form.secondary_city.data)
+            secondary_address = Address(
+                name=form.first_name.data + " " + form.last_name.data,
+                street_address=form.primary_address1.data + " " +
                 form.primary_address2.data,
-                city = form.primary_city.data)
+                city=form.primary_city.data)
             if form.secondary_metro_area.data:
-                metro=MetroArea(name = form.secondary_metro_area.data)
+                metro = MetroArea(name=form.secondary_metro_area.data)
         else:
-            address=Address(name = form.first_name.data + " " +
+            address = Address(name=form.first_name.data + " " +
                               form.last_name.data,
-                              street_address = form.primary_address1.data + " " +
+                              street_address=form.primary_address1.data + " " +
                               form.primary_address2.data,
-                              city = form.primary_city.data)
+                              city=form.primary_city.data)
             if form.secondary_address1.data:
-                secondary_address=Address(
+                secondary_address = Address(
                     name=form.first_name.data + " " + form.last_name.data,
                     street_address=form.secondary_address1.data + " " +
                     form.secondary_address2.data,
@@ -614,28 +614,28 @@ def invite_member(member_id=None):
 
         if member is not None:
             updated_member = member
-            updated_member.salutation=form.salutation.data
-            updated_member.primary_address_id=int(address.id)
-            updated_member.secondary_address_id=secondary_address.id if secondary_address else None
-            updated_member.metro_area_id=metro.id
-            updated_member.first_name=form.first_name.data
-            updated_member.middle_initial=form.middle_initial.data
-            updated_member.last_name=form.last_name.data
-            updated_member.preferred_name=form.preferred_name.data
-            updated_member.gender=form.gender.data
-            updated_member.birthdate=form.birthdate.data
-            updated_member.primary_phone_number=form.primary_phone_number.data
-            updated_member.secondary_phone_number=form.secondary_phone_number.data
-            updated_member.email_address=form.email_address.data
-            updated_member.preferred_contact_method=form.preferred_contact_method.data
-            updated_member.emergency_contact_name=form.emergency_contact_name.data
-            updated_member.emergency_contact_phone_number=form.emergency_contact_phone_number.data
-            updated_member.emergency_contact_email_address=form.emergency_contact_email_address.data
-            updated_member.emergency_contact_relationship=form.emergency_contact_relationship.data
-            updated_member.membership_expiration_date=form.membership_expiration_date.data
-            updated_member.member_number=form.member_number.data
-            updated_member.volunteer_notes=form.volunteer_notes.data
-            updated_member.staffer_notes=form.staffer_notes.data
+            updated_member.salutation = form.salutation.data
+            updated_member.primary_address_id = int(address.id)
+            updated_member.secondary_address_id = secondary_address.id if secondary_address else None
+            updated_member.metro_area_id = metro.id
+            updated_member.first_name = form.first_name.data
+            updated_member.middle_initial = form.middle_initial.data
+            updated_member.last_name = form.last_name.data
+            updated_member.preferred_name = form.preferred_name.data
+            updated_member.gender = form.gender.data
+            updated_member.birthdate = form.birthdate.data
+            updated_member.primary_phone_number = form.primary_phone_number.data
+            updated_member.secondary_phone_number = form.secondary_phone_number.data
+            updated_member.email_address = form.email_address.data
+            updated_member.preferred_contact_method = form.preferred_contact_method.data
+            updated_member.emergency_contact_name = form.emergency_contact_name.data
+            updated_member.emergency_contact_phone_number = form.emergency_contact_phone_number.data
+            updated_member.emergency_contact_email_address = form.emergency_contact_email_address.data
+            updated_member.emergency_contact_relationship = form.emergency_contact_relationship.data
+            updated_member.membership_expiration_date = form.membership_expiration_date.data
+            updated_member.member_number = form.member_number.data
+            updated_member.volunteer_notes = form.volunteer_notes.data
+            updated_member.staffer_notes = form.staffer_notes.data
             db.session.add(updated_member)
             db.session.commit()
             flash(
@@ -705,11 +705,12 @@ def invite_volunteer(volunteer_id=None):
     form = VolunteerManager()
     if volunteer_id is not None:
         volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
-        primary_address=Address.query.filter_by(id=volunteer.primary_address_id).first()
+        primary_address = Address.query.filter_by(
+            id=volunteer.primary_address_id).first()
         primary_street_address = primary_address.street_address
-        primary_city=primary_address.city
-        primary_state=primary_address.state
-        primary_zip_code=primary_address.zipcode
+        primary_city = primary_address.city
+        primary_state = primary_address.state
+        primary_zip_code = primary_address.zipcode
         form = VolunteerManager(
             salutation=volunteer.salutation,
             first_name=volunteer.first_name,
@@ -755,21 +756,21 @@ def invite_volunteer(volunteer_id=None):
             updated_volunteer.salutation = form.salutation.data
             updated_volunteer.primary_address_id = int(address.id)
             # updated_volunteer.secondary_address_id=secondary_address.id if secondary_address else None
-            updated_volunteer.first_name=form.first_name.data
-            updated_volunteer.middle_initial=form.middle_initial.data
-            updated_volunteer.last_name=form.last_name.data
-            updated_volunteer.preferred_name=form.preferred_name.data
-            updated_volunteer.gender=form.gender.data
-            updated_volunteer.birthdate=form.birthdate.data
-            updated_volunteer.primary_phone_number=form.primary_phone_number.data
-            updated_volunteer.secondary_phone_number=form.secondary_phone_number.data
-            updated_volunteer.email_address=form.email_address.data
-            updated_volunteer.preferred_contact_method=form.preferred_contact_method.data
-            updated_volunteer.emergency_contact_name=form.emergency_contact_name.data
-            updated_volunteer.emergency_contact_phone_number=form.emergency_contact_phone_number.data
-            updated_volunteer.emergency_contact_email_address=form.emergency_contact_email_address.data
-            updated_volunteer.emergency_contact_relationship=form.emergency_contact_relationship.data
-            updated_volunteer.general_notes=form.notes.data
+            updated_volunteer.first_name = form.first_name.data
+            updated_volunteer.middle_initial = form.middle_initial.data
+            updated_volunteer.last_name = form.last_name.data
+            updated_volunteer.preferred_name = form.preferred_name.data
+            updated_volunteer.gender = form.gender.data
+            updated_volunteer.birthdate = form.birthdate.data
+            updated_volunteer.primary_phone_number = form.primary_phone_number.data
+            updated_volunteer.secondary_phone_number = form.secondary_phone_number.data
+            updated_volunteer.email_address = form.email_address.data
+            updated_volunteer.preferred_contact_method = form.preferred_contact_method.data
+            updated_volunteer.emergency_contact_name = form.emergency_contact_name.data
+            updated_volunteer.emergency_contact_phone_number = form.emergency_contact_phone_number.data
+            updated_volunteer.emergency_contact_email_address = form.emergency_contact_email_address.data
+            updated_volunteer.emergency_contact_relationship = form.emergency_contact_relationship.data
+            updated_volunteer.general_notes = form.notes.data
             db.session.add(updated_volunteer)
             db.session.commit()
             flash(
@@ -788,25 +789,25 @@ def invite_volunteer(volunteer_id=None):
                 preferred_name=form.preferred_name.data,
                 gender=form.gender.data,
                 birthdate=form.birthdate.data,
-                primary_address_id = address.id,
+                primary_address_id=address.id,
                 primary_phone_number=form.primary_phone_number.data,
                 email_address=form.email_address.data,
                 preferred_contact_method=form.preferred_contact_method.data,
                 emergency_contact_name=form.emergency_contact_name.data,
                 emergency_contact_phone_number=form.emergency_contact_phone_number.data,
                 emergency_contact_email_address=form.emergency_contact_email_address.data,
-                emergency_contact_relationship = form.emergency_contact_relationship.data,
+                emergency_contact_relationship=form.emergency_contact_relationship.data,
                 type_id=0,  # What should we set volunteer type id as???
                 rating=1,  # Why is this not null before the user even creates a volunteer?
-                is_fully_vetted=False, #What should be default? 
+                is_fully_vetted=False,  # What should be default?
                 availability_id=availability.id,
                 general_notes=form.notes.data
             )
             db.session.add(volunteer)
             db.session.commit()
             flash('Volunteer {} successfully added'.format(form.first_name.data),
-              'success')
-            
+                  'success')
+
         return redirect(url_for('admin.people_manager'))
 
         for service in service_ids:
@@ -832,14 +833,16 @@ def invite_contractor(local_resource_id=None):
     """Page for contactor management."""
     local_resource = None
     form = ContractorManager()
-    if local_resource_id is not None: 
-        local_resource = LocalResource.query.filter_by(id=local_resource_id).first()
-        primary_address=Address.query.filter_by(id=local_resource.address_id).first()
+    if local_resource_id is not None:
+        local_resource = LocalResource.query.filter_by(
+            id=local_resource_id).first()
+        primary_address = Address.query.filter_by(
+            id=local_resource.address_id).first()
         primary_street_address = primary_address.street_address
-        primary_city=primary_address.city
-        primary_state=primary_address.state
-        primary_country=primary_address.country
-        primary_zip_code=primary_address.zipcode
+        primary_city = primary_address.city
+        primary_state = primary_address.state
+        primary_country = primary_address.country
+        primary_zip_code = primary_address.zipcode
         form = ContractorManager(
             first_name=local_resource.contact_first_name,
             middle_initial=local_resource.contact_middle_initial,
@@ -855,7 +858,7 @@ def invite_contractor(local_resource_id=None):
             email_address=local_resource.email_address,
             preferred_contact_method=local_resource.preferred_contact_method,
             website=local_resource.website)
-        
+
     if form.validate_on_submit():
         address = Address(name=form.company_name.data,
                           street_address=form.street_address.data,
@@ -868,28 +871,28 @@ def invite_contractor(local_resource_id=None):
 
         if local_resource is not None:
             updated_local_resource = local_resource
-            updated_local_resource.address_id=int(address.id)
-            updated_local_resource.contact_first_name=form.first_name.data
-            updated_local_resource.contact_middle_initial=form.middle_initial.data
-            updated_local_resource.contact_last_name=form.last_name.data
-            updated_local_resource.contaqct_salutation=form.salutation.data
-            updated_local_resource.company_name=form.company_name.data
-            updated_local_resource.primary_phone_number=form.primary_phone_number.data
-            updated_local_resource.secondary_phone_number=form.secondary_phone_number.data
-            updated_local_resource.email_address=form.email_address.data
-            updated_local_resource.preferred_contact_method=form.preferred_contact_method.data
-            updated_local_resource.website=form.website.data
+            updated_local_resource.address_id = int(address.id)
+            updated_local_resource.contact_first_name = form.first_name.data
+            updated_local_resource.contact_middle_initial = form.middle_initial.data
+            updated_local_resource.contact_last_name = form.last_name.data
+            updated_local_resource.contaqct_salutation = form.salutation.data
+            updated_local_resource.company_name = form.company_name.data
+            updated_local_resource.primary_phone_number = form.primary_phone_number.data
+            updated_local_resource.secondary_phone_number = form.secondary_phone_number.data
+            updated_local_resource.email_address = form.email_address.data
+            updated_local_resource.preferred_contact_method = form.preferred_contact_method.data
+            updated_local_resource.website = form.website.data
             db.session.add(updated_local_resource)
             db.session.commit()
             flash('Local Resource {} successfully updated'.format(form.company_name.data),
-              'success')
+                  'success')
         else:
             availability = Availability()
             db.session.add(availability)
-            db.session.commit() 
+            db.session.commit()
 
             local_resource = LocalResource(
-                address_id = address.id,
+                address_id=address.id,
                 contact_first_name=form.first_name.data,
                 contact_middle_initial=form.middle_initial.data,
                 contact_last_name=form.last_name.data,
@@ -905,11 +908,12 @@ def invite_contractor(local_resource_id=None):
             db.session.add(local_resource)
             db.session.commit()
             flash('Local Resource {} successfully added'.format(form.company_name.data),
-              'success')
-            
+                  'success')
+
         return redirect(url_for('admin.people_manager'))
 
     return render_template('admin/people_manager/contractor_manager.html', form=form)
+
 
 @admin.route('/add-availability-volunteer/<int:volunteer_id>', methods=['GET', 'POST'])
 @login_required
@@ -919,49 +923,48 @@ def add_availability_volunteer(volunteer_id=None):
     print('Hello world!', file=sys.stderr)
 
     volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
-    availability_id=volunteer.availability_id
+    availability_id = volunteer.availability_id
     print(f'Availability ID is {availability_id}', file=sys.stderr)
 
     availability = Availability.query.filter_by(id=availability_id).first()
     form = AddAvailability(
-        availability_monday=availability.availability_monday, 
+        availability_monday=availability.availability_monday,
         backup_monday=availability.backup_monday,
-        availability_tuesday=availability.availability_tuesday, 
+        availability_tuesday=availability.availability_tuesday,
         backup_tuesday=availability.backup_tuesday,
-        availability_wednesday=availability.availability_wednesday, 
+        availability_wednesday=availability.availability_wednesday,
         backup_wednesday=availability.backup_wednesday,
-        availability_thursday=availability.availability_thursday, 
+        availability_thursday=availability.availability_thursday,
         backup_thursday=availability.backup_thursday,
-        availability_friday=availability.availability_friday, 
+        availability_friday=availability.availability_friday,
         backup_friday=availability.backup_friday,
-        availability_saturday=availability.availability_saturday, 
+        availability_saturday=availability.availability_saturday,
         backup_saturday=availability.backup_saturday,
-        availability_sunday=availability.availability_sunday, 
+        availability_sunday=availability.availability_sunday,
         backup_sunday=availability.backup_sunday)
     print(form.errors, file=sys.stderr)
 
     if form.is_submitted():
         print("submitted", file=sys.stderr)
 
-
-    if form.validate_on_submit():  
+    if form.validate_on_submit():
         print('Form validate on submit.', file=sys.stderr)
 
         updated_availability = availability
-        updated_availability.availability_monday=form.availability_monday.data
-        updated_availability.backup_monday=form.backup_monday.data
-        updated_availability.availability_tuesday=form.availability_tuesday.data
-        updated_availability.backup_tuesday=form.backup_tuesday.data
-        updated_availability.availability_wednesday=form.availability_wednesday.data
-        updated_availability.backup_wednesday=form.backup_wednesday.data
-        updated_availability.availability_thursday=form.availability_thursday.data
-        updated_availability.backup_thursday=form.backup_thursday.data
-        updated_availability.availability_friday=form.availability_friday.data
-        updated_availability.backup_friday=form.backup_friday.data
-        updated_availability.availability_saturday=form.availability_saturday.data
-        updated_availability.backup_saturday=form.backup_saturday.data
-        updated_availability.availability_sunday=form.availability_sunday.data
-        updated_availability.backup_sunday=form.backup_sunday.data
+        updated_availability.availability_monday = form.availability_monday.data
+        updated_availability.backup_monday = form.backup_monday.data
+        updated_availability.availability_tuesday = form.availability_tuesday.data
+        updated_availability.backup_tuesday = form.backup_tuesday.data
+        updated_availability.availability_wednesday = form.availability_wednesday.data
+        updated_availability.backup_wednesday = form.backup_wednesday.data
+        updated_availability.availability_thursday = form.availability_thursday.data
+        updated_availability.backup_thursday = form.backup_thursday.data
+        updated_availability.availability_friday = form.availability_friday.data
+        updated_availability.backup_friday = form.backup_friday.data
+        updated_availability.availability_saturday = form.availability_saturday.data
+        updated_availability.backup_saturday = form.backup_saturday.data
+        updated_availability.availability_sunday = form.availability_sunday.data
+        updated_availability.backup_sunday = form.backup_sunday.data
         db.session.add(updated_availability)
         db.session.commit()
 
@@ -972,7 +975,8 @@ def add_availability_volunteer(volunteer_id=None):
         print(form.errors, file=sys.stderr)
         print(form.backup_monday.data, file=sys.stderr)
     return render_template('admin/people_manager/availability.html', form=form)
-    
+
+
 @admin.route('/add-availability-local-resource/<int:local_resource_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -981,48 +985,48 @@ def add_availability_local_resource(local_resource_id=None):
     print('Hello world!', file=sys.stderr)
 
     localResource = LocalResource.query.filter_by(id=local_resource_id).first()
-    availability_id=localResource.availability_id
+    availability_id = localResource.availability_id
     print(f'Availability ID is {availability_id}', file=sys.stderr)
 
     availability = Availability.query.filter_by(id=availability_id).first()
     form = AddAvailability(
-        availability_monday=availability.availability_monday, 
+        availability_monday=availability.availability_monday,
         backup_monday=availability.backup_monday,
-        availability_tuesday=availability.availability_tuesday, 
+        availability_tuesday=availability.availability_tuesday,
         backup_tuesday=availability.backup_tuesday,
-        availability_wednesday=availability.availability_wednesday, 
+        availability_wednesday=availability.availability_wednesday,
         backup_wednesday=availability.backup_wednesday,
-        availability_thursday=availability.availability_thursday, 
+        availability_thursday=availability.availability_thursday,
         backup_thursday=availability.backup_thursday,
-        availability_friday=availability.availability_friday, 
+        availability_friday=availability.availability_friday,
         backup_friday=availability.backup_friday,
-        availability_saturday=availability.availability_saturday, 
+        availability_saturday=availability.availability_saturday,
         backup_saturday=availability.backup_saturday,
-        availability_sunday=availability.availability_sunday, 
+        availability_sunday=availability.availability_sunday,
         backup_sunday=availability.backup_sunday)
     print(form.errors, file=sys.stderr)
 
     if form.is_submitted():
-        print("submitted", file=sys.stderr)    
+        print("submitted", file=sys.stderr)
 
     if form.validate_on_submit():
         print('Form validate on submit.', file=sys.stderr)
 
         updated_availability = availability
-        updated_availability.availability_monday=form.availability_monday.data
-        updated_availability.backup_monday=form.backup_monday.data
-        updated_availability.availability_tuesday=form.availability_tuesday.data
-        updated_availability.backup_tuesday=form.backup_tuesday.data
-        updated_availability.availability_wednesday=form.availability_wednesday.data
-        updated_availability.backup_wednesday=form.backup_wednesday.data
-        updated_availability.availability_thursday=form.availability_thursday.data
-        updated_availability.backup_thursday=form.backup_thursday.data
-        updated_availability.availability_friday=form.availability_friday.data
-        updated_availability.backup_friday=form.backup_friday.data
-        updated_availability.availability_saturday=form.availability_saturday.data
-        updated_availability.backup_saturday=form.backup_saturday.data
-        updated_availability.availability_sunday=form.availability_sunday.data
-        updated_availability.backup_sunday=form.backup_sunday.data
+        updated_availability.availability_monday = form.availability_monday.data
+        updated_availability.backup_monday = form.backup_monday.data
+        updated_availability.availability_tuesday = form.availability_tuesday.data
+        updated_availability.backup_tuesday = form.backup_tuesday.data
+        updated_availability.availability_wednesday = form.availability_wednesday.data
+        updated_availability.backup_wednesday = form.backup_wednesday.data
+        updated_availability.availability_thursday = form.availability_thursday.data
+        updated_availability.backup_thursday = form.backup_thursday.data
+        updated_availability.availability_friday = form.availability_friday.data
+        updated_availability.backup_friday = form.backup_friday.data
+        updated_availability.availability_saturday = form.availability_saturday.data
+        updated_availability.backup_saturday = form.backup_saturday.data
+        updated_availability.availability_sunday = form.availability_sunday.data
+        updated_availability.backup_sunday = form.backup_sunday.data
         db.session.add(updated_availability)
         db.session.commit()
 
@@ -1034,38 +1038,45 @@ def add_availability_local_resource(local_resource_id=None):
         print(form.backup_monday.data, file=sys.stderr)
     return render_template('admin/people_manager/availability.html', form=form)
 
+
 @admin.route('/people-manager/<int:member_id>/_delete-member')
 @login_required
 @admin_required
 def delete_member(member_id):
     """Delete a member."""
-    member = Member.query.filter_by(id=member_id).first()    
+    member = Member.query.filter_by(id=member_id).first()
     db.session.delete(member)
     db.session.commit()
-    flash('Successfully deleted member {}'.format(member.first_name + '' + member.last_name), 'success')
+    flash('Successfully deleted member {}'.format(
+        member.first_name + '' + member.last_name), 'success')
     return redirect(url_for('admin.people_manager'))
+
 
 @admin.route('/people-manager/<int:volunteer_id>/_delete-volunteer')
 @login_required
 @admin_required
 def delete_volunteer(volunteer_id):
     """Delete a volunteer."""
-    volunteer = Volunteer.query.filter_by(id=volunteer_id).first()    
+    volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
     db.session.delete(volunteer)
     db.session.commit()
-    flash('Successfully deleted volunteer {}'.format(volunteer.first_name + '' + volunteer.last_name), 'success')
+    flash('Successfully deleted volunteer {}'.format(
+        volunteer.first_name + '' + volunteer.last_name), 'success')
     return redirect(url_for('admin.people_manager'))
+
 
 @admin.route('/people-manager/<int:local_resource_id>/_delete-local-resource')
 @login_required
 @admin_required
 def delete_local_resource(local_resource_id):
     """Delete a local resource."""
-    localResource = LocalResource.query.filter_by(id=local_resource_id).first()    
+    localResource = LocalResource.query.filter_by(id=local_resource_id).first()
     db.session.delete(localResource)
     db.session.commit()
-    flash('Successfully deleted local resource {}'.format(localResource.company_name), 'success')
+    flash('Successfully deleted local resource {}'.format(
+        localResource.company_name), 'success')
     return redirect(url_for('admin.people_manager'))
+
 
 @admin.route('/services')
 @login_required
@@ -1202,7 +1213,8 @@ def new_metro_area():
 @login_required
 @admin_required
 def generate_report():
-    import pandas as pd, numpy as np
+    import pandas as pd
+    import numpy as np
     from jinja2 import Environment, FileSystemLoader
     from weasyprint import HTML
 
