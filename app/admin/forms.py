@@ -382,113 +382,113 @@ class VolunteerManager(FlaskForm):
 
     # address
     street_address = StringField('Street address or P.O. Box',
-                                   validators=[InputRequired(),
-    primary_address1=StringField(
+                                   validators=[InputRequired(), ])
+    primary_address1 = StringField(
         'Street address or P.O. Box',
         validators=[InputRequired(), Length(max=200)])
-    primary_address2=StringField('Apt, suite, unit, building, floor, etc.',
+    primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
                                    validators=[Optional(),
                                                Length(max=200)])
-    primary_city=StringField('City',
+    primary_city = StringField('City',
                                validators=[InputRequired(),
                                            Length(max=200)])
-    primary_state=StringField('State',
+    primary_state = StringField('State',
                                 validators=[InputRequired(),
                                             Length(max=200)])
-    primary_zip_code=StringField('Zip Code',
+    primary_zip_code = StringField('Zip Code',
                                    validators=[Optional(),
                                                Length(max=45)])
     # emergency contact
-    emergency_contact_name=StringField(
+    emergency_contact_name = StringField(
         'Contact Name', validators=[Optional(), Length(1, 64)])
-    emergency_contact_relationship=StringField(
+    emergency_contact_relationship = StringField(
         'Relationship', validators=[Optional(), Length(1, 64)])
-    emergency_contact_phone_number=StringField(
+    emergency_contact_phone_number = StringField(
         'Phone Number',
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()])
-    emergency_contact_email_address=EmailField(
+    emergency_contact_email_address = EmailField(
         'Email', validators=[Optional(), Length(1, 64),
                              Email()])
     # now under contact info
-    primary_phone_number=StringField("Primary Phone Number",
+    primary_phone_number = StringField("Primary Phone Number",
                                        widget=widgets.Input(input_type="tel"),
                                        validators=[InputRequired()])
-    secondary_phone_number=StringField(
+    secondary_phone_number = StringField(
         "Secondary Phone Number",
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()])
-    email_address=EmailField('Email',
+    email_address = EmailField('Email',
                                validators=[Optional(),
                                            Length(1, 64),
                                            Email()])
-    preferred_contact_method=RadioField('Preferred Contact Method',
+    preferred_contact_method = RadioField('Preferred Contact Method',
                                           choices=[('phone', "Phone"),
                                                    ('email', "Email"),
                                                    ('phone and email',
                                                     "Phone and Email")])
 
-    notes=TextAreaField("Notes for Office Staff", validators=[Optional()])
+    notes = TextAreaField("Notes for Office Staff", validators=[Optional()])
 
-    submit=SubmitField("Submit")
+    submit = SubmitField("Submit")
 
 
 class AddServiceVetting(FlaskForm):
-    vetting_notes=TextAreaField("",
+    vetting_notes = TextAreaField("",
                                   render_kw={
                                       "rows": 15,
                                       "cols": 105
                                   },
                                   validators=[Optional()])
-    volunteer_fully_vetted_checkbox=BooleanField('Is Fully Vetted?',
+    volunteer_fully_vetted_checkbox = BooleanField('Is Fully Vetted?',
                                                    validators=[Optional()])
-    submit=SubmitField("Save")
+    submit = SubmitField("Save")
 
 
 class ContractorManager(FlaskForm):
-    first_name=StringField('First name',
+    first_name = StringField('First name',
                              validators=[InputRequired(),
                                          Length(1, 64)])
-    middle_initial=StringField('Middle Initial',
+    middle_initial = StringField('Middle Initial',
                                  validators=[Length(min=0, max=1)])
-    last_name=StringField('Last name',
+    last_name = StringField('Last name',
                             validators=[InputRequired(),
                                         Length(1, 64)])
-    salutations=[("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
+    salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
                    ("mr", "Mr")]
-    salutation=SelectField("Salutation", choices=salutations)
-    company_name=StringField('Company',
+    salutation = SelectField("Salutation", choices=salutations)
+    company_name = StringField('Company',
                                validators=[Optional(),
                                            Length(min=1, max=30)])
 
-    countries=[('united_states', 'United States'), ('b', "B"), ('c', 'C')]
-    states=[('none', ""), ("ny", "NY")]
-    time_zones=[("est", "Eastern Time (US & Canada) (UTC-05:00)"),
+    countries = [('united_states', 'United States'), ('b', "B"), ('c', 'C')]
+    states = [('none', ""), ("ny", "NY")]
+    time_zones = [("est", "Eastern Time (US & Canada) (UTC-05:00)"),
                   ("b", "B"), ("c", "C")]
-    metro_areas=[("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
+    metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
 
-    primary_country=SelectField('Country', choices=countries)
-    street_address=StringField('Street address or P.O. Box',
+    primary_country = SelectField('Country', choices=countries)
+    street_address = StringField('Street address or P.O. Box',
                                    validators=[Optional(),
                                                Length(max=200)])
-    primary_city=StringField('City',
+    primary_city = StringField('City',
                                validators=[Optional(),
                                            Length(max=200)])
-    primary_state=SelectField('State', choices=states)
-    primary_zip_code=StringField('Zip Code',
+    primary_state = SelectField('State', choices=states)
+    primary_zip_code = StringField('Zip Code',
                                    validators=[Optional(),
                                                Length(max=45)])
-    primary_metro_area=SelectField('Metro Area',
+    primary_metro_area = SelectField('Metro Area',
                                      choices=metro_areas,
                                      validators=[Optional()])
-    primary_phone_number=IntegerField('Primary Phone Number',
+    primary_phone_number = IntegerField('Primary Phone Number',
                                         widget=widgets.Input(input_type="tel"),
                                         validators=[InputRequired()])
-    secondary_phone_number=IntegerField('Secondary Phone Number',
+    secondary_phone_number = IntegerField('Secondary Phone Number',
                                           widget=widgets.Input(
                                               input_type="tel"),
                                           validators=[Optional()])
-    email_address=EmailField('Email',
+    email_address = EmailField('Email',
     secondary_phone_number=IntegerField(
         'Secondary Phone Number',
         widget=widgets.Input(input_type="tel"),
