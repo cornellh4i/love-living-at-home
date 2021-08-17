@@ -317,10 +317,6 @@ class MemberManager(FlaskForm):
         'Secondary Phone Number',
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()])
-    email = EmailField('Email',
-                       validators=[Optional(),
-                                   Length(1, 64),
-                                   Email()])
     preferred_contact_method = RadioField('Preferred Contact Method *',
                                           choices=[('phone', 'Phone'),
                                                    ('email', 'Email'),
@@ -382,10 +378,7 @@ class VolunteerManager(FlaskForm):
 
     # address
     street_address = StringField('Street address or P.O. Box',
-                                   validators=[InputRequired(), ])
-    primary_address1 = StringField(
-        'Street address or P.O. Box',
-        validators=[InputRequired(), Length(max=200)])
+                                 validators=[InputRequired(), Length(max=200)])
     primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
                                    validators=[Optional(),
                                                Length(max=200)])
@@ -492,20 +485,14 @@ class ContractorManager(FlaskForm):
     secondary_phone_number=IntegerField(
         'Secondary Phone Number',
         widget=widgets.Input(input_type="tel"),
-        validators=[Optional()])
-    email=EmailField('Email',
-                       validators=[Optional(),
-                                   Length(1, 64),
-                                   Email()])
-
+        validators=[Optional()]),
     preferred_contact_method=RadioField(
         choices=[('phone',
                   'Phone'), ('email',
-                             'Email'), ('phone_and_email', 'Phone and Email')])
-
+                             'Email'), ('phone_and_email', 'Phone and Email')]),
     website=StringField('Website',
                           validators=[Optional(),
-                                      Length(min=1, max=30)])
+                                      Length(min=1, max=30)]),
     submit=SubmitField("Submit")
 
 
