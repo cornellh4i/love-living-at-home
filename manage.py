@@ -10,6 +10,7 @@ from rq import Connection, Queue, Worker
 from app import create_app, db
 from app.models import *
 from config import Config
+from manage_helper import *
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
@@ -40,6 +41,7 @@ def recreate_db():
     Recreates a local database. You probably should not use this on
     production.
     """
+    drop_everything(db)
     db.drop_all()
     db.create_all()
     db.session.commit()
