@@ -15,7 +15,7 @@ class Staffer(db.Model):
     middle_initial = db.Column(db.String(5))
     last_name = db.Column(db.String(80), nullable=False)
     ## Contact Information
-    phone_number = db.Column(db.String(10))
+    phone_number = db.Column(db.String(80))
     email_address = db.Column(db.String(80), nullable=False)
 
     requests_created = db.relationship("Request", backref="staffer", lazy=True)
@@ -32,10 +32,11 @@ class Staffer(db.Model):
 
         seed()
         for i in range(count):
-            a = Staffer(first_name=fake.first_name(),
-                        last_name= fake.last_name(),
-                        phone_number = fake.phone_number(),
-                        email_address = fake.email(),
+            a = Staffer(id=i,
+                        first_name=fake.first_name(),
+                        last_name=fake.last_name(),
+                        phone_number=fake.phone_number(),
+                        email_address=fake.email(),
                         **kwargs)
             db.session.add(a)
             try:

@@ -3,6 +3,7 @@ from .. import db
 class MetroArea(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
+
     @staticmethod
     def get_metro_areas():
         import pandas as pd

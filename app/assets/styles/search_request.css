@@ -1,0 +1,35 @@
+
+.ui.multiple.selection.dropdown .menu .item.active {
+  background-color: lightgray;
+}
+
+.container {
+  /* Center the content */
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+#leftbutton,
+#rightbutton {
+  margin: 5px
+}
+
+
+.request_box {
+  width: 840px;
+  padding: 100px;
+  height: 210px;
+  border: 1px solid gray;
+  margin: 0;
+}
+
+.request_number_box {
+  background-color: tan;
+  width: 840px;
+  padding: 20px;
+  margin: 0px;
+  margin-top: 20px;
+}
+
+

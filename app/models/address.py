@@ -9,11 +9,11 @@ class Address(db.Model):
     city = db.Column(db.String(64), nullable=False)
     state = db.Column(db.String(64), default='New York')
     country = db.Column(db.String(64), default='United States')
-    zipcode = db.Column(db.String(64)) # WILL HAVE TO INCLUDE THIS
+    zipcode = db.Column(db.String(64))  # WILL HAVE TO INCLUDE THIS
     # metro_area = db.Column(db.String(64))
 
     @staticmethod
-    def generate_fake(count=5, **kwargs):
+    def generate_fake(count=200, **kwargs):
         """Generate a number of fake addresses for testing."""
         from sqlalchemy.exc import IntegrityError
         from random import seed, choice, random
@@ -24,7 +24,8 @@ class Address(db.Model):
 
         seed()
         for i in range(count):
-            a = Address(name=fake.company(),
+            a = Address(id=i,
+                        name=fake.company(),
                         street_address=fake.street_address(),
                         city=fake.city(),
                         **kwargs)

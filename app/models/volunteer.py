@@ -1,11 +1,12 @@
 from app.models.availability import Availability
 from .. import db
 
-NUM_VOLUNTEERS=100
+NUM_VOLUNTEERS = 100
+
 
 class Volunteer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    ## Personal Information
+    # Personal Information
     salutation = db.Column(db.String(20))
     first_name = db.Column(db.String(80), nullable=False)
     middle_initial = db.Column(db.String(5))
@@ -13,34 +14,34 @@ class Volunteer(db.Model):
     preferred_name = db.Column(db.String(80))
     gender = db.Column(db.String(80))
     birthdate = db.Column(db.Date, nullable=False)
-    ## Contact Information
+    # Contact Information
     primary_address_id = db.Column(db.Integer(),
-                          db.ForeignKey("address.id"),
-                          nullable=False)
-    secondary_address_id = db.Column(db.Integer(),
-                          db.ForeignKey("address.id"))
+                                   db.ForeignKey("address.id"),
+                                   nullable=False)
+    secondary_address_id = db.Column(db.Integer(), db.ForeignKey("address.id"))
     metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
     primary_phone_number = db.Column(db.String(64), nullable=False)
     secondary_phone_number = db.Column(db.String(10))
     email_address = db.Column(db.String(80))
-    preferred_contact_method = db.Column(db.String(80), nullable=False) # One of: ['phone', 'email', 'phone and email']
-    
-    ## Emergency Contact Information
+    # One of: ['phone', 'email', 'phone and email']
+    preferred_contact_method = db.Column(db.String(80), nullable=False)
+
+    # Emergency Contact Information
     emergency_contact_name = db.Column(db.String(64))
     emergency_contact_phone_number = db.Column(db.String(64))
     emergency_contact_email_address = db.Column(db.String(64))
-    emergency_contact_relationship = db.Column(db.String(64)) 
+    emergency_contact_relationship = db.Column(db.String(64))
 
-    ## Volunteer-Specific Information
+    # Volunteer-Specific Information
     type_id = db.Column(db.Integer(),
                         db.ForeignKey("volunteer_type.id"),
                         nullable=False)
-                    
+
     rating = db.Column(db.Float(), nullable=False)
     is_fully_vetted = db.Column(db.Boolean(), nullable=False)
     vettings = db.Column(db.Text)
     availability_id = db.Column(db.Integer(), db.ForeignKey("availability.id"))
-    
+
     general_notes = db.Column(db.String(255), nullable=False)
 
     @staticmethod
@@ -64,10 +65,11 @@ class Volunteer(db.Model):
                 primary_phone_number=fake.phone_number(),
                 email_address=choice([fake.email(), None]),
                 type_id=choice([0, 1]),
-                rating=random() * 5.0,  
+                rating=random() * 5.0,
                 is_fully_vetted=choice([True, False]),
                 vettings=choice([fake.text(), None]),
-                preferred_contact_method=choice(['phone', 'email', 'phone and email']),
+                preferred_contact_method=choice(
+                    ['phone', 'email', 'phone and email']),
                 availability_id=choice([1, 2, 3]),
                 general_notes=fake.text(),
                 **kwargs)
@@ -102,6 +104,8 @@ class VolunteerType(db.Model):
         return f"VolunteerType('{self.name}')"
 
 # For Vacation Calendar
+
+
 class VolunteerVacationDay(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     volunteer_id = db.Column(db.Integer,
@@ -111,4 +115,3 @@ class VolunteerVacationDay(db.Model):
 
     def __repr__(self):
         return f"VolunteerVacationDay('{self.date}')"
-

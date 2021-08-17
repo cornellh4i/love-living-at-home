@@ -1,47 +1,42 @@
 {% extends "admin/request_manager/layouts/base.html" %}
 {% import 'macros/form_macros.html' as f %}
 
-{% macro request_card(request_num) %}
-<!-- <div class="request-card"> -->
-<!-- <div class="field">
-    <div class="request_number_box">
-      <div class="divleft"><b>Request #{{request_num}}</b></div>
-      <div class="divright"><b>Status: Confirmed</b></div>
-    </div>
-  </div>
-  <div class="field">
-    <div class="request_box" class="float-container">
-      <div class="field">
-        <div class="date_box"></div>
-        <div class="day_box">Saturday</div>
-        <div class="date_number_box">03/16</div>
-        <div class="time_box">2:40 PM - 3:20 PM</div>
-        <div class="name">Randy Warren</div>
-        <div class="service_provider">Service Provider:</div>
-        <div class="service_provider_name">Cheryl Lewis</div>
-        <div class="type">Type:</div>
-        <div class="small_text">Member's Home Request</div>
-        <div class="small_text">Coronavirus Support Phone Call</div>
-        <br> </br>
-        <div class="small_text">Created Date: 03/04/2021</div>
-        <div class="small_text">Modified Date: 03/05/2021</div>
-        <div><i class="check icon"></i></div>
-      </div>
-      <div class="divleft">
-      </div>
-      <div class="divleft">
-
-      </div>
-    </div>
-  </div>
-</div> -->
-<div class="ui one cards" style="margin-top:20px">
+{# Render a card for a single service request.
+Parameters:
+request_num,
+request_status,
+requested_date,
+requested_day_of_week,
+start_time,
+end_time,
+member_name,
+volunteer_name,
+request_type,
+service,
+created_date,
+modified_date,
+service_category,
+member_number,
+volunteer_id,
+is_volunteer
+#}
+{% macro request_card(
+request_num, request_status, requested_date, requested_day_of_week, start_time,
+end_time, member_name, volunteer_name, request_type, service, created_date,
+modified_date, service_category, member_number, volunteer_id, is_volunteer ) %}
+<div class="ui one cards request-card" style="margin-top:20px">
   <div class="ui card">
     <div class="content" style="background-color: burlywood;">
       <div class="header">
         Request #{{request_num}}
-        <div class="ui right floated ">
-          <div class="ui green label">Confirmed</div>
+        <div class="ui right floated request-status-value">
+          {% if request_status == "Requested" %}
+          <div class="ui yellow label">{{request_status}}</div>
+          {% elif request_status == "Confirmed" %}
+          <div class="ui green label">{{request_status}}</div>
+          {% else %}
+          <div class="ui red label">{{request_status}}</div>
+          {% endif %}
         </div>
       </div>
 
@@ -51,31 +46,44 @@
         <div class="four wide column">
           <div class="ui card">
             <div class="content">
-              <div class="header">Saturday</div>
+              <div class="header">{{requested_day_of_week}}</div>
             </div>
             <div class="content">
-              <h2>03/16</h2>
+              <h2><span class="requested-date-value">{% if requested_date %}
+                  {{requested_date}}
+                  {% else %}
+                  N/A
+                  {% endif %}</span></h2>
             </div>
             <div class="extra content">
-              <h3>2:40 PM - 3:20 PM</h3>
+              <h3>{{start_time}} - {{end_time}}</h3>
             </div>
           </div>
         </div>
         <div class="six wide column">
-          <h2>Randy Warren</h2>
-          <h3><em>Volunteer:</em> Cheryl Lewis</h3>
-          <div class="ui label" style="margin-bottom: 5px">Member's Home</div>
+          <h2><span class="requesting-member-value" data-value="{{member_number}}">{{member_name}}</span></h2>
+          <h3> <em><span class="service-provider-role-value">{% if is_volunteer %}
+                Volunteer
+                {% else %}
+                Local Resource
+                {% endif %}</span>:</em>
+            <span class="service-provider-value" data-value="{{volunteer_id}}">{{volunteer_name}}</span>
+          </h3>
+          <div class="ui label request-type-value" style="margin-bottom: 5px">{{request_type}}</div>
 
-          <div class="ui label">Coronavirus Support Phone Call</div>
+          <div class="ui label">
+            <span class="service-category-value">{{service_category}}</span>:
+            <div class="detail">{{service}}</div>
+          </div>
         </div>
         <div class="six wide column">
           <div>
             <b style="font-size:1.3em">Created Date:</b>
-            <p>03/04/2021</p>
+            <p>{{created_date}}</p>
           </div>
           <div style="margin-top: 10px">
             <b style="font-size:1.3em">Modified Date:</b>
-            <p>03/05/2021</p>
+            <p>{{modified_date}}</p>
           </div>
         </div>
       </div>
@@ -83,501 +91,163 @@
   </div>
 </div>
 {% endmacro %}
+
+{# Render a multiple select dropdown field for filtering purposes.
+Parameters:
+field – Field object passed in through the form.
+show_label – If true, text of selected menu items are displayed. Otherwise, only number selected is shown.
+#}
+<!-- MACRO: Render Filter Select Field -->
+{% macro filter_select_field(field, show_label) %}
+<div class="field {% if not show_label %} no label {% endif %}" id="{{field.name}}">
+  <label style="margin-bottom:0">{{field.label.text}}</label>
+
+  <div class="ui multiple selection dropdown fluid">
+    <i class="dropdown icon"></i>
+    <div class="default text">All</div>
+    <div class="menu">
+      {% for choice in field.choices %}
+      <div class="item" data-value="{{choice[0]}}">{{choice[1]}}</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
 {% block request_content %}
-
-<style>
-  .container {
-    /* Center the content */
-    align-items: center;
-    display: flex;
-    justify-content: center;
-
-    /* Spacing */
-    /* padding: 8px; */
-  }
-
-  .triangle {
-    border-style: solid;
-
-    /* Size */
-    height: 0px;
-    width: 0px;
-  }
-
-  .right_triangle {
-    border-color: transparent transparent transparent rgba(0, 0, 0, 0.3);
-    border-width: 8px 0px 8px 8px;
-  }
-
-  .left_triangle {
-    border-color: transparent rgba(0, 0, 0, 0.3) transparent transparent;
-    border-width: 8px 8px 8px 0px;
-  }
-
-  .request_box {
-    width: 840px;
-    padding: 100px;
-    height: 210px;
-    border: 1px solid gray;
-    margin: 0;
-  }
-
-  .request_number_box {
-    background-color: tan;
-    width: 840px;
-    padding: 20px;
-    margin: 0px;
-    margin-top: 20px;
-  }
-
-  .divleft {
-    float: left
-  }
-
-  .divright {
-    float: right
-  }
-
-  .date_box {
-    position: relative;
-    width: 140px;
-    height: 131px;
-    border: 1px solid gray;
-    overflow: hidden;
-    margin: -60px;
-    text-align: center;
-    font-weight: bold;
-    vertical-align: middle;
-  }
-
-  .day_box {
-    width: 140px;
-    height: 25px;
-    background-color: gainsboro;
-    margin: -60px;
-    margin-top: -130px;
-    text-align: center;
-    vertical-align: middle;
-  }
-
-  .time_box {
-    width: 140px;
-    height: 35px;
-    background-color: gainsboro;
-    margin: -60px;
-    margin-top: 95px;
-    text-align: center;
-    vertical-align: middle;
-  }
-
-  .date_number_box {
-    width: 140px;
-    height: 5px;
-    margin: -60px;
-    margin-top: 90px;
-    text-align: center;
-    font-weight: bold;
-    font-size: x-large;
-  }
-
-  .name {
-    width: auto;
-    height: 25px;
-    overflow: hidden;
-    margin-left: 150px;
-    margin-top: -120px;
-    text-align: left;
-    font-weight: bold;
-    font-size: large;
-    color: mediumslateblue;
-  }
-
-  .service_provider {
-    width: 150px;
-    height: 25px;
-    overflow: hidden;
-    margin-left: 150px;
-    margin-top: 20px;
-    text-align: left;
-    font-weight: bold;
-    font-size: medium;
-  }
-
-  .service_provider_name {
-    width: auto;
-    height: 25px;
-    overflow: hidden;
-    margin-left: 150px;
-    margin-top: 5px;
-    margin-bottom: -40px;
-    text-align: left;
-    font-size: medium;
-  }
-
-  .type {
-    width: 150px;
-    height: 20px;
-    overflow: hidden;
-    margin-left: 360px;
-    margin-top: -130px;
-    text-align: left;
-    font-weight: bold;
-    font-size: small;
-  }
-
-  .small_text {
-    width: auto;
-    height: 50px;
-    overflow: hidden;
-    margin-left: 360px;
-    margin-top: 10px;
-    margin-bottom: -40px;
-    text-align: left;
-    font-size: small;
-  }
-
-  .vertical_line {
-    border-left: 2px solid darkgrey;
-    height: 180px;
-    margin-left: 575px;
-    margin-top: -185px;
-    margin-bottom: -700px;
-    /* position:absolute;
-    left: 50%; */
-  }
-</style>
-
-
+{% assets 'search_request_css' %}
+<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
+{% endassets %}
 
 <div class="content-section">
-  <form method="POST" action="">
-    {{ form.hidden_tag() }}
+  <h2 class="header">Search Criteria</h2>
 
-    <h2 class="header">Search Criteria</h2>
-    <hr />
+  {% set flashes = {
+  'error': get_flashed_messages(category_filter=['form-error']),
+  'warning': get_flashed_messages(category_filter=['form-check-email']),
+  'info': get_flashed_messages(category_filter=['form-info']),
+  'success': get_flashed_messages(category_filter=['form-success'])
+  } %}
+  {{ f.begin_form(form, flashes) }}
 
-    {% set flashes = {
-    'error': get_flashed_messages(category_filter=['form-error']),
-    'warning': get_flashed_messages(category_filter=['form-check-email']),
-    'info': get_flashed_messages(category_filter=['form-info']),
-    'success': get_flashed_messages(category_filter=['form-success'])
-    } %}
+  <div class="ui three column stackable grid">
+    <div class="five wide column" style="padding-top: 0; padding-bottom:0">
+      {{filter_select_field(form.service_category, false)}}
+    </div>
+    <div class="five wide column" style="padding-top: 0; padding-bottom:0">
+      {{filter_select_field(form.service_category, false)}}
+    </div>
+    <div class="five wide column" style="padding-top: 0; padding-bottom:0">
+      {{filter_select_field(form.request_status, false)}}
+    </div>
+  </div>
 
-    {{ f.begin_form(form, flashes) }}
-
-    <div class="ui form">
-      <!--Dropdown components-->
-      <div class="ui two column stackable grid">
-        <div class="eight wide column">
-          <!--Javascript to implement Select All (in progress)-->
-          <div class="dropdown">
-            <div class="field">
-              <label> {{form.request_type.label}}</label>
-              <select multiple="" class="ui dropdown" name="requesttype" id="requesttype" onInput="myFunction()">
-                <option value="">Select Request Type(s)</option>
-                {% for choice in form.request_type.choices %}
-                <option value={{ choice[0] }}>{{choice[1]}}</option>
-                {% endfor %}
-              </select>
+  <div class="ui two column stackable grid">
+    <div class="eight wide column" style="padding-top: 0; padding-bottom: 0.2">
+      <div>
+        {{filter_select_field(form.requesting_member, true)}}
+      </div>
+      <div class="field" style="margin-bottom: 0">
+        <label style="margin-bottom:0">Service Provider(s)</label>
+        <div>
+          <div class="ui menu">
+            <div id="select-role" class="ui dropdown item">
+              <div class="text">
+                All roles
+              </div>
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                <div class="item" data-value="">All roles</div>
+                <div class="item" data-value="volunteer">Volunteers</div>
+                <div class="item" data-value="local-resource">Local Resources</div>
+              </div>
             </div>
-
-            <script type="text/javascript">
-              function myFunction() {
-                window.alert(0);
-                var element = document.getElementById("requesttype");
-                if (element.options[0].selected == true) {
-                  for (var i = 1; i < element.options.length; i++) {
-                    elements.options[i].selected = true;
-                  }
-                }
-              };
-            </script>
-
-            <div class="field">
-              <label> {{form.request_status.label}}</label>
-              <select multiple="" class="ui dropdown" name="requeststatus">
-                <option value="">Select Request Status</option>
-                {% for choice in form.request_status.choices %}
-                <option value={{ choice[0] }}>{{choice[1]}}</option>
+            <div class="ui fluid multiple search selection dropdown">
+              <i class="dropdown icon"></i>
+              <div class="default text">All</div>
+              <div class="menu" id="service-provider-menu">
+                {% for service_provider_info in service_providers %}
+                <div class="item" data-role="{{service_provider_info[0]}}" data-id="{{service_provider_info[1]}}">
+                  {{service_provider_info[2]}}
+                </div>
                 {% endfor %}
-              </select>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <div class="right floated eight wide column">
-          <div class="field">
-            <label> {{form.service_category.label}}</label>
-            <select multiple="" class="ui dropdown" name="servicecategory">
-              <option value="">Select Service Category(s)</option>
-              {% for choice in form.service_category.choices %}
-              <option value={{ choice[0] }}>{{choice[1]}}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="field">
-            <label> {{form.provider_type.label}}</label>
-            <select multiple="" class="ui dropdown" name="providertype">
-              <option value="">Select Provider Type(s)</option>
-              {% for choice in form.provider_type.choices %}
-              <option value={{ choice[0] }}>{{choice[1]}}</option>
-              {% endfor %}
-            </select>
           </div>
         </div>
       </div>
-      <script type="text/javascript">
-        $(document).ready(function () {
-          $('.ui.dropdown').dropdown({ fullTextSearch: true });
-        });
-      </script>
       <div class="field">
-        <label> {{form.requesting_member.label}}</label>
-        <select class="ui search selection dropdown" name="requestingmem">
-          <option value="">Type Name Here</option>
-          {% for choice in form.requesting_member.choices %}
+        <label style="margin-bottom:0">Request #</label>
+        <input type="text">
+      </div>
+    </div>
+    <div class="eight wide column" style="padding-top: 0.3; padding-bottom: 0; padding-left: 100px">
+      <div class="inline fields">
+        <label>Show...</label>
+        <div class="field">
+          <div class="ui checkbox">
+            <input type="checkbox" name="frequency" checked="checked">
+            <label>Dated</label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui checkbox">
+            <input type="checkbox" name="frequency">
+            <label>Undated</label>
+          </div>
+        </div>
+      </div>
+      <div class="inline fields" style="padding: 0; margin: 0">
+        <div class="ui icon button" id="leftbutton">
+          <i class="caret left icon"></i>
+        </div>
+        <select class="ui dropdown" id="timePeriod" name="timePeriod">
+          <option value="">Nothing Selected</option>
+          {% for choice in form.time_period.choices %}
           <option value={{ choice[0] }}>{{choice[1]}}</option>
           {% endfor %}
         </select>
+        <div class="ui icon button" id="rightbutton">
+          <i class="caret right icon"></i>
+        </div>
       </div>
-      <div class="field">
-        <label> {{form.service_provider.label}}</label>
-        <select class="ui search dropdown" name="serviceprov">
-          <option value="">Type Name Here</option>
-          {% for choice in form.service_provider.choices %}
-          <option value={{ choice[0] }}>{{choice[1]}}</option>
-          {% endfor %}
-        </select>
-      </div>
-    </div>
-    <p>
-      <hr />
-    </p>
-
-    <div class="ui form">
-      <div class="ui two column stackable grid">
-
-        <div class="right floated sixteen wide column">
-          <div class="inline fields">
-            <label>{{ form.show.label }}:</label>
-            {% for subfield in form.show %}
-            <tr>
-              <td>{{ subfield }}</td>
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <td>{{ subfield.label }}</td>
-            </tr>
-            {% endfor %}
-          </div>
-
-          <!-- <div class = "field"> -->
-          <label>{{ form.time_period.label }}</label>
-          <div class="inline fields">
-            <button class="container" id="leftbutton">
-              <!-- Triangle -->
-              <div class="triangle left_triangle"></div>
-            </button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <select class="ui dropdown" id="timePeriod" name="timePeriod">
-              <option value="">Nothing Selected</option>
-              {% for choice in form.time_period.choices %}
-              <option value={{ choice[0] }}>{{choice[1]}}</option>
-              {% endfor %}
-            </select>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <button class="container" id="rightbutton">
-              <!-- Triangle -->
-              <div class="triangle right_triangle"></div>
-            </button>
-            <!-- </div>  -->
-          </div>
-
-          <script text="text/javascript">
-            $(document).ready(function () {
-              document.getElementById("leftbutton").onclick = function () {
-
-                var option = document.getElementById("timePeriod").value;
-                var start_date = document.getElementById("startdate").value;
-                var end_date = document.getElementById("enddate").value;
-                var date_values = start_date.split("-");
-                var year = parseInt(date_values[0]);
-                var month = parseInt(date_values[1]) - 1;
-                var date = parseInt(date_values[2]);
-                var current = new Date(year, month, date);
-
-                switch (option) {
-                  case '0':
-                    var yesterday = new Date(current);
-                    yesterday.setDate(yesterday.getDate() - 1)
-                    var new_date = yesterday.getFullYear() + '-' + ("0" + (yesterday.getMonth() + 1)).slice(-2) + '-' + ("0" + yesterday.getDate()).slice(-2);
-                    var end_date = new_date;
-                    break;
-                  case '1':
-                    var week_ = current.getDate() - 7;
-                    var last_week = new Date(current.setDate(week_));
-                    var end_week = new Date(current.setDate(current.getDate() + 7));
-                    var new_date = last_week.getFullYear() + '-' + ("0" + (last_week.getMonth() + 1)).slice(-2) + '-' + ("0" + last_week.getDate()).slice(-2);
-                    var end_date = end_week.getFullYear() + '-' + ("0" + (end_week.getMonth() + 1)).slice(-2) + '-' + ("0" + end_week.getDate()).slice(-2);
-                    break;
-                  case '2':
-                    var month_ = current.getMonth() - 1;
-                    var last_month = new Date(current.setMonth(month_));
-                    var end_month = new Date(current.setMonth(current.getMonth() + 1));
-                    var new_date = last_month.getFullYear() + '-' + ("0" + (last_month.getMonth() + 1)).slice(-2) + '-' + ("0" + last_month.getDate()).slice(-2);
-                    var end_date = end_month.getFullYear() + '-' + ("0" + (end_month.getMonth() + 1)).slice(-2) + '-' + ("0" + end_month.getDate()).slice(-2);
-                    break;
-                  default:
-                    var new_date = start_date;
-                }
-
-                var dateControl = document.querySelector('#startdate');
-                dateControl.value = new_date;
-
-                var dateControl2 = document.querySelector('#enddate');
-                dateControl2.value = end_date;
-              }
-            });
-          </script>
-
-          <script text="text/javascript">
-            document.getElementById("rightbutton").onclick = function () {
-
-              var option = document.getElementById("timePeriod").value;
-              var start_date = document.getElementById("startdate").value;
-              var end_date = document.getElementById("enddate").value;
-              var date_values = start_date.split("-");
-              var year = parseInt(date_values[0]);
-              var month = parseInt(date_values[1]) - 1;
-              var date = parseInt(date_values[2]);
-              var current = new Date(year, month, date);
-
-              switch (option) {
-                case '0':
-                  var tomorrow = new Date(current);
-                  tomorrow.setDate(tomorrow.getDate() + 1)
-                  var new_date = tomorrow.getFullYear() + '-' + ("0" + (tomorrow.getMonth() + 1)).slice(-2) + '-' + ("0" + tomorrow.getDate()).slice(-2);
-                  var end_date = new_date;
-                  break;
-                case '1':
-                  var week_ = current.getDate() + 7;
-                  var next_week = new Date(current.setDate(week_));
-                  var end_week = new Date(current.setDate(current.getDate() + 7));
-                  var new_date = next_week.getFullYear() + '-' + ("0" + (next_week.getMonth() + 1)).slice(-2) + '-' + ("0" + next_week.getDate()).slice(-2);
-                  var end_date = end_week.getFullYear() + '-' + ("0" + (end_week.getMonth() + 1)).slice(-2) + '-' + ("0" + end_week.getDate()).slice(-2);
-                  break;
-                case '2':
-                  var month_ = current.getMonth() + 1;
-                  var next_month = new Date(current.setMonth(month_));
-                  var end_month = new Date(current.setMonth(current.getMonth() + 1));
-                  var new_date = next_month.getFullYear() + '-' + ("0" + (next_month.getMonth() + 1)).slice(-2) + '-' + ("0" + next_month.getDate()).slice(-2);
-                  var end_date = end_month.getFullYear() + '-' + ("0" + (end_month.getMonth() + 1)).slice(-2) + '-' + ("0" + end_month.getDate()).slice(-2);
-                  break;
-                default:
-                  var new_date = start_date;
-              }
-
-              var dateControl = document.querySelector('#startdate');
-              dateControl.value = new_date;
-
-              var dateControl2 = document.querySelector('#enddate');
-              dateControl2.value = end_date;
-            }
-          </script>
-
-          <script text="text/javascript">
-            $("select[name = timePeriod]").on("change", function () {
-              var date = new Date();
-              var start_date;
-              var end_date;
-              //YYYY-MM-DD                      
-
-              switch ($(this).val()) {
-                case '0':
-                  var start_date = date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2);
-                  var end_date = start_date;
-                  break;
-                case '1':
-                  var first = date.getDate() - date.getDay() + 1; // First day is the day of the month - the day of the week
-                  var last = first + 6;
-                  var firstDay = new Date(date.setDate(first));
-                  var lastDay = new Date(date.setDate(last));
-                  var start_date = firstDay.getFullYear() + '-' + ("0" + (firstDay.getMonth() + 1)).slice(-2) + '-' + ("0" + firstDay.getDate()).slice(-2);
-                  var end_date = lastDay.getFullYear() + '-' + ("0" + (lastDay.getMonth() + 1)).slice(-2) + '-' + ("0" + lastDay.getDate()).slice(-2);
-                  break;
-                case '2':
-                  var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-                  var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-                  var start_date = firstDay.getFullYear() + '-' + ("0" + (firstDay.getMonth() + 1)).slice(-2) + '-' + ("0" + firstDay.getDate()).slice(-2);
-                  var end_date = lastDay.getFullYear() + '-' + ("0" + (lastDay.getMonth() + 1)).slice(-2) + '-' + ("0" + lastDay.getDate()).slice(-2);
-                  break;
-                case '3':
-                  var tomorrow = new Date(date);
-                  tomorrow.setDate(tomorrow.getDate() + 1);
-                  var start_date = tomorrow.getFullYear() + '-' + ("0" + (tomorrow.getMonth() + 1)).slice(-2) + '-' + ("0" + tomorrow.getDate()).slice(-2);
-                  var end_date = start_date;
-                  break;
-                default:
-              }
-
-              var dateControl = document.querySelector('#startdate');
-              dateControl.value = start_date;
-              //window.alert(dateControl.value);
-              var dateControl2 = document.querySelector('#enddate');
-              dateControl2.value = end_date;
-            });
-          </script>
-
-
-          <div class="inline fields">
-            <div>
-              <label>{{ form.start_date.label }}:</label>
-              <input type="date" id="startdate" name="trip-start" class="setDate" value="">
-            </div>
-            <div>
-              <label>{{form.end_date.label}}:</label>
-              <input type="date" id="enddate" name="trip-start" value="">
-            </div>
-          </div>
-          <div id="selectedValues" class="ui container date-values" readonly></div>
+      <div class="fields" style="padding: 0; margin: 0">
+        <div class="field">
+          <label style="margin-bottom: 0">{{ form.start_date.label }}:</label>
+          <input type="date" id="startdate" name="trip-start" class="setDate" value="">
+        </div>
+        <div class="field">
+          <label style="margin-bottom: 0">{{form.end_date.label}}:</label>
+          <input type="date" id="enddate" name="trip-start" value="">
         </div>
       </div>
     </div>
+  </div>
 
-    <p>
-      <hr />
-    </p>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <div class="ui form">
-      <div class="ui centered grid">
-        <div class="inline fields">
-          <div>{{form.apply_filters}}</div>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <div><input type="reset" value="Reset Filters"></div>
-        </div>
-      </div>
-    </div>
-
-    <h2 class="header" class="divleft">Search Results</h2>
-    <div id="" class="divright">(0 Results Found)</div>
-
-    <p>
-      <hr />
-    </p>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <div class="ui four column stackable grid">
-      <div class="field">
-        <label>Sort By:</label>
-        <select class="ui search dropdown" name="sortby">
-          <option value="">Choose Filter</option>
-          <option value=0>Create Date</option>
-        </select>
-      </div>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    </div>
-    {{f.end_form()}}
-    {{request_card(6163)}}
+  <div class="ui one column centered grid">
+    <div class="ui button" type="submit" id="filter-button">Apply Filters</div>
+  </div>
+  {{f.end_form()}}
 
 
-</div>
-</div>
+  <h2 class="header" class="divleft">Search Results</h2>
+  <div id="" class="divright">({{num_requests}} Results Found)</div>
 
-{% endblock %}
+  <hr />
+  <div id="request-search-results">
+    {% for request in requests %}
+    {{request_card(
+    request.request_num, request.request_status,
+    request.requested_date, request.requested_day_of_week,
+    request.start_time,
+    request.end_time, request.member_name, request.volunteer_name,
+    request.request_type, request.service, request.created_date,
+    request.modified_date, request.service_category, request.member_number, request.volunteer_id, request.is_volunteer)
+    }}
+    {% endfor %}
+  </div>
+
+  {% assets 'search_request_js' %}
+  <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+  {% endblock %}
