@@ -77,8 +77,8 @@ class Volunteer(db.Model):
             db.session.add(v)
             try:
                 db.session.commit()
-            except IntegrityError:
-                print("ERROR MAKING VOLUNTEERS")
+            except IntegrityError as e:
+                print(f"ERROR MAKING VOLUNTEERS: {e}")
                 db.session.rollback()
 
     def __repr__(self):
