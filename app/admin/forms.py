@@ -455,9 +455,9 @@ class ContractorManager(FlaskForm):
     salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
                    ("mr", "Mr")]
     salutation = SelectField("Salutation", choices=salutations)
-    company_name = StringField('Company',
-                               validators=[Optional(),
-                                           Length(min=1, max=30)])
+    company_name = StringField(
+        'Company',
+        validators=[Optional(), Length(min=1, max=30)])
 
     countries = [('united_states', 'United States'), ('b', "B"), ('c', 'C')]
     states = [('none', ""), ("ny", "NY")]
@@ -467,8 +467,8 @@ class ContractorManager(FlaskForm):
 
     primary_country = SelectField('Country', choices=countries)
     street_address = StringField('Street address or P.O. Box',
-                                 validators=[Optional(),
-                                             Length(max=200)])
+                                   validators=[Optional(),
+                                               Length(max=200)])
     primary_city = StringField('City',
                                validators=[Optional(),
                                            Length(max=200)])
@@ -487,22 +487,16 @@ class ContractorManager(FlaskForm):
                                               input_type="tel"),
                                           validators=[Optional()])
     email_address = EmailField('Email',
-                               validators=[Optional(),
-                                           Length(1, 64),
-                                           Email()])
-    secondary_phone_number = IntegerField(
-        'Secondary Phone Number',
-        widget=widgets.Input(input_type="tel"),
-        validators=[Optional()]),
+                       validators=[Optional(),
+                                   Length(1, 64),
+                                   Email()])
 
-    preferred_contact_method = RadioField(
-        choices=[('phone',
-                  'Phone'), ('email',
-                             'Email'), ('phone_and_email', 'Phone and Email')]),
+    preferred_contact_method = RadioField(choices=[(
+        'phone', 'Phone'), ('email', 'Email'), ('phone_and_email', 'Phone and Email')])
 
-    website = StringField('Website',
-                          validators=[Optional(),
-                                      Length(min=1, max=30)]),
+    website = StringField(
+        'Website',
+        validators=[Optional(), Length(min=1, max=30)])
     submit = SubmitField("Submit")
 
 
