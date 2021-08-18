@@ -574,7 +574,7 @@ def invite_member(member_id=None):
                                             city=form.secondary_city.data,
                                             state=form.secondary_state.data,
                                             zipcode=form.secondary_zip_code.data)
-            membership_expiration_date = member.membership_expiration_date
+            #membership_expiration_date = member.membership_expiration_date
 
     if form.validate_on_submit():
         secondary_address = False
