@@ -152,6 +152,9 @@ $(document).ready(function () {
       if (request_number_filter && request_number_filter !== request_number) {
         $this.hide();
       }
+
+      // TODO: Update the display for the number of search results returned. 
+
     });
   });
 

@@ -97,7 +97,7 @@ class SearchRequestForm(FlaskForm):
         get_label='name',
         query_factory=lambda: db.session.query(VolunteerType).order_by('name'))
 
-    date_type = RadioField('Date Type:', choices=[(0, 'Service Date'), (1, 'Created Date')])
+    date_type = RadioField('Date Type:', choices=[(0, 'Service Date'), (1, 'Created Date')], default='0')
     time_period = SelectField('Time Period',
                               choices=[(0, 'Today'), (1, 'This Week'),
                                        (2, 'This Month'), (3, 'Future Dates')])
