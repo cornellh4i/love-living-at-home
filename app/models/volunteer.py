@@ -1,4 +1,5 @@
 from app.models.availability import Availability
+
 from .. import db
 
 NUM_VOLUNTEERS = 100
@@ -56,24 +57,23 @@ class Volunteer(db.Model):
 
         seed()
         for i in range(count):
-            v = Volunteer(
-                id=i,
-                first_name=fake.first_name(),
-                last_name=fake.last_name(),
-                birthdate=datetime.strptime(
-                    fake.date(), "%Y-%m-%d").date(),
-                primary_address_id=1,
-                primary_phone_number=fake.phone_number(),
-                email_address=choice([fake.email(), None]),
-                type_id=choice([0, 1]),
-                rating=random() * 5.0,
-                is_fully_vetted=choice([True, False]),
-                vettings=choice([fake.text(), None]),
-                preferred_contact_method=choice(
-                    ['phone', 'email', 'phone and email']),
-                availability_id=i,
-                general_notes=fake.text(),
-                **kwargs)
+            v = Volunteer(id=i,
+                          first_name=fake.first_name(),
+                          last_name=fake.last_name(),
+                          birthdate=datetime.strptime(fake.date(),
+                                                      "%Y-%m-%d").date(),
+                          primary_address_id=1,
+                          primary_phone_number=fake.phone_number(),
+                          email_address=choice([fake.email(), None]),
+                          type_id=choice([0, 1]),
+                          rating=random() * 5.0,
+                          is_fully_vetted=choice([True, False]),
+                          vettings=choice([fake.text(), None]),
+                          preferred_contact_method=choice(
+                              ['phone', 'email', 'phone and email']),
+                          availability_id=i,
+                          general_notes=fake.text(),
+                          **kwargs)
             db.session.add(v)
             try:
                 db.session.commit()
@@ -104,6 +104,7 @@ class VolunteerType(db.Model):
 
     def __repr__(self):
         return f"VolunteerType('{self.name}')"
+
 
 # For Vacation Calendar
 
