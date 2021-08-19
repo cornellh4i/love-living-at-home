@@ -1,3 +1,13 @@
+// Convert a date string with format `yyyy-mm-dd` to a Date object that assumes the local timezone.
+function date_object_of_string(date_str) {
+  // TODO: need to test timezone (maybe set to ET manually)... what about daylight savings time?
+  let date_parts = date_str.split('-');
+  let year = date_parts[0];
+  let month_zero_indexed = date_parts[1] - 1;
+  let day = date_parts[2];
+  return new Date(year, month_zero_indexed, day);
+}
+
 
 $(document).ready(function () {
   $('.ui.search.selection.dropdown').dropdown({ fullTextSearch: true });
@@ -79,18 +89,9 @@ $(document).ready(function () {
       date_type_filter_text = date_type_options[date_type_filter_id];
     }
 
-    // Convert a date string with format `yyyy-mm-dd` to a Date object that assumes the local timezone.
-    function date_object_of_string(date_str) {
-      let date_parts = date_str.split('-');
-      let year = date_parts[0];
-      let month_zero_indexed = date_parts[1] - 1;
-      let day = date_parts[2];
-      return new Date(year, month_zero_indexed, day);
-    }
     let start_date_str = $('#start-date').val();
     let end_date_str = $('#end-date').val();
-
-    let start_date = date_object_of_string(start_date_str); // need to test timezone (maybe set to ET manually)... what about daylight savings time?
+    let start_date = date_object_of_string(start_date_str);
     let end_date = date_object_of_string(end_date_str);
 
     request_number_filter = document.getElementById("request_number").value;
@@ -121,33 +122,37 @@ $(document).ready(function () {
         $this.hide();
       }
 
-      // TODO: Date status and date type + range filters
-      if (date_type_filter_text == "Service Date") {
-        // Create date object for this request item.
-        let service_date_str = $this.find('.requested-date-value').html().trim();
-        let service_date_month = service_date_str.split('/')[0];
-        let service_date_day = service_date_str.split('/')[1];
-        let service_date = new Date('2021', service_date_month - 1, service_date_day); // TODO: FIX YEAR USED
+      // TODO: Date status filter ("Dated" vs "Undated")
 
-        // Filter by start date.
-        if (start_date && service_date < start_date) {
-          $this.hide();
-        }
-        // Filter by end date.
-        if (end_date && service_date > end_date) {
-          $this.hide();
-        }
+      // Apply filter for Date Type and Range
+      let date_str;
+      if (date_type_filter_text == "Service Date") {
+        date_str = $this.find('.requested-date-value').attr('data-value');
       }
-      // If service date selected Get the service date 
+      else if (date_type_filter_text == "Created Date") {
+        date_str = $this.find('.created-date-value').html().trim();
+      }
+      // Assuming format 'mm/dd/yyyy'
+      let date_str_tokens = date_str.split('/');
+      let date_month = date_str_tokens[0];
+      let date_day = date_str_tokens[1];
+      let date_year = date_str_tokens[2];
+      let date_obj = new Date(date_year, date_month - 1, date_day);
+
+      // Filter by start date.
+      if (start_date && date_obj < start_date) {
+        $this.hide();
+      }
+      // Filter by end date.
+      if (end_date && date_obj > end_date) {
+        $this.hide();
+      }
 
       let request_number = $this.find('.request-number-value').html();
       if (request_number_filter && request_number_filter !== request_number) {
         $this.hide();
       }
     });
-
-
-
   });
 
   // L and R arrows to control date selection
