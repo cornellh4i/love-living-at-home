@@ -32,6 +32,11 @@ $(document).ready(function () {
       useLabels: false
     });
 
+  $('#clear-filter').click(function (e) {
+    // Instead of resetting all individual form fields, we're reloading the page. 
+    location.reload();
+  })
+
   $('#filter-button').click(function (e) {
     request_type_filter = [];
     service_category_filter = [];
