@@ -183,13 +183,13 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
         <label>Show...</label>
         <div class="field">
           <div class="ui checkbox">
-            <input type="checkbox" name="frequency" checked="checked">
+            <input type="checkbox" name="date_status" value="0">
             <label>Dated</label>
           </div>
         </div>
         <div class="field">
           <div class="ui checkbox">
-            <input type="checkbox" name="frequency">
+            <input type="checkbox" name="date_status" value="1">
             <label>Undated</label>
           </div>
         </div>
@@ -201,7 +201,7 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
         <div class="ui icon button" id="leftbutton">
           <i class="caret left icon"></i>
         </div>
-        <select class="ui dropdown" id="timePeriod" name="timePeriod">
+        <select class="ui dropdown" id="time-period" name="time-period">
           <option value="">Nothing Selected</option>
           {% for choice in form.time_period.choices %}
           <option value={{ choice[0] }}>{{choice[1]}}</option>
@@ -214,11 +214,11 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
       <div class="fields" style="padding: 0; margin: 0">
         <div class="field" style="padding:0">
           <label style="margin-bottom: 0">{{ form.start_date.label }}:</label>
-          <input type="date" id="startdate" name="trip-start" class="setDate" value="">
+          <input type="date" id="start-date" name="trip-start" class="setDate" value="">
         </div>
         <div class="field">
           <label style="margin-bottom: 0">{{form.end_date.label}}:</label>
-          <input type="date" id="enddate" name="trip-start" value="">
+          <input type="date" id="end-date" name="trip-start" value="">
         </div>
       </div>
     </div>
