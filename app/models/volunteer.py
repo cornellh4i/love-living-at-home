@@ -57,8 +57,7 @@ class Volunteer(db.Model):
 
         seed()
         for i in range(count):
-            v = Volunteer(id=i,
-                          first_name=fake.first_name(),
+            v = Volunteer(first_name=fake.first_name(),
                           last_name=fake.last_name(),
                           birthdate=datetime.strptime(fake.date(),
                                                       "%Y-%m-%d").date(),
