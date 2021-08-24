@@ -40,6 +40,7 @@ class LocalResource(db.Model):
             local_resource = LocalResource.query.filter_by(
                 id=local_resource_dict['id']).first()
             if local_resource is None:
+                local_resource_dict.pop('id', None)
                 local_resource = LocalResource(**local_resource_dict)
             db.session.add(local_resource)
         db.session.commit()
