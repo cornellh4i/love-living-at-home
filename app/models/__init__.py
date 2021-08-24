@@ -4,6 +4,7 @@ module (as opposed to just their python files)
 """
 
 from .address import *
+from .availability import *
 from .local_resource import *
 from .member import *
 from .metro_area import *
@@ -19,4 +20,3 @@ from .service_category import *
 from .staffer import *
 from .user import *  # noqa
 from .volunteer import *
-from .availability import *

@@ -19,9 +19,10 @@ class Request(db.Model):
     modified_date = db.Column(db.Date,
                               nullable=False,
                               default=datetime.utcnow().date())
-    requested_date = db.Column(db.Date,
-                               nullable=False, # can this be null?
-                               default=datetime.utcnow().date())
+    requested_date = db.Column(
+        db.Date,
+        nullable=False,  # can this be null?
+        default=datetime.utcnow().date())
     # Time Info
     initial_pickup_time = db.Column(db.Time,
                                     nullable=False,
@@ -68,7 +69,6 @@ class Request(db.Model):
         db.ForeignKey('contact_log_priority_type.id'),
         nullable=False)
     cc_email = db.Column(db.String(120), unique=False, nullable=False)
-
 
     def __repr__(self):
         return f"Request('{self.created_date}, '{self.cc_email}')"

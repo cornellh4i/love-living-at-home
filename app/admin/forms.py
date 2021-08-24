@@ -97,23 +97,21 @@ class SearchRequestForm(FlaskForm):
         get_label='name',
         query_factory=lambda: db.session.query(VolunteerType).order_by('name'))
 
+    date_type = RadioField('Date Type:',
+                           choices=[(0, 'Service Date'), (1, 'Created Date')],
+                           default='0')
     time_period = SelectField('Time Period',
                               choices=[(0, 'Today'), (1, 'This Week'),
                                        (2, 'This Month'), (3, 'Future Dates')])
 
-    start_date = DateField('Start Date',
-                           format='%Y-%M-%D')
-    end_date = DateField('End Date',
-                         format='%Y-%M-%D')
+    start_date = DateField('Start Date', format='%Y-%M-%D')
+    end_date = DateField('End Date', format='%Y-%M-%D')
+
+    request_number = StringField('Request #')
 
     apply_filters = SubmitField('Apply Filters')
 
     # reset_filters = SubmitField('Reset Filters')
-
-    def get_status(id):
-        for i in range(len(request_status.choices)):
-            if id == request_status.choices[i][0]:
-                return request_status.choices[i][1]
 
 
 class TransportationRequestForm(FlaskForm):
@@ -155,10 +153,10 @@ class TransportationRequestForm(FlaskForm):
         validators=[InputRequired()],
         coerce=int)
 
-    service_provider = SelectMultipleField(
-        'Service Provider',
-        id='service_provider',
-        validators=[InputRequired()], coerce=int)
+    service_provider = SelectMultipleField('Service Provider',
+                                           id='service_provider',
+                                           validators=[InputRequired()],
+                                           coerce=int)
 
     requested_date = DateField('Requested Date', validators=[InputRequired()])
     initial_pickup = TimeField('Inital Pickup:',
@@ -307,10 +305,10 @@ class MemberManager(FlaskForm):
     primary_phone_number = StringField('Primary Phone Number',
                                        widget=widgets.Input(input_type="tel"),
                                        validators=[InputRequired()])
-    secondary_phone_number = StringField('Secondary Phone Number',
-                                         widget=widgets.Input(
-                                             input_type="tel"),
-                                         validators=[Optional()])
+    secondary_phone_number = StringField(
+        'Secondary Phone Number',
+        widget=widgets.Input(input_type="tel"),
+        validators=[Optional()])
     email_address = EmailField('Email',
                                widget=widgets.Input(input_type="tel"),
                                validators=[InputRequired()])
@@ -383,7 +381,8 @@ class VolunteerManager(FlaskForm):
 
     # address
     street_address = StringField('Street address or P.O. Box',
-                                 validators=[InputRequired(), Length(max=200)])
+                                 validators=[InputRequired(),
+                                             Length(max=200)])
     primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
                                    validators=[Optional(),
                                                Length(max=200)])
@@ -455,9 +454,9 @@ class ContractorManager(FlaskForm):
     salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
                    ("mr", "Mr")]
     salutation = SelectField("Salutation", choices=salutations)
-    company_name = StringField(
-        'Company',
-        validators=[Optional(), Length(min=1, max=30)])
+    company_name = StringField('Company',
+                               validators=[Optional(),
+                                           Length(min=1, max=30)])
 
     countries = [('united_states', 'United States'), ('b', "B"), ('c', 'C')]
     states = [('none', ""), ("ny", "NY")]
@@ -467,8 +466,8 @@ class ContractorManager(FlaskForm):
 
     primary_country = SelectField('Country', choices=countries)
     street_address = StringField('Street address or P.O. Box',
-                                   validators=[Optional(),
-                                               Length(max=200)])
+                                 validators=[Optional(),
+                                             Length(max=200)])
     primary_city = StringField('City',
                                validators=[Optional(),
                                            Length(max=200)])
@@ -482,21 +481,23 @@ class ContractorManager(FlaskForm):
     primary_phone_number = IntegerField('Primary Phone Number',
                                         widget=widgets.Input(input_type="tel"),
                                         validators=[InputRequired()])
-    secondary_phone_number = IntegerField('Secondary Phone Number',
-                                          widget=widgets.Input(
-                                              input_type="tel"),
-                                          validators=[Optional()])
+    secondary_phone_number = IntegerField(
+        'Secondary Phone Number',
+        widget=widgets.Input(input_type="tel"),
+        validators=[Optional()])
     email_address = EmailField('Email',
-                       validators=[Optional(),
-                                   Length(1, 64),
-                                   Email()])
+                               validators=[Optional(),
+                                           Length(1, 64),
+                                           Email()])
 
-    preferred_contact_method = RadioField(choices=[(
-        'phone', 'Phone'), ('email', 'Email'), ('phone_and_email', 'Phone and Email')])
+    preferred_contact_method = RadioField(
+        choices=[('phone',
+                  'Phone'), ('email',
+                             'Email'), ('phone_and_email', 'Phone and Email')])
 
-    website = StringField(
-        'Website',
-        validators=[Optional(), Length(min=1, max=30)])
+    website = StringField('Website',
+                          validators=[Optional(),
+                                      Length(min=1, max=30)])
     submit = SubmitField("Submit")
 
 
@@ -509,47 +510,45 @@ class Reviews(FlaskForm):
 
 
 class AddAvailability(FlaskForm):
-    availability_times = [("Unavailable", "Unavailable"), ("7am-8am", "7am-8am"), ("7am-9am", "7am-9am"), ("7am-10am", "7am-10am"),
-                          ("7am-11am", "7am-11am"), ("7am-12pm",
-                                                     "7am-12pm"), ("7am-1pm", "7am-1pm"), ("7am-2pm", "7am-2pm"),
-                          ("7am-3pm", "7am-3pm"), ("7am-4pm",
-                                                   "7am-4pm"), ("7am-5pm", "7am-5pm"),
-                          ("7am-6pm", "7am-6pm"), ("8am-9am", "8am-9am"), ("8am-10am",
-                                                                           "8am-10am"), ("8am-11am", "8am-11am"),
-                          ("8am-12pm", "8am-12pm"), ("8am-1pm",
-                                                     "8am-1pm"), ("8am-2pm", "8am-2pm"),
-                          ("8am-3pm", "8am-3pm"), ("8am-4pm",
-                                                   "8am-4pm"), ("8am-5pm", "8am-5pm"),
-                          ("8am-6pm", "8am-6pm"), ("9am-10am",
-                                                   "9am-10am"), ("9am-11am", "9am-11am"),
-                          ("9am-12pm", "9am-12pm"), ("9am-1pm",
-                                                     "9am-1pm"), ("9am-2pm", "9am-2pm"),
-                          ("9am-3pm", "9am-3pm"), ("9am-4pm",
-                                                   "9am-4pm"), ("9am-5pm", "9am-5pm"),
-                          ("9am-6pm", "9am-6pm"), ("10am-11am",
-                                                   "10am-11am"), ("10am-12pm", "10am-12pm"),
-                          ("10am-1pm", "10am-1pm"), ("10am-2pm",
-                                                     "10am-2pm"), ("10am-3pm", "10am-3pm"),
-                          ("10am-4pm", "10am-4pm"), ("10am-5pm",
-                                                     "10am-5pm"), ("10am-6pm", "10am-6pm"),
-                          ("11am-12pm", "11am-12pm"), ("11am-1pm",
-                                                       "11am-1pm"), ("11am-2pm", "11am-2pm"),
-                          ("11am-3pm", "11am-3pm"), ("11am-4pm",
-                                                     "11am-4pm"), ("11am-5pm", "11am-5pm"),
-                          ("11am-6pm", "11am-6pm"), ("12pm-1pm", "12pm-1pm"), ("12pm-2pm",
-                                                                               "12pm-2pm"), ("12pm-3pm", "12pm-3pm"),
-                          ("12pm-4pm", "12pm-4pm"), ("12pm-5pm",
-                                                     "12pm-5pm"), ("12pm-6pm", "12pm-6pm"), ("1pm-2pm", "1pm-2pm"),
-                          ("1pm-3pm", "1pm-3pm"), ("1pm-4pm", "1pm-4pm"), ("1pm-5pm",
-                                                                           "1pm-5pm"), ("1pm-6pm", "1pm-6pm"),
-                          ("2pm-3pm", "2pm-3pm"), ("2pm-4pm", "2pm-4pm"), ("2pm-5pm",
-                                                                           "2pm-5pm"), ("2pm-6pm", "2pm-6pm"),
-                          ("3pm-4pm", "3pm-4pm"), ("3pm-5pm", "3pm-5pm"), ("3pm-6pm",
-                                                                           "3pm-6pm"), ("4pm-5pm", "4pm-5pm"),
-                          ("4pm-6pm", "4pm-6pm"), ("5pm-6pm", "5pm-6pm")]
+    availability_times = [("Unavailable", "Unavailable"),
+                          ("7am-8am", "7am-8am"), ("7am-9am", "7am-9am"),
+                          ("7am-10am", "7am-10am"), ("7am-11am", "7am-11am"),
+                          ("7am-12pm", "7am-12pm"), ("7am-1pm", "7am-1pm"),
+                          ("7am-2pm", "7am-2pm"), ("7am-3pm", "7am-3pm"),
+                          ("7am-4pm", "7am-4pm"), ("7am-5pm", "7am-5pm"),
+                          ("7am-6pm", "7am-6pm"), ("8am-9am", "8am-9am"),
+                          ("8am-10am", "8am-10am"), ("8am-11am", "8am-11am"),
+                          ("8am-12pm", "8am-12pm"), ("8am-1pm", "8am-1pm"),
+                          ("8am-2pm", "8am-2pm"), ("8am-3pm", "8am-3pm"),
+                          ("8am-4pm", "8am-4pm"), ("8am-5pm", "8am-5pm"),
+                          ("8am-6pm", "8am-6pm"), ("9am-10am", "9am-10am"),
+                          ("9am-11am", "9am-11am"), ("9am-12pm", "9am-12pm"),
+                          ("9am-1pm", "9am-1pm"), ("9am-2pm", "9am-2pm"),
+                          ("9am-3pm", "9am-3pm"), ("9am-4pm", "9am-4pm"),
+                          ("9am-5pm", "9am-5pm"), ("9am-6pm", "9am-6pm"),
+                          ("10am-11am", "10am-11am"),
+                          ("10am-12pm", "10am-12pm"), ("10am-1pm", "10am-1pm"),
+                          ("10am-2pm", "10am-2pm"), ("10am-3pm", "10am-3pm"),
+                          ("10am-4pm", "10am-4pm"), ("10am-5pm", "10am-5pm"),
+                          ("10am-6pm", "10am-6pm"), ("11am-12pm", "11am-12pm"),
+                          ("11am-1pm", "11am-1pm"), ("11am-2pm", "11am-2pm"),
+                          ("11am-3pm", "11am-3pm"), ("11am-4pm", "11am-4pm"),
+                          ("11am-5pm", "11am-5pm"), ("11am-6pm", "11am-6pm"),
+                          ("12pm-1pm", "12pm-1pm"), ("12pm-2pm", "12pm-2pm"),
+                          ("12pm-3pm", "12pm-3pm"), ("12pm-4pm", "12pm-4pm"),
+                          ("12pm-5pm", "12pm-5pm"), ("12pm-6pm", "12pm-6pm"),
+                          ("1pm-2pm", "1pm-2pm"), ("1pm-3pm", "1pm-3pm"),
+                          ("1pm-4pm", "1pm-4pm"), ("1pm-5pm", "1pm-5pm"),
+                          ("1pm-6pm", "1pm-6pm"), ("2pm-3pm", "2pm-3pm"),
+                          ("2pm-4pm", "2pm-4pm"), ("2pm-5pm", "2pm-5pm"),
+                          ("2pm-6pm", "2pm-6pm"), ("3pm-4pm", "3pm-4pm"),
+                          ("3pm-5pm", "3pm-5pm"), ("3pm-6pm", "3pm-6pm"),
+                          ("4pm-5pm", "4pm-5pm"), ("4pm-6pm", "4pm-6pm"),
+                          ("5pm-6pm", "5pm-6pm")]
     availability_monday = SelectField('', choices=availability_times)
-    backup_monday = SelectField(
-        '', choices=availability_times, default='Unavailable')
+    backup_monday = SelectField('',
+                                choices=availability_times,
+                                default='Unavailable')
     availability_tuesday = SelectField('', choices=availability_times)
     backup_tuesday = SelectField('', choices=availability_times)
     availability_wednesday = SelectField('', choices=availability_times)

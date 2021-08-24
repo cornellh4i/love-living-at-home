@@ -115,7 +115,7 @@ method – <form> method attribute (default 'POST')
             {# Render a field for the form #}
             {% macro render_form_field(field, extra_classes='') %}
             {% if field.type == 'RadioField' %}
-            {% set extra_classes = extra_classes + ' grouped fields' %}
+            {% set extra_classes = extra_classes + ' inline fields' %}
             {% endif %}
             <div class="field {% if field.errors %}error{% endif %} {{ extra_classes }}">
                 {{ render_form_input(field) }}

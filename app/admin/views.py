@@ -1,6 +1,5 @@
-from app.models.request_volunteer_record import RequestVolunteerRecord
-from app.models.request import RequestDurationType, RequestStatus, RequestType
 import json
+import sys
 import time
 from operator import __truediv__
 
@@ -19,10 +18,11 @@ from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
                              TransportationRequestForm, VolunteerManager)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import (EditableHTML, Role, User, Member, Address, ServiceCategory, Service,
-                        Request, MetroArea, Staffer, LocalResource, Volunteer, ProvidedService, Availability)
-import json
-import sys
+from app.models import (Address, Availability, EditableHTML, LocalResource,
+                        Member, MetroArea, ProvidedService, Request, Role,
+                        Service, ServiceCategory, Staffer, User, Volunteer)
+from app.models.request import RequestDurationType, RequestStatus, RequestType
+from app.models.request_volunteer_record import RequestVolunteerRecord
 
 admin = Blueprint('admin', __name__)
 
@@ -307,58 +307,70 @@ def select_all(selection, field):
 @admin_required
 def search_request():
     form = SearchRequestForm()
+
+    # Pull choices from database
     form.request_type.choices = [(request_type.name, request_type.name)
                                  for request_type in RequestType.query.all()]
-    form.request_status.choices = [(request_status.name, request_status.name)
-                                   for request_status in RequestStatus.query.all()]
-    form.service_category.choices = [(service_category.name, service_category.name)
-                                     for service_category in ServiceCategory.query.all()]
-    form.dated_filter.choices = [(0, 'Dated'), (1, 'Undated')]
+    form.request_status.choices = [
+        (request_status.name, request_status.name)
+        for request_status in RequestStatus.query.all()
+    ]
+    form.service_category.choices = [
+        (service_category.name, service_category.name)
+        for service_category in ServiceCategory.query.all()
+    ]
     form.requesting_member.choices = [
         (member.id, member.first_name + " " + member.last_name)
         for member in Member.query.all()
-    ] + [(-1, "Randy Warden"), (-2, "Anne Rodda")]
-
+    ] + [(-1, "Randy Warden"),
+         (-2, "Anne Rodda")]  ## temporarily added these extra members
     service_providers = [
-        ('volunteer', volunteer.id, volunteer.first_name + " " + volunteer.last_name)
-        for volunteer in Volunteer.query.all()] + [('local-resource', local_resource.id, local_resource.company_name)
-                                                   for local_resource in LocalResource.query.all()
-                                                   ]  # TODO -- what is required from local resources
+        ('volunteer', volunteer.id,
+         volunteer.first_name + " " + volunteer.last_name)
+        for volunteer in Volunteer.query.all()
+    ] + [('local-resource', local_resource.id, local_resource.company_name)
+         for local_resource in LocalResource.query.all()
+         ]  # TODO -- what is required from local resources
 
-    requests = [
-        {'request_num': 6724,
-         'request_status': "Requested",
-         'requested_date': "06/17",
-         'requested_day_of_week': "Saturday",
-         'start_time': "12:00 PM",
-         'end_time': "12:00 PM",
-         'member_name': "Anne Rodda",
-         'volunteer_name': "Fran Spadafora Manzella",
-         'is_volunteer': True,
-         'request_type': "Member's Home",
-         'service': "Pet Care -Vol",
-                    'created_date': "06/15/2021",
-                    'modified_date': "N/A",
-                    'service_category': "Volunteer In-Home Support",
-                    'member_number': -2
-         },
-        {'request_num': 6697,
-         'request_status': "Confirmed",
-         'requested_date': "06/21",
-         'requested_day_of_week': "Wednesday",
-         'start_time': "11:30 AM",
-         'end_time': "12:40 PM",
-         'member_name': "Randy Warden",
-         'volunteer_name': "Hank Dullea",
-         'is_volunteer': True,
-         'request_type': "Transportation",
-         'service': "Vol Driver Local Medical Appt",
-                    'created_date': "06/11/2021",
-                    'modified_date': "06/18/2021",
-                    'service_category': "Transportation",
-                    'member_number': -1
-         }
-    ]
+    form.dated_filter.choices = [(0, 'Dated'), (1, 'Undated')]
+
+    temp_requests = [{
+        'request_num': 6724,
+        'request_status': "Requested",
+        'requested_date_display': "06/17",
+        'requested_date_full': "06/17/2021",
+        'requested_day_of_week': "Saturday",
+        'start_time': "12:00 PM",
+        'end_time': "12:00 PM",
+        'member_name': "Anne Rodda",
+        'volunteer_name': "Fran Spadafora Manzella",
+        'is_volunteer': True,
+        'request_type': "Member's Home",
+        'service': "Pet Care -Vol",
+        'created_date': "06/15/2021",
+        'modified_date': "N/A",
+        'service_category': "Volunteer In-Home Support",
+        'member_number': -2
+    }, {
+        'request_num': 6697,
+        'request_status': "Confirmed",
+        'requested_date_display': "06/21",
+        'requested_date_full': "06/21/2021",
+        'requested_day_of_week': "Wednesday",
+        'start_time': "11:30 AM",
+        'end_time': "12:40 PM",
+        'member_name': "Randy Warden",
+        'volunteer_name': "Hank Dullea",
+        'is_volunteer': True,
+        'request_type': "Transportation",
+        'service': "Vol Driver Local Medical Appt",
+        'created_date': "06/11/2021",
+        'modified_date': "06/18/2021",
+        'service_category': "Transportation",
+        'member_number': -1
+    }]
+
+    # Pull existing requests from the database and format each of them for display on front-end.
     db_requests = Request.query.all()
     formatted_db_requests = []
     for db_req in db_requests:
@@ -368,31 +380,50 @@ def search_request():
             request_id=db_req.id).first()
         volunteer = Volunteer.query.get(request_volunteer_record.volunteer_id)
 
-        formatted_db_requests.append(
-            {'request_num': db_req.id,
-             'request_status': RequestStatus.query.get(db_req.status_id).name,
-             'requested_date': db_req.requested_date.strftime("%m/%d"),
-             'requested_day_of_week': db_req.requested_date.strftime("%A"),
-             'start_time': db_req.initial_pickup_time.strftime("%I:%M %p"),
-             'end_time': db_req.drop_off_time.strftime("%I:%M %p"),
-             'member_name': f"{member.first_name} {member.last_name}",
-             'member_number': member.member_number,
-             'volunteer_name': f"{volunteer.first_name} {volunteer.last_name}",
-             'volunteer_id': volunteer.id,
-             'is_volunteer': True,
-             'request_type': RequestType.query.get(db_req.type_id).name,
-             'service_category': ServiceCategory.query.get(db_req.service_category_id).name,
-             'service': Service.query.get(db_req.service_id).name,
-             'created_date': db_req.created_date.strftime("%m/%d/%Y"),
-             'modified_date': db_req.modified_date.strftime("%m/%d/%Y")
-             })
+        formatted_db_requests.append({
+            'request_num':
+            db_req.id,
+            'request_status':
+            RequestStatus.query.get(db_req.status_id).name,
+            'requested_date_display':
+            db_req.requested_date.strftime("%m/%d"),
+            'requested_date_full':
+            db_req.requested_date.strftime("%m/%d/%Y"),
+            'requested_day_of_week':
+            db_req.requested_date.strftime("%A"),
+            'start_time':
+            db_req.initial_pickup_time.strftime("%I:%M %p"),
+            'end_time':
+            db_req.drop_off_time.strftime("%I:%M %p"),
+            'member_name':
+            f"{member.first_name} {member.last_name}",
+            'member_number':
+            member.member_number,
+            'volunteer_name':
+            f"{volunteer.first_name} {volunteer.last_name}",
+            'volunteer_id':
+            volunteer.id,
+            'is_volunteer':
+            True,
+            'request_type':
+            RequestType.query.get(db_req.type_id).name,
+            'service_category':
+            ServiceCategory.query.get(db_req.service_category_id).name,
+            'service':
+            Service.query.get(db_req.service_id).name,
+            'created_date':
+            db_req.created_date.strftime("%m/%d/%Y"),
+            'modified_date':
+            db_req.modified_date.strftime("%m/%d/%Y")
+        })
 
-    requests.extend(formatted_db_requests)
+    temp_requests.extend(formatted_db_requests)
     return render_template('admin/request_manager/search_request.html',
                            title='Search Request',
-                           form=form, service_providers=service_providers, requests=requests, num_requests=len(
-                               requests)
-                           )
+                           form=form,
+                           service_providers=service_providers,
+                           requests=temp_requests,
+                           num_requests=len(temp_requests))
 
 
 # Create a new service request.
@@ -414,7 +445,8 @@ def create_transportation_request():
     ]
     form.service_provider.choices = [
         (volunteer.id, volunteer.first_name + " " + volunteer.last_name)
-        for volunteer in Volunteer.query.all()]
+        for volunteer in Volunteer.query.all()
+    ]
 
     form.duration.choices = [
         (request_duration_type.id, request_duration_type.name)
@@ -537,43 +569,53 @@ def invite_member(member_id=None):
             email_address=member.email_address,
             preferred_contact_method=member.preferred_contact_method,
             emergency_contact_name=member.emergency_contact_name,
-            emergency_contact_relationship=member.emergency_contact_relationship,
-            emergency_contact_phone_number=member.emergency_contact_phone_number,
-            emergency_contact_email_address=member.emergency_contact_email_address,
+            emergency_contact_relationship=member.
+            emergency_contact_relationship,
+            emergency_contact_phone_number=member.
+            emergency_contact_phone_number,
+            emergency_contact_email_address=member.
+            emergency_contact_email_address,
             membership_expiration_date=member.membership_expiration_date,
             member_number=member.member_number,
             volunteer_notes=member.volunteer_notes,
-            staffer_notes=member.staffer_notes
-        )
+            staffer_notes=member.staffer_notes)
 
     if form.validate_on_submit():
         secondary_address = False
         if (form.secondary_as_primary_checkbox.data):
-            address = Address(name=form.first_name.data + " " + form.last_name.data,
-                              street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
-                              city=form.secondary_city.data,
-                              state=form.secondary_state.data,
-                              zipcode=form.secondary_zip_code.data)
+            address = Address(
+                name=form.first_name.data + " " + form.last_name.data,
+                street_address=form.secondary_address1.data + " " +
+                form.secondary_address2.data,
+                city=form.secondary_city.data,
+                state=form.secondary_state.data,
+                zipcode=form.secondary_zip_code.data)
             if form.primary_address1.data:
-                secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
-                                            street_address=form.primary_address1.data + " " + form.primary_address2.data,
-                                            city=form.primary_city.data,
-                                            state=form.primary_state.data,
-                                            zipcode=form.primary_zip_code.data)
+                secondary_address = Address(
+                    name=form.first_name.data + " " + form.last_name.data,
+                    street_address=form.primary_address1.data + " " +
+                    form.primary_address2.data,
+                    city=form.primary_city.data,
+                    state=form.primary_state.data,
+                    zipcode=form.primary_zip_code.data)
             if form.secondary_metro_area.data:
                 metro = MetroArea(name=form.secondary_metro_area.data)
         else:
-            address = Address(name=form.first_name.data + " " + form.last_name.data,
-                              street_address=form.primary_address1.data + " " + form.primary_address2.data,
+            address = Address(name=form.first_name.data + " " +
+                              form.last_name.data,
+                              street_address=form.primary_address1.data + " " +
+                              form.primary_address2.data,
                               city=form.primary_city.data,
                               state=form.primary_state.data,
                               zipcode=form.primary_zip_code.data)
             if form.secondary_address1.data:
-                secondary_address = Address(name=form.first_name.data + " " + form.last_name.data,
-                                            street_address=form.secondary_address1.data + " " + form.secondary_address2.data,
-                                            city=form.secondary_city.data,
-                                            state=form.secondary_state.data,
-                                            zipcode=form.secondary_zip_code.data)
+                secondary_address = Address(
+                    name=form.first_name.data + " " + form.last_name.data,
+                    street_address=form.secondary_address1.data + " " +
+                    form.secondary_address2.data,
+                    city=form.secondary_city.data,
+                    state=form.secondary_state.data,
+                    zipcode=form.secondary_zip_code.data)
             #membership_expiration_date = member.membership_expiration_date
 
     if form.validate_on_submit():
@@ -644,28 +686,34 @@ def invite_member(member_id=None):
                 'Member {} successfully updated'.format(form.first_name.data),
                 'success')
         else:
-            member = Member(salutation=form.salutation.data,
-                            primary_address_id=address.id,
-                            secondary_address_id=secondary_address.id if secondary_address else None,
-                            metro_area_id=metro.id,
-                            first_name=form.first_name.data,
-                            middle_initial=form.middle_initial.data,
-                            last_name=form.last_name.data,
-                            preferred_name=form.preferred_name.data,
-                            gender=form.gender.data,
-                            birthdate=form.birthdate.data,
-                            primary_phone_number=form.primary_phone_number.data,
-                            secondary_phone_number=form.secondary_phone_number.data,
-                            email_address=form.email_address.data,
-                            preferred_contact_method=form.preferred_contact_method.data,
-                            emergency_contact_name=form.emergency_contact_name.data,
-                            emergency_contact_phone_number=form.emergency_contact_phone_number.data,
-                            emergency_contact_email_address=form.emergency_contact_email_address.data,
-                            emergency_contact_relationship=form.emergency_contact_relationship.data,
-                            membership_expiration_date=form.membership_expiration_date.data,
-                            member_number=form.member_number.data,
-                            volunteer_notes=form.volunteer_notes.data,
-                            staffer_notes=form.staffer_notes.data)
+            member = Member(
+                salutation=form.salutation.data,
+                primary_address_id=address.id,
+                secondary_address_id=secondary_address.id
+                if secondary_address else None,
+                metro_area_id=metro.id,
+                first_name=form.first_name.data,
+                middle_initial=form.middle_initial.data,
+                last_name=form.last_name.data,
+                preferred_name=form.preferred_name.data,
+                gender=form.gender.data,
+                birthdate=form.birthdate.data,
+                primary_phone_number=form.primary_phone_number.data,
+                secondary_phone_number=form.secondary_phone_number.data,
+                email_address=form.email_address.data,
+                preferred_contact_method=form.preferred_contact_method.data,
+                emergency_contact_name=form.emergency_contact_name.data,
+                emergency_contact_phone_number=form.
+                emergency_contact_phone_number.data,
+                emergency_contact_email_address=form.
+                emergency_contact_email_address.data,
+                emergency_contact_relationship=form.
+                emergency_contact_relationship.data,
+                membership_expiration_date=form.membership_expiration_date.
+                data,
+                member_number=form.member_number.data,
+                volunteer_notes=form.volunteer_notes.data,
+                staffer_notes=form.staffer_notes.data)
             db.session.add(member)
             db.session.commit()
             flash(
@@ -726,9 +774,12 @@ def invite_volunteer(volunteer_id=None):
             primary_state=primary_state,
             primary_zip_code=primary_zip_code,
             emergency_contact_name=volunteer.emergency_contact_name,
-            emergency_contact_relationship=volunteer.emergency_contact_relationship,
-            emergency_contact_phone_number=volunteer.emergency_contact_phone_number,
-            emergency_contact_email_address=volunteer.emergency_contact_email_address,
+            emergency_contact_relationship=volunteer.
+            emergency_contact_relationship,
+            emergency_contact_phone_number=volunteer.
+            emergency_contact_phone_number,
+            emergency_contact_email_address=volunteer.
+            emergency_contact_email_address,
             primary_phone_number=volunteer.primary_phone_number,
             secondary_phone_number=volunteer.secondary_phone_number,
             email_address=volunteer.email_address,
@@ -745,7 +796,8 @@ def invite_volunteer(volunteer_id=None):
                     name=service,
                     category_id=int(category_name_to_id[key])).first()
                 service_ids.append(service_to_be_committed.id)
-        address = Address(name=form.first_name.data + " " + form.last_name.data,
+        address = Address(name=form.first_name.data + " " +
+                          form.last_name.data,
                           street_address=form.street_address.data,
                           city=form.primary_city.data,
                           state=form.primary_state.data,
@@ -796,19 +848,23 @@ def invite_volunteer(volunteer_id=None):
                 email_address=form.email_address.data,
                 preferred_contact_method=form.preferred_contact_method.data,
                 emergency_contact_name=form.emergency_contact_name.data,
-                emergency_contact_phone_number=form.emergency_contact_phone_number.data,
-                emergency_contact_email_address=form.emergency_contact_email_address.data,
-                emergency_contact_relationship=form.emergency_contact_relationship.data,
+                emergency_contact_phone_number=form.
+                emergency_contact_phone_number.data,
+                emergency_contact_email_address=form.
+                emergency_contact_email_address.data,
+                emergency_contact_relationship=form.
+                emergency_contact_relationship.data,
                 type_id=0,  # What should we set volunteer type id as???
-                rating=1,  # Why is this not null before the user even creates a volunteer?
+                rating=
+                1,  # Why is this not null before the user even creates a volunteer?
                 is_fully_vetted=False,  # What should be default?
                 availability_id=availability.id,
-                general_notes=form.notes.data
-            )
+                general_notes=form.notes.data)
             db.session.add(volunteer)
             db.session.commit()
-            flash('Volunteer {} successfully added'.format(form.first_name.data),
-                  'success')
+            flash(
+                'Volunteer {} successfully added'.format(form.first_name.data),
+                'success')
 
         return redirect(url_for('admin.people_manager'))
 
@@ -886,8 +942,9 @@ def invite_contractor(local_resource_id=None):
             updated_local_resource.website = form.website.data
             db.session.add(updated_local_resource)
             db.session.commit()
-            flash('Local Resource {} successfully updated'.format(form.company_name.data),
-                  'success')
+            flash(
+                'Local Resource {} successfully updated'.format(
+                    form.company_name.data), 'success')
         else:
             availability = Availability()
             db.session.add(availability)
@@ -905,19 +962,21 @@ def invite_contractor(local_resource_id=None):
                 email_address=form.email_address.data,
                 preferred_contact_method=form.preferred_contact_method.data,
                 website=form.website.data,
-                availability_id=availability.id
-            )
+                availability_id=availability.id)
             db.session.add(local_resource)
             db.session.commit()
-            flash('Local Resource {} successfully added'.format(form.company_name.data),
-                  'success')
+            flash(
+                'Local Resource {} successfully added'.format(
+                    form.company_name.data), 'success')
 
         return redirect(url_for('admin.people_manager'))
 
-    return render_template('admin/people_manager/contractor_manager.html', form=form)
+    return render_template('admin/people_manager/contractor_manager.html',
+                           form=form)
 
 
-@admin.route('/add-availability-volunteer/<int:volunteer_id>', methods=['GET', 'POST'])
+@admin.route('/add-availability-volunteer/<int:volunteer_id>',
+             methods=['GET', 'POST'])
 @login_required
 @admin_required
 def add_availability_volunteer(volunteer_id=None):
@@ -970,8 +1029,9 @@ def add_availability_volunteer(volunteer_id=None):
         db.session.add(updated_availability)
         db.session.commit()
 
-        flash('Availability for {} successfully updated'.format(
-            volunteer.last_name), 'success')
+        flash(
+            'Availability for {} successfully updated'.format(
+                volunteer.last_name), 'success')
         return redirect(url_for('admin.people_manager'))
     else:
         print(form.errors, file=sys.stderr)
@@ -979,7 +1039,8 @@ def add_availability_volunteer(volunteer_id=None):
     return render_template('admin/people_manager/availability.html', form=form)
 
 
-@admin.route('/add-availability-local-resource/<int:local_resource_id>', methods=['GET', 'POST'])
+@admin.route('/add-availability-local-resource/<int:local_resource_id>',
+             methods=['GET', 'POST'])
 @login_required
 @admin_required
 def add_availability_local_resource(local_resource_id=None):
@@ -1032,8 +1093,9 @@ def add_availability_local_resource(local_resource_id=None):
         db.session.add(updated_availability)
         db.session.commit()
 
-        flash('Availability for {} successfully updated'.format(
-            localResource.company_name), 'success')
+        flash(
+            'Availability for {} successfully updated'.format(
+                localResource.company_name), 'success')
         return redirect(url_for('admin.people_manager'))
     else:
         print(form.errors, file=sys.stderr)
@@ -1049,8 +1111,9 @@ def delete_member(member_id):
     member = Member.query.filter_by(id=member_id).first()
     db.session.delete(member)
     db.session.commit()
-    flash('Successfully deleted member {}'.format(
-        member.first_name + '' + member.last_name), 'success')
+    flash(
+        'Successfully deleted member {}'.format(member.first_name + '' +
+                                                member.last_name), 'success')
     return redirect(url_for('admin.people_manager'))
 
 
@@ -1062,8 +1125,10 @@ def delete_volunteer(volunteer_id):
     volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
     db.session.delete(volunteer)
     db.session.commit()
-    flash('Successfully deleted volunteer {}'.format(
-        volunteer.first_name + '' + volunteer.last_name), 'success')
+    flash(
+        'Successfully deleted volunteer {}'.format(volunteer.first_name + '' +
+                                                   volunteer.last_name),
+        'success')
     return redirect(url_for('admin.people_manager'))
 
 
@@ -1075,8 +1140,9 @@ def delete_local_resource(local_resource_id):
     localResource = LocalResource.query.filter_by(id=local_resource_id).first()
     db.session.delete(localResource)
     db.session.commit()
-    flash('Successfully deleted local resource {}'.format(
-        localResource.company_name), 'success')
+    flash(
+        'Successfully deleted local resource {}'.format(
+            localResource.company_name), 'success')
     return redirect(url_for('admin.people_manager'))
 
 

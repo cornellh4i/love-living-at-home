@@ -9,7 +9,8 @@ from flask_rq import RQ
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
 
-from app.assets import (app_css, app_js, search_request_css, search_request_js, multidatespicker_js, vendor_css,
+from app.assets import (app_css, app_js, multidatespicker_js,
+                        search_request_css, search_request_js, vendor_css,
                         vendor_js)
 from config import config as Config
 

@@ -1,3 +1,13 @@
+// Convert a date string with format `yyyy-mm-dd` to a Date object that assumes the local timezone.
+function date_object_of_string(date_str) {
+  // TODO: need to test timezone (maybe set to ET manually)... what about daylight savings time?
+  let date_parts = date_str.split('-');
+  let year = date_parts[0];
+  let month_zero_indexed = date_parts[1] - 1;
+  let day = date_parts[2];
+  return new Date(year, month_zero_indexed, day);
+}
+
 
 $(document).ready(function () {
   $('.ui.search.selection.dropdown').dropdown({ fullTextSearch: true });
@@ -22,13 +32,19 @@ $(document).ready(function () {
       useLabels: false
     });
 
-  $('#filter-button').click(function (e) {
+  $('#clear-filter-button').click(function (e) {
+    // Instead of resetting all individual form fields, we're reloading the page. 
+    location.reload();
+  })
+
+  $('#apply-filter-button').click(function (e) {
     request_type_filter = [];
     service_category_filter = [];
     request_status_filter = [];
     requesting_member_filter = [];
     volunteer_filter = [];
     local_resource_filter = [];
+    request_number_filter = null;
 
     // grab filters from relevant form fields
     $('#request_type .menu .item.active').each(function () {
@@ -47,7 +63,6 @@ $(document).ready(function () {
       selected_value = $(this).attr('data-value');
       requesting_member_filter.push(selected_value);
     });
-
     $('#service-provider-menu .item.active').each(function () {
       volunteer_id = $(this).attr('data-id');
       role = $(this).attr('data-role'); // either "volunteer" or "local-resource"
@@ -62,14 +77,31 @@ $(document).ready(function () {
       }
     });
 
-    let date_option_filter = $('#date-options').find('[name="date-options"]:checked').val();
-    let start_date = $('#startdate').val();
-    let end_date = $('#enddate').val()
+    // Dated or Undated
+    let date_status_options = []
+    $('input[name="date_status"]:checked').each(function () {
+      date_status_options.push($(this).parent().text().trim());
+    });
 
-    // window.alert(Date.parse(start_date));
-    // window.alert(Date.parse("2021-06-29"));
-    // window.alert(new Date());
+    // Obtain date filters by (1) getting the type of date, and (2) getting the start/end dates
+    let date_type_options = [];
+    let date_type_filter_text;
+    $(':radio').each(function () {
+      date_type_options.push($(this).parent().text().trim());
+    });
+    date_type_filter_id = $("input[name='date_type']:checked").val();
+    if (date_type_filter_id) {
+      date_type_filter_text = date_type_options[date_type_filter_id];
+    }
 
+    let start_date_str = $('#start-date').val();
+    let end_date_str = $('#end-date').val();
+    let start_date = date_object_of_string(start_date_str);
+    let end_date = date_object_of_string(end_date_str);
+
+    request_number_filter = document.getElementById("request_number").value;
+
+    // Filter through request cards 
     $('.request-card').each(function () {
       $this = $(this);
       $this.show();
@@ -94,17 +126,48 @@ $(document).ready(function () {
       if (volunteer_filter.length > 0 && !volunteer_filter.includes(volunteer_id)) {
         $this.hide();
       }
+
+      // TODO: Date status filter ("Dated" vs "Undated")
+
+      // Apply filter for Date Type and Range
+      let date_str;
+      if (date_type_filter_text == "Service Date") {
+        date_str = $this.find('.requested-date-value').attr('data-value');
+      }
+      else if (date_type_filter_text == "Created Date") {
+        date_str = $this.find('.created-date-value').html().trim();
+      }
+      // Assuming format 'mm/dd/yyyy'
+      let date_str_tokens = date_str.split('/');
+      let date_month = date_str_tokens[0];
+      let date_day = date_str_tokens[1];
+      let date_year = date_str_tokens[2];
+      let date_obj = new Date(date_year, date_month - 1, date_day);
+
+      // Filter by start date.
+      if (start_date && date_obj < start_date) {
+        $this.hide();
+      }
+      // Filter by end date.
+      if (end_date && date_obj > end_date) {
+        $this.hide();
+      }
+
+      let request_number = $this.find('.request-number-value').html();
+      if (request_number_filter && request_number_filter !== request_number) {
+        $this.hide();
+      }
+
+      // TODO: Update the display for the number of search results returned. 
+
     });
-
-
-
   });
 
   // L and R arrows to control date selection
   $("#leftbutton").click(function () {
-    var option = document.getElementById("timePeriod").value;
-    var start_date = document.getElementById("startdate").value;
-    var end_date = document.getElementById("enddate").value;
+    var option = document.getElementById("time-period").value;
+    var start_date = document.getElementById("start-date").value;
+    var end_date = document.getElementById("end-date").value;
     var date_values = start_date.split("-");
     var year = parseInt(date_values[0]);
     var month = parseInt(date_values[1]) - 1;
@@ -136,16 +199,16 @@ $(document).ready(function () {
         var new_date = start_date;
     }
 
-    var dateControl = document.querySelector('#startdate');
+    var dateControl = document.querySelector('#start-date');
     dateControl.value = new_date;
 
-    var dateControl2 = document.querySelector('#enddate');
+    var dateControl2 = document.querySelector('#end-date');
     dateControl2.value = end_date;
   });
   $("#rightbutton").click(function () {
-    var option = document.getElementById("timePeriod").value;
-    var start_date = document.getElementById("startdate").value;
-    var end_date = document.getElementById("enddate").value;
+    var option = document.getElementById("time-period").value;
+    var start_date = document.getElementById("start-date").value;
+    var end_date = document.getElementById("end-date").value;
     var date_values = start_date.split("-");
     var year = parseInt(date_values[0]);
     var month = parseInt(date_values[1]) - 1;
@@ -176,14 +239,14 @@ $(document).ready(function () {
       default:
         var new_date = start_date;
     }
-    var dateControl = document.querySelector('#startdate');
+    var dateControl = document.querySelector('#start-date');
     dateControl.value = new_date;
 
-    var dateControl2 = document.querySelector('#enddate');
+    var dateControl2 = document.querySelector('#end-date');
     dateControl2.value = end_date;
   });
 
-  $("select[name = timePeriod]").on("change", function () {
+  $("select[name = time-period]").on("change", function () {
     var date = new Date();
     var start_date;
     var end_date;
@@ -212,15 +275,14 @@ $(document).ready(function () {
         var tomorrow = new Date(date);
         tomorrow.setDate(tomorrow.getDate() + 1);
         var start_date = tomorrow.getFullYear() + '-' + ("0" + (tomorrow.getMonth() + 1)).slice(-2) + '-' + ("0" + tomorrow.getDate()).slice(-2);
-        var end_date = start_date;
         break;
       default:
     }
 
-    var dateControl = document.querySelector('#startdate');
+    var dateControl = document.querySelector('#start-date');
     dateControl.value = start_date;
-    //window.alert(dateControl.value);
-    var dateControl2 = document.querySelector('#enddate');
+
+    var dateControl2 = document.querySelector('#end-date');
     dateControl2.value = end_date;
   });
 

@@ -21,14 +21,14 @@ volunteer_id,
 is_volunteer
 #}
 {% macro request_card(
-request_num, request_status, requested_date, requested_day_of_week, start_time,
+request_num, request_status, requested_date_display, requested_date_full, requested_day_of_week, start_time,
 end_time, member_name, volunteer_name, request_type, service, created_date,
 modified_date, service_category, member_number, volunteer_id, is_volunteer ) %}
 <div class="ui one cards request-card" style="margin-top:20px">
   <div class="ui card">
     <div class="content" style="background-color: burlywood;">
       <div class="header">
-        Request #{{request_num}}
+        Request #<span class="request-number-value">{{request_num}}</span>
         <div class="ui right floated request-status-value">
           {% if request_status == "Requested" %}
           <div class="ui yellow label">{{request_status}}</div>
@@ -49,8 +49,8 @@ modified_date, service_category, member_number, volunteer_id, is_volunteer ) %}
               <div class="header">{{requested_day_of_week}}</div>
             </div>
             <div class="content">
-              <h2><span class="requested-date-value">{% if requested_date %}
-                  {{requested_date}}
+              <h2><span class="requested-date-value" data-value={{requested_date_full}}>{% if requested_date_display %}
+                  {{requested_date_display}}
                   {% else %}
                   N/A
                   {% endif %}</span></h2>
@@ -79,7 +79,7 @@ modified_date, service_category, member_number, volunteer_id, is_volunteer ) %}
         <div class="six wide column">
           <div>
             <b style="font-size:1.3em">Created Date:</b>
-            <p>{{created_date}}</p>
+            <p><span class='created-date-value'>{{created_date}}</span></p>
           </div>
           <div style="margin-top: 10px">
             <b style="font-size:1.3em">Modified Date:</b>
@@ -120,7 +120,7 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
 {% endassets %}
 
 <div class="content-section">
-  <h2 class="header">Search Criteria</h2>
+  <h3 class="header">Search Criteria</h3>
 
   {% set flashes = {
   'error': get_flashed_messages(category_filter=['form-error']),
@@ -132,7 +132,7 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
 
   <div class="ui three column stackable grid">
     <div class="five wide column" style="padding-top: 0; padding-bottom:0">
-      {{filter_select_field(form.service_category, false)}}
+      {{filter_select_field(form.request_type, false)}}
     </div>
     <div class="five wide column" style="padding-top: 0; padding-bottom:0">
       {{filter_select_field(form.service_category, false)}}
@@ -176,32 +176,32 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
           </div>
         </div>
       </div>
-      <div class="field">
-        <label style="margin-bottom:0">Request #</label>
-        <input type="text">
-      </div>
+      {{f.render_form_field(form.request_number)}}
     </div>
     <div class="eight wide column" style="padding-top: 0.3; padding-bottom: 0; padding-left: 100px">
       <div class="inline fields">
         <label>Show...</label>
         <div class="field">
           <div class="ui checkbox">
-            <input type="checkbox" name="frequency" checked="checked">
+            <input type="checkbox" name="date_status" value="0">
             <label>Dated</label>
           </div>
         </div>
         <div class="field">
           <div class="ui checkbox">
-            <input type="checkbox" name="frequency">
+            <input type="checkbox" name="date_status" value="1">
             <label>Undated</label>
           </div>
         </div>
+      </div>
+      <div class="field" style="padding: 0; margin: 0">
+        {{ f.render_form_field(form.date_type) }}
       </div>
       <div class="inline fields" style="padding: 0; margin: 0">
         <div class="ui icon button" id="leftbutton">
           <i class="caret left icon"></i>
         </div>
-        <select class="ui dropdown" id="timePeriod" name="timePeriod">
+        <select class="ui dropdown" id="time-period" name="time-period">
           <option value="">Nothing Selected</option>
           {% for choice in form.time_period.choices %}
           <option value={{ choice[0] }}>{{choice[1]}}</option>
@@ -212,33 +212,35 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
         </div>
       </div>
       <div class="fields" style="padding: 0; margin: 0">
-        <div class="field">
+        <div class="field" style="padding:0">
           <label style="margin-bottom: 0">{{ form.start_date.label }}:</label>
-          <input type="date" id="startdate" name="trip-start" class="setDate" value="">
+          <input type="date" id="start-date" name="trip-start" class="setDate" value="">
         </div>
         <div class="field">
           <label style="margin-bottom: 0">{{form.end_date.label}}:</label>
-          <input type="date" id="enddate" name="trip-start" value="">
+          <input type="date" id="end-date" name="trip-start" value="">
         </div>
       </div>
     </div>
   </div>
 
   <div class="ui one column centered grid">
-    <div class="ui button" type="submit" id="filter-button">Apply Filters</div>
+    <div class="ui small button" type="submit" id="apply-filter-button">Apply Filters</div>
+    <div class="ui small button" type="submit" id="clear-filter-button">Clear Filters</div>
+
   </div>
   {{f.end_form()}}
 
 
-  <h2 class="header" class="divleft">Search Results</h2>
-  <div id="" class="divright">({{num_requests}} Results Found)</div>
+  <h3 class="header">Search Results</h3><span style="float: right">({{num_requests}} Results
+    Found)</span>
 
   <hr />
   <div id="request-search-results">
     {% for request in requests %}
     {{request_card(
-    request.request_num, request.request_status,
-    request.requested_date, request.requested_day_of_week,
+    request.request_num, request.request_status, request.requested_date_display,
+    request.requested_date_full, request.requested_day_of_week,
     request.start_time,
     request.end_time, request.member_name, request.volunteer_name,
     request.request_type, request.service, request.created_date,
