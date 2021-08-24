@@ -2,7 +2,7 @@ from .. import db
 
 
 class Address(db.Model):
-    id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, unique=True)
     # A name for the address (i.e., 'Wegmans Food Market')
     name = db.Column(db.String(64), nullable=False)
     street_address = db.Column(db.String(64), nullable=False)
@@ -24,8 +24,7 @@ class Address(db.Model):
 
         seed()
         for i in range(count):
-            a = Address(id=i,
-                        name=fake.company(),
+            a = Address(name=fake.company(),
                         street_address=fake.street_address(),
                         city=fake.city(),
                         **kwargs)
