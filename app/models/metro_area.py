@@ -21,7 +21,7 @@ class MetroArea(db.Model):
         for i, ma in metro_areas:
             metro_area = MetroArea.query.filter_by(name=ma).first()
             if metro_area is None:
-                metro_area = MetroArea(id=i, name=ma)
+                metro_area = MetroArea(name=ma)
             db.session.add(metro_area)
         db.session.commit()
 
