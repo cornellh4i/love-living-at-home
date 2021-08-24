@@ -60,12 +60,12 @@ def add_fake_data(number_users):
     User.generate_fake(count=number_users)
     Availability.generate_fake(count=10)
     Address.generate_fake(count=400)
-    Volunteer.generate_fake(count=10)
     Member.generate_fake(count=10)
     LocalResource.insert_local_resources(
     )  # should move this to setup_general later, but depends on having addresses in the database.
     print("Generating Fake Members")
     Staffer.generate_fake(count=10)
+    Volunteer.generate_fake(count=10)
 
 
 @manager.command
