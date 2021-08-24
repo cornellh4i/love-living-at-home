@@ -25,8 +25,7 @@ class Availability(db.Model):
         from sqlalchemy.exc import IntegrityError
 
         for i in range(count):
-            a = Availability(id=i,
-                             availability_monday="7am-6pm",
+            a = Availability(availability_monday="7am-6pm",
                              availability_tuesday="7am-6pm",
                              availability_friday="7am-6pm",
                              availability_sunday="7am-6pm",
