@@ -100,7 +100,7 @@ def setup_general():
     MetroArea.insert_metro_areas()
 
     # Create foreign key dependency first
-    Availability.generate_fake(count=10)
+    Availability.generate_fake(count=90)
 
     # Set up first admin user
     admin_query = Role.query.filter_by(name='Administrator')
