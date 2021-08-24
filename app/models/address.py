@@ -2,7 +2,7 @@ from .. import db
 
 
 class Address(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
     # A name for the address (i.e., 'Wegmans Food Market')
     name = db.Column(db.String(64), nullable=False)
     street_address = db.Column(db.String(64), nullable=False)
