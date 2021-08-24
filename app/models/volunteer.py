@@ -65,7 +65,7 @@ class Volunteer(db.Model):
                           primary_address_id=1,
                           primary_phone_number=fake.phone_number(),
                           email_address=choice([fake.email(), None]),
-                          type_id=choice([0, 1]),
+                          type_id=choice([1, 2]),
                           rating=random() * 5.0,
                           is_fully_vetted=choice([True, False]),
                           vettings=choice([fake.text(), None]),
