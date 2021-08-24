@@ -70,7 +70,7 @@ class Volunteer(db.Model):
                           vettings=choice([fake.text(), None]),
                           preferred_contact_method=choice(
                               ['phone', 'email', 'phone and email']),
-                          availability_id=i,
+                          availability_id=i+1,
                           general_notes=fake.text(),
                           **kwargs)
             db.session.add(v)
