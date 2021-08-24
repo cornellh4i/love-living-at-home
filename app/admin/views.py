@@ -854,7 +854,7 @@ def invite_volunteer(volunteer_id=None):
                 emergency_contact_email_address.data,
                 emergency_contact_relationship=form.
                 emergency_contact_relationship.data,
-                type_id=0,  # What should we set volunteer type id as???
+                type_id=1,  # What should we set volunteer type id as???
                 rating=
                 1,  # Why is this not null before the user even creates a volunteer?
                 is_fully_vetted=False,  # What should be default?
