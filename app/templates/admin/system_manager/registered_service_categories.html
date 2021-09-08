@@ -1,0 +1,96 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="ui stackable grid container">
+  <div class="sixteen wide tablet twelve wide computer centered column">
+    <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
+      <i class="caret left icon"></i>
+      Back to dashboard
+    </a>
+    <h2 class="ui header">
+      Provided Service Categories
+      <div class="sub header">
+        View and manage service categories.
+      </div>
+    </h2>
+
+    <div class="ui menu">
+      <div class="ui search item">
+        <div class="ui transparent icon input">
+          <input id="search-services" type="text" placeholder="Search services...">
+          <i class="search icon"></i>
+        </div>
+      </div>
+    </div>
+
+    {# Use overflow-x: scroll so that mobile views don't freak out
+    # when the table is too wide #}
+    <div style="overflow-x: scroll;">
+      <a class="ui basic compact button" href="{{ url_for('admin.new_service_category') }}">
+        <i class="plus icon"></i>
+        Add a Service Category
+      </a>
+      <table class="ui searchable sortable unstackable selectable celled table">
+        <thead>
+          <tr>
+            <th class="sorted ascending">Name</th>
+            <th>Maintain</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in categories | sort(attribute='name') %}
+          <tr>
+            <td onclick="window.location.href = '{{ url_for('admin.service_category_info', category_id=s.id) }}';">{{ s.name }}
+            </td>
+            <td>
+              <i class="trash alternate outline icon delete-service" id={{s.id}}></i>
+            </td>
+
+            <div class="ui modal" id='modal-{{s.id}}'>
+              <div class="header">Delete Service Category</div>
+              {% if services[s.name] != [] %}
+                <div class="content">Would you like to delete Service Category [{{s.name}}]? <br/> This action would also delete all the related services: <br/> {{services[s.name]}}</div>
+              {% else %}
+              <div class="content">Would you like to delete Service Category [{{s.name}}]?</div>
+              {% endif %}
+                <div class="actions">
+                <div class="positive ui approve button"
+                  onclick="window.location.href = '{{ url_for('admin.delete_service_category', category_id=s.id) }}';">
+                  Yes
+                </div>
+                <div class="negative ui deny button">No</div>
+              </div>
+            </div>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#search-services').keyup(function () {
+      var searchText = $(this).val();
+      if (searchText.length > 0) {
+        $('tbody td:icontains(' + searchText + ')').addClass('positive');
+        $('td.positive').not(':icontains(' + searchText + ')').removeClass('positive');
+        $('tbody td').not(':icontains(' + searchText + ')').closest('tr').addClass('hidden').hide();
+        $('tr.hidden:icontains(' + searchText + ')').removeClass('hidden').show();
+      } else {
+        $('td.positive').removeClass('positive');
+        $('tr.hidden').removeClass('hidden').show();
+      }
+    });
+
+    $('.delete-service').click(function () {
+      service_id = $(this).attr('id');
+      $(`#modal-${service_id}`).modal('show');
+    });
+  });
+</script>
+{% endblock %}
