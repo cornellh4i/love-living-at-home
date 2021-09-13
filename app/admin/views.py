@@ -12,7 +12,7 @@ from app import db
 from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
                              AddServiceVetting, ChangeAccountTypeForm,
                              ChangeUserEmailForm, ContractorManager,
-                             EditMetroAreaForm, EditServiceForm,
+                             EditMetroAreaForm, EditServiceForm, EditServiceCategoryForm,
                              InviteUserForm, MemberManager, MultiCheckboxField,
                              NewUserForm, Reviews, SearchRequestForm,
                              TransportationRequestForm, VolunteerManager)
@@ -323,7 +323,7 @@ def search_request():
         (member.id, member.first_name + " " + member.last_name)
         for member in Member.query.all()
     ] + [(-1, "Randy Warden"),
-         (-2, "Anne Rodda")]  ## temporarily added these extra members
+         (-2, "Anne Rodda")]  # temporarily added these extra members
     service_providers = [
         ('volunteer', volunteer.id,
          volunteer.first_name + " " + volunteer.last_name)
@@ -855,8 +855,7 @@ def invite_volunteer(volunteer_id=None):
                 emergency_contact_relationship=form.
                 emergency_contact_relationship.data,
                 type_id=1,  # What should we set volunteer type id as???
-                rating=
-                1,  # Why is this not null before the user even creates a volunteer?
+                rating=1,  # Why is this not null before the user even creates a volunteer?
                 is_fully_vetted=False,  # What should be default?
                 availability_id=availability.id,
                 general_notes=form.notes.data)
@@ -1211,9 +1210,86 @@ def new_service():
                            form=form)
 
 
+@admin.route('/service-categories')
+@login_required
+@admin_required
+def registered_service_categories():
+    """Manage service categories."""
+    categories = ServiceCategory.query.all()
+    category_to_services = dict()
+    for c in categories:
+        service_list = [service.name for service in Service.query.filter_by(
+            category_id=c.id).all()]
+        category_to_services[c.name] = service_list
+    return render_template('admin/system_manager/registered_service_categories.html',
+                           categories=categories, services=category_to_services)
+
+
+@admin.route('/service-categories/info/<int:category_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def service_category_info(category_id):
+    """View a service's profile."""
+    category = ServiceCategory.query.filter_by(id=category_id).first()
+    request_type = RequestType.query.filter_by(
+        id=category.request_type_id).first()
+    form = EditServiceCategoryForm(
+        name=category.name, request_type=request_type)
+    if form.validate_on_submit():
+        updated_service_category = category
+        updated_service_category.name = form.name.data
+        updated_service_category.request_type_id = form.request_type.data.id
+        db.session.add(updated_service_category)
+        db.session.commit()
+        flash('Service Catgeory {} successfully updated'.format(form.name.data),
+              'form-success')
+        return redirect(url_for('admin.registered_service_categories'))
+    if category is None:
+        abort(404)
+    return render_template('admin/system_manager/manage_service_category.html',
+                           category=category,
+                           form=form)
+
+
+@admin.route('/new-service-category', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_service_category():
+    """Create a new service category."""
+    form = EditServiceCategoryForm()
+    if form.validate_on_submit():
+        category = ServiceCategory(name=form.name.data,
+                                   request_type_id=form.request_type.data.id)
+        db.session.add(category)
+        db.session.commit()
+        flash('Service Category {} successfully created'.format(category.name),
+              'success')
+        return redirect(url_for('admin.registered_service_categories'))
+
+    return render_template('admin/system_manager/manage_service_category.html',
+                           form=form)
+
+
+@admin.route('/service-categories/_delete/<int:category_id>')
+@login_required
+@admin_required
+def delete_service_category(category_id):
+    """Delete a service category."""
+    services = Service.query.filter_by(category_id=category_id).all()
+    for service in services:
+        db.session.delete(service)
+    category = ServiceCategory.query.filter_by(id=category_id).first()
+    db.session.delete(category)
+    db.session.commit()
+    flash('Successfully deleted service category %s.' %
+          category.name, 'success')
+    return redirect(url_for('admin.registered_service_categories'))
+
 ####
 # Metro Areas
 ####
+
+
 @admin.route('/metro-areas')
 @login_required
 @admin_required
