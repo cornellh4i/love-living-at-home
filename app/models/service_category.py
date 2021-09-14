@@ -28,7 +28,7 @@ class ServiceCategory(db.Model):
         for i, c, r_i in categories:
             category = ServiceCategory.query.filter_by(name=c).first()
             if category is None:
-                category = ServiceCategory(id=i, name=c, request_type_id=r_i)
+                category = ServiceCategory(name=c, request_type_id=r_i)
             db.session.add(category)
         db.session.commit()
 
