@@ -5,7 +5,7 @@ class Service(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(
         db.String(), nullable=False
-    )  #Took out unique = true because some services have same names for different categories
+    )  # Took out unique = true because some services have same names for different categories
     category_id = db.Column(db.Integer,
                             db.ForeignKey('service_category.id'),
                             nullable=False)
@@ -30,7 +30,7 @@ class Service(db.Model):
         for i, s, c_i in services:
             service = Service.query.filter_by(name=s).first()
             if service is None:
-                service = Service(id=i, name=s, category_id=c_i)
+                service = Service(id=i, name=s, category_id=c_i+1)
             db.session.add(service)
         db.session.commit()
 
