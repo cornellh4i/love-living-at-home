@@ -15,7 +15,7 @@ from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
                              EditMetroAreaForm, EditServiceForm, EditServiceCategoryForm,
                              InviteUserForm, MemberManager, MultiCheckboxField,
                              NewUserForm, Reviews, SearchRequestForm,
-                             TransportationRequestForm, VolunteerManager)
+                             TransportationRequestForm, VolunteerManager, GeneratePdfForm)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import (Address, Availability, EditableHTML, LocalResource,
@@ -1353,27 +1353,31 @@ def new_metro_area():
                            form=form)
 
 
-@admin.route("/generate-report", methods=['GET'])
+@admin.route("/generate-report", methods=['GET', 'POST'])
 @login_required
 @admin_required
 def generate_report():
-    import pandas as pd
-    import numpy as np
-    from jinja2 import Environment, FileSystemLoader
-    from weasyprint import HTML
+    pdf_form = GeneratePdfForm()
+    if pdf_form.validate_on_submit():
+        file_name = pdf_form.file_name.data
+        import pandas as pd
+        import numpy as np
+        from jinja2 import Environment, FileSystemLoader
+        from weasyprint import HTML
 
-    data = pd.DataFrame()
-    data['Col1'] = np.arange(1, 50)
-    data['Col2'] = np.arange(2, 51)
+        data = pd.DataFrame()
+        data['Col1'] = np.arange(1, 50)
+        data['Col2'] = np.arange(2, 51)
 
-    env = Environment(loader=FileSystemLoader('.'))
-    template = env.get_template("./app/templates/admin/report.html")
-    template_vars = {"title": "Love Living at Home", "data": data.to_html()}
-    html_out = template.render(template_vars)
-    HTML(string=html_out).write_pdf(
-        "./app/may_report.pdf", stylesheets=["./app/assets/styles/report.css"])
-    try:
-        return send_file("may_report.pdf", as_attachment=True)
-    except FileNotFoundError:
-        flash('Failed to generate report.', 'error')
-        abort(404)
+        env = Environment(loader=FileSystemLoader('.'))
+        template = env.get_template("./app/templates/admin/report.html")
+        template_vars = {"title": "Love Living at Home", "data": data.to_html()}
+        html_out = template.render(template_vars)
+        HTML(string=html_out).write_pdf(
+            "./app/reports/" + file_name + ".pdf", stylesheets=["./app/assets/styles/report.css"])
+        try:
+            return send_file(file_name + ".pdf", as_attachment=True)
+        except FileNotFoundError:
+            flash('Failed to generate report.', 'error')
+            abort(404)
+    return render_template('admin/system_manager/generate_report.html', form = pdf_form)
