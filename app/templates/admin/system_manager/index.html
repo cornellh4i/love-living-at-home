@@ -1,5 +1,4 @@
 {% extends 'layouts/base.html' %}
-
 {% macro dashboard_option(title, endpoint,
 description=None, icon=None) %}
 <a class="column" href="{{ url_for(endpoint) }}">
@@ -175,45 +174,14 @@ description=None, icon=None) %}
     </div>
 
     <h2>Additional Actions</h2>
-    <button class="ui fluid large button" id="show-report">
-      <h3>Generate Report</h3>
-    </button>
-
-    <div class="ui modal" id="report">
-      <i class="close icon"></i>
-      <div class="header">Generate Report</div>
-      <div class="content">
-        <div class="ui large form">
-          <div class="field">
-            <label>Report Type</label>
-            <select class="ui fluid dropdown">
-              <option value="a">Completed Volunteer Services by Service Category</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Report File Name</label>
-            <input type="text" name="filename" placeholder="Report">
-          </div>
-        </div>
-        <hr />
-        <div class="actions">
-          <div class="positive ui approve button"
-            onclick="window.location.href = '{{ url_for('admin.generate_report') }}';">
-            Run Report
-          </div>
-          <div class="negative ui deny button">Cancel</div>
-        </div>
+    <div>
+      <div class="ui two column stackable grid">
+        {{ dashboard_option('Generate Report', 'admin.generate_report', 
+        description = 'Generate and manage reports', icon = 'file outline icon') }}
       </div>
     </div>
   </div>
 
 
 </div>
-
-
-<script>
-  $('#show-report').click(function () {
-    $('#report').modal('show');
-  });
-</script>
 {% endblock %}

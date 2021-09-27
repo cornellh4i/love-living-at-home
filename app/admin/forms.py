@@ -84,6 +84,14 @@ class NewUserForm(InviteUserForm):
     submit = SubmitField('Create')
 
 
+class GeneratePdfForm(FlaskForm):
+    report_type = SelectField(
+        'Report Type', coerce=int,
+        choices=[(0, 'Completed Volunteer Services by Service Category')], validators=[InputRequired()])
+    file_name = StringField('Report File Name', validators=[InputRequired()])
+    submit = SubmitField('Run Report')
+
+
 class SearchRequestForm(FlaskForm):
     request_type = SelectMultipleField('Request Type')
     request_status = SelectMultipleField('Request Status')
