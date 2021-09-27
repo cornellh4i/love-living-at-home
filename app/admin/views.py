@@ -1376,7 +1376,7 @@ def generate_report():
         HTML(string=html_out).write_pdf(
             "./app/reports/" + file_name + ".pdf", stylesheets=["./app/assets/styles/report.css"])
         try:
-            return send_file(file_name + ".pdf", as_attachment=True)
+            return send_file("reports/" + file_name + ".pdf", as_attachment=True)
         except FileNotFoundError:
             flash('Failed to generate report.', 'error')
             abort(404)
