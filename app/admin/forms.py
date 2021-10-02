@@ -433,6 +433,7 @@ class VolunteerManager(FlaskForm):
                                                    ('phone and email',
                                                     "Phone and Email")])
 
+    provided_services = MultiCheckboxField('Services Volunteer can Provide', coerce = int)
     notes = TextAreaField("Notes for Office Staff", validators=[Optional()])
 
     submit = SubmitField("Submit")
