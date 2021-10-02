@@ -739,7 +739,7 @@ def invite_volunteer(volunteer_id=None):
     for idx, c in enumerate(Service.query.order_by('category_id')):
         if c.category_id not in category_to_indices:
             category_to_indices[c.category_id] = []
-        category_to_indices[c.category_id].append(idx)
+        category_to_indices[c.category_id].append(idx+1)
         choices.append((c.id, c.name))
     for category in ServiceCategory.query.order_by('id'):
         service_categories[category.id] = category.name 

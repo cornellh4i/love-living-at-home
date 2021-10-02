@@ -26,8 +26,6 @@ class ServiceCategory(db.Model):
     def insert_categories():
         categories = ServiceCategory.get_categories()
         for i, c, r_i in categories:
-            if i == "ID":
-                continue
             category = ServiceCategory.query.filter_by(name=c).first()
             if category is None:
                 category = ServiceCategory(name=c, request_type_id=r_i)
