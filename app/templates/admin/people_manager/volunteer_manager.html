@@ -63,30 +63,29 @@
       {{ f.render_form_field(form.preferred_contact_method) }}
     </div>
 
-    <!-- 
     <div class="field">
-      <i class="ui inverted violet fluid button" id="show-services">
-        Services
-      </i>
-    </div> -->
-
-    <!-- <div class="ui modal" id="services">
-      <i class="close icon"></i> -->
-    <div class="field">
-      <div class="ui header">Services Provided By</div>
+      <div class="ui header">Services Volunteer Can Provide</div>
       <div class="ui styled fluid accordion">
-        {% for key, value in category_dict.items() %}
+        {% for i in range(service_categories | length) %}
         <div class="title">
           <i class="dropdown icon"></i>
-          {{ key }}
+          {{ service_categories[i] }}
         </div>
         <div class="content">
-          {{ form|attr(key)() }}
+          {% for c in category_to_indices[i]%}
+            {% for choice in form.provided_services %}
+              {% if loop.index0 == c %}
+                <div class="form-check">
+                    {{ choice }}
+                    {{ choice.label }}
+                </div>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
         </div>
         {% endfor %}
       </div>
     </div>
-    <!-- </div> -->
 
     {{f.render_form_field(form.notes)}} {{ f.form_message(flashes['error'],
     header='Something went wrong.', class='error') }} {{

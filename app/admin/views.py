@@ -730,29 +730,21 @@ def invite_member(member_id=None):
 @admin_required
 def invite_volunteer(volunteer_id=None):
     """Invites a user to create a volunteer account"""
-    service_categories = sorted(
-        [(category.name, category.request_type_id, category.id)
-         for category in ServiceCategory.query.all()],
-        key=lambda triple: triple[2])
-    services = [(service.name, service.category_id, service.id)
-                for service in Service.query.all()]
-
-    category_dict = {}
-    category_name_to_id = {}
-    for count, category in enumerate(service_categories):
-        category_name_to_id[category[0]] = category[1]
-        choices = []
-        for service in services:
-            if service[1] == category[1]:
-                choices.append((service[0], service[0]))
-        category_dict[category[0]] = MultiCheckboxField(category[0],
-                                                        choices=choices)
-    for key, value in category_dict.items():
-        setattr(VolunteerManager, key, value)
-
     # for editing existing Volunteer profiles
     volunteer = None
     form = VolunteerManager()
+    choices = []
+    service_categories = dict()
+    category_to_indices = dict()
+    for idx, c in enumerate(Service.query.order_by('category_id')):
+        if c.category_id not in category_to_indices:
+            category_to_indices[c.category_id] = []
+        category_to_indices[c.category_id].append(idx)
+        choices.append((c.id, c.name))
+    for category in ServiceCategory.query.order_by('id'):
+        service_categories[category.id] = category.name 
+    
+    form.provided_services.choices = choices 
     if volunteer_id is not None:
         volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
         primary_address = Address.query.filter_by(
@@ -785,17 +777,12 @@ def invite_volunteer(volunteer_id=None):
             email_address=volunteer.email_address,
             preferred_contact_method=volunteer.preferred_contact_method,
             notes=volunteer.general_notes)
+        form.provided_services.choices = choices 
+        form.provided_services.data = [p.service_id for p in ProvidedService.query.filter_by(volunteer_id = volunteer_id)]
 
     service_ids = []
     if form.validate_on_submit():
-        for key, value in category_dict.items():
-            service_input = getattr(form, key)
-            service_data = service_input.data
-            for service in service_data:
-                service_to_be_committed = Service.query.filter_by(
-                    name=service,
-                    category_id=int(category_name_to_id[key])).first()
-                service_ids.append(service_to_be_committed.id)
+        service_ids = request.form.getlist("provided_services")
         address = Address(name=form.first_name.data + " " +
                           form.last_name.data,
                           street_address=form.street_address.data,
@@ -827,6 +814,7 @@ def invite_volunteer(volunteer_id=None):
             updated_volunteer.general_notes = form.notes.data
             db.session.add(updated_volunteer)
             db.session.commit()
+            volunteer = updated_volunteer
             flash(
                 'Volunteer {} successfully updated'.format(
                     form.first_name.data), 'success')
@@ -865,20 +853,26 @@ def invite_volunteer(volunteer_id=None):
                 'Volunteer {} successfully added'.format(form.first_name.data),
                 'success')
 
-        return redirect(url_for('admin.people_manager'))
-
-        for service in service_ids:
-            provided_service = ProvidedService(service_id=service,
-                                               volunteer_id=volunteer.id)
-            db.session.add(provided_service)
+        need_to_be_deleted = []
+        for provided_service in ProvidedService.query.filter_by(volunteer_id = volunteer.id):
+            if provided_service.service_id not in service_ids:
+                need_to_be_deleted.append(provided_service)
+        for service in need_to_be_deleted:
+            db.session.delete(service)
             db.session.commit()
+        for service in service_ids:
+            if not ProvidedService.query.filter_by(service_id = service, volunteer_id = volunteer.id).first():
+                db.session.add(ProvidedService(service_id = service, volunteer_id = volunteer.id))
+                db.session.commit()
+        
         flash('Volunteer {} successfully invited'.format(form.first_name.data),
               'form-success')
+
+        return redirect(url_for('admin.people_manager'))
     return render_template('admin/people_manager/volunteer_manager.html',
                            form=form,
-                           services=services,
                            service_categories=service_categories,
-                           category_dict=category_dict)
+                           category_to_indices = category_to_indices)
 
 
 @admin.route('/invite-contractor', methods=['GET', 'POST'])
@@ -1124,6 +1118,9 @@ def delete_volunteer(volunteer_id):
     volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
     db.session.delete(volunteer)
     db.session.commit()
+    for service in ProvidedService.query.filter_by(volunteer_id = volunteer_id):
+        db.session.delete(service)
+        db.session.commit()
     flash(
         'Successfully deleted volunteer {}'.format(volunteer.first_name + '' +
                                                    volunteer.last_name),
