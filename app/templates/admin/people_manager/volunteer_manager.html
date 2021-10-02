@@ -69,12 +69,12 @@
         {% for i in range(service_categories | length) %}
         <div class="title">
           <i class="dropdown icon"></i>
-          {{ service_categories[i] }}
+          {{ service_categories[i+1] }}
         </div>
         <div class="content">
-          {% for c in category_to_indices[i]%}
+          {% for c in category_to_indices[i+1]%}
             {% for choice in form.provided_services %}
-              {% if loop.index0 == c %}
+              {% if loop.index == c %}
                 <div class="form-check">
                     {{ choice }}
                     {{ choice.label }}

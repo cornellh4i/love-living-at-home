@@ -96,7 +96,6 @@ def setup_general():
     RequestVolunteerStatus.insert_statuses()
     # Service related
     Service.insert_services()
-    ServiceCategory.insert_categories()
     MetroArea.insert_metro_areas()
 
     # Create foreign key dependency first
