@@ -469,40 +469,47 @@ def create_transportation_request():
     ]
     if form.validate_on_submit():
         special_input = request.form.get('special_instructions')
-        transportation_request = Request(
-            type_id=0,
-            status_id=form.status.data.id,
-            short_description=form.description.data,
-            created_date=form.date_created.data,
-            requested_date=form.requested_date.data,
-            initial_pickup_time=form.initial_pickup.data,
-            appointment_time=form.appointment.data,
-            return_pickup_time=form.return_pickup.data,
-            drop_off_time=form.drop_off.data,
-            is_date_time_flexible=form.time_flexible.data,
-            duration_type_id=form.duration.data,
-            service_category_id=form.service_category.data.id,
-            service_id=form.transportation_service.data.id if
-            form.service_category.data.id == 0 else form.covid_service.data.id,
-            starting_address=form.starting_location.data,
-            destination_address_id=form.destination.data,
-            # Will be updated in the future for multiple ppl
-            requesting_member_id=form.requesting_member.data[0],
-            special_instructions=special_input,
-            followup_date=form.follow_up_date.data,
-            responsible_staffer_id=form.responsible_staffer.data,
-            contact_log_priority_id=form.contact_log_priority.data.id,
-            cc_email=form.person_to_cc.data)
-        db.session.add(transportation_request)
-        db.session.commit()
-        print(form.service_provider.data)
-        request_volunteer_record = RequestVolunteerRecord(
-            request_id=transportation_request.id,
-            volunteer_id=form.service_provider.data[0],
-            status_id=-1,
-            staffer_id=-1,
-            updated_datetime=form.date_created.data)
-        db.session.add(request_volunteer_record)
+        request_batch = []
+        for elderly_member in form.requesting_member.data:
+            transportation_request = Request(
+                type_id=0,
+                status_id=form.status.data.id,
+                short_description=form.description.data,
+                created_date=form.date_created.data,
+                requested_date=form.requested_date.data,
+                initial_pickup_time=form.initial_pickup.data,
+                appointment_time=form.appointment.data,
+                return_pickup_time=form.return_pickup.data,
+                drop_off_time=form.drop_off.data,
+                is_date_time_flexible=form.time_flexible.data,
+                duration_type_id=form.duration.data,
+                service_category_id=form.service_category.data.id,
+                service_id=form.transportation_service.data.id if
+                form.service_category.data.id == 0 else form.covid_service.data.id,
+                starting_address=form.starting_location.data,
+                destination_address_id=form.destination.data,
+                # Will be updated in the future for multiple ppl
+                requesting_member_id=elderly_member,
+                special_instructions=special_input,
+                followup_date=form.follow_up_date.data,
+                responsible_staffer_id=form.responsible_staffer.data,
+                contact_log_priority_id=form.contact_log_priority.data.id,
+                cc_email=form.person_to_cc.data)
+            db.session.add(transportation_request)
+            db.session.commit()
+            request_batch.append(transportation_request.id)
+
+        # Eventually this should be changed so multiple volunteers can be notified
+        volunteer_batch = []
+        for req in request_batch:
+            request_volunteer_record = RequestVolunteerRecord(
+                request_id=req,
+                volunteer_id=form.service_provider.data[0],
+                status_id=-1,
+                staffer_id=-1,
+                updated_datetime=form.date_created.data)
+            volunteer_batch.append(request_volunteer_record)
+        db.session.bulk_save_objects(volunteer_batch)
         db.session.commit()
 
         flash('Successfully submitted a new transportation request', 'success')
@@ -742,9 +749,9 @@ def invite_volunteer(volunteer_id=None):
         category_to_indices[c.category_id].append(idx+1)
         choices.append((c.id, c.name))
     for category in ServiceCategory.query.order_by('id'):
-        service_categories[category.id] = category.name 
-    
-    form.provided_services.choices = choices 
+        service_categories[category.id] = category.name
+
+    form.provided_services.choices = choices
     if volunteer_id is not None:
         volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
         primary_address = Address.query.filter_by(
@@ -777,7 +784,7 @@ def invite_volunteer(volunteer_id=None):
             email_address=volunteer.email_address,
             preferred_contact_method=volunteer.preferred_contact_method,
             notes=volunteer.general_notes)
-        form.provided_services.choices = choices 
+        form.provided_services.choices = choices
         form.provided_services.data = [p.service_id for p in ProvidedService.query.filter_by(volunteer_id = volunteer_id)]
 
     service_ids = []
@@ -864,7 +871,7 @@ def invite_volunteer(volunteer_id=None):
             if not ProvidedService.query.filter_by(service_id = service, volunteer_id = volunteer.id).first():
                 db.session.add(ProvidedService(service_id = service, volunteer_id = volunteer.id))
                 db.session.commit()
-        
+
         flash('Volunteer {} successfully invited'.format(form.first_name.data),
               'form-success')
 
