@@ -1,23 +1,21 @@
-{% extends 'admin/request_manager/create_request.html' %}
-{% import 'macros/form_macros.html' as f %}
+{% extends 'admin/request_manager/create_request.html' %} 
+{% import 'macros/form_macros.html' as f %} 
 
-{% block scripts %}
-{% endblock %}
+{% block scripts %} 
+{% endblock %} 
 
-{% block create_request_content %}
-{% set flashes = {
-'error': get_flashed_messages(category_filter=['form-error']),
-'warning': get_flashed_messages(category_filter=['form-check-email']),
-'info': get_flashed_messages(category_filter=['form-info']),
-'success': get_flashed_messages(category_filter=['form-success'])
-} %}
+{% block create_request_content %} 
+{% set flashes = { 
+'error': get_flashed_messages(category_filter=['form-error']), 
+'warning': get_flashed_messages(category_filter=['form-check-email']), 
+'info': get_flashed_messages(category_filter=['form-info']), 
+'success': get_flashed_messages(category_filter=['form-success']) 
+} %} 
 
 {{ f.begin_form(form, flashes, extra_classes="large") }}
 <div class="ui stackable centered grid container">
   <div class="twelve wide column">
-    <h2 class="ui center aligned header">
-      Transportation Request Form
-    </h2>
+    <h2 class="ui center aligned header">Transportation Request Form</h2>
   </div>
 
   <div class="twelve wide column">
@@ -71,15 +69,14 @@
         {{ f.render_form_field(form.service_category) }}
       </div>
       <div class="right floated six wide column">
-        <div id="covid" style="display:none;">
+        <div id="covid" style="display: none">
           {{ f.render_form_field(form.covid_service) }}
         </div>
         <div id="transportation">
           {{ f.render_form_field(form.transportation_service) }}
         </div>
       </div>
-      <div class="right floated six wide column">
-      </div>
+      <div class="right floated six wide column"></div>
     </div>
 
     <style>
@@ -104,18 +101,17 @@
           {{ f.render_form_field(form.destination) }}
         </div>
         <div class="right floated four wide column">
-          <button type="button" class="ui inverted violet fluid button side-button" id="show-new-destination">
-            Add new address</button>
+          <button
+            type="button"
+            class="ui inverted violet fluid button side-button"
+            id="show-new-destination"
+          >
+            Add new address
+          </button>
         </div>
       </div>
     </div>
     {{ f.render_form_field(form.duration) }}
-
-    <div class="field">
-      <label>Volunteer:</label>
-      <button type="button" class="ui inverted violet fluid button" id="show-new-service-provider">
-        Add New Service Provider</button>
-    </div>
 
     <div class="twelve wide column">
       {{ f.render_form_field(form.service_provider)}}
@@ -123,10 +119,14 @@
 
     <div class="four fields">
       <div class="field">
-        <button class="ui purple basic button" type="button">Send Request</button>
+        <button class="ui purple basic button" type="button">
+          Send Request
+        </button>
       </div>
       <div class="field">
-        <button class="ui purple basic button" type="button">Confirmation</button>
+        <button class="ui purple basic button" type="button">
+          Confirmation
+        </button>
       </div>
       <div class="field">
         <button class="ui purple basic button" type="button">Not Needed</button>
@@ -135,7 +135,6 @@
         <button class="ui purple basic button" type="button">Summary</button>
       </div>
     </div>
-
   </div>
 
   <div id="new-service-provider" class="ui modal">
@@ -146,7 +145,9 @@
     </div>
   </div>
 
-  <p id="special-instructions" style="display:none;">{{form.special_instructions_list}} </p>
+  <p id="special-instructions" style="display: none">
+    {{form.special_instructions_list}}
+  </p>
 
   <div class="twelve wide column">
     <div class="field" id="special-instructions-div">
@@ -157,12 +158,12 @@
   <div class="twelve wide column">
     <div class="ui two column stackable grid">
       <div class="six wide column">
-        {{ f.render_form_field(form.follow_up_date) }}
-        {{ f.render_form_field(form.responsible_staffer) }}
+        {{ f.render_form_field(form.follow_up_date) }} {{
+        f.render_form_field(form.responsible_staffer) }}
       </div>
       <div class="right floated six wide column">
-        {{ f.render_form_field(form.status) }}
-        {{ f.render_form_field(form.contact_log_priority) }}
+        {{ f.render_form_field(form.status) }} {{
+        f.render_form_field(form.contact_log_priority) }}
       </div>
     </div>
   </div>
@@ -184,12 +185,8 @@
           {{f.render_form_field(form.city)}}
         </div>
         <div class="two column row">
-          <div class="six wide column">
-            {{f.render_form_field(form.state)}}
-          </div>
-          <div class="six wide column">
-            {{f.render_form_field(form.zip)}}
-          </div>
+          <div class="six wide column">{{f.render_form_field(form.state)}}</div>
+          <div class="six wide column">{{f.render_form_field(form.zip)}}</div>
         </div>
         <div class="two column row">
           <div class="six wide column">
@@ -213,37 +210,41 @@
     });
 
     function serviceChoices() {
-      let service_category = document.getElementById("service_category").value;
-      if (service_category === "1") {
-        document.getElementById("covid").style.display = "initial";
-        document.getElementById("transportation").style.display = "none";
-      } else if (service_category === "0") {
-        document.getElementById("covid").style.display = "none"
-        document.getElementById("transportation").style.display = "initial"
+      let service_category = document.getElementById('service_category').value;
+      if (service_category === '1') {
+        document.getElementById('covid').style.display = 'initial';
+        document.getElementById('transportation').style.display = 'none';
+      } else if (service_category === '0') {
+        document.getElementById('covid').style.display = 'none';
+        document.getElementById('transportation').style.display = 'initial';
       }
     }
 
     function specialInstructions() {
-      let member_id = document.getElementById("member").value.toString();
+      let member_id = document.getElementById('member').value.toString();
       $('#special-instructions-div').empty();
-      let str = document.getElementById("special-instructions").innerHTML;
+      let str = document.getElementById('special-instructions').innerHTML;
       let obj = JSON.parse(str);
-      $('#special-instructions-div').append('<label class = "ui form field">Special Instructions:</label>');
-      $('#special-instructions-div').append('<textarea name="special_instructions" class="ui textArea" >' + obj[member_id] + '</textarea>');
+      $('#special-instructions-div').append(
+        '<label class = "ui form field">Special Instructions:</label>'
+      );
+      $('#special-instructions-div').append(
+        '<textarea name="special_instructions" class="ui textArea" >' +
+          obj[member_id] +
+          '</textarea>'
+      );
       special_input = obj[member_id];
     }
   </script>
 
-
   <div class="twelve wide column">
-
-    {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
-    {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
-    {{ f.form_message(flashes['info'], header='Information', class='info') }}
-    {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-
-    {{ f.render_form_field(form.submit, extra_classes=".ui .button") }}
-
+    {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }} 
+    {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }} 
+    {{ f.form_message(flashes['info'], header='Information', class='info') }} 
+    {{ f.form_message(flashes['success'], header='Success!', class='success') }} 
+    
+    {{ f.render_form_field(form.submit, extra_classes=".ui .button") }} 
+    
     {{ f.end_form() }}
   </div>
 </div>
