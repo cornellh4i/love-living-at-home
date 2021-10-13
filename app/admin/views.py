@@ -505,8 +505,8 @@ def create_transportation_request():
             request_volunteer_record = RequestVolunteerRecord(
                 request_id=req,
                 volunteer_id=form.service_provider.data[0],
-                status_id=-1,
-                staffer_id=-1,
+                status_id=1,
+                staffer_id=1,
                 updated_datetime=form.date_created.data)
             volunteer_batch.append(request_volunteer_record)
         db.session.bulk_save_objects(volunteer_batch)
@@ -785,7 +785,8 @@ def invite_volunteer(volunteer_id=None):
             preferred_contact_method=volunteer.preferred_contact_method,
             notes=volunteer.general_notes)
         form.provided_services.choices = choices
-        form.provided_services.data = [p.service_id for p in ProvidedService.query.filter_by(volunteer_id = volunteer_id)]
+        form.provided_services.data = [
+            p.service_id for p in ProvidedService.query.filter_by(volunteer_id=volunteer_id)]
 
     service_ids = []
     if form.validate_on_submit():
@@ -861,15 +862,16 @@ def invite_volunteer(volunteer_id=None):
                 'success')
 
         need_to_be_deleted = []
-        for provided_service in ProvidedService.query.filter_by(volunteer_id = volunteer.id):
+        for provided_service in ProvidedService.query.filter_by(volunteer_id=volunteer.id):
             if provided_service.service_id not in service_ids:
                 need_to_be_deleted.append(provided_service)
         for service in need_to_be_deleted:
             db.session.delete(service)
             db.session.commit()
         for service in service_ids:
-            if not ProvidedService.query.filter_by(service_id = service, volunteer_id = volunteer.id).first():
-                db.session.add(ProvidedService(service_id = service, volunteer_id = volunteer.id))
+            if not ProvidedService.query.filter_by(service_id=service, volunteer_id=volunteer.id).first():
+                db.session.add(ProvidedService(
+                    service_id=service, volunteer_id=volunteer.id))
                 db.session.commit()
 
         flash('Volunteer {} successfully invited'.format(form.first_name.data),
@@ -879,7 +881,7 @@ def invite_volunteer(volunteer_id=None):
     return render_template('admin/people_manager/volunteer_manager.html',
                            form=form,
                            service_categories=service_categories,
-                           category_to_indices = category_to_indices)
+                           category_to_indices=category_to_indices)
 
 
 @admin.route('/invite-contractor', methods=['GET', 'POST'])
@@ -1125,7 +1127,7 @@ def delete_volunteer(volunteer_id):
     volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
     db.session.delete(volunteer)
     db.session.commit()
-    for service in ProvidedService.query.filter_by(volunteer_id = volunteer_id):
+    for service in ProvidedService.query.filter_by(volunteer_id=volunteer_id):
         db.session.delete(service)
         db.session.commit()
     flash(
@@ -1375,7 +1377,8 @@ def generate_report():
 
         env = Environment(loader=FileSystemLoader('.'))
         template = env.get_template("./app/templates/admin/report.html")
-        template_vars = {"title": "Love Living at Home", "data": data.to_html()}
+        template_vars = {"title": "Love Living at Home",
+                         "data": data.to_html()}
         html_out = template.render(template_vars)
         HTML(string=html_out).write_pdf(
             "./app/reports/" + file_name + ".pdf", stylesheets=["./app/assets/styles/report.css"])
@@ -1384,4 +1387,4 @@ def generate_report():
         except FileNotFoundError:
             flash('Failed to generate report.', 'error')
             abort(404)
-    return render_template('admin/system_manager/generate_report.html', form = pdf_form)
+    return render_template('admin/system_manager/generate_report.html', form=pdf_form)
