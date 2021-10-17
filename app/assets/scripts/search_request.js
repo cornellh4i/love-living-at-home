@@ -128,6 +128,13 @@ $(document).ready(function () {
       }
 
       // TODO: Date status filter ("Dated" vs "Undated")
+      let requested_date = $this.find('.requested-date-value').attr('data-value');
+      if (date_status_options.includes("Undated") && requested_date.length != 0 && !(date_status_options.includes("Dated"))) {
+        $this.hide();
+      }
+      if (date_status_options.includes("Dated") && requested_date.length === 0 && !(date_status_options.includes("Undated"))) {
+        $this.hide();
+      }
 
       // Apply filter for Date Type and Range
       let date_str;
