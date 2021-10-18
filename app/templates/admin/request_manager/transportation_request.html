@@ -1,16 +1,16 @@
-{% extends 'admin/request_manager/create_request.html' %} 
-{% import 'macros/form_macros.html' as f %} 
+{% extends 'admin/request_manager/create_request.html' %}
+{% import 'macros/form_macros.html' as f %}
 
-{% block scripts %} 
-{% endblock %} 
+{% block scripts %}
+{% endblock %}
 
-{% block create_request_content %} 
-{% set flashes = { 
-'error': get_flashed_messages(category_filter=['form-error']), 
-'warning': get_flashed_messages(category_filter=['form-check-email']), 
-'info': get_flashed_messages(category_filter=['form-info']), 
-'success': get_flashed_messages(category_filter=['form-success']) 
-} %} 
+{% block create_request_content %}
+{% set flashes = {
+'error': get_flashed_messages(category_filter=['form-error']),
+'warning': get_flashed_messages(category_filter=['form-check-email']),
+'info': get_flashed_messages(category_filter=['form-info']),
+'success': get_flashed_messages(category_filter=['form-success'])
+} %}
 
 {{ f.begin_form(form, flashes, extra_classes="large") }}
 <div class="ui stackable centered grid container">
@@ -113,11 +113,59 @@
     </div>
     {{ f.render_form_field(form.duration) }}
 
-    <div class="twelve wide column">
+    <div id = "providers" class="twelve wide column">
       {{ f.render_form_field(form.service_provider)}}
     </div>
 
-    <div class="four fields">
+    <script>
+       const providerSelect = document.getElementById("service_provider");
+       function updateTable() {
+         const providerDiv = document.getElementById("providers");
+         let selectedNames = [];
+         for (const option of providerSelect.options) {
+           if (option.selected)
+             selectedNames.push(option.innerHTML)
+         }
+
+         const table = document.createElement('table');
+         if (selectedNames.length > 0) {
+           table.className += "ui celled table";
+           const header = table.createTHead();
+           const row = header.insertRow(0);
+           const titleOne = row.insertCell(0);
+           titleOne.innerHTML = "<b>Name</b>";
+           const titleTwo = row.insertCell(1);
+           titleTwo.innerHTML = "<b>Volunteer Type</b>";
+           const titleThree = row.insertCell(2);
+           titleThree.innerHTML = "<b>Volunteer Status</b>";
+           const titleFour = row.insertCell(3);
+           titleFour.innerHTML = "<b>Actions</b>";
+           table.id = "volunteerDataTable";
+         }
+
+         for (const name of selectedNames) {
+           const row = table.insertRow(1);
+           const volunName = row.insertCell(0);
+           volunName.innerHTML = name;
+           const volunType = row.insertCell(1);
+           volunType.innerHTML = "will be inserted";
+           const volunStatus = row.insertCell(2);
+           // when request editing is implemented flask should pass vars that are stored in volunStatus so the actual status can be displayed
+           volunStatus.innerHTML = "Not contacted";
+           const action = row.insertCell(3);
+           action.innerHTML = "will be added";
+         }
+
+         if (!document.getElementById("volunteerDataTable")) {
+           providerDiv.prepend(table);
+         } else {
+           providerDiv.replaceChild(table, document.getElementById("volunteerDataTable"));
+         }
+       }
+       providerSelect.setAttribute("onchange", "updateTable()");
+     </script>
+
+    <div class="four fields" style = "margin-top: 10px">
       <div class="field">
         <button class="ui purple basic button" type="button">
           Send Request
@@ -238,13 +286,13 @@
   </script>
 
   <div class="twelve wide column">
-    {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }} 
-    {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }} 
-    {{ f.form_message(flashes['info'], header='Information', class='info') }} 
-    {{ f.form_message(flashes['success'], header='Success!', class='success') }} 
-    
-    {{ f.render_form_field(form.submit, extra_classes=".ui .button") }} 
-    
+    {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+    {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+    {{ f.form_message(flashes['info'], header='Information', class='info') }}
+    {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+    {{ f.render_form_field(form.submit, extra_classes=".ui .button") }}
+
     {{ f.end_form() }}
   </div>
 </div>
