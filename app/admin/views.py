@@ -368,6 +368,23 @@ def search_request():
         'modified_date': "06/18/2021",
         'service_category': "Transportation",
         'member_number': -1
+    }, {
+        'request_num': 6698,
+        'request_status': "Confirmed",
+        'requested_date_display': "",
+        'requested_date_full': "",
+        'requested_day_of_week': "Friday",
+        'start_time': "10:00 AM",
+        'end_time': "11:00 PM",
+        'member_name': "John Brown",
+        'volunteer_name': "Diana Cosgrove",
+        'is_volunteer': True,
+        'request_type': "Transportation",
+        'service': "Vol Driver Local Medical Appt",
+        'created_date': "06/11/2021",
+        'modified_date': "06/18/2021",
+        'service_category': "Transportation",
+        'member_number': -1
     }]
 
     # Pull existing requests from the database and format each of them for display on front-end.
