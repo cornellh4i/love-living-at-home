@@ -15,6 +15,4 @@ dist
 .idea
 dump.rdb
 .vscode/
-start.sh
-reset_db.sh
 transportation_improvements.txt
