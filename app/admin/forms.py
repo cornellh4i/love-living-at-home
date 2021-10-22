@@ -154,6 +154,7 @@ class TransportationRequestForm(FlaskForm):
     date_created = DateField('Date Created:',
                              default=date.today,
                              render_kw={'readonly': True})
+
     requesting_member = SelectMultipleField(
         'Requesting Member',
         render_kw={'onchange': "specialInstructions()"},
@@ -238,6 +239,119 @@ class TransportationRequestForm(FlaskForm):
     zip = StringField('Zip:')
     country = StringField('Country:')
     add_address = SubmitField('Add Address')
+
+    submit = SubmitField("Submit")
+
+
+class MembersHomeRequestForm(FlaskForm):
+    categoryId = 0
+
+    def selectedCategory():
+        return db.session.query(ServiceCategory).order_by().filter(
+            ServiceCategory.request_type_id == 2)
+
+    def covid_services():
+        return db.session.query(Service).order_by().filter(
+            Service.category_id == 2)
+
+    def members_home_services():
+        return db.session.query(Service).order_by().filter(
+            Service.category_id == 2)
+
+    def stafferQuery():
+        return db.session.query(Staffer).order_by()
+
+    def statusQuery():
+        return db.session.query(RequestStatus).order_by()
+
+    def contactLogQuery():
+        return db.session.query(ContactLogPriorityType).order_by()
+
+    def specialInstructionsQuery():
+        return db.session.query(Member).order_by()
+
+    special_instructions_list = {}
+
+    date_created = DateField('Date Created:',
+                             default=date.today,
+                             render_kw={'readonly': True})
+
+    requesting_member = SelectMultipleField(
+        'Requesting Member',
+        render_kw={'onchange': "specialInstructions()"},
+        id='member',
+        validators=[InputRequired()],
+        coerce=int)
+
+    service_provider = SelectMultipleField('Service Provider',
+                                           id='service_provider',
+                                           validators=[InputRequired()],
+                                           coerce=int)
+
+    requested_date = DateField('Requested Date', validators=[InputRequired()])
+
+    time_from = TimeField('From:',
+                          format='%H:%M',
+                          validators=[InputRequired()])
+
+    time_until = TimeField('Until:',
+                           format='%H:%M',
+                           validators=[InputRequired()])
+
+    time_flexible = RadioField('Is Date/Time Flexible?',
+                               choices=[(True, 'Yes'), (False, 'No')],
+                               coerce=lambda x: x == 'True')
+
+    description = TextAreaField('Short description (included in email):')
+
+    service_category = QuerySelectField(
+        'Service Category:',
+        render_kw={'onchange': "serviceChoices()"},
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=selectedCategory)
+
+    covid_service = QuerySelectField(
+        'Service:',
+        id="covid_service",
+        render_kw={'onchange': "serviceChoices()"},
+        validators=[Optional()],
+        get_label='name',
+        query_factory=covid_services)
+
+    members_home_service = QuerySelectField(
+        'Service:',
+        render_kw={'onchange': "serviceChoices()"},
+        id="members_home_service",
+        validators=[Optional()],
+        get_label='name',
+        query_factory=members_home_services)
+
+    home_location = SelectMultipleField(
+        'Location',
+        id='home_location',
+        validators=[InputRequired()],
+        coerce=int)
+
+    special_instructions = TextAreaField('Special Instructions:',
+                                         id="special-instructions-text")
+
+    follow_up_date = DateField('Follow Up Date:')
+    status = QuerySelectField('Status:',
+                              validators=[InputRequired()],
+                              get_label='name',
+                              query_factory=statusQuery)
+
+    responsible_staffer = SelectField('Responsible Staffer:', coerce=int)
+
+    contact_log_priority = QuerySelectField('Contact Log Priority:',
+                                            validators=[InputRequired()],
+                                            get_label='name',
+                                            query_factory=contactLogQuery)
+
+    person_to_cc = EmailField('Person to cc',
+                              validators=[Length(0, 64),
+                                          Optional()])
 
     submit = SubmitField("Submit")
 
@@ -433,7 +547,8 @@ class VolunteerManager(FlaskForm):
                                                    ('phone and email',
                                                     "Phone and Email")])
 
-    provided_services = MultiCheckboxField('Services Volunteer can Provide', coerce = int)
+    provided_services = MultiCheckboxField(
+        'Services Volunteer can Provide', coerce=int)
     notes = TextAreaField("Notes for Office Staff", validators=[Optional()])
 
     submit = SubmitField("Submit")

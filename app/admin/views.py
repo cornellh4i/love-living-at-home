@@ -13,7 +13,7 @@ from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
                              AddServiceVetting, ChangeAccountTypeForm,
                              ChangeUserEmailForm, ContractorManager,
                              EditMetroAreaForm, EditServiceForm, EditServiceCategoryForm,
-                             InviteUserForm, MemberManager, MultiCheckboxField,
+                             InviteUserForm, MemberManager, MembersHomeRequestForm, MultiCheckboxField,
                              NewUserForm, Reviews, SearchRequestForm,
                              TransportationRequestForm, VolunteerManager, GeneratePdfForm)
 from app.decorators import admin_required
@@ -537,6 +537,40 @@ def create_transportation_request():
     # flash(form.errors, 'error')
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
+                           form=form)
+
+
+@admin.route('create-request/members-home-request')
+@admin_required
+@login_required
+def create_members_home_request():
+    form = MembersHomeRequestForm()
+
+    form.requesting_member.multiple = True
+    form.requesting_member.choices = [
+        (member.id, member.first_name + " " + member.last_name)
+        for member in Member.query.all()
+    ]
+
+    form.service_provider.choices = [
+        (volunteer.id, volunteer.first_name + " " + volunteer.last_name)
+        for volunteer in Volunteer.query.all()
+    ]
+
+    form.home_location.choices = [(1, "Home")]
+
+    form.special_instructions_list = json.dumps({
+        str(member.id): member.volunteer_notes
+        for member in Member.query.all()
+    })
+
+    form.responsible_staffer.choices = [
+        (staffer.id, staffer.first_name + " " + staffer.last_name)
+        for staffer in Staffer.query.all()
+    ]
+
+    return render_template('admin/request_manager/members_home_request.html',
+                           title='Members Home Request',
                            form=form)
 
 
