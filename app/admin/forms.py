@@ -748,3 +748,29 @@ class EditMetroAreaForm(FlaskForm):
                        validators=[InputRequired(),
                                    Length(1, 200)])
     submit = SubmitField('Save Metro Area Information')
+
+
+class EditDestinationAddressForm(FlaskForm):
+    name = StringField('Destination Address Name',
+                       validators=[InputRequired(),
+                                   Length(1, 200)])
+    address1 = StringField('Street address or P.O. Box',
+                                 validators=[InputRequired(),
+                                             Length(max=200)])
+                                             
+    address2 = StringField('Apt, suite, unit, building, floor, etc.',
+                                   validators=[Optional(),
+                                               Length(max=200)])
+    city = StringField('City',
+                       validators=[InputRequired(),
+                                   Length(max=200)])
+    state = StringField('State',
+                        validators=[InputRequired(),
+                                    Length(max=200)])
+    country = StringField('Country', default="United States")
+    zip_code = StringField('Zip Code',
+                           validators=[Optional(),
+                                       Length(max=45)])
+    submit = SubmitField('Save Destination Address Information')
+
+
