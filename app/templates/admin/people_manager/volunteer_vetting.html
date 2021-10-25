@@ -1,0 +1,51 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+{% import 'macros/check_password.html' as check %}
+
+{% block content %}
+<div class="ui stackable centered grid container">
+    <div class="twelve wide column">
+        <a class="ui basic compact button" href="{{ url_for('admin.people_manager') }}">
+            <i class="caret left icon"></i>
+            Back to dashboard
+        </a>
+
+        {% set flashes =
+        { 'error': get_flashed_messages(category_filter=['form-error']),
+        'warning': get_flashed_messages(category_filter=['form-check-email']),
+        'info': get_flashed_messages(category_filter=['form-info']),
+        'success': get_flashed_messages(category_filter=['form-success']) }
+        %}
+
+        {{ f.begin_form(form, flashes) }}
+
+        <div class="ui two column stackable grid">
+            <br>
+            <h2 class="twelve wide column">Add Vetting for {{ form.vetting_identity.label }}</h2>
+            <div class="four wide column" style="text-align:right">
+                <br><br>
+                {{f.render_form_field(form.is_fully_vetted) }}
+            </div>
+        </div>
+  
+        <div class="ui violet inverted attached segment">
+            <div class="ui attached segment">
+                <h3>Notes</h3>
+            </div>
+            {{f.render_form_field(form.vetting_notes)}}
+        </div>
+
+
+        {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+        {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+        {{ f.form_message(flashes['info'], header='Information', class='info') }}
+        {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+
+        {{ f.render_form_field(form.submit) }}
+
+        {{ f.end_form() }}
+    </div>
+</div>
+
+{% endblock %}

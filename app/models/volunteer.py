@@ -1,5 +1,3 @@
-from app.models.availability import Availability
-
 from .. import db
 
 NUM_VOLUNTEERS = 100
@@ -39,8 +37,8 @@ class Volunteer(db.Model):
                         nullable=False)
 
     rating = db.Column(db.Float(), nullable=False)
-    is_fully_vetted = db.Column(db.Boolean(), nullable=False)
-    vettings = db.Column(db.Text)
+    is_fully_vetted = db.Column(db.Boolean(), nullable=False, default=False)
+    vetting_notes = db.Column(db.Text, default='')
     availability_id = db.Column(db.Integer(), db.ForeignKey("availability.id"))
 
     general_notes = db.Column(db.String(255), nullable=False)
@@ -66,8 +64,6 @@ class Volunteer(db.Model):
                           email_address=choice([fake.email(), None]),
                           type_id=choice([1, 2]),
                           rating=random() * 5.0,
-                          is_fully_vetted=choice([True, False]),
-                          vettings=choice([fake.text(), None]),
                           preferred_contact_method=choice(
                               ['phone', 'email', 'phone and email']),
                           availability_id=i+1,

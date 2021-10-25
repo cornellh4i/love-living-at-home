@@ -9,9 +9,6 @@
             <i class="caret left icon"></i>
             Back to dashboard
         </a>
-        <h2 class="ui header">
-            Add Availability
-        </h2>
 
         {% set flashes =
         { 'error': get_flashed_messages(category_filter=['form-error']),
@@ -26,6 +23,10 @@
         {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
         {{ f.form_message(flashes['info'], header='Information', class='info') }}
         {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+        <h2 class="ui header">
+            Add Availability for {{ form.availability_identity.label }}
+        </h2>
 
         <div class="ui header">Monday:</div>
         <div class="ui segment">

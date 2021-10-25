@@ -10,7 +10,7 @@ from flask_rq import get_queue
 
 from app import db
 from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
-                             AddServiceVetting, ChangeAccountTypeForm,
+                             AddVetting, ChangeAccountTypeForm,
                              ChangeUserEmailForm, ContractorManager,
                              EditMetroAreaForm, EditServiceForm, EditServiceCategoryForm,
                              InviteUserForm, MemberManager, MembersHomeRequestForm, MultiCheckboxField,
@@ -23,6 +23,7 @@ from app.models import (Address, Availability, EditableHTML, LocalResource,
                         Service, ServiceCategory, Staffer, User, Volunteer)
 from app.models.request import RequestDurationType, RequestStatus, RequestType
 from app.models.request_volunteer_record import RequestVolunteerRecord
+from wtforms.fields.core import Label
 
 admin = Blueprint('admin', __name__)
 
@@ -49,7 +50,7 @@ def request_manager():
 def people_manager():
     """People Manager Page."""
     add_availability = AddAvailability()
-    add_vetting = AddServiceVetting()
+    add_vetting = AddVetting()
     service_categories = sorted(
         [(category.name, category.request_type_id, category.id)
          for category in ServiceCategory.query.all()],
@@ -73,17 +74,6 @@ def people_manager():
 
     # NEED TO CHANGE THIS SO THAT WE UPDATE VETTINGS BASED ON WHICH USER WAS SELECTED
     volunteer = Volunteer.query.first()
-
-    # VETTINGS UPDATED
-    if add_vetting.validate_on_submit():
-        # NEED TO CHANGE THIS SO THAT WE UPDATE VETTINGS BASED ON WHICH USER WAS SELECTED
-        volunteer = Volunteer.query.first()
-        volunteer.vettings = add_vetting.vetting_notes.data
-        volunteer.is_fully_vetted = add_vetting.volunteer_fully_vetted_checkbox.data
-        db.session.commit()
-        flash(
-            'Vettings for user {} successfully saved.'.format(
-                volunteer.first_name), 'form-success')
 
     # SERVICES UPDATED
     if service_form.validate_on_submit():
@@ -605,7 +595,7 @@ def invite_member(member_id=None):
         primary_city = primary_address.city
         primary_state = primary_address.state
         primary_zip_code = primary_address.zipcode
-        #primary_metro_area = primary_address.metro_area
+        # primary_metro_area = primary_address.metro_area
         form = MemberManager(
             first_name=member.first_name,
             middle_initial=member.middle_initial,
@@ -674,7 +664,7 @@ def invite_member(member_id=None):
                     city=form.secondary_city.data,
                     state=form.secondary_state.data,
                     zipcode=form.secondary_zip_code.data)
-            #membership_expiration_date = member.membership_expiration_date
+            # membership_expiration_date = member.membership_expiration_date
 
     if form.validate_on_submit():
         secondary_address = False
@@ -903,7 +893,6 @@ def invite_volunteer(volunteer_id=None):
                 emergency_contact_relationship.data,
                 type_id=1,  # What should we set volunteer type id as???
                 rating=1,  # Why is this not null before the user even creates a volunteer?
-                is_fully_vetted=False,  # What should be default?
                 availability_id=availability.id,
                 general_notes=form.notes.data)
             db.session.add(volunteer)
@@ -1028,17 +1017,75 @@ def invite_contractor(local_resource_id=None):
                            form=form)
 
 
+@admin.route('/add-volunteer-services/<int:volunteer_id>',
+             methods=['GET', 'POST'])
+@login_required
+@admin_required
+def add_volunteer_services(volunteer_id=None):
+    """Page for volunteer service management."""
+    print('Hello world!', file=sys.stderr)
+
+    volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
+    print(f'Volunteer ID is {volunteer_id}', file=sys.stderr)
+
+    form = AddServiceToVolunteer()
+    print(form.errors, file=sys.stderr)
+
+    if form.is_submitted():
+        print("Submitted!", file=sys.stderr)
+
+    if form.validate_on_submit():
+        print('Form validate on submit!', file=sys.stderr)
+
+        flash(
+            'Services for {} successfully updated'.format(
+                volunteer.last_name), 'success')
+        return redirect(url_for('admin.people_manager'))
+    else:
+        print(form.errors, file=sys.stderr)
+
+    return render_template('admin/people_manager/volunteer_services.html', form=form)
+
+
+@admin.route('/add-volunteer-vetting/<int:volunteer_id>',
+             methods=['GET', 'POST'])
+@login_required
+@admin_required
+def add_volunteer_vetting(volunteer_id=None):
+    """Page for volunteer vetting management."""
+
+    volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
+
+    form = AddVetting(
+        is_fully_vetted=volunteer.is_fully_vetted,
+        vetting_notes=volunteer.vetting_notes)
+    form.vetting_identity.label = Label("vetting_identity", "Volunteer " + volunteer.first_name + " " +
+                                        volunteer.last_name)
+
+    if form.validate_on_submit():
+        updated_volunteer = volunteer
+        updated_volunteer.is_fully_vetted = form.is_fully_vetted.data
+        updated_volunteer.vetting_notes = form.vetting_notes.data
+        db.session.add(updated_volunteer)
+        db.session.commit()
+
+        flash(
+            'Vetting for {} successfully updated'.format(
+                volunteer.last_name), 'success')
+        return redirect(url_for('admin.people_manager'))
+
+    return render_template('admin/people_manager/volunteer_vetting.html', form=form)
+
+
 @admin.route('/add-availability-volunteer/<int:volunteer_id>',
              methods=['GET', 'POST'])
 @login_required
 @admin_required
 def add_availability_volunteer(volunteer_id=None):
     """Page for availability management."""
-    print('Hello world!', file=sys.stderr)
 
     volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
     availability_id = volunteer.availability_id
-    print(f'Availability ID is {availability_id}', file=sys.stderr)
 
     availability = Availability.query.filter_by(id=availability_id).first()
     form = AddAvailability(
@@ -1056,14 +1103,10 @@ def add_availability_volunteer(volunteer_id=None):
         backup_saturday=availability.backup_saturday,
         availability_sunday=availability.availability_sunday,
         backup_sunday=availability.backup_sunday)
-    print(form.errors, file=sys.stderr)
-
-    if form.is_submitted():
-        print("submitted", file=sys.stderr)
+    form.availability_identity.label = Label("availability_identity", "Volunteer " + volunteer.first_name + " " +
+                                             volunteer.last_name)
 
     if form.validate_on_submit():
-        print('Form validate on submit.', file=sys.stderr)
-
         updated_availability = availability
         updated_availability.availability_monday = form.availability_monday.data
         updated_availability.backup_monday = form.backup_monday.data
@@ -1086,23 +1129,19 @@ def add_availability_volunteer(volunteer_id=None):
             'Availability for {} successfully updated'.format(
                 volunteer.last_name), 'success')
         return redirect(url_for('admin.people_manager'))
-    else:
-        print(form.errors, file=sys.stderr)
-        print(form.backup_monday.data, file=sys.stderr)
+
     return render_template('admin/people_manager/availability.html', form=form)
 
 
-@admin.route('/add-availability-local-resource/<int:local_resource_id>',
-             methods=['GET', 'POST'])
-@login_required
-@admin_required
+@ admin.route('/add-availability-local-resource/<int:local_resource_id>',
+              methods=['GET', 'POST'])
+@ login_required
+@ admin_required
 def add_availability_local_resource(local_resource_id=None):
     """Page for availability management."""
-    print('Hello world!', file=sys.stderr)
 
     localResource = LocalResource.query.filter_by(id=local_resource_id).first()
     availability_id = localResource.availability_id
-    print(f'Availability ID is {availability_id}', file=sys.stderr)
 
     availability = Availability.query.filter_by(id=availability_id).first()
     form = AddAvailability(
@@ -1120,14 +1159,10 @@ def add_availability_local_resource(local_resource_id=None):
         backup_saturday=availability.backup_saturday,
         availability_sunday=availability.availability_sunday,
         backup_sunday=availability.backup_sunday)
-    print(form.errors, file=sys.stderr)
-
-    if form.is_submitted():
-        print("submitted", file=sys.stderr)
+    form.availability_identity.label = Label(
+        "availability_identity", "Local Resource " + localResource.company_name)
 
     if form.validate_on_submit():
-        print('Form validate on submit.', file=sys.stderr)
-
         updated_availability = availability
         updated_availability.availability_monday = form.availability_monday.data
         updated_availability.backup_monday = form.backup_monday.data
@@ -1150,15 +1185,13 @@ def add_availability_local_resource(local_resource_id=None):
             'Availability for {} successfully updated'.format(
                 localResource.company_name), 'success')
         return redirect(url_for('admin.people_manager'))
-    else:
-        print(form.errors, file=sys.stderr)
-        print(form.backup_monday.data, file=sys.stderr)
+
     return render_template('admin/people_manager/availability.html', form=form)
 
 
-@admin.route('/people-manager/<int:member_id>/_delete-member')
-@login_required
-@admin_required
+@ admin.route('/people-manager/<int:member_id>/_delete-member')
+@ login_required
+@ admin_required
 def delete_member(member_id):
     """Delete a member."""
     member = Member.query.filter_by(id=member_id).first()
@@ -1170,9 +1203,9 @@ def delete_member(member_id):
     return redirect(url_for('admin.people_manager'))
 
 
-@admin.route('/people-manager/<int:volunteer_id>/_delete-volunteer')
-@login_required
-@admin_required
+@ admin.route('/people-manager/<int:volunteer_id>/_delete-volunteer')
+@ login_required
+@ admin_required
 def delete_volunteer(volunteer_id):
     """Delete a volunteer."""
     volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
@@ -1188,9 +1221,9 @@ def delete_volunteer(volunteer_id):
     return redirect(url_for('admin.people_manager'))
 
 
-@admin.route('/people-manager/<int:local_resource_id>/_delete-local-resource')
-@login_required
-@admin_required
+@ admin.route('/people-manager/<int:local_resource_id>/_delete-local-resource')
+@ login_required
+@ admin_required
 def delete_local_resource(local_resource_id):
     """Delete a local resource."""
     localResource = LocalResource.query.filter_by(id=local_resource_id).first()
@@ -1202,9 +1235,9 @@ def delete_local_resource(local_resource_id):
     return redirect(url_for('admin.people_manager'))
 
 
-@admin.route('/services')
-@login_required
-@admin_required
+@ admin.route('/services')
+@ login_required
+@ admin_required
 def registered_services():
     """Manage services."""
     services = Service.query.all()
@@ -1213,9 +1246,9 @@ def registered_services():
 
 
 # @admin.route('/services/<int:service_id>', methods=['GET', 'POST'])
-@admin.route('/services/info/<int:service_id>', methods=['GET', 'POST'])
-@login_required
-@admin_required
+@ admin.route('/services/info/<int:service_id>', methods=['GET', 'POST'])
+@ login_required
+@ admin_required
 def service_info(service_id):
     """View a service's profile."""
     service = Service.query.filter_by(id=service_id).first()

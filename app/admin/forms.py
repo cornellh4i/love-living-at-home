@@ -8,7 +8,7 @@ from wtforms.fields import (BooleanField, IntegerField, PasswordField,
                             RadioField, SelectField, SelectMultipleField,
                             StringField, SubmitField, TextAreaField)
 from wtforms.fields.html5 import DateField, EmailField, IntegerField, TimeField
-from wtforms.validators import (DataRequired, Email, EqualTo, InputRequired,
+from wtforms.validators import (Email, EqualTo, InputRequired,
                                 Length, Optional)
 
 from app import db
@@ -554,18 +554,6 @@ class VolunteerManager(FlaskForm):
     submit = SubmitField("Submit")
 
 
-class AddServiceVetting(FlaskForm):
-    vetting_notes = TextAreaField("",
-                                  render_kw={
-                                      "rows": 15,
-                                      "cols": 105
-                                  },
-                                  validators=[Optional()])
-    volunteer_fully_vetted_checkbox = BooleanField('Is Fully Vetted?',
-                                                   validators=[Optional()])
-    submit = SubmitField("Save")
-
-
 class ContractorManager(FlaskForm):
     first_name = StringField('First name',
                              validators=[InputRequired(),
@@ -669,10 +657,9 @@ class AddAvailability(FlaskForm):
                           ("3pm-5pm", "3pm-5pm"), ("3pm-6pm", "3pm-6pm"),
                           ("4pm-5pm", "4pm-5pm"), ("4pm-6pm", "4pm-6pm"),
                           ("5pm-6pm", "5pm-6pm")]
+    availability_identity = TextAreaField()
     availability_monday = SelectField('', choices=availability_times)
-    backup_monday = SelectField('',
-                                choices=availability_times,
-                                default='Unavailable')
+    backup_monday = SelectField('', choices=availability_times)
     availability_tuesday = SelectField('', choices=availability_times)
     backup_tuesday = SelectField('', choices=availability_times)
     availability_wednesday = SelectField('', choices=availability_times)
@@ -686,6 +673,19 @@ class AddAvailability(FlaskForm):
     availability_sunday = SelectField('', choices=availability_times)
     backup_sunday = SelectField('', choices=availability_times)
     submit = SubmitField("Save")
+
+
+class AddVetting(FlaskForm):
+    vetting_identity = TextAreaField()
+    is_fully_vetted = BooleanField('Is Fully Vetted?',
+                                   validators=[Optional()])
+    vetting_notes = TextAreaField(
+        "", render_kw={"rows": 15, "cols": 105}, validators=[Optional()])
+    submit = SubmitField("Save")
+
+
+class AddServiceToVolunteer(FlaskForm):
+    submit = SubmitField('Save')
 
 
 class EditServiceForm(FlaskForm):
@@ -713,7 +713,3 @@ class EditMetroAreaForm(FlaskForm):
                        validators=[InputRequired(),
                                    Length(1, 200)])
     submit = SubmitField('Save Metro Area Information')
-
-
-class AddServiceToVolunteer(FlaskForm):
-    submit = SubmitField('Save')
