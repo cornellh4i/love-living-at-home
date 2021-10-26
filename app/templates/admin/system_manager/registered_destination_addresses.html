@@ -1,0 +1,134 @@
+{% extends 'layouts/base.html' %} {% block content %}
+<div class="ui stackable grid container">
+  <div class="sixteen wide tablet twelve wide computer centered column">
+    <a class="ui basic compact button" href="{{ url_for('admin.index') }}">
+      <i class="caret left icon"></i>
+      Back to dashboard
+    </a>
+    <h2 class="ui header">
+      Destination Addresses
+      <div class="sub header">View and manage destination addresses.</div>
+    </h2>
+
+    <div class="ui menu">
+      <div class="ui search item" style="width: 100%">
+        <div class="ui transparent icon input">
+          <input
+            id="search-destination-addresses"
+            type="text"
+            placeholder="Search destination addresses..."
+          />
+          <i class="search icon"></i>
+        </div>
+      </div>
+    </div>
+
+    {# Use overflow-x: scroll so that mobile views don't freak out # when the
+    table is too wide #}
+    <div style="overflow-x: scroll">
+      <a
+        class="ui basic compact button"
+        href="{{ url_for('admin.new_destination_address') }}"
+      >
+        <i class="plus icon"></i>
+        Add a Destination Address
+      </a>
+      <table class="ui searchable sortable unstackable selectable celled table">
+        <thead>
+          <tr>
+            <th class="sorted ascending">Destination Name</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Zip</th>
+            <th>Maintain</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for da in addresses | sort(attribute='name') %}
+          <tr>
+            <td
+              onclick="window.location.href = '{{ url_for('admin.destination_address_info', destination_address_id=da.id) }}';"
+            >
+              {{ da.name }}
+            </td>
+            <td
+              onclick="window.location.href = '{{ url_for('admin.destination_address_info', destination_address_id=da.id) }}';"
+            >
+              {{ da.address1 + (" " + da.address2 if da.address2 else "") }}
+            </td>
+            <td
+              onclick="window.location.href = '{{ url_for('admin.destination_address_info', destination_address_id=da.id) }}';"
+            >
+              {{ da.city }}
+            </td>
+            <td
+              onclick="window.location.href = '{{ url_for('admin.destination_address_info', destination_address_id=da.id) }}';"
+            >
+              {{ da.state }}
+            </td>
+            <td
+              onclick="window.location.href = '{{ url_for('admin.destination_address_info', destination_address_id=da.id) }}';"
+            >
+              {{ da.zipcode }}
+            </td>
+            <td>
+              <i
+                class="trash alternate outline icon delete-destination-address"
+                id="{{da.id}}"
+              ></i>
+            </td>
+
+            <div class="ui modal" id="modal-{{da.id}}">
+              <div class="header">Delete Destination Address</div>
+              <div class="content">
+                Would you like to delete Destination Address [{{da.name}}]?
+              </div>
+              <div class="actions">
+                <div
+                  class="positive ui approve button"
+                  onclick="window.location.href = '{{ url_for('admin.delete_destination_address',  destination_address_id=da.id) }}';"
+                >
+                  Yes
+                </div>
+                <div class="negative ui deny button">No</div>
+              </div>
+            </div>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#search-destination-addresses').keyup(function () {
+      var searchText = $(this).val();
+      if (searchText.length > 0) {
+        $('tbody td:icontains(' + searchText + ')').addClass('positive');
+        $('td.positive')
+          .not(':icontains(' + searchText + ')')
+          .removeClass('positive');
+        $('tbody td')
+          .not(':icontains(' + searchText + ')')
+          .closest('tr')
+          .addClass('hidden')
+          .hide();
+        $('tr.hidden:icontains(' + searchText + ')')
+          .removeClass('hidden')
+          .show();
+      } else {
+        $('td.positive').removeClass('positive');
+        $('tr.hidden').removeClass('hidden').show();
+      }
+    });
+
+    $('.delete-destination-address').click(function () {
+      destination_address_id = $(this).attr('id');
+      $(`#modal-${destination_address_id}`).modal('show');
+    });
+  });
+</script>
+{% endblock %}

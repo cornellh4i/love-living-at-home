@@ -13,6 +13,7 @@ from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
                              AddVetting, ChangeAccountTypeForm,
                              ChangeUserEmailForm, ContractorManager,
                              EditMetroAreaForm, EditServiceForm, EditServiceCategoryForm,
+                             EditDestinationAddressForm,
                              InviteUserForm, MemberManager, MembersHomeRequestForm, MultiCheckboxField,
                              NewUserForm, Reviews, SearchRequestForm,
                              TransportationRequestForm, VolunteerManager, GeneratePdfForm)
@@ -1444,7 +1445,7 @@ def metro_area_info(metro_area_id):
     if form.validate_on_submit():
         updated_metro_area = metro_area
         updated_metro_area.name = form.name.data
-        db.session.add(updated_service)
+        db.session.add(updated_metro_area)
         db.session.commit()
         flash('Metro Area {} successfully updated'.format(form.name.data),
               'form-success')
@@ -1484,6 +1485,90 @@ def new_metro_area():
 
     return render_template('admin/system_manager/manage_metro_area.html',
                            form=form)
+
+####
+# Destination Addresses
+####
+
+
+@admin.route('/destination-addresses')
+@login_required
+@admin_required
+def registered_destination_addresses():
+    """Manage destination addresses."""
+    # TODO: Change addresses to be queried from standard destinations and not addresses table
+    addresses = Address.query.all()
+    return render_template('admin/system_manager/registered_destination_addresses.html',
+                           addresses=addresses)
+
+
+@admin.route('/destination-addresses/info/<int:destination_address_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def destination_address_info(destination_address_id):
+    """View a destination address's profile."""
+    destination_address = Address.query.filter_by(
+        id=destination_address_id).first()
+    form = EditDestinationAddressForm(name=destination_address.name, 
+                    address1 = destination_address.address1, address2 = destination_address.address2,
+                    city = destination_address.city, 
+                    state = destination_address.state, 
+                    country = destination_address.country, 
+                    zip_code = destination_address.zipcode)
+    if form.validate_on_submit():
+        updated_destination_address = destination_address
+        updated_destination_address.name = form.name.data
+        updated_destination_address.address1 = form.address1.data
+        updated_destination_address.address2 = form.address2.data
+        updated_destination_address.city = form.city.data
+        updated_destination_address.state = form.state.data
+        updated_destination_address.country = form.country.data
+        updated_destination_address.zipcode = form.zip_code.data
+        db.session.add(updated_destination_address)
+        db.session.commit()
+        flash('Destination Address {} successfully updated'.format(form.name.data),
+              'form-success')
+        return redirect(url_for('admin.registered_destination_addresses'))
+    if destination_address is None:
+        abort(404)
+    return render_template('admin/system_manager/manage_destination_address.html',
+                           destination_address=destination_address,
+                           form=form)
+
+
+@admin.route('/new-destination-address', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def new_destination_address():
+    """Create a new destination address."""
+    form = EditDestinationAddressForm()
+    if form.validate_on_submit():
+        destination_address = Address(
+            name=form.name.data, address1=form.address1.data, address2 = form.address2.data,
+            city=form.city.data, state=form.state.data,
+            country=form.country.data, zipcode=form.zip_code.data)
+        db.session.add(destination_address)
+        db.session.commit()
+        flash('Destination Address {} successfully created'.format(destination_address.name),
+              'success')
+        return redirect(url_for('admin.registered_destination_addresses'))
+
+    return render_template('admin/system_manager/manage_destination_address.html',
+                           form=form)
+
+
+@admin.route('/destination-addresses/<int:destination_address_id>/_delete')
+@login_required
+@admin_required
+def delete_destination_address(destination_address_id):
+    """Delete a destination address."""
+    destination_address = Address.query.filter_by(
+        id=destination_address_id).first()
+    db.session.delete(destination_address)
+    db.session.commit()
+    flash('Successfully deleted destination address %s.' %
+          destination_address.name, 'success')
+    return redirect(url_for('admin.registered_destination_addresses'))
 
 
 @admin.route("/generate-report", methods=['GET', 'POST'])
