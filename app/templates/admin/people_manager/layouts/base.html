@@ -30,7 +30,7 @@ description=None, icon=None) %}
   <div class="header">{{ name + " (" + m.member_number|string + ")"}}
     <i class="trash alternate outline icon right floated delete-member" style="cursor: pointer" id={{m.id}}></i>
 
-    <div class="ui modal" id='modal-{{m.id}}'>
+    <div class="ui modal" id='modal-deletem-{{m.id}}'>
       <div class="header">Delete Member</div>
       <div class="content">Would you like to delete Member [{{m.first_name + ' ' + m.last_name}}]?</div>
       <div class="actions">
@@ -59,7 +59,7 @@ description=None, icon=None) %}
   <div class="header">{{ name }}
     <i class="trash alternate outline icon right floated delete-volunteer" style="cursor: pointer" id={{v.id}}></i>
 
-    <div class="ui modal" id='modal-{{v.id}}'>
+    <div class="ui modal" id='modal-deletev-{{v.id}}'>
       <div class="header">Delete Volunteer</div>
       <div class="content">Would you like to delete Volunteer [{{v.first_name + ' ' + v.last_name}}]?</div>
       <div class="actions">
@@ -119,7 +119,7 @@ description=None, icon=None) %}
   <div class="header">{{lr.company_name}}
     <i class="trash alternate outline icon right floated delete-local-resource" style="cursor: pointer" id={{lr.id}}></i>
 
-    <div class="ui modal" id='modal-{{lr.id}}'>
+    <div class="ui modal" id='modal-deletelr-{{lr.id}}'>
       <div class="header">Delete Local Resource</div>
       <div class="content">Would you like to delete Local Resource [{{lr.company_name}}]?</div>
       <div class="actions">
@@ -652,17 +652,17 @@ description=None, icon=None) %}
 
     $('.delete-member').click(function () {
       member_id = $(this).attr('id');
-      $(`#modal-${member_id}`).modal('show');
+      $(`#modal-deletem-${member_id}`).modal('show');
     });
 
     $('.delete-volunteer').click(function () {
       volunteer_id = $(this).attr('id');
-      $(`#modal-${volunteer_id}`).modal('show');
+      $(`#modal-deletev-${volunteer_id}`).modal('show');
     });
 
     $('.delete-local-resource').click(function () {
       local_resource_id = $(this).attr('id');
-      $(`#modal-${local_resource_id}`).modal('show');
+      $(`#modal-deletelr-${local_resource_id}`).modal('show');
     });
 
   </script>

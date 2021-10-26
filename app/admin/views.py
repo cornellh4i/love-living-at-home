@@ -577,25 +577,23 @@ def invite_member(member_id=None):
         # get the address information from Address table
         primary_address = Address.query.filter_by(
             id=member.primary_address_id).first()
-        primary_address1 = primary_address.street_address
+        primary_address1 = primary_address.address1
+        primary_address2 = primary_address.address2
         primary_city = primary_address.city
         primary_state = primary_address.state
         primary_zip_code = primary_address.zipcode
-        secondary_address1 = None
-        secondary_city = None
-        secondary_state = None
-        secondary_zip_code = None
+        primary_country = primary_address.country
+        secondary_address = None
         if member.secondary_address_id is not None:
             secondary_address = Address.query.filter_by(
                 id=member.secondary_address_id).first()
-            secondary_address1 = secondary_address.street_address
+            secondary_address1 = secondary_address.address1
+            secondary_address2 = secondary_address.address2
             secondary_city = secondary_address.city
             secondary_state = secondary_address.state
             secondary_zip_code = secondary_address.zipcode
-        primary_city = primary_address.city
-        primary_state = primary_address.state
-        primary_zip_code = primary_address.zipcode
-        # primary_metro_area = primary_address.metro_area
+            secondary_country = secondary_address.country
+
         form = MemberManager(
             first_name=member.first_name,
             middle_initial=member.middle_initial,
@@ -605,13 +603,17 @@ def invite_member(member_id=None):
             gender=member.gender,
             birthdate=member.birthdate,
             primary_address1=primary_address1,
+            primary_address2=primary_address2,
             primary_city=primary_city,
             primary_state=primary_state,
             primary_zip_code=primary_zip_code,
-            secondary_address1=secondary_address1,
-            secondary_city=secondary_city,
-            secondary_state=secondary_state,
-            secondary_zip_code=secondary_zip_code,
+            primary_country=primary_country,
+            secondary_address1=secondary_address1 if secondary_address else None,
+            secondary_address2=secondary_address2 if secondary_address else None,
+            secondary_city=secondary_city if secondary_address else None,
+            secondary_state=secondary_state if secondary_address else None,
+            secondary_zip_code=secondary_zip_code if secondary_address else None,
+            secondary_country=secondary_country if secondary_address else None,
             primary_phone_number=member.primary_phone_number,
             secondary_phone_number=member.secondary_phone_number,
             email_address=member.email_address,
@@ -633,68 +635,44 @@ def invite_member(member_id=None):
         if (form.secondary_as_primary_checkbox.data):
             address = Address(
                 name=form.first_name.data + " " + form.last_name.data,
-                street_address=form.secondary_address1.data + " " +
-                form.secondary_address2.data,
+                address1=form.secondary_address1.data,
+                address2=form.secondary_address2.data,
                 city=form.secondary_city.data,
                 state=form.secondary_state.data,
-                zipcode=form.secondary_zip_code.data)
+                zipcode=form.secondary_zip_code.data,
+                country=form.secondary_country.data)
             if form.primary_address1.data:
                 secondary_address = Address(
                     name=form.first_name.data + " " + form.last_name.data,
-                    street_address=form.primary_address1.data + " " +
-                    form.primary_address2.data,
+                    address1=form.primary_address1.data,
+                    address2=form.primary_address2.data,
                     city=form.primary_city.data,
                     state=form.primary_state.data,
-                    zipcode=form.primary_zip_code.data)
+                    zipcode=form.primary_zip_code.data,
+                    country=form.primary_country.data)
             if form.secondary_metro_area.data:
                 metro = MetroArea(name=form.secondary_metro_area.data)
         else:
             address = Address(name=form.first_name.data + " " +
                               form.last_name.data,
-                              street_address=form.primary_address1.data + " " +
-                              form.primary_address2.data,
+                              address1=form.primary_address1.data,
+                              address2=form.primary_address2.data,
                               city=form.primary_city.data,
                               state=form.primary_state.data,
-                              zipcode=form.primary_zip_code.data)
+                              zipcode=form.primary_zip_code.data,
+                              country=form.primary_country.data)
             if form.secondary_address1.data:
                 secondary_address = Address(
                     name=form.first_name.data + " " + form.last_name.data,
-                    street_address=form.secondary_address1.data + " " +
-                    form.secondary_address2.data,
+                    address1=form.secondary_address1.data,
+                    address2=form.secondary_address2.data,
                     city=form.secondary_city.data,
                     state=form.secondary_state.data,
-                    zipcode=form.secondary_zip_code.data)
-            # membership_expiration_date = member.membership_expiration_date
-
-    if form.validate_on_submit():
-        secondary_address = False
-        if (form.secondary_as_primary_checkbox.data):
-            address = Address(
-                name=form.first_name.data + " " + form.last_name.data,
-                street_address=form.secondary_address1.data + " " +
-                form.secondary_address2.data,
-                city=form.secondary_city.data)
-            secondary_address = Address(
-                name=form.first_name.data + " " + form.last_name.data,
-                street_address=form.primary_address1.data + " " +
-                form.primary_address2.data,
-                city=form.primary_city.data)
-            if form.secondary_metro_area.data:
-                metro = MetroArea(name=form.secondary_metro_area.data)
-        else:
-            address = Address(name=form.first_name.data + " " +
-                              form.last_name.data,
-                              street_address=form.primary_address1.data + " " +
-                              form.primary_address2.data,
-                              city=form.primary_city.data)
-            if form.secondary_address1.data:
-                secondary_address = Address(
-                    name=form.first_name.data + " " + form.last_name.data,
-                    street_address=form.secondary_address1.data + " " +
-                    form.secondary_address2.data,
-                    city=form.secondary_city.data)
+                    zipcode=form.secondary_zip_code.data,
+                    country=form.secondary_country.data)
             if form.primary_metro_area.data:
                 metro = MetroArea(name=form.primary_metro_area.data)
+
         db.session.add(address)
         db.session.commit()
         if metro:
@@ -707,7 +685,7 @@ def invite_member(member_id=None):
         if member is not None:
             updated_member = member
             updated_member.salutation = form.salutation.data
-            updated_member.primary_address_id = int(address.id)
+            updated_member.primary_address_id = address.id
             updated_member.secondary_address_id = secondary_address.id if secondary_address else None
             updated_member.metro_area_id = metro.id
             updated_member.first_name = form.first_name.data
@@ -765,7 +743,7 @@ def invite_member(member_id=None):
             db.session.add(member)
             db.session.commit()
             flash(
-                'Member {} successfully created'.format(form.first_name.data),
+                'Member {} successfully added'.format(form.first_name.data),
                 'success')
         return redirect(url_for('admin.people_manager'))
     return render_template('admin/people_manager/member_manager.html',
@@ -797,10 +775,22 @@ def invite_volunteer(volunteer_id=None):
         volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
         primary_address = Address.query.filter_by(
             id=volunteer.primary_address_id).first()
-        primary_street_address = primary_address.street_address
+        primary_address1 = primary_address.address1
+        primary_address2 = primary_address.address2
         primary_city = primary_address.city
         primary_state = primary_address.state
         primary_zip_code = primary_address.zipcode
+        primary_country = primary_address.country
+        secondary_address = None
+        if volunteer.secondary_address_id is not None:
+            secondary_address = Address.query.filter_by(
+                id=volunteer.secondary_address_id).first()
+            secondary_address1 = secondary_address.address1
+            secondary_address2 = secondary_address.address2
+            secondary_city = secondary_address.city
+            secondary_state = secondary_address.state
+            secondary_zip_code = secondary_address.zipcode
+            secondary_country = secondary_address.country
         form = VolunteerManager(
             salutation=volunteer.salutation,
             first_name=volunteer.first_name,
@@ -809,10 +799,18 @@ def invite_volunteer(volunteer_id=None):
             gender=volunteer.gender,
             birthdate=volunteer.birthdate,
             preferred_name=volunteer.preferred_name,
-            street_address=primary_street_address,
+            primary_address1=primary_address1,
+            primary_address2=primary_address2,
             primary_city=primary_city,
             primary_state=primary_state,
             primary_zip_code=primary_zip_code,
+            primary_country=primary_country,
+            secondary_address1=secondary_address1 if secondary_address else None,
+            secondary_address2=secondary_address2 if secondary_address else None,
+            secondary_city=secondary_city if secondary_address else None,
+            secondary_state=secondary_state if secondary_address else None,
+            secondary_zip_code=secondary_zip_code if secondary_address else None,
+            secondary_country=secondary_country if secondary_address else None,
             emergency_contact_name=volunteer.emergency_contact_name,
             emergency_contact_relationship=volunteer.
             emergency_contact_relationship,
@@ -832,20 +830,62 @@ def invite_volunteer(volunteer_id=None):
     service_ids = []
     if form.validate_on_submit():
         service_ids = request.form.getlist("provided_services")
-        address = Address(name=form.first_name.data + " " +
-                          form.last_name.data,
-                          street_address=form.street_address.data,
-                          city=form.primary_city.data,
-                          state=form.primary_state.data,
-                          zipcode=form.primary_zip_code.data)
+        secondary_address = False
+        if (form.secondary_as_primary_checkbox.data):
+            address = Address(
+                name=form.first_name.data + " " + form.last_name.data,
+                address1=form.secondary_address1.data,
+                address2=form.secondary_address2.data,
+                city=form.secondary_city.data,
+                state=form.secondary_state.data,
+                zipcode=form.secondary_zip_code.data,
+                country=form.secondary_country.data)
+            if form.primary_address1.data:
+                secondary_address = Address(
+                    name=form.first_name.data + " " + form.last_name.data,
+                    address1=form.primary_address1.data,
+                    address2=form.primary_address2.data,
+                    city=form.primary_city.data,
+                    state=form.primary_state.data,
+                    zipcode=form.primary_zip_code.data,
+                    country=form.primary_country.data)
+            if form.secondary_metro_area.data:
+                metro = MetroArea(name=form.secondary_metro_area.data)
+        else:
+            address = Address(name=form.first_name.data + " " +
+                              form.last_name.data,
+                              address1=form.primary_address1.data,
+                              address2=form.primary_address2.data,
+                              city=form.primary_city.data,
+                              state=form.primary_state.data,
+                              zipcode=form.primary_zip_code.data,
+                              country=form.primary_country.data)
+            if form.secondary_address1.data:
+                secondary_address = Address(
+                    name=form.first_name.data + " " + form.last_name.data,
+                    address1=form.secondary_address1.data,
+                    address2=form.secondary_address2.data,
+                    city=form.secondary_city.data,
+                    state=form.secondary_state.data,
+                    zipcode=form.secondary_zip_code.data,
+                    country=form.secondary_country.data)
+            if form.primary_metro_area.data:
+                metro = MetroArea(name=form.primary_metro_area.data)
+
         db.session.add(address)
         db.session.commit()
+        if metro:
+            db.session.add(metro)
+            db.session.commit()
+        if secondary_address:
+            db.session.add(secondary_address)
+            db.session.commit()
 
         if volunteer is not None:
             updated_volunteer = volunteer
             updated_volunteer.salutation = form.salutation.data
-            updated_volunteer.primary_address_id = int(address.id)
-            # updated_volunteer.secondary_address_id=secondary_address.id if secondary_address else None
+            updated_volunteer.primary_address_id = address.id
+            updated_volunteer.secondary_address_id = secondary_address.id if secondary_address else None
             updated_volunteer.first_name = form.first_name.data
             updated_volunteer.middle_initial = form.middle_initial.data
             updated_volunteer.last_name = form.last_name.data
@@ -874,13 +914,15 @@ def invite_volunteer(volunteer_id=None):
 
             volunteer = Volunteer(
                 salutation=form.salutation.data,
+                primary_address_id=address.id,
+                secondary_address_id=secondary_address.id
+                if secondary_address else None,
                 first_name=form.first_name.data,
                 middle_initial=form.middle_initial.data,
                 last_name=form.last_name.data,
                 preferred_name=form.preferred_name.data,
                 gender=form.gender.data,
                 birthdate=form.birthdate.data,
-                primary_address_id=address.id,
                 primary_phone_number=form.primary_phone_number.data,
                 email_address=form.email_address.data,
                 preferred_contact_method=form.preferred_contact_method.data,
@@ -898,7 +940,8 @@ def invite_volunteer(volunteer_id=None):
             db.session.add(volunteer)
             db.session.commit()
             flash(
-                'Volunteer {} successfully added'.format(form.first_name.data),
+                'Volunteer {} successfully added'.format(
+                    form.first_name.data),
                 'success')
 
         need_to_be_deleted = []
@@ -938,11 +981,12 @@ def invite_contractor(local_resource_id=None):
             id=local_resource_id).first()
         primary_address = Address.query.filter_by(
             id=local_resource.address_id).first()
-        primary_street_address = primary_address.street_address
+        primary_address1 = primary_address.address1
+        primary_address2 = primary_address.address2
         primary_city = primary_address.city
         primary_state = primary_address.state
-        primary_country = primary_address.country
         primary_zip_code = primary_address.zipcode
+        primary_country = primary_address.country
         form = ContractorManager(
             first_name=local_resource.contact_first_name,
             middle_initial=local_resource.contact_middle_initial,
@@ -950,7 +994,8 @@ def invite_contractor(local_resource_id=None):
             salutation=local_resource.contact_salutation,
             company_name=local_resource.company_name,
             primary_country=primary_country,
-            street_address=primary_street_address,
+            primary_address1=primary_address1,
+            primary_address2=primary_address2,
             primary_city=primary_city,
             primary_state=primary_state,
             primary_zip_code=primary_zip_code,
@@ -961,7 +1006,8 @@ def invite_contractor(local_resource_id=None):
 
     if form.validate_on_submit():
         address = Address(name=form.company_name.data,
-                          street_address=form.street_address.data,
+                          address1=form.primary_address1.data,
+                          address2=form.primary_address2.data,
                           city=form.primary_city.data,
                           state=form.primary_state.data,
                           zipcode=form.primary_zip_code.data,
@@ -971,7 +1017,7 @@ def invite_contractor(local_resource_id=None):
 
         if local_resource is not None:
             updated_local_resource = local_resource
-            updated_local_resource.address_id = int(address.id)
+            updated_local_resource.address_id = address.id
             updated_local_resource.contact_first_name = form.first_name.data
             updated_local_resource.contact_middle_initial = form.middle_initial.data
             updated_local_resource.contact_last_name = form.last_name.data
@@ -1038,7 +1084,7 @@ def add_volunteer_services(volunteer_id=None):
         print('Form validate on submit!', file=sys.stderr)
 
         flash(
-            'Services for {} successfully updated'.format(
+            'Services for Volunteer {} successfully updated'.format(
                 volunteer.last_name), 'success')
         return redirect(url_for('admin.people_manager'))
     else:
@@ -1070,7 +1116,7 @@ def add_volunteer_vetting(volunteer_id=None):
         db.session.commit()
 
         flash(
-            'Vetting for {} successfully updated'.format(
+            'Vetting for Volunteer {} successfully updated'.format(
                 volunteer.last_name), 'success')
         return redirect(url_for('admin.people_manager'))
 
@@ -1126,7 +1172,7 @@ def add_availability_volunteer(volunteer_id=None):
         db.session.commit()
 
         flash(
-            'Availability for {} successfully updated'.format(
+            'Availability for Volunteer {} successfully updated'.format(
                 volunteer.last_name), 'success')
         return redirect(url_for('admin.people_manager'))
 
@@ -1182,14 +1228,14 @@ def add_availability_local_resource(local_resource_id=None):
         db.session.commit()
 
         flash(
-            'Availability for {} successfully updated'.format(
+            'Availability for Local Resource {} successfully updated'.format(
                 localResource.company_name), 'success')
         return redirect(url_for('admin.people_manager'))
 
     return render_template('admin/people_manager/availability.html', form=form)
 
 
-@ admin.route('/people-manager/<int:member_id>/_delete-member')
+@ admin.route('/people-manager/_delete-member/<int:member_id>')
 @ login_required
 @ admin_required
 def delete_member(member_id):
@@ -1198,12 +1244,12 @@ def delete_member(member_id):
     db.session.delete(member)
     db.session.commit()
     flash(
-        'Successfully deleted member {}'.format(member.first_name + '' +
+        'Successfully deleted member {}'.format(member.first_name + ' ' +
                                                 member.last_name), 'success')
     return redirect(url_for('admin.people_manager'))
 
 
-@ admin.route('/people-manager/<int:volunteer_id>/_delete-volunteer')
+@ admin.route('/people-manager/_delete-volunteer/<int:volunteer_id>')
 @ login_required
 @ admin_required
 def delete_volunteer(volunteer_id):
@@ -1211,17 +1257,14 @@ def delete_volunteer(volunteer_id):
     volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
     db.session.delete(volunteer)
     db.session.commit()
-    for service in ProvidedService.query.filter_by(volunteer_id=volunteer_id):
-        db.session.delete(service)
-        db.session.commit()
     flash(
-        'Successfully deleted volunteer {}'.format(volunteer.first_name + '' +
+        'Successfully deleted volunteer {}'.format(volunteer.first_name + ' ' +
                                                    volunteer.last_name),
         'success')
     return redirect(url_for('admin.people_manager'))
 
 
-@ admin.route('/people-manager/<int:local_resource_id>/_delete-local-resource')
+@ admin.route('/people-manager/_delete-local-resource/<int:local_resource_id>')
 @ login_required
 @ admin_required
 def delete_local_resource(local_resource_id):

@@ -5,11 +5,12 @@ class Address(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
     # A name for the address (i.e., 'Wegmans Food Market')
     name = db.Column(db.String(64), nullable=False)
-    street_address = db.Column(db.String(64), nullable=False)
+    address1 = db.Column(db.String(64), nullable=False)
+    address2 = db.Column(db.String(64))
     city = db.Column(db.String(64), nullable=False)
     state = db.Column(db.String(64), default='New York')
     country = db.Column(db.String(64), default='United States')
-    zipcode = db.Column(db.String(64))  # WILL HAVE TO INCLUDE THIS
+    zipcode = db.Column(db.String(64))
     # metro_area = db.Column(db.String(64))
 
     @staticmethod
@@ -25,7 +26,7 @@ class Address(db.Model):
         seed()
         for i in range(count):
             a = Address(name=fake.company(),
-                        street_address=fake.street_address(),
+                        address1=fake.street_address(),
                         city=fake.city(),
                         **kwargs)
             db.session.add(a)

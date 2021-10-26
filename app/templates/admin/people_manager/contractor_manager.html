@@ -36,8 +36,11 @@
     <div class="ui header">Primary Address</div>
     <div class="field">
       <label>Address</label>
+      <div class="field required">
+        {{ form.primary_address1(placeholder = form.primary_address1.label.text) }}
+      </div>
       <div class="field">
-        {{ form.street_address(placeholder = form.street_address.label.text) }}
+        {{ form.primary_address2(placeholder = form.primary_address2.label.text) }}
       </div>
     </div>
 

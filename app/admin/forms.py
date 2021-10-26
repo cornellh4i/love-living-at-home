@@ -21,9 +21,6 @@ salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
 genders = [("female", "Female"), ("male", "Male"),
            ("unspecified", "Unspecified"),
            ("no_answer", "Does not wish to answer")]
-
-countries = [('united_states', 'United States'), ('b', "B"), ('c', 'C')]
-states = [("ny", "NY")]
 time_zones = [("est", "Eastern Time (US & Canada) (UTC-05:00)"), ("b", "B"),
               ("c", "C")]
 metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
@@ -382,9 +379,7 @@ class MemberManager(FlaskForm):
                          choices=genders,
                          validators=[InputRequired()])
 
-    primary_country = StringField('Country', default="United States")
-
-    # One Address object:
+    # Address Information
     primary_address1 = StringField(
         'Street address or P.O. Box',
         validators=[InputRequired(), Length(max=200)])
@@ -394,18 +389,22 @@ class MemberManager(FlaskForm):
     primary_city = StringField('City',
                                validators=[InputRequired(),
                                            Length(max=200)])
-    primary_state = SelectField('State', choices=states)
+    primary_state = StringField('State',
+                                validators=[InputRequired(),
+                                            Length(max=200)], default='New York')
+    primary_country = StringField('Country',
+                                  validators=[InputRequired(),
+                                              Length(max=200)], default='United States')
     primary_zip_code = StringField('Zip Code',
                                    validators=[Optional(),
                                                Length(max=45)])
     primary_metro_area = SelectField('Metro Area',
                                      choices=metro_areas,
                                      validators=[Optional()])
-
     secondary_as_primary_checkbox = BooleanField(
         'Use this address instead of the primary address',
         validators=[Optional()])
-    secondary_country = StringField('Country', default="United States")
+
     secondary_address1 = StringField('Street address or P.O. Box',
                                      validators=[Optional(),
                                                  Length(max=200)])
@@ -415,7 +414,12 @@ class MemberManager(FlaskForm):
     secondary_city = StringField('City',
                                  validators=[Optional(),
                                              Length(max=200)])
-    secondary_state = SelectField('State', choices=states)
+    secondary_state = StringField('State',
+                                  validators=[Optional(),
+                                              Length(max=200)])
+    secondary_country = StringField('Country',
+                                    validators=[Optional(),
+                                                Length(max=200)])
     secondary_zip_code = StringField('Zip Code',
                                      validators=[Optional(),
                                                  Length(max=45)])
@@ -496,28 +500,56 @@ class VolunteerManager(FlaskForm):
                                   ("no_answer", "Do not wish to answer")])
 
     birthdate = DateField("Birthdate ", validators=[InputRequired()])
-    # make this a stringfield or select field?
-    preferred_name = StringField(
-        'Preferred Name', validators=[Optional(),
-                                      Length(min=1, max=30)])
+    preferred_name = StringField('Preferred Name', validators=[Optional(),
+                                                               Length(min=1, max=30)])
 
-    # address
-    street_address = StringField('Street address or P.O. Box',
-                                 validators=[InputRequired(),
-                                             Length(max=200)])
+    # Address Information
+    primary_address1 = StringField('Street address or P.O. Box',
+                                   validators=[InputRequired(), Length(max=200)])
     primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
-                                   validators=[Optional(),
-                                               Length(max=200)])
+                                   validators=[Optional(), Length(max=200)])
     primary_city = StringField('City',
                                validators=[InputRequired(),
                                            Length(max=200)])
     primary_state = StringField('State',
                                 validators=[InputRequired(),
-                                            Length(max=200)])
+                                            Length(max=200)], default='New York')
+    primary_country = StringField('Country',
+                                  validators=[InputRequired(),
+                                              Length(max=200)], default='United States')
     primary_zip_code = StringField('Zip Code',
                                    validators=[Optional(),
                                                Length(max=45)])
-    # emergency contact
+    primary_metro_area = SelectField('Metro Area',
+                                     choices=metro_areas,
+                                     validators=[Optional()])
+    secondary_as_primary_checkbox = BooleanField(
+        'Use this address instead of the primary address',
+        validators=[Optional()])
+
+    secondary_address1 = StringField('Street address or P.O. Box',
+                                     validators=[Optional(),
+                                                 Length(max=200)])
+    secondary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
+                                     validators=[Optional(),
+                                                 Length(max=200)])
+    secondary_city = StringField('City',
+                                 validators=[Optional(),
+                                             Length(max=200)])
+    secondary_state = StringField('State',
+                                  validators=[Optional(),
+                                              Length(max=200)])
+    secondary_country = StringField('Country',
+                                    validators=[Optional(),
+                                                Length(max=200)])
+    secondary_zip_code = StringField('Zip Code',
+                                     validators=[Optional(),
+                                                 Length(max=45)])
+    secondary_metro_area = SelectField('Metro Area',
+                                       choices=metro_areas,
+                                       validators=[Optional()])
+
+    # Emergency Contact Information
     emergency_contact_name = StringField(
         'Contact Name', validators=[Optional(), Length(1, 64)])
     emergency_contact_relationship = StringField(
@@ -529,7 +561,8 @@ class VolunteerManager(FlaskForm):
     emergency_contact_email_address = EmailField(
         'Email', validators=[Optional(), Length(1, 64),
                              Email()])
-    # now under contact info
+
+    # Contact Information
     primary_phone_number = StringField("Primary Phone Number",
                                        widget=widgets.Input(input_type="tel"),
                                        validators=[InputRequired()])
@@ -568,35 +601,37 @@ class ContractorManager(FlaskForm):
     salutation = SelectField("Salutation", choices=salutations)
     company_name = StringField('Company',
                                validators=[Optional(),
-                                           Length(min=1, max=30)])
+                                           Length(min=1, max=64)])
 
-    countries = [('united_states', 'United States'), ('b', "B"), ('c', 'C')]
-    states = [('none', ""), ("ny", "NY")]
-    time_zones = [("est", "Eastern Time (US & Canada) (UTC-05:00)"),
-                  ("b", "B"), ("c", "C")]
-    metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
-
-    primary_country = SelectField('Country', choices=countries)
-    street_address = StringField('Street address or P.O. Box',
-                                 validators=[Optional(),
-                                             Length(max=200)])
+    # Address Information
+    primary_address1 = StringField('Street address or P.O. Box',
+                                   validators=[InputRequired(), Length(max=200)])
+    primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
+                                   validators=[Optional(), Length(max=200)])
     primary_city = StringField('City',
                                validators=[Optional(),
                                            Length(max=200)])
-    primary_state = SelectField('State', choices=states)
+    primary_state = StringField('State',
+                                validators=[InputRequired(),
+                                            Length(max=200)], default='New York')
+    primary_country = StringField('Country',
+                                  validators=[InputRequired(),
+                                              Length(max=200)], default='United States')
     primary_zip_code = StringField('Zip Code',
                                    validators=[Optional(),
                                                Length(max=45)])
     primary_metro_area = SelectField('Metro Area',
                                      choices=metro_areas,
                                      validators=[Optional()])
+
+    # Contact Information
     primary_phone_number = IntegerField('Primary Phone Number',
                                         widget=widgets.Input(input_type="tel"),
                                         validators=[InputRequired()])
-    secondary_phone_number = IntegerField(
-        'Secondary Phone Number',
-        widget=widgets.Input(input_type="tel"),
-        validators=[Optional()])
+    secondary_phone_number = IntegerField('Secondary Phone Number',
+                                          widget=widgets.Input(
+                                              input_type="tel"),
+                                          validators=[Optional()])
     email_address = EmailField('Email',
                                validators=[Optional(),
                                            Length(1, 64),
@@ -609,16 +644,8 @@ class ContractorManager(FlaskForm):
 
     website = StringField('Website',
                           validators=[Optional(),
-                                      Length(min=1, max=30)])
+                                      Length(min=1, max=80)])
     submit = SubmitField("Submit")
-
-
-class Reviews(FlaskForm):
-    reviewer_name = StringField(
-        'Name of Reviewer',
-        validators=[InputRequired(), Length(min=1, max=30)])
-    notes = TextAreaField('Notes', validators=[Optional(), Length(max=500)])
-    submit = SubmitField("Save")
 
 
 class AddAvailability(FlaskForm):
@@ -681,6 +708,14 @@ class AddVetting(FlaskForm):
                                    validators=[Optional()])
     vetting_notes = TextAreaField(
         "", render_kw={"rows": 15, "cols": 105}, validators=[Optional()])
+    submit = SubmitField("Save")
+
+
+class Reviews(FlaskForm):
+    reviewer_name = StringField(
+        'Name of Reviewer',
+        validators=[InputRequired(), Length(min=1, max=30)])
+    notes = TextAreaField('Notes', validators=[Optional(), Length(max=500)])
     submit = SubmitField("Save")
 
 
