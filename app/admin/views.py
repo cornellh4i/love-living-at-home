@@ -461,10 +461,10 @@ def create_transportation_request():
         for request_duration_type in RequestDurationType.query.all()
     ]
     form.destination.choices = [(address.id,
-                                 address.name + " - " + address.street_address)
+                                 address.name + " - " + address.address1 + (" " + address.address2 if address.address2 else ""))
                                 for address in Address.query.all()]
     form.starting_location.choices = [
-        (address.id, address.name + " " + address.street_address)
+       (address.id, address.name + " - " + address.address1 + (" " + address.address2 if address.address2 else ""))
         for address in Address.query.all()
     ]
     form.special_instructions_list = json.dumps({

@@ -36,5 +36,5 @@ class Address(db.Model):
                 db.session.rollback()
 
     def __repr__(self):
-        return (f"Address('{self.street_address}',\
+        return (f"Address('{self.address1}',\
                          '{self.city}', '{self.state}', '{self.country}')")
