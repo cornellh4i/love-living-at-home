@@ -25,14 +25,37 @@
         {{ f.form_message(flashes['success'], header='Success!', class='success') }}
 
         <h2 class="ui header">
-            Add Services
+            Edit Services <i> Volunteer {{ volunteer_name }}</i> Can Provide
         </h2>
-        
+        <div class="field">
+            <div class="ui styled fluid accordion">
+                {% for i in range(service_categories | length) %}
+                <div class="active title">
+                <i class="dropdown icon"></i>
+                {{ service_categories[i+1] }}
+                </div>
+                <div class="active content">
+                {% for c in category_to_indices[i+1]%}
+                    {% for choice in form.provided_services %}
+                    {% if loop.index == c %}
+                        <div class="form-check">
+                            {{ choice }}
+                            {{ choice.label }}
+                        </div>
+                    {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
 
         {{ f.render_form_field(form.submit) }}
 
         {{ f.end_form() }}
     </div>
 </div>
-
+<script>
+    $('.ui.accordion').accordion({ exclusive: false });
+  </script>
 {% endblock %}

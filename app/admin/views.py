@@ -16,7 +16,7 @@ from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
                              EditDestinationAddressForm,
                              InviteUserForm, MemberManager, MembersHomeRequestForm, MultiCheckboxField,
                              NewUserForm, Reviews, SearchRequestForm,
-                             TransportationRequestForm, VolunteerManager, GeneratePdfForm)
+                             TransportationRequestForm, VolunteerManager, GeneratePdfForm, EditServicesVolunteerCanProvide)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import (Address, Availability, EditableHTML, LocalResource,
@@ -1090,29 +1090,51 @@ def invite_contractor(local_resource_id=None):
 @login_required
 @admin_required
 def add_volunteer_services(volunteer_id=None):
-    """Page for volunteer service management."""
-    print('Hello world!', file=sys.stderr)
+    """Page for volunteer's services management."""
 
     volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
-    print(f'Volunteer ID is {volunteer_id}', file=sys.stderr)
+    volunteer_name = volunteer.first_name + " " + volunteer.last_name
+    form = EditServicesVolunteerCanProvide()
+    choices = []
+    service_categories = dict()
+    category_to_indices = dict()
+    for idx, c in enumerate(Service.query.order_by('category_id')):
+        if c.category_id not in category_to_indices:
+            category_to_indices[c.category_id] = []
+        category_to_indices[c.category_id].append(idx+1)
+        choices.append((c.id, c.name))
+    for category in ServiceCategory.query.order_by('id'):
+        service_categories[category.id] = category.name
+    form.provided_services.choices = choices
 
-    form = AddServiceToVolunteer()
-    print(form.errors, file=sys.stderr)
-
-    if form.is_submitted():
-        print("Submitted!", file=sys.stderr)
+    if volunteer_id:
+        form.provided_services.choices = choices
+        form.provided_services.data = [
+            p.service_id for p in ProvidedService.query.filter_by(volunteer_id=volunteer_id)]
 
     if form.validate_on_submit():
-        print('Form validate on submit!', file=sys.stderr)
-
+        service_ids = request.form.getlist("provided_services")
+        need_to_be_deleted = []
+        for provided_service in ProvidedService.query.filter_by(volunteer_id=volunteer_id):
+            if provided_service.service_id not in service_ids:
+                need_to_be_deleted.append(provided_service)
+        for service in need_to_be_deleted:
+            db.session.delete(service)
+            db.session.commit()
+        for service in service_ids:
+            if not ProvidedService.query.filter_by(service_id=service,
+                                                   volunteer_id=volunteer_id).first():
+                db.session.add(ProvidedService(
+                    service_id=service, volunteer_id=volunteer_id))
+                db.session.commit()
         flash(
-            'Services for Volunteer {} successfully updated'.format(
+            'Services Volunteer can provide {} successfully updated'.format(
                 volunteer.last_name), 'success')
         return redirect(url_for('admin.people_manager'))
-    else:
-        print(form.errors, file=sys.stderr)
-
-    return render_template('admin/people_manager/volunteer_services.html', form=form)
+    return render_template('admin/people_manager/volunteer_services.html',
+                           form=form, service_categories=service_categories,
+                           category_to_indices=category_to_indices,
+                           volunteer_name = volunteer_name)
 
 
 @admin.route('/add-volunteer-vetting/<int:volunteer_id>',
