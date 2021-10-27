@@ -16,7 +16,7 @@ from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
                              EditDestinationAddressForm,
                              InviteUserForm, MemberManager, MembersHomeRequestForm, MultiCheckboxField,
                              NewUserForm, Reviews, SearchRequestForm,
-                             TransportationRequestForm, VolunteerManager, GeneratePdfForm)
+                             TransportationRequestForm, VolunteerManager, GeneratePdfForm, EditServicesVolunteerCanProvide)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import (Address, Availability, EditableHTML, LocalResource,
@@ -464,7 +464,8 @@ def create_transportation_request():
                                  address.name + " - " + address.address1 + (" " + address.address2 if address.address2 else ""))
                                 for address in Address.query.all()]
     form.starting_location.choices = [
-       (address.id, address.name + " - " + address.address1 + (" " + address.address2 if address.address2 else ""))
+        (address.id, address.name + " - " + address.address1 +
+         (" " + address.address2 if address.address2 else ""))
         for address in Address.query.all()
     ]
     form.special_instructions_list = json.dumps({
@@ -1069,29 +1070,51 @@ def invite_contractor(local_resource_id=None):
 @login_required
 @admin_required
 def add_volunteer_services(volunteer_id=None):
-    """Page for volunteer service management."""
-    print('Hello world!', file=sys.stderr)
+    """Page for volunteer's services management."""
 
     volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
-    print(f'Volunteer ID is {volunteer_id}', file=sys.stderr)
+    volunteer_name = volunteer.first_name + " " + volunteer.last_name
+    form = EditServicesVolunteerCanProvide()
+    choices = []
+    service_categories = dict()
+    category_to_indices = dict()
+    for idx, c in enumerate(Service.query.order_by('category_id')):
+        if c.category_id not in category_to_indices:
+            category_to_indices[c.category_id] = []
+        category_to_indices[c.category_id].append(idx+1)
+        choices.append((c.id, c.name))
+    for category in ServiceCategory.query.order_by('id'):
+        service_categories[category.id] = category.name
+    form.provided_services.choices = choices
 
-    form = AddServiceToVolunteer()
-    print(form.errors, file=sys.stderr)
-
-    if form.is_submitted():
-        print("Submitted!", file=sys.stderr)
+    if volunteer_id:
+        form.provided_services.choices = choices
+        form.provided_services.data = [
+            p.service_id for p in ProvidedService.query.filter_by(volunteer_id=volunteer_id)]
 
     if form.validate_on_submit():
-        print('Form validate on submit!', file=sys.stderr)
-
+        service_ids = request.form.getlist("provided_services")
+        need_to_be_deleted = []
+        for provided_service in ProvidedService.query.filter_by(volunteer_id=volunteer_id):
+            if provided_service.service_id not in service_ids:
+                need_to_be_deleted.append(provided_service)
+        for service in need_to_be_deleted:
+            db.session.delete(service)
+            db.session.commit()
+        for service in service_ids:
+            if not ProvidedService.query.filter_by(service_id=service,
+                                                   volunteer_id=volunteer_id).first():
+                db.session.add(ProvidedService(
+                    service_id=service, volunteer_id=volunteer_id))
+                db.session.commit()
         flash(
-            'Services for Volunteer {} successfully updated'.format(
+            'Services Volunteer can provide {} successfully updated'.format(
                 volunteer.last_name), 'success')
         return redirect(url_for('admin.people_manager'))
-    else:
-        print(form.errors, file=sys.stderr)
-
-    return render_template('admin/people_manager/volunteer_services.html', form=form)
+    return render_template('admin/people_manager/volunteer_services.html',
+                           form=form, service_categories=service_categories,
+                           category_to_indices=category_to_indices,
+                           volunteer_name = volunteer_name)
 
 
 @admin.route('/add-volunteer-vetting/<int:volunteer_id>',
@@ -1509,12 +1532,12 @@ def destination_address_info(destination_address_id):
     """View a destination address's profile."""
     destination_address = Address.query.filter_by(
         id=destination_address_id).first()
-    form = EditDestinationAddressForm(name=destination_address.name, 
-                    address1 = destination_address.address1, address2 = destination_address.address2,
-                    city = destination_address.city, 
-                    state = destination_address.state, 
-                    country = destination_address.country, 
-                    zip_code = destination_address.zipcode)
+    form = EditDestinationAddressForm(name=destination_address.name,
+                                      address1=destination_address.address1, address2=destination_address.address2,
+                                      city=destination_address.city,
+                                      state=destination_address.state,
+                                      country=destination_address.country,
+                                      zip_code=destination_address.zipcode)
     if form.validate_on_submit():
         updated_destination_address = destination_address
         updated_destination_address.name = form.name.data
@@ -1544,7 +1567,7 @@ def new_destination_address():
     form = EditDestinationAddressForm()
     if form.validate_on_submit():
         destination_address = Address(
-            name=form.name.data, address1=form.address1.data, address2 = form.address2.data,
+            name=form.name.data, address1=form.address1.data, address2=form.address2.data,
             city=form.city.data, state=form.state.data,
             country=form.country.data, zipcode=form.zip_code.data)
         db.session.add(destination_address)

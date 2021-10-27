@@ -710,6 +710,10 @@ class AddVetting(FlaskForm):
         "", render_kw={"rows": 15, "cols": 105}, validators=[Optional()])
     submit = SubmitField("Save")
 
+class EditServicesVolunteerCanProvide(FlaskForm):
+    provided_services = MultiCheckboxField(
+        'Services Volunteer can Provide', coerce=int)
+    submit = SubmitField("Save")
 
 class Reviews(FlaskForm):
     reviewer_name = StringField(
