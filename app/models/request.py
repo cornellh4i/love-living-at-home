@@ -53,9 +53,9 @@ class Request(db.Model):
                                        db.ForeignKey('address.id'),
                                        nullable=False)
     # Member Info
-    requesting_member_id = db.Column(db.Integer,
-                                     db.ForeignKey('member.id'),
-                                     nullable=False)
+    # requesting_member_id = db.Column(db.Integer,
+    #                                  db.ForeignKey('member.id'),
+    #                                  nullable=False)
     # Misc.
     special_instructions = db.Column(db.Text, nullable=False)
     followup_date = db.Column(db.Date,

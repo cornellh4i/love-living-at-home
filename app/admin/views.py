@@ -21,7 +21,7 @@ from app.decorators import admin_required
 from app.email import send_email
 from app.models import (Address, Availability, EditableHTML, LocalResource,
                         Member, MetroArea, ProvidedService, Request, Role,
-                        Service, ServiceCategory, Staffer, User, Volunteer)
+                        Service, ServiceCategory, Staffer, User, Volunteer, RequestMemberRecord)
 from app.models.request import RequestDurationType, RequestStatus, RequestType
 from app.models.request_volunteer_record import RequestVolunteerRecord
 from wtforms.fields.core import Label
@@ -382,12 +382,28 @@ def search_request():
     db_requests = Request.query.all()
     formatted_db_requests = []
     for db_req in db_requests:
-        member = Member.query.get(db_req.requesting_member_id)
-
-        request_volunteer_record = RequestVolunteerRecord.query.filter_by(
-            request_id=db_req.id).first()
-        volunteer = Volunteer.query.get(request_volunteer_record.volunteer_id)
-
+        # member = Member.query.get(db_req.requesting_member_id)
+        request_member_records = RequestMemberRecord.query.filter_by(
+            request_id=db_req.id).all()
+        members = []
+        for request_member_record in request_member_records:
+            members.append(Member.query.get(
+                request_member_record.member_id))
+        request_volunteer_records = RequestVolunteerRecord.query.filter_by(
+            request_id=db_req.id).all()
+        volunteers = []
+        for request_volunteer_record in request_volunteer_records:
+            volunteers.append(Volunteer.query.get(
+                request_volunteer_record.volunteer_id))
+        #volunteer = Volunteer.query.get(request_volunteer_record.volunteer_id)
+        member_name = ""
+        for member in members:
+            member_name += member.first_name + " " + member.last_name + ", "
+        member_name = member_name[:-2]
+        volunteer_name = ""
+        for volunteer in volunteers:
+            volunteer_name += volunteer.first_name + " " + volunteer.last_name + ", "
+        volunteer_name = volunteer_name[:-2]
         formatted_db_requests.append({
             'request_num':
             db_req.id,
@@ -404,13 +420,15 @@ def search_request():
             'end_time':
             db_req.drop_off_time.strftime("%I:%M %p"),
             'member_name':
-            f"{member.first_name} {member.last_name}",
-            'member_number':
-            member.member_number,
+            # f"{member.first_name} {member.last_name}",
+            member_name,
+            # 'member_number':
+            # member.member_number,
             'volunteer_name':
-            f"{volunteer.first_name} {volunteer.last_name}",
-            'volunteer_id':
-            volunteer.id,
+            # f"{volunteer.first_name} {volunteer.last_name}",
+            volunteer_name,
+            # 'volunteer_id':
+            # volunteer.id,
             'is_volunteer':
             True,
             'request_type':
@@ -464,7 +482,8 @@ def create_transportation_request():
                                  address.name + " - " + address.address1 + (" " + address.address2 if address.address2 else ""))
                                 for address in Address.query.all()]
     form.starting_location.choices = [
-       (address.id, address.name + " - " + address.address1 + (" " + address.address2 if address.address2 else ""))
+        (address.id, address.name + " - " + address.address1 +
+         (" " + address.address2 if address.address2 else ""))
         for address in Address.query.all()
     ]
     form.special_instructions_list = json.dumps({
@@ -477,48 +496,50 @@ def create_transportation_request():
     ]
     if form.validate_on_submit():
         special_input = request.form.get('special_instructions')
-        request_batch = []
-        for elderly_member in form.requesting_member.data:
-            transportation_request = Request(
-                type_id=0,
-                status_id=form.status.data.id,
-                short_description=form.description.data,
-                created_date=form.date_created.data,
-                requested_date=form.requested_date.data,
-                initial_pickup_time=form.initial_pickup.data,
-                appointment_time=form.appointment.data,
-                return_pickup_time=form.return_pickup.data,
-                drop_off_time=form.drop_off.data,
-                is_date_time_flexible=form.time_flexible.data,
-                duration_type_id=form.duration.data,
-                service_category_id=form.service_category.data.id,
-                service_id=form.transportation_service.data.id if
-                form.service_category.data.id == 0 else form.covid_service.data.id,
-                starting_address=form.starting_location.data,
-                destination_address_id=form.destination.data,
-                # Will be updated in the future for multiple ppl
-                requesting_member_id=elderly_member,
-                special_instructions=special_input,
-                followup_date=form.follow_up_date.data,
-                responsible_staffer_id=form.responsible_staffer.data,
-                contact_log_priority_id=form.contact_log_priority.data.id,
-                cc_email=form.person_to_cc.data)
-            db.session.add(transportation_request)
-            db.session.commit()
-            request_batch.append(transportation_request.id)
+        transportation_request = Request(
+            type_id=0,
+            status_id=form.status.data.id,
+            short_description=form.description.data,
+            created_date=form.date_created.data,
+            requested_date=form.requested_date.data,
+            initial_pickup_time=form.initial_pickup.data,
+            appointment_time=form.appointment.data,
+            return_pickup_time=form.return_pickup.data,
+            drop_off_time=form.drop_off.data,
+            is_date_time_flexible=form.time_flexible.data,
+            duration_type_id=form.duration.data,
+            service_category_id=form.service_category.data.id,
+            service_id=form.transportation_service.data.id if
+            form.service_category.data.id == 0 else form.covid_service.data.id,
+            starting_address=form.starting_location.data,
+            destination_address_id=form.destination.data,
+            # Will be updated in the future for multiple ppl
+            # requesting_member_id=elderly_member,
+            special_instructions=special_input,
+            followup_date=form.follow_up_date.data,
+            responsible_staffer_id=form.responsible_staffer.data,
+            contact_log_priority_id=form.contact_log_priority.data.id,
+            cc_email=form.person_to_cc.data)
+        db.session.add(transportation_request)
+        db.session.commit()
+        # request_batch.append(transportation_request.id)
 
+        # member_batch = []
+        for member in form.requesting_member.data:
+            record = RequestMemberRecord(request_id=transportation_request.id,
+                                         member_id=member)
+            db.session.add(record)
+            db.session.commit()
         # Eventually this should be changed so multiple volunteers can be notified
-        volunteer_batch = []
-        for req in request_batch:
+        for volunteer in form.service_provider.data:
             request_volunteer_record = RequestVolunteerRecord(
-                request_id=req,
-                volunteer_id=form.service_provider.data[0],
+                request_id=transportation_request.id,
+                volunteer_id=volunteer,
                 status_id=1,
                 staffer_id=1,
                 updated_datetime=form.date_created.data)
-            volunteer_batch.append(request_volunteer_record)
-        db.session.bulk_save_objects(volunteer_batch)
-        db.session.commit()
+            db.session.add(request_volunteer_record)
+            db.session.commit()
 
         flash('Successfully submitted a new transportation request', 'success')
         return redirect(url_for('admin.search_request'))
@@ -1509,12 +1530,12 @@ def destination_address_info(destination_address_id):
     """View a destination address's profile."""
     destination_address = Address.query.filter_by(
         id=destination_address_id).first()
-    form = EditDestinationAddressForm(name=destination_address.name, 
-                    address1 = destination_address.address1, address2 = destination_address.address2,
-                    city = destination_address.city, 
-                    state = destination_address.state, 
-                    country = destination_address.country, 
-                    zip_code = destination_address.zipcode)
+    form = EditDestinationAddressForm(name=destination_address.name,
+                                      address1=destination_address.address1, address2=destination_address.address2,
+                                      city=destination_address.city,
+                                      state=destination_address.state,
+                                      country=destination_address.country,
+                                      zip_code=destination_address.zipcode)
     if form.validate_on_submit():
         updated_destination_address = destination_address
         updated_destination_address.name = form.name.data
@@ -1544,7 +1565,7 @@ def new_destination_address():
     form = EditDestinationAddressForm()
     if form.validate_on_submit():
         destination_address = Address(
-            name=form.name.data, address1=form.address1.data, address2 = form.address2.data,
+            name=form.name.data, address1=form.address1.data, address2=form.address2.data,
             city=form.city.data, state=form.state.data,
             country=form.country.data, zipcode=form.zip_code.data)
         db.session.add(destination_address)

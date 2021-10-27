@@ -40,7 +40,7 @@ class Member(db.Model):
     volunteer_notes = db.Column(db.Text)
     # Notes about this member that only the staffers can see.
     staffer_notes = db.Column(db.Text)
-    requests = db.relationship('Request', backref='member', lazy='dynamic')
+    #requests = db.relationship('Request', backref='member', lazy='dynamic')
     reviews_given = db.relationship('Review', backref='member', lazy='dynamic')
 
     @staticmethod
