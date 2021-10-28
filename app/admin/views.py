@@ -16,7 +16,7 @@ from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
                              EditDestinationAddressForm,
                              InviteUserForm, MemberManager, MembersHomeRequestForm, MultiCheckboxField,
                              NewUserForm, Reviews, SearchRequestForm,
-                             TransportationRequestForm, VolunteerManager, GeneratePdfForm, EditServicesVolunteerCanProvide)
+                             TransportationRequestForm, VolunteerManager,OfficeTimeRequestForm, GeneratePdfForm, EditServicesVolunteerCanProvide)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import (Address, Availability, EditableHTML, LocalResource,
@@ -292,7 +292,7 @@ def select_all(selection, field):
             return [0, 1, 2]
     return list(map(int, selection))
 
-
+ 
 @admin.route('/search-request', methods=['POST', 'GET'])
 @login_required
 @admin_required
@@ -549,6 +549,74 @@ def create_transportation_request():
     # flash(form.errors, 'error')
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
+                           form=form)
+
+@admin.route('/create-request/office-time-request', methods=['GET', 'POST'])
+@admin_required
+def create_office_time_request():
+
+    form = OfficeTimeRequestForm()
+    form.requesting_member.multiple = True
+    form.requesting_member.choices = [
+        (member.id, member.first_name + " " + member.last_name)
+        for member in Member.query.all()
+    ]
+    form.service_provider.choices = [
+        (volunteer.id, volunteer.first_name + " " + volunteer.last_name)
+        for volunteer in Volunteer.query.all()
+    ]
+    form.special_instructions_list = json.dumps({
+        str(member.id): member.volunteer_notes
+        for member in Member.query.all()
+    })
+    form.responsible_staffer.choices = [
+        (staffer.id, staffer.first_name + " " + staffer.last_name)
+        for staffer in Staffer.query.all()
+    ]
+    if form.validate_on_submit():
+        special_input = request.form.get('special_instructions')
+        request_batch = []
+        for elderly_member in form.requesting_member.data:
+            office_time_request = Request(
+                type_id=0,
+                status_id=form.status.data.id,
+                short_description=form.description.data,
+                created_date=form.date_created.data,
+                requested_date=form.requested_date.data,
+                start_time=form.start_time.data,
+                end_time=form.end_time.data,
+                is_high_priority=form.high_priority.data,
+                service_category_id=form.service_category.data.id,
+                service_id=form.transportation_service.data.id if
+                form.service_category.data.id == 0 else form.covid_service.data.id,
+                # Will be updated in the future for multiple ppl
+                requesting_member_id=elderly_member,
+                special_instructions=special_input,
+                responsible_staffer_id=form.responsible_staffer.data,
+                contact_log_priority_id=form.contact_log_priority.data.id,
+                cc_email=form.person_to_cc.data)
+            db.session.add(office_time_request)
+            db.session.commit()
+            request_batch.append(office_time_request.id)
+
+        # Eventually this should be changed so multiple volunteers can be notified
+        volunteer_batch = []
+        for req in request_batch:
+            request_volunteer_record = RequestVolunteerRecord(
+                request_id=req,
+                volunteer_id=form.service_provider.data[0],
+                status_id=1,
+                staffer_id=1,
+                updated_datetime=form.date_created.data)
+            volunteer_batch.append(request_volunteer_record)
+        db.session.bulk_save_objects(volunteer_batch)
+        db.session.commit()
+
+        flash('Successfully submitted a new office time request', 'success')
+        return redirect(url_for('admin.search_request'))
+
+    return render_template('admin/request_manager/office_time_request.html',
+                           title='Office Time Request',
                            form=form)
 
 

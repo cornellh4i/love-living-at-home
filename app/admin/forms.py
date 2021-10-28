@@ -239,6 +239,104 @@ class TransportationRequestForm(FlaskForm):
 
     submit = SubmitField("Submit")
 
+class OfficeTimeRequestForm(FlaskForm):
+    categoryId = 0
+
+    def selectedCategory():
+        return db.session.query(ServiceCategory).order_by().filter(
+            ServiceCategory.request_type_id == 1)
+
+    def covid_services():
+        return db.session.query(Service).order_by().filter(
+            Service.category_id == 1)
+
+    def office_time_services():
+        return db.session.query(Service).order_by().filter(
+            Service.category_id == 6)
+
+    def stafferQuery():
+        return db.session.query(Staffer).order_by()
+
+    def statusQuery():
+        return db.session.query(RequestStatus).order_by()
+
+    def contactLogQuery():
+        return db.session.query(ContactLogPriorityType).order_by()
+
+    def specialInstructionsQuery():
+        return db.session.query(Member).order_by()
+
+    special_instructions_list = {}
+
+    date_created = DateField('Date Created:',
+                             default=date.today,
+                             render_kw={'readonly': True})
+    requesting_member = SelectMultipleField(
+        'Requesting Member',
+        render_kw={'onchange': "specialInstructions()"},
+        id='member',
+        validators=[InputRequired()],
+        coerce=int)
+
+    service_provider = SelectMultipleField('Service Provider',
+                                           id='service_provider',
+                                           validators=[InputRequired()],
+                                           coerce=int)
+
+    requested_date = DateField('Date Requested', validators=[InputRequired()])
+    start_time = TimeField('From:',
+                               format='%H:%M',
+                               validators=[InputRequired()])
+    end_time = TimeField('Until:', format='%H:%M')
+    high_priority = RadioField('Is high priority?',
+                               choices=[(True, 'Yes'), (False, 'No')],
+                               coerce=lambda x: x == 'True')
+    #add alerts
+    description = TextAreaField('Short description (included in email):')
+
+    service_category = QuerySelectField(
+        'Service Category:',
+        render_kw={'onchange': "serviceChoices()"},
+        validators=[InputRequired()],
+        get_label='name',
+        query_factory=selectedCategory)
+
+    covid_service = QuerySelectField(
+        'Service:',
+        id="covid_service",
+        render_kw={'onchange': "serviceChoices()"},
+        validators=[Optional()],
+        get_label='name',
+        query_factory=covid_services)
+
+    office_time_service = QuerySelectField(
+        'Service:',
+        render_kw={'onchange': "serviceChoices()"},
+        id="office_time_service",
+        validators=[Optional()],
+        get_label='name',
+        query_factory=office_time_services)
+    special_instructions = TextAreaField('Special Instructions:',
+                                    id="special-instructions-text")
+
+    responsible_staffer = SelectField('Responsible Staffer:', coerce=int)
+
+    status = QuerySelectField('Status:',
+                              validators=[InputRequired()],
+                              get_label='name',
+                              query_factory=statusQuery)
+
+    
+    contact_log_priority = QuerySelectField('Contact Log Priority:',
+                                            validators=[InputRequired()],
+                                            get_label='name',
+                                            query_factory=contactLogQuery)
+
+    person_to_cc = EmailField('Person to cc',
+                              validators=[Length(0, 64),
+                                          Optional()])
+
+    submit = SubmitField("Submit")
 
 class MembersHomeRequestForm(FlaskForm):
     categoryId = 0
