@@ -1,6 +1,5 @@
 import json
 import sys
-import time
 from operator import __truediv__
 
 from flask import (Blueprint, abort, flash, redirect, render_template, request,
@@ -10,17 +9,17 @@ from flask_rq import get_queue
 
 from app import db
 from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
-                             AddVetting, ChangeAccountTypeForm,
+                             AddVetting, AddReview, ChangeAccountTypeForm,
                              ChangeUserEmailForm, ContractorManager,
                              EditMetroAreaForm, EditServiceForm, EditServiceCategoryForm,
                              EditDestinationAddressForm,
                              InviteUserForm, MemberManager, MembersHomeRequestForm, MultiCheckboxField,
-                             NewUserForm, Reviews, SearchRequestForm,
-                             TransportationRequestForm, VolunteerManager,OfficeTimeRequestForm, GeneratePdfForm, EditServicesVolunteerCanProvide)
+                             NewUserForm, SearchRequestForm, TransportationRequestForm,
+                             VolunteerManager, OfficeTimeRequestForm, GeneratePdfForm, EditServicesVolunteerCanProvide)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import (Address, Availability, EditableHTML, LocalResource,
-                        Member, MetroArea, ProvidedService, Request, Role,
+                        Member, MetroArea, ProvidedService, Request, Review, Role,
                         Service, ServiceCategory, Staffer, User, Volunteer, RequestMemberRecord)
 from app.models.request import RequestDurationType, RequestStatus, RequestType
 from app.models.request_volunteer_record import RequestVolunteerRecord
@@ -50,15 +49,12 @@ def request_manager():
 @admin_required
 def people_manager():
     """People Manager Page."""
-    add_availability = AddAvailability()
-    add_vetting = AddVetting()
     service_categories = sorted(
         [(category.name, category.request_type_id, category.id)
          for category in ServiceCategory.query.all()],
         key=lambda triple: triple[2])
     services = [(service.name, service.category_id, service.id)
                 for service in Service.query.all()]
-    reviews = Reviews()
     category_dict = {}
     category_name_to_id = {}
     for count, category in enumerate(service_categories):
@@ -98,11 +94,8 @@ def people_manager():
     volunteers = Volunteer.query.all()
     local_resources = LocalResource.query.all()
     return render_template('admin/people_manager/layouts/base.html',
-                           add_availability=add_availability,
-                           add_vetting=add_vetting,
                            service_form=service_form,
                            category_dict=category_dict,
-                           reviews=reviews,
                            members=members,
                            volunteers=volunteers,
                            local_resources=local_resources)
@@ -292,7 +285,7 @@ def select_all(selection, field):
             return [0, 1, 2]
     return list(map(int, selection))
 
- 
+
 @admin.route('/search-request', methods=['POST', 'GET'])
 @login_required
 @admin_required
@@ -550,6 +543,7 @@ def create_transportation_request():
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
                            form=form)
+
 
 @admin.route('/create-request/office-time-request', methods=['GET', 'POST'])
 @admin_required
@@ -1202,7 +1196,54 @@ def add_volunteer_services(volunteer_id=None):
     return render_template('admin/people_manager/volunteer_services.html',
                            form=form, service_categories=service_categories,
                            category_to_indices=category_to_indices,
-                           volunteer_name = volunteer_name)
+                           volunteer_name=volunteer_name)
+
+
+@ admin.route('/add-local-resource-review/<int:local_resource_id>',
+              methods=['GET', 'POST'])
+@ login_required
+@ admin_required
+def add_local_resource_review(local_resource_id=None):
+    """Page for review management."""
+
+    localResource = LocalResource.query.filter_by(id=local_resource_id).first()
+    reviews = Review.query.filter_by(lr_id=local_resource_id).all()
+
+    form = AddReview()
+    form.review_identity.label = Label(
+        "review_identity", "Local Resource " + localResource.company_name)
+
+    if form.validate_on_submit():
+        review = Review(
+            reviewer_name=form.reviewer_name.data,
+            rating=form.rating.data,
+            review_text=form.review_text.data,
+            lr_id=local_resource_id,
+            date_created=form.date_created.data)
+        db.session.add(review)
+        db.session.commit()
+
+        flash(
+            'Review for Local Resource {} successfully added'.format(
+                localResource.company_name), 'success')
+        return redirect(url_for('admin.people_manager'))
+
+    return render_template('admin/people_manager/review.html', form=form, reviews=reviews)
+
+
+@ admin.route('/add-local-resource-review/_delete-review/<int:review_id>')
+@ login_required
+@ admin_required
+def delete_review(review_id):
+    """Delete a review."""
+    review = Review.query.filter_by(id=review_id).first()
+    local_resource_id = review.lr_id
+    db.session.delete(review)
+    db.session.commit()
+    flash(
+        'Successfully deleted review by {}'.format(
+            review.reviewer_name), 'success')
+    return redirect(url_for('admin.add_local_resource_review', local_resource_id=local_resource_id))
 
 
 @admin.route('/add-volunteer-vetting/<int:volunteer_id>',

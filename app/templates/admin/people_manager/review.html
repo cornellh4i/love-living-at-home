@@ -1,0 +1,133 @@
+{% extends 'layouts/base.html' %}
+{% import 'macros/form_macros.html' as f %}
+{% import 'macros/check_password.html' as check %}
+
+
+<!-- Macros -->
+{% macro review_card(r) %}
+<div class="content">
+  <div class="card">
+    <div class="content">
+      <div class="ui two column grid">
+        <div class="row">
+          <div class="twelve wide column">
+            <div class="header">
+              <h3>{{ r.reviewer_name }}</h3>
+            </div>
+            <div class="meta">{{ r.date_created }}</div>
+          </div>
+          <div class="right aligned"> 
+            <div class="ui huge star rating" data-max-rating=5 data-rating = "{{ r.rating }}"></div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="description">
+        <div class="twelve wide column">{{ r.review_text }}</div>
+        <div class="twelve wide column">
+          <i class="large trash alternate outline icon right floated delete-review" style="cursor: pointer" id={{r.id}}></i>
+
+          <div class="ui modal" id='modal-delete-review-{{r.id}}'>
+            <div class="header">Delete Review</div>
+            <div class="content">Would you like to delete this review by [{{r.reviewer_name}}]?</div>
+            <div class="actions">
+              <div class="positive ui approve button"
+                onclick="window.location.href = '{{ url_for('admin.delete_review', review_id=r.id) }}';">
+                Yes
+              </div>
+              <div class="negative ui deny button">No</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+<!-- Content -->
+{% block content %}
+<div class="ui stackable centered grid container">
+    <div class="twelve wide column">
+        <a class="ui basic compact button" href="{{ url_for('admin.people_manager') }}">
+            <i class="caret left icon"></i>
+            Back to dashboard
+        </a>
+
+        {% set flashes =
+        { 'error': get_flashed_messages(category_filter=['form-error']),
+        'warning': get_flashed_messages(category_filter=['form-check-email']),
+        'info': get_flashed_messages(category_filter=['form-info']),
+        'success': get_flashed_messages(category_filter=['form-success']) }
+        %}
+
+        {{ f.begin_form(form, flashes) }}
+
+        {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+        {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+        {{ f.form_message(flashes['info'], header='Information', class='info') }}
+        {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+        <h2 class="ui header">
+            Add Reviews for {{ form.review_identity.label }}
+        </h2>
+
+        <div class="ui styled fluid accordion">
+          <div class="active title">
+            <i class="dropdown icon"></i>
+            Add A Review
+          </div>
+          <div class="active content">
+            <div class="two fields">
+              <div class="field">
+                {{ f.render_form_field(form.reviewer_name) }}
+              </div>
+              <div class="field">
+                <label>Rating:</label>
+                <input name = "rating" type = "hidden" id="rating"><div class="ui massive star rating" data-max-rating=5></div></input>
+              </div>
+            </div>
+            {{ f.render_form_field(form.review_text) }}
+            {{ f.render_form_field(form.submit) }}
+            
+          </div>
+          <div class="title">
+            <i class="dropdown icon"></i>
+            Previous Reviews
+          </div>
+          <div class="content">
+            <div class="transition hidden">
+              {% for r in reviews %}
+                <div class="ui fluid card">
+                  {{review_card(r)}}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        {{ f.end_form() }}
+    </div>
+</div>
+
+<script language='javascript'>
+  $('.ui.accordion').accordion({ exclusive: false });
+
+  //Non-interactable rating (the past reviews' ratings that the user shouldn't
+  //be able to change)
+  $('.ui.huge.star.rating').rating('disable');
+
+  //Interactable rating (the rating user can change)
+  $('.ui.massive.star.rating').rating();
+
+  $('.ui.massive.star.rating').on('click', function() {
+    let rating = $('.ui.massive.star.rating').rating('get rating');
+    document.getElementById('rating').value=rating; 
+  });
+
+  $('.delete-review').click(function () {
+    review_id = $(this).attr('id');
+    $(`#modal-delete-review-${review_id}`).modal('show');
+  });
+</script>
+
+{% endblock %}

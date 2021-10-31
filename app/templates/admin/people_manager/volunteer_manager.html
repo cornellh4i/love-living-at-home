@@ -121,9 +121,11 @@
     class='info') }} {{ f.form_message(flashes['success'], header='Success!',
     class='success') }}
 
-    {{f.render_form_field(form.submit)}} {{
-    f.end_form() }} {% if form.password %} {{ check.password_check('password',
-    0) }} {% endif %}
+    {{f.render_form_field(form.submit)}} 
+    {{ f.end_form() }} 
+    {% if form.password %} 
+      {{ check.password_check('password',0) }} 
+    {% endif %}
   </div>
 </div>
 

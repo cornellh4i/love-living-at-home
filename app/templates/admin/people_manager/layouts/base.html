@@ -71,7 +71,6 @@ description=None, icon=None) %}
       </div>
     </div>
 
-    <i class="comment outline icon right floated" style="cursor: pointer"></i>
     <i class="clock outline icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.add_availability_volunteer', volunteer_id=v.id) }}';"></i>
     <i class="calendar minus outline icon right floated" style="cursor: pointer"></i>
@@ -131,7 +130,8 @@ description=None, icon=None) %}
       </div>
     </div>
 
-    <i class="comment outline icon right floated" style="cursor: pointer"></i>
+    <i class="comment outline icon right floated" style="cursor: pointer"
+      onclick="window.location.href = '{{ url_for('admin.add_local_resource_review', local_resource_id=lr.id) }}';"></i>
     <i class="clock outline icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.add_availability_local_resource', local_resource_id=lr.id) }}';"></i>
     <i class="pencil icon right floated" style="cursor: pointer"
@@ -457,61 +457,6 @@ description=None, icon=None) %}
       {{ f.end_form() }}
     </div>-->
 
-    <!-- Reviews Pop Up -->
-    <div class="ui modal" id="reviews">
-      <i class="close icon"></i>
-      <div class="header">Reviews</div>
-
-      {% set flashes = { 'error':
-      get_flashed_messages(category_filter=['form-error']), 'warning':
-      get_flashed_messages(category_filter=['form-check-email']), 'info':
-      get_flashed_messages(category_filter=['form-info']), 'success':
-      get_flashed_messages(category_filter=['form-success']) } %} {{
-      f.begin_form(reviews, flashes) }}
-
-      <div class="ui styled fluid accordion">
-        <div class="active title">
-          <i class="dropdown icon"></i>
-          Add A Review
-        </div>
-        <div class="active content">
-          <div class="two fields">
-            <div class="field">
-              {{ f.render_form_field(reviews.reviewer_name) }}
-            </div>
-            <div class="field">
-              <label>Rating:</label>
-              <div class="ui massive star rating" data-max-rating="5"></div>
-            </div>
-          </div>
-          {{ f.render_form_field(reviews.notes) }}
-        </div>
-        <div class="title">
-          <i class="dropdown icon"></i>
-          Previous Reviews
-        </div>
-        <div class="content">
-          <div class="transition hidden">
-            <div class="ui form">{{ f.render_form_field(reviews.notes) }}</div>
-          </div>
-        </div>
-
-        <div class="actions">
-          {{ f.form_message(flashes['error'], header='Something went wrong.',
-          class='error') }}
-          {{ f.form_message(flashes['warning'], header='Check your
-          email.', class='warning') }}
-          {{ f.form_message(flashes['info'],
-          header='Information', class='info') }}
-          {{ f.form_message(flashes['success'],
-          header='Success!', class='success') }}
-          {{f.render_form_field(reviews.submit) }}
-        </div>
-        {{ f.end_form() }}
-
-      </div>
-    </div>
-
     <!-- Vacation Calendar Pop Up -->
     <div class="ui modal" id="vacation_calendar">
       <i class="close icon"></i>
@@ -641,14 +586,6 @@ description=None, icon=None) %}
     $('i.calendar.minus.outline.icon.right.floated').click(function () {
       $('#vacation_calendar').modal('show');
     });    
-
-    $('i.comment.outline.icon.right.floated').click(function () {
-      $('#reviews').modal('show');
-    });
-
-    $('.ui.accordion').accordion({ exclusive: false });
-
-    $('.ui.rating').rating();
 
     $('.delete-member').click(function () {
       member_id = $(this).attr('id');

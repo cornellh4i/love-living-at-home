@@ -813,12 +813,17 @@ class EditServicesVolunteerCanProvide(FlaskForm):
         'Services Volunteer can Provide', coerce=int)
     submit = SubmitField("Save")
 
-class Reviews(FlaskForm):
+class AddReview(FlaskForm):
+    review_identity = TextAreaField()
     reviewer_name = StringField(
         'Name of Reviewer',
         validators=[InputRequired(), Length(min=1, max=30)])
-    notes = TextAreaField('Notes', validators=[Optional(), Length(max=500)])
-    submit = SubmitField("Save")
+    rating = IntegerField(validators=[Optional()])
+    review_text = TextAreaField('Review Text', validators=[
+                                Optional(), Length(max=1000)])
+    date_created = DateField(
+        'Date Created', default=date.today)
+    submit = SubmitField('Save')
 
 
 class AddServiceToVolunteer(FlaskForm):
@@ -857,12 +862,12 @@ class EditDestinationAddressForm(FlaskForm):
                        validators=[InputRequired(),
                                    Length(1, 200)])
     address1 = StringField('Street address or P.O. Box',
-                                 validators=[InputRequired(),
-                                             Length(max=200)])
-                                             
+                           validators=[InputRequired(),
+                                       Length(max=200)])
+
     address2 = StringField('Apt, suite, unit, building, floor, etc.',
-                                   validators=[Optional(),
-                                               Length(max=200)])
+                           validators=[Optional(),
+                                       Length(max=200)])
     city = StringField('City',
                        validators=[InputRequired(),
                                    Length(max=200)])
@@ -874,5 +879,3 @@ class EditDestinationAddressForm(FlaskForm):
                            validators=[Optional(),
                                        Length(max=45)])
     submit = SubmitField('Save Destination Address Information')
-
-

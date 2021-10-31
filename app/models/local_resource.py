@@ -18,13 +18,12 @@ class LocalResource(db.Model):
     email_address = db.Column(db.String(80))
     preferred_contact_method = db.Column(db.String(80))
     website = db.Column(db.String(80))
-    reviews_received = db.relationship('Review',
-                                       backref='local_resource',
-                                       lazy='dynamic')
+    # reviews_received = db.relationship('Review', backref = 'local_resource', lazy = 'dynamic')
+
     # Availability information
     availability_id = db.Column(db.Integer(), db.ForeignKey("availability.id"))
 
-    @staticmethod
+    @ staticmethod
     def get_local_resources():
         import pandas as pd
         local_resources = []
@@ -33,7 +32,7 @@ class LocalResource(db.Model):
             local_resources.append(dict(row[1]))
         return local_resources
 
-    @staticmethod
+    @ staticmethod
     def insert_local_resources():
         local_resources = LocalResource.get_local_resources()
         for local_resource_dict in local_resources:
