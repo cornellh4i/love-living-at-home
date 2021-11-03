@@ -9,7 +9,8 @@ class Service(db.Model):
     category_id = db.Column(db.Integer,
                             db.ForeignKey('service_category.id'),
                             nullable=False)
-    requests = db.relationship("Request", backref="service", lazy=True)
+    requests = db.relationship(
+        "TransportationRequest", backref="service", lazy=True)
     provided_services = db.relationship("ProvidedService",
                                         backref="service",
                                         lazy=True)

@@ -10,7 +10,8 @@ from .member import *
 from .metro_area import *
 from .miscellaneous import *  # noqa
 from .provided_service import *
-from .request import *
+from .members_home_request import *
+from .transportation_request import *
 from .request_member_record import *
 from .request_volunteer_record import *
 from .request_volunteer_status import *

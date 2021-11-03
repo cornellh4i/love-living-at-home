@@ -120,8 +120,6 @@ class SearchRequestForm(FlaskForm):
 
 
 class TransportationRequestForm(FlaskForm):
-    categoryId = 0
-
     def selectedCategory():
         return db.session.query(ServiceCategory).order_by().filter(
             ServiceCategory.request_type_id == 0)
@@ -240,8 +238,6 @@ class TransportationRequestForm(FlaskForm):
     submit = SubmitField("Submit")
 
 class OfficeTimeRequestForm(FlaskForm):
-    categoryId = 0
-
     def selectedCategory():
         return db.session.query(ServiceCategory).order_by().filter(
             ServiceCategory.request_type_id == 1)
@@ -326,7 +322,7 @@ class OfficeTimeRequestForm(FlaskForm):
                               get_label='name',
                               query_factory=statusQuery)
 
-    
+
     contact_log_priority = QuerySelectField('Contact Log Priority:',
                                             validators=[InputRequired()],
                                             get_label='name',
@@ -339,7 +335,6 @@ class OfficeTimeRequestForm(FlaskForm):
     submit = SubmitField("Submit")
 
 class MembersHomeRequestForm(FlaskForm):
-    categoryId = 0
 
     def selectedCategory():
         return db.session.query(ServiceCategory).order_by().filter(
@@ -347,11 +342,27 @@ class MembersHomeRequestForm(FlaskForm):
 
     def covid_services():
         return db.session.query(Service).order_by().filter(
-            Service.category_id == 2)
+            Service.category_id == 1)
 
-    def members_home_services():
+    def tech_service():
         return db.session.query(Service).order_by().filter(
-            Service.category_id == 2)
+            Service.category_id == 3)
+
+    def prof_home():
+        return db.session.query(Service).order_by().filter(
+            Service.category_id == 4)
+
+    def prof_support():
+        return db.session.query(Service).order_by().filter(
+            Service.category_id == 5)
+
+    def vol_home():
+        return db.session.query(Service).order_by().filter(
+            Service.category_id == 7)
+
+    def vol_support():
+        return db.session.query(Service).order_by().filter(
+            Service.category_id == 8)
 
     def stafferQuery():
         return db.session.query(Staffer).order_by()
@@ -366,6 +377,7 @@ class MembersHomeRequestForm(FlaskForm):
         return db.session.query(Member).order_by()
 
     special_instructions_list = {}
+    category_id = 2
 
     date_created = DateField('Date Created:',
                              default=date.today,
@@ -406,21 +418,41 @@ class MembersHomeRequestForm(FlaskForm):
         get_label='name',
         query_factory=selectedCategory)
 
-    covid_service = QuerySelectField(
+    tech_services = QuerySelectField(
         'Service:',
-        id="covid_service",
-        render_kw={'onchange': "serviceChoices()"},
+        id="tech_service",
         validators=[Optional()],
         get_label='name',
-        query_factory=covid_services)
+        query_factory=tech_service)
 
-    members_home_service = QuerySelectField(
+    prof_home_services = QuerySelectField(
         'Service:',
-        render_kw={'onchange': "serviceChoices()"},
-        id="members_home_service",
+        id="prof_home_service",
         validators=[Optional()],
         get_label='name',
-        query_factory=members_home_services)
+        query_factory=prof_home)
+
+    prof_support_services = QuerySelectField(
+        'Service:',
+        id="prof_support_service",
+        validators=[Optional()],
+        get_label='name',
+        query_factory=prof_support)
+
+    vol_home_services = QuerySelectField(
+        'Service:',
+        id="vol_home_service",
+        validators=[Optional()],
+        get_label='name',
+        query_factory=vol_home)
+
+    vol_support_services = QuerySelectField(
+        'Service:',
+        id="vol_support_service",
+        validators=[Optional()],
+        get_label='name',
+        query_factory=vol_support)
+
 
     home_location = SelectMultipleField(
         'Location',
@@ -862,8 +894,8 @@ class EditDestinationAddressForm(FlaskForm):
                        validators=[InputRequired(),
                                    Length(1, 200)])
     address1 = StringField('Street address or P.O. Box',
-                           validators=[InputRequired(),
-                                       Length(max=200)])
+                                 validators=[InputRequired(),
+                                             Length(max=200)])
 
     address2 = StringField('Apt, suite, unit, building, floor, etc.',
                            validators=[Optional(),

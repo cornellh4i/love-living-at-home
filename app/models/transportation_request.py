@@ -3,7 +3,7 @@ from datetime import datetime
 from .. import db
 
 
-class Request(db.Model):
+class TransportationRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type_id = db.Column(db.Integer,
                         db.ForeignKey('request_type.id'),
@@ -71,13 +71,13 @@ class Request(db.Model):
     cc_email = db.Column(db.String(120), unique=False, nullable=False)
 
     def __repr__(self):
-        return f"Request('{self.created_date}, '{self.cc_email}')"
+        return f"TransportationRequest('{self.created_date}, '{self.cc_email}')"
 
 
 class RequestDurationType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), unique=True, nullable=False)
-    requests = db.relationship("Request",
+    requests = db.relationship("TransportationRequest",
                                backref="request_duration_type",
                                lazy=True)
 
@@ -93,13 +93,13 @@ class RequestDurationType(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return f"request duration type( '{self.name}')"
+        return f"transportation request duration type( '{self.name}')"
 
 
 class RequestStatus(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), unique=True, nullable=False)
-    requests = db.relationship("Request", backref="request_status", lazy=True)
+    requests = db.relationship("TransportationRequest", backref="request_status", lazy=True)
 
     @staticmethod
     def insert_statuses():
@@ -112,13 +112,13 @@ class RequestStatus(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return f"request status( '{self.name}')"
+        return f"transportation request status( '{self.name}')"
 
 
 class RequestType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), unique=True, nullable=False)
-    requests = db.relationship("Request", backref="request_type", lazy=True)
+    requests = db.relationship("TransportationRequest", backref="request_type", lazy=True)
     service_categories = db.relationship("ServiceCategory",
                                          backref="request_type",
                                          lazy=True)
@@ -144,13 +144,13 @@ class RequestType(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return f"request types( '{self.name}')"
+        return f"transportation request types( '{self.name}')"
 
 
 class ContactLogPriorityType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), unique=True, nullable=False)
-    requests = db.relationship("Request",
+    requests = db.relationship("TransportationRequest",
                                backref="contact_log_priority_type",
                                lazy=True)
 
@@ -166,4 +166,4 @@ class ContactLogPriorityType(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return f"contact log priority type( '{self.name}')"
+        return f"transportation contact log priority type( '{self.name}')"

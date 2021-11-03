@@ -10,7 +10,8 @@ class ServiceCategory(db.Model):
                                 db.ForeignKey("request_type.id"),
                                 nullable=False)
     services = db.relationship("Service", backref="category", lazy=True)
-    requests = db.relationship("Request", backref="category", lazy=True)
+    requests = db.relationship(
+        "TransportationRequest", backref="category", lazy=True)
 
     @staticmethod
     def get_categories():

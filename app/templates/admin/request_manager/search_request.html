@@ -28,7 +28,7 @@ modified_date, service_category, member_number, volunteer_id, is_volunteer ) %}
   <div class="ui card">
     <div class="content" style="background-color: burlywood;">
       <div class="header">
-        Request #<span class="request-number-value">{{request_num}}</span>
+        {{request_type}} Request #<span class="request-number-value">{{request_num}}</span>
         <div class="ui right floated request-status-value">
           {% if request_status == "Requested" %}
           <div class="ui yellow label">{{request_status}}</div>

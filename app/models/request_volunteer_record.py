@@ -3,13 +3,16 @@ from .. import db
 
 class RequestVolunteerRecord(db.Model):
     """
-    A record of a volunteer associated with a request. 
+    A record of a volunteer associated with a request.
     (e.g., "Volunteer1 has been emailed (an example of a possible volunteer-request <status>) for request Request2.")
     """
     id = db.Column(db.Integer, primary_key=True)
     request_id = db.Column(db.Integer,
-                           db.ForeignKey('request.id'),
+                           db.ForeignKey('transportation_request.id'),
                            nullable=False)
+    request_category_id = db.Column(db.Integer,
+                                    db.ForeignKey('request_type.id'),
+                                    nullable=False)
     volunteer_id = db.Column(db.Integer,
                              db.ForeignKey('volunteer.id'),
                              nullable=False)

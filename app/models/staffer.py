@@ -10,15 +10,16 @@ class Staffer(db.Model):
       between Volunteer and Staffer that is nullable.
     """
     id = db.Column(db.Integer, primary_key=True)
-    ## Personal Information
+    # Personal Information
     first_name = db.Column(db.String(80), nullable=False)
     middle_initial = db.Column(db.String(5))
     last_name = db.Column(db.String(80), nullable=False)
-    ## Contact Information
+    # Contact Information
     phone_number = db.Column(db.String(80))
     email_address = db.Column(db.String(80), nullable=False)
 
-    requests_created = db.relationship("Request", backref="staffer", lazy=True)
+    requests_created = db.relationship(
+        "TransportationRequest", backref="staffer", lazy=True)
 
     @staticmethod
     def generate_fake(count=100, **kwargs):
