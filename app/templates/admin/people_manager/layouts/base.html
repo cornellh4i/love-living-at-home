@@ -155,6 +155,14 @@ description=None, icon=None) %}
 
 <!-- Content -->
 {% block content %}
+<script>
+  $(document).ready(function(){
+    $('.ui .tab').removeClass('active');
+      $("#{{ data.active }}-tab").addClass('active');
+      $('.ui .tabular .menu').removeClass('active');
+      $("#{{ data.active }}-tab-menu").addClass('active');
+  })
+</script>
 <style>
   .highlight {
     background-color: lightblue;
@@ -280,13 +288,13 @@ description=None, icon=None) %}
   <h2 class="ui header">People Manager</h2>
 
   <div class="ui tabular menu">
-    <a class="active item" data-tab="member">Members</a>
-    <a class="item" data-tab="volunteer">Volunteers</a>
-    <a class="item" data-tab="local-resource">Local Resources</a>
+    <a class="item" id = "member-tab-menu" data-tab="member">Members</a>
+    <a class="item" id = "volunteer-tab-menu" data-tab="volunteer">Volunteers</a>
+    <a class="item" id = "local-resource-tab-menu" data-tab="local-resource">Local Resources</a>
   </div>
   
   <!-- Member Tab -->
-  <div class="active ui tab" data-tab="member">
+  <div class="ui tab" id = "member-tab" data-tab="member">
     <div class="ui stackable centered grid container">
       <div class="four wide column">
         {{ dashboard_option('Add Member', 'admin.invite_member', icon='add user icon') }}
@@ -338,7 +346,7 @@ description=None, icon=None) %}
   </div>
   
   <!-- Volunteer Tab -->
-  <div class="ui tab" data-tab="volunteer">
+  <div class="ui tab" id = "volunteer-tab" data-tab="volunteer">
     <div class="ui stackable centered grid container">
       <div class="four wide column">
         {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', icon='add user icon') }}
@@ -390,7 +398,7 @@ description=None, icon=None) %}
   </div>
 
   <!-- Local Resource Tab -->
-  <div class="ui tab" data-tab="local-resource">
+  <div class="ui tab" id="local-resource-tab" data-tab="local-resource">
     <div class="ui stackable centered grid container">
       <div class="four wide column">
         {{ dashboard_option('Add Local Resource', 'admin.invite_contractor', icon='add user icon') }}
@@ -512,8 +520,8 @@ description=None, icon=None) %}
     </div>
   </div>
 
-
   <script language='javascript'>
+      
     $(document).ready(function () {
       $('.ui.accordion').accordion();
       $('.ui.checkbox').checkbox();
@@ -554,10 +562,11 @@ description=None, icon=None) %}
       });
 
       $(document).ready(function(){
-          $('.ui .item').on('click', function() {
-              $('.ui .item').removeClass('active');
-              $(this).addClass('active');
-          });             
+          //How active tabs worked before:
+          // $('.ui .item').on('click', function() {
+          //     $('.ui .item').removeClass('active');
+          //     $(this).addClass('active');
+          // });  
       });
 
 

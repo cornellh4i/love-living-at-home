@@ -19,7 +19,7 @@ from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import (Address, Availability, EditableHTML, LocalResource,
-                        Member, MetroArea, ProvidedService, MembersHomeRequest, TransportationRequest, Role, Service, ServiceCategory, Staffer, User, Volunteer, RequestMemberRecord)
+                        Member, MetroArea, ProvidedService, MembersHomeRequest, TransportationRequest, Role, Service, ServiceCategory, Staffer, User, Volunteer, RequestMemberRecord, Review)
 from app.models.transportation_request import RequestDurationType, RequestStatus, RequestType
 from app.models.request_volunteer_record import RequestVolunteerRecord
 from wtforms.fields.core import Label
@@ -88,7 +88,10 @@ def people_manager():
             flash(
                 'Services provided by {} successfully updated'.format(
                     volunteer.first_name), 'form-success')
-
+    active = "member"
+    if 'active' in request.args:
+        active = request.args['active']
+    data ={'active':active }
     members = Member.query.all()
     volunteers = Volunteer.query.all()
     local_resources = LocalResource.query.all()
@@ -97,7 +100,7 @@ def people_manager():
                            category_dict=category_dict,
                            members=members,
                            volunteers=volunteers,
-                           local_resources=local_resources)
+                           local_resources=local_resources, data = data)
 
 
 @admin.route('/new-user', methods=['GET', 'POST'])
@@ -1123,7 +1126,7 @@ def invite_volunteer(volunteer_id=None):
         flash('Volunteer {} successfully invited'.format(form.first_name.data),
               'form-success')
 
-        return redirect(url_for('admin.people_manager'))
+        return redirect(url_for('admin.people_manager', active='volunteer'))
     return render_template('admin/people_manager/volunteer_manager.html',
                            form=form,
                            service_categories=service_categories,
@@ -1220,7 +1223,7 @@ def invite_contractor(local_resource_id=None):
                 'Local Resource {} successfully added'.format(
                     form.company_name.data), 'success')
 
-        return redirect(url_for('admin.people_manager'))
+        return redirect(url_for('admin.people_manager', active='local-resource'))
 
     return render_template('admin/people_manager/contractor_manager.html',
                            form=form)
@@ -1271,7 +1274,7 @@ def add_volunteer_services(volunteer_id=None):
         flash(
             'Services Volunteer can provide {} successfully updated'.format(
                 volunteer.last_name), 'success')
-        return redirect(url_for('admin.people_manager'))
+        return redirect(url_for('admin.people_manager', active='volunteer'))
     return render_template('admin/people_manager/volunteer_services.html',
                            form=form, service_categories=service_categories,
                            category_to_indices=category_to_indices,
@@ -1305,7 +1308,7 @@ def add_local_resource_review(local_resource_id=None):
         flash(
             'Review for Local Resource {} successfully added'.format(
                 localResource.company_name), 'success')
-        return redirect(url_for('admin.people_manager'))
+        return redirect(url_for('admin.people_manager', active='local-resource'))
 
     return render_template('admin/people_manager/review.html', form=form, reviews=reviews)
 
@@ -1350,7 +1353,7 @@ def add_volunteer_vetting(volunteer_id=None):
         flash(
             'Vetting for Volunteer {} successfully updated'.format(
                 volunteer.last_name), 'success')
-        return redirect(url_for('admin.people_manager'))
+        return redirect(url_for('admin.people_manager', active='volunteer'))
 
     return render_template('admin/people_manager/volunteer_vetting.html', form=form)
 
@@ -1406,9 +1409,9 @@ def add_availability_volunteer(volunteer_id=None):
         flash(
             'Availability for Volunteer {} successfully updated'.format(
                 volunteer.last_name), 'success')
-        return redirect(url_for('admin.people_manager'))
+        return redirect(url_for('admin.people_manager', active='volunteer'))
 
-    return render_template('admin/people_manager/availability.html', form=form)
+    return render_template('admin/people_manager/availability.html', form=form, active = 'volunteer')
 
 
 @ admin.route('/add-availability-local-resource/<int:local_resource_id>',
@@ -1462,9 +1465,9 @@ def add_availability_local_resource(local_resource_id=None):
         flash(
             'Availability for Local Resource {} successfully updated'.format(
                 localResource.company_name), 'success')
-        return redirect(url_for('admin.people_manager'))
+        return redirect(url_for('admin.people_manager', active='local-resource'))
 
-    return render_template('admin/people_manager/availability.html', form=form)
+    return render_template('admin/people_manager/availability.html', form=form, active = 'local-resource')
 
 
 @ admin.route('/people-manager/_delete-member/<int:member_id>')
@@ -1493,7 +1496,7 @@ def delete_volunteer(volunteer_id):
         'Successfully deleted volunteer {}'.format(volunteer.first_name + ' ' +
                                                    volunteer.last_name),
         'success')
-    return redirect(url_for('admin.people_manager'))
+    return redirect(url_for('admin.people_manager', active='volunteer'))
 
 
 @ admin.route('/people-manager/_delete-local-resource/<int:local_resource_id>')
@@ -1507,7 +1510,7 @@ def delete_local_resource(local_resource_id):
     flash(
         'Successfully deleted local resource {}'.format(
             localResource.company_name), 'success')
-    return redirect(url_for('admin.people_manager'))
+    return redirect(url_for('admin.people_manager', active='local-resource'))
 
 
 @ admin.route('/services')
