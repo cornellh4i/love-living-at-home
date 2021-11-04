@@ -82,10 +82,11 @@ class NewUserForm(InviteUserForm):
 
 
 class GeneratePdfForm(FlaskForm):
-    report_type = SelectField(
-        'Report Type', coerce=int,
-        choices=[(0, 'Completed Volunteer Services by Service Category')], validators=[InputRequired()])
-    file_name = StringField('Report File Name', validators=[InputRequired()])
+    # report_type = SelectField(
+    #     'Report Type', coerce=int,
+    #     choices=[(0, 'Completed Volunteer Services by Service Category')], validators=[InputRequired()])
+    data_type = RadioField('Data Export', coerce=int)
+    # file_name = StringField('Report File Name', validators=[InputRequired()])
     submit = SubmitField('Run Report')
 
 

@@ -1810,27 +1810,83 @@ def delete_destination_address(destination_address_id):
 @admin_required
 def generate_report():
     pdf_form = GeneratePdfForm()
+    member_data = Member.query.all()
+    print(member_data)
+    count_to_name = {}
+    choices = []
+    for (count,value) in enumerate(db.engine.table_names()):
+        count_to_name[count] = value
+        choices.append((count,value))
+    pdf_form.data_type.choices = choices
     if pdf_form.validate_on_submit():
-        file_name = pdf_form.file_name.data
-        import pandas as pd
-        import numpy as np
-        from jinja2 import Environment, FileSystemLoader
-        from weasyprint import HTML
+        import csv
+        from io import StringIO
+        
+        import csv
+        from random import randint
+        if count_to_name[pdf_form.data_type.data]=='member':
+            data = Member.query.all()
+        #open the file or create it if it doesnt exist
+            with open ('./app/reports/test.csv','a', newline='') as my_file:
+                csv_writter = csv.writer(my_file)
 
-        data = pd.DataFrame()
-        data['Col1'] = np.arange(1, 50)
-        data['Col2'] = np.arange(2, 51)
+                #crate some random csv data
+                my_data = [[randint(0, 9) for _ in range(10)] for _ in range(10)]
 
-        env = Environment(loader=FileSystemLoader('.'))
-        template = env.get_template("./app/templates/admin/report.html")
-        template_vars = {"title": "Love Living at Home",
-                         "data": data.to_html()}
-        html_out = template.render(template_vars)
-        HTML(string=html_out).write_pdf(
-            "./app/reports/" + file_name + ".pdf", stylesheets=["./app/assets/styles/report.css"])
-        try:
-            return send_file("reports/" + file_name + ".pdf", as_attachment=True)
-        except FileNotFoundError:
-            flash('Failed to generate report.', 'error')
-            abort(404)
+                #for each row append it to our CSV file
+                for member in data:
+                    member_data = {
+                        "id": member.id, 
+                        "salutation": member.salutation, 
+                        "member_number": member.member_number, 
+                        "first_name":member.first_name,
+                        "middle_initial":member.middle_initial, 
+                        "last_name":member.last_name,
+                        "preferred_name":member.preferred_name,
+                        "gender":member.gender, 
+                        "birthdate":member.birthdate,
+                        "primary_address_id":member.primary_address_id,
+                        "secondary_address_id":member.secondary_address_id, 
+                        "metro_area_id": member.metro_area_id, 
+                        "primary_phone_number":member.primary_phone_number, 
+                        "secondary_phone_number": member.secondary_phone_number,
+                        "email_address": member.email_address,
+                        "preferred_contact_method": member.preferred_contact_method, 
+                        "emergency_contact_name": member.emergency_contact_name, 
+                        "emergency_contact_phone_number": member.emergency_contact_phone_number,
+                        "emergency_contact_email_address": member.emergency_contact_email_address,
+                        "emergency_contact_relationship": member.emergency_contact_relationship,
+                        "membership_expiration_date": member.membership_expiration_date,
+                        "volunteer_notes": member.volunteer_notes,
+                        "staffer_notes": member.staffer_notes
+                        }
+                    print(member.first_name)
+                    #csv_writter.writerow(row)
+
+
+
+
+
+        # file_name = pdf_form.file_name.data
+        # import pandas as pd
+        # import numpy as np
+        # from jinja2 import Environment, FileSystemLoader
+        # from weasyprint import HTML
+
+        # data = pd.DataFrame()
+        # data['Col1'] = np.arange(1, 50)
+        # data['Col2'] = np.arange(2, 51)
+
+        # env = Environment(loader=FileSystemLoader('.'))
+        # template = env.get_template("./app/templates/admin/report.html")
+        # template_vars = {"title": "Love Living at Home",
+        #                  "data": data.to_html()}
+        # html_out = template.render(template_vars)
+        # HTML(string=html_out).write_pdf(
+        #     "./app/reports/" + file_name + ".pdf", stylesheets=["./app/assets/styles/report.css"])
+        # try:
+        #     return send_file("reports/" + file_name + ".pdf", as_attachment=True)
+        # except FileNotFoundError:
+        #     flash('Failed to generate report.', 'error')
+        #     abort(404)
     return render_template('admin/system_manager/generate_report.html', form=pdf_form)
