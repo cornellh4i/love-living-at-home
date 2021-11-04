@@ -7,7 +7,6 @@ class RequestMemberRecord(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     request_id = db.Column(db.Integer,
-                           db.ForeignKey('transportation_request.id'),
                            nullable=False)
     request_category_id = db.Column(db.Integer,
                                     db.ForeignKey('request_type.id'),
