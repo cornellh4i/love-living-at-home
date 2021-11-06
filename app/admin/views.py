@@ -22,6 +22,7 @@ from app.models import (Address, Availability, EditableHTML, LocalResource,
                         Member, MetroArea, ProvidedService, MembersHomeRequest, TransportationRequest, Role, Service, ServiceCategory, Staffer, User, Volunteer, RequestMemberRecord, Review)
 from app.models.transportation_request import RequestDurationType, RequestStatus, RequestType
 from app.models.request_volunteer_record import RequestVolunteerRecord
+from app.models.office_request import OfficeRequest
 from wtforms.fields.core import Label
 
 admin = Blueprint('admin', __name__)
@@ -375,7 +376,7 @@ def search_request():
 
     # Pull existing requests from the database and format each of them for display on front-end.
     transportation_requests = TransportationRequest.query.all()
-    office_time_requests = []
+    office_time_requests = OfficeRequest.query.all()
     members_home_requests = MembersHomeRequest.query.all()
     #TODO: Add Office time request in future PR
     db_requests = [transportation_requests, office_time_requests, members_home_requests]
@@ -603,42 +604,40 @@ def create_office_time_request():
     ]
     if form.validate_on_submit():
         special_input = request.form.get('special_instructions')
-        transportation_request = TransportationRequest(
-            type_id=0,
+       
+        office_time_request = OfficeRequest(
+            type_id=1,
             status_id=form.status.data.id,
             short_description=form.description.data,
             created_date=form.date_created.data,
             requested_date=form.requested_date.data,
-            initial_pickup_time=form.initial_pickup.data,
-            appointment_time=form.appointment.data,
-            return_pickup_time=form.return_pickup.data,
-            drop_off_time=form.drop_off.data,
-            is_date_time_flexible=form.time_flexible.data,
-            duration_type_id=form.duration.data,
+            start_time=form.start_time.data,
+            end_time=form.end_time.data,
+            is_high_priority=form.high_priority.data,
             service_category_id=form.service_category.data.id,
-            service_id=form.transportation_service.data.id if
-            form.service_category.data.id == 0 else form.covid_service.data.id,
-            starting_address=form.starting_location.data,
-            destination_address_id=form.destination.data,
+            service_id=form.office_time_service.data.id if
+            form.service_category.data.id == 6 else form.covid_service.data.id,
             special_instructions=special_input,
-            followup_date=form.follow_up_date.data,
             responsible_staffer_id=form.responsible_staffer.data,
             contact_log_priority_id=form.contact_log_priority.data.id,
-            cc_email=form.person_to_cc.data)
-        db.session.add(transportation_request)
+            cc_email= form.person_to_cc.data )
+        db.session.add(office_time_request)
         db.session.commit()
+        
 
         for member in form.requesting_member.data:
-            record = RequestMemberRecord(request_id=transportation_request.id,
-                                         request_category_id=0,
-                                         member_id=member)
-            db.session.add(record)
+            request_member_record= RequestMemberRecord(
+                request_id=office_time_request.id,
+                request_category_id = 1,
+                member_id=member
+            )
+            db.session.add(request_member_record)
             db.session.commit()
 
         for volunteer in form.service_provider.data:
             request_volunteer_record = RequestVolunteerRecord(
-                request_id=transportation_request.id,
-                request_category_id=0,
+                request_id=office_time_request.id,
+                request_category_id=1,
                 volunteer_id=volunteer,
                 status_id=1,
                 staffer_id=1,
@@ -649,8 +648,8 @@ def create_office_time_request():
         flash('Successfully submitted a new transportation request', 'success')
         return redirect(url_for('admin.search_request'))
 
-    return render_template('admin/request_manager/transportation_request.html',
-                           title='Transportation Request',
+    return render_template('admin/request_manager/office_time_request.html',
+                           title='Office Time Request',
                            form=form)
 
 @admin.route('create-request/members-home-request', methods=['GET', 'POST'])

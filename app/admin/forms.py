@@ -328,7 +328,7 @@ class OfficeTimeRequestForm(FlaskForm):
                                             get_label='name',
                                             query_factory=contactLogQuery)
 
-    person_to_cc = EmailField('Person to cc',
+    person_to_cc = TextAreaField('Person to cc',
                               validators=[Length(0, 64),
                                           Optional()])
 
