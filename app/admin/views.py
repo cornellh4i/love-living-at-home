@@ -337,7 +337,7 @@ def search_request():
         'created_date': "06/15/2021",
         'modified_date': "N/A",
         'service_category': "Volunteer In-Home Support",
-        'member_number': -2
+        'member_numbers': -2
     }, {
         'request_num': 6697,
         'request_status': "Confirmed",
@@ -354,7 +354,7 @@ def search_request():
         'created_date': "06/11/2021",
         'modified_date': "06/18/2021",
         'service_category': "Transportation",
-        'member_number': -1
+        'member_numbers': -1
     }, {
         'request_num': 6698,
         'request_status': "Confirmed",
@@ -371,7 +371,7 @@ def search_request():
         'created_date': "06/11/2021",
         'modified_date': "06/18/2021",
         'service_category': "Transportation",
-        'member_number': -1
+        'member_numbers': -1
     }]
 
     # Pull existing requests from the database and format each of them for display on front-end.
@@ -385,16 +385,23 @@ def search_request():
         for db_req in db_request_type:
             request_member_records = RequestMemberRecord.query.filter_by(
                 request_id=db_req.id).all()
+
             members = []
+            member_ids = []
             for request_member_record in request_member_records:
                 members.append(Member.query.get(
                     request_member_record.member_id))
+                member_ids.append(str(request_member_record.member_id))
+
             request_volunteer_records = RequestVolunteerRecord.query.filter_by(
                 request_id=db_req.id).all()
+
             volunteers = []
+            vol_ids = []
             for request_volunteer_record in request_volunteer_records:
                 volunteers.append(Volunteer.query.get(
                     request_volunteer_record.volunteer_id))
+                vol_ids.append(str(request_volunteer_record.volunteer_id))
 
             member_name = ""
             for member in members:
@@ -435,7 +442,11 @@ def search_request():
                     'created_date':
                     db_req.created_date.strftime("%m/%d/%Y"),
                     'modified_date':
-                    db_req.modified_date.strftime("%m/%d/%Y")
+                    db_req.modified_date.strftime("%m/%d/%Y"),
+                    'member_numbers':
+                    " ".join(member_ids),
+                    'volunteer_ids':
+                    " ".join(vol_ids)
                 })
             elif index == 2:
                 formatted_db_requests.append({
@@ -468,7 +479,11 @@ def search_request():
                     'created_date':
                     db_req.created_date.strftime("%m/%d/%Y"),
                     'modified_date':
-                    db_req.modified_date.strftime("%m/%d/%Y")
+                    db_req.modified_date.strftime("%m/%d/%Y"),
+                    'member_numbers':
+                    " ".join(member_ids),
+                    'volunteer_ids':
+                    " ".join(vol_ids)
                 })
 
     temp_requests.extend(formatted_db_requests)

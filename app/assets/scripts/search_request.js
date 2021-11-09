@@ -127,25 +127,21 @@ $(document).ready(function () {
       ) {
         $this.hide();
       }
-      let requesting_member = $this
+      let requesting_members = $this
         .find('.requesting-member-value')
-        .attr('data-value');
-      if (
-        requesting_member_filter.length > 0 &&
-        !requesting_member_filter.includes(requesting_member)
-      ) {
-        $this.hide();
-      }
+        .attr('data-value')
+        .split(" ");
 
-      let volunteer_id = $this
+      for (const memb_id of requesting_member_filter)
+        if (!requesting_members.includes(memb_id)) $this.hide();
+
+      let volunteer_ids = $this
         .find('.service-provider-value')
-        .attr('data-value');
-      if (
-        volunteer_filter.length > 0 &&
-        !volunteer_filter.includes(volunteer_id)
-      ) {
-        $this.hide();
-      }
+        .attr('data-value')
+        .split(" ");
+
+      for (const vol_id of volunteer_filter)
+        if(!volunteer_ids.includes(vol_id)) $this.hide();
 
       // TODO: Date status filter ("Dated" vs "Undated")
       let requested_date = $this
