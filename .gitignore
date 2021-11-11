@@ -15,4 +15,6 @@ dist
 .idea
 dump.rdb
 .vscode/
+app/static/scripts/
+app/static/styles/vendor.css
 transportation_improvements.txt
