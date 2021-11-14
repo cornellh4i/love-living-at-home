@@ -6,7 +6,7 @@ from flask import (Blueprint, abort, flash, redirect, render_template, request,
                    send_file, url_for)
 from flask_login import current_user, login_required
 from flask_rq import get_queue
-
+from datetime import datetime
 from app import db
 from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
                              AddVetting, AddReview, ChangeAccountTypeForm,
@@ -384,7 +384,7 @@ def search_request():
     for index, db_request_type in enumerate(db_requests):
         for db_req in db_request_type:
             request_member_records = RequestMemberRecord.query.filter_by(
-                request_id=db_req.id).all()
+                request_id=db_req.id, request_category_id=index).all()
 
             members = []
             member_ids = []
@@ -394,7 +394,7 @@ def search_request():
                 member_ids.append(str(request_member_record.member_id))
 
             request_volunteer_records = RequestVolunteerRecord.query.filter_by(
-                request_id=db_req.id).all()
+                request_id=db_req.id ,request_category_id=index).all()
 
             volunteers = []
             vol_ids = []
@@ -435,6 +435,8 @@ def search_request():
                     True,
                     'request_type':
                     RequestType.query.get(db_req.type_id).name,
+                    'request_type_id':
+                    db_req.type_id, 
                     'service_category':
                     ServiceCategory.query.get(db_req.service_category_id).name,
                     'service':
@@ -503,77 +505,172 @@ def create_request():
 
 
 # Create a new Transportation service request.
+@admin.route('/create-request/transportation-request/<int:request_id>', methods=['GET', 'POST'])
 @admin.route('/create-request/transportation-request', methods=['GET', 'POST'])
 @admin_required
-def create_transportation_request():
+def create_transportation_request(request_id=None):
     form = TransportationRequestForm()
-    form.requesting_member.multiple = True
-    form.requesting_member.choices = [
-        (member.id, member.first_name + " " + member.last_name)
-        for member in Member.query.all()
-    ]
-    form.service_provider.choices = [
-        (volunteer.id, volunteer.first_name + " " + volunteer.last_name)
-        for volunteer in Volunteer.query.all()
-    ]
+    transportation_request = None
+    if request_id:
+        transportation_request = TransportationRequest.query.filter_by(id=request_id).first()
+        form = TransportationRequestForm(
+            type_id = 0, 
+            status_id = transportation_request.status_id,
+            short_description = transportation_request.short_description, 
+            date_created = transportation_request.created_date,
+            requested_date = transportation_request.requested_date,
+            initial_pickup = transportation_request.initial_pickup_time, 
+            appointment = transportation_request.appointment_time, 
+            return_pickup=transportation_request.return_pickup_time,
+            drop_off=transportation_request.drop_off_time,
+            time_flexible=transportation_request.is_date_time_flexible,
+            duration=transportation_request.duration_type_id,
+            service_category=transportation_request.service_category_id,
+            transportation_service=transportation_request.service_id,
+            starting_location=transportation_request.starting_address,
+            destination=transportation_request.destination_address_id,
+            special_instructions=transportation_request.special_instructions,
+            follow_up_date=transportation_request.followup_date,
+            responsible_staffer=transportation_request.responsible_staffer_id,
+            contact_log_priority=transportation_request.contact_log_priority_id,
+            cc_email=transportation_request.cc_email
+        )
+        form.requesting_member.multiple = True
+        form.requesting_member.choices = [
+            (member.id, member.first_name + " " + member.last_name)
+            for member in Member.query.all()
+        ]
+        form.service_provider.choices = [
+            (volunteer.id, volunteer.first_name + " " + volunteer.last_name)
+            for volunteer in Volunteer.query.all()
+        ]
 
-    form.duration.choices = [
-        (request_duration_type.id, request_duration_type.name)
-        for request_duration_type in RequestDurationType.query.all()
-    ]
-    form.destination.choices = [(address.id,
-                                 address.name + " - " + address.address1 + (" " + address.address2 if address.address2 else ""))
-                                for address in Address.query.all()]
-    form.starting_location.choices = [
-        (address.id, address.name + " - " + address.address1 +
-         (" " + address.address2 if address.address2 else ""))
-        for address in Address.query.all()
-    ]
-    form.special_instructions_list = json.dumps({
-        str(member.id): member.volunteer_notes
-        for member in Member.query.all()
-    })
-    form.responsible_staffer.choices = [
-        (staffer.id, staffer.first_name + " " + staffer.last_name)
-        for staffer in Staffer.query.all()
-    ]
+        form.duration.choices = [
+            (request_duration_type.id, request_duration_type.name)
+            for request_duration_type in RequestDurationType.query.all()
+        ]
+        form.destination.choices = [(address.id,
+                                    address.name + " - " + address.address1 + (" " + address.address2 if address.address2 else ""))
+                                    for address in Address.query.all()]
+        form.starting_location.choices = [
+            (address.id, address.name + " - " + address.address1 +
+            (" " + address.address2 if address.address2 else ""))
+            for address in Address.query.all()
+        ]
+        form.special_instructions_list = json.dumps({
+            str(member.id): member.volunteer_notes
+            for member in Member.query.all()
+        })
+        form.responsible_staffer.choices = [
+            (staffer.id, staffer.first_name + " " + staffer.last_name)
+            for staffer in Staffer.query.all()
+        ]
+        
+        request_member_records = [member.member_id for member in RequestMemberRecord.query.filter_by(request_id = transportation_request.id, 
+        request_category_id=0).all()]
+        form.requesting_member.data = request_member_records
+        request_volunteer_records = [volunteer.volunteer_id for volunteer in RequestVolunteerRecord.query.filter_by(request_id = transportation_request.id, 
+        request_category_id=0).all()]
+        form.service_provider.data = request_volunteer_records 
+    else:
+        form.requesting_member.multiple = True
+        form.requesting_member.choices = [
+            (member.id, member.first_name + " " + member.last_name)
+            for member in Member.query.all()
+        ]
+        form.service_provider.choices = [
+            (volunteer.id, volunteer.first_name + " " + volunteer.last_name)
+            for volunteer in Volunteer.query.all()
+        ]
+
+        form.duration.choices = [
+            (request_duration_type.id, request_duration_type.name)
+            for request_duration_type in RequestDurationType.query.all()
+        ]
+        form.destination.choices = [(address.id,
+                                    address.name + " - " + address.address1 + (" " + address.address2 if address.address2 else ""))
+                                    for address in Address.query.all()]
+        form.starting_location.choices = [
+            (address.id, address.name + " - " + address.address1 +
+            (" " + address.address2 if address.address2 else ""))
+            for address in Address.query.all()
+        ]
+        form.special_instructions_list = json.dumps({
+            str(member.id): member.volunteer_notes
+            for member in Member.query.all()
+        })
+        form.responsible_staffer.choices = [
+            (staffer.id, staffer.first_name + " " + staffer.last_name)
+            for staffer in Staffer.query.all()
+        ]
+   
     if form.validate_on_submit():
         special_input = request.form.get('special_instructions')
-        transportation_request = TransportationRequest(
-            type_id=0,
-            status_id=form.status.data.id,
-            short_description=form.description.data,
-            created_date=form.date_created.data,
-            requested_date=form.requested_date.data,
-            initial_pickup_time=form.initial_pickup.data,
-            appointment_time=form.appointment.data,
-            return_pickup_time=form.return_pickup.data,
-            drop_off_time=form.drop_off.data,
-            is_date_time_flexible=form.time_flexible.data,
-            duration_type_id=form.duration.data,
-            service_category_id=form.service_category.data.id,
-            service_id=form.transportation_service.data.id if
-            form.service_category.data.id == 0 else form.covid_service.data.id,
-            starting_address=form.starting_location.data,
-            destination_address_id=form.destination.data,
-            special_instructions=special_input,
-            followup_date=form.follow_up_date.data,
-            responsible_staffer_id=form.responsible_staffer.data,
-            contact_log_priority_id=form.contact_log_priority.data.id,
-            cc_email=form.person_to_cc.data)
-        db.session.add(transportation_request)
-        db.session.commit()
-        # request_batch.append(transportation_request.id)
+        if transportation_request is not None:
+            transportation_request.status_id=form.status.data.id
+            transportation_request.short_description=form.description.data
+            transportation_request.created_date=form.date_created.data
+            transportation_request.requested_date=form.requested_date.data
+            transportation_request.initial_pickup_time=form.initial_pickup.data
+            transportation_request.appointment_time=form.appointment.data
+            transportation_request.return_pickup_time=form.return_pickup.data
+            transportation_request.drop_off_time=form.drop_off.data
+            transportation_request.is_date_time_flexible=form.time_flexible.data
+            transportation_request.duration_type_id=form.duration.data
+            transportation_request.service_category_id=form.service_category.data.id
+            transportation_request.service_id=form.transportation_service.data.id if form.service_category.data.id == 0 else form.covid_service.data.id
+            transportation_request.starting_address=form.starting_location.data
+            transportation_request.destination_address_id=form.destination.data
+            transportation_request.special_instructions=special_input
+            transportation_request.followup_date=form.follow_up_date.data
+            transportation_request.responsible_staffer_id=form.responsible_staffer.data
+            transportation_request.contact_log_priority_id=form.contact_log_priority.data.id
+            transportation_request.cc_email=form.person_to_cc.data
 
-        # member_batch = []
-        for member in form.requesting_member.data:
+            members = RequestMemberRecord.query.filter_by(request_id = transportation_request.id).filter_by(request_category_id=0).all()
+            for member in members:
+                db.session.delete(member)
+            volunteers = RequestVolunteerRecord.query.filter_by(request_id = transportation_request.id).filter_by(request_category_id=0).all()
+            for volunteer in volunteers:
+                db.session.delete(volunteer)
+            db.session.add(transportation_request)
+            db.session.commit()
+        else:
+            print(type(form.date_created.data))
+            transportation_request = TransportationRequest(
+                type_id=0,
+                status_id=form.status.data.id,
+                short_description=form.description.data,
+                created_date=form.date_created.data,
+                requested_date=form.requested_date.data,
+                initial_pickup_time=form.initial_pickup.data,
+                appointment_time=form.appointment.data,
+                return_pickup_time=form.return_pickup.data,
+                drop_off_time=form.drop_off.data,
+                is_date_time_flexible=form.time_flexible.data,
+                duration_type_id=form.duration.data,
+                service_category_id=form.service_category.data.id,
+                service_id=form.transportation_service.data.id if
+                form.service_category.data.id == 0 else form.covid_service.data.id,
+                starting_address=form.starting_location.data,
+                destination_address_id=form.destination.data,
+                special_instructions=special_input,
+                followup_date=form.follow_up_date.data,
+                responsible_staffer_id=form.responsible_staffer.data,
+                contact_log_priority_id=form.contact_log_priority.data.id,
+                cc_email=form.person_to_cc.data)
+            db.session.add(transportation_request)
+            db.session.commit()
+
+        requesting_members = request.form.getlist("requesting_member")
+        for member in requesting_members:
             record = RequestMemberRecord(request_id=transportation_request.id,
                                          request_category_id=0,
                                          member_id=member)
             db.session.add(record)
             db.session.commit()
-        # Eventually this should be changed so multiple volunteers can be notified
-        for volunteer in form.service_provider.data:
+        service_providers = request.form.getlist("service_provider")
+        for volunteer in service_providers:
             request_volunteer_record = RequestVolunteerRecord(
                 request_id=transportation_request.id,
                 request_category_id=0,
@@ -586,10 +683,6 @@ def create_transportation_request():
 
         flash('Successfully submitted a new transportation request', 'success')
         return redirect(url_for('admin.search_request'))
-    # elif (len(form.errors) > 0):
-    # else:
-    # flash(request.method, 'error')
-    # flash(form.errors, 'error')
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
                            form=form)
