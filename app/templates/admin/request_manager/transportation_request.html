@@ -98,16 +98,18 @@
     <div class="ui two column stackable grid">
       <div class="ui two column row">
         <div class="ten wide column">
-          {{ f.render_form_field(form.destination) }}
+          {{ f.render_custom_select(form.destination) }}
         </div>
         <div class="right floated four wide column">
-          <button
-            type="button"
-            class="ui inverted violet fluid button side-button"
-            id="show-new-destination"
-          >
-            Add new address
-          </button>
+          <a href = "{{ url_for('admin.new_destination_address') }}">
+            <button
+              type="button"
+              class="ui inverted violet fluid button side-button"
+              id="show-new-destination"
+            >
+                Add new address
+            </button>
+          </a>
         </div>
       </div>
     </div>
@@ -219,7 +221,7 @@
   <div class="twelve wide column">
     {{ f.render_form_field(form.person_to_cc) }}
   </div>
-
+<!-- 
   <div id="new-destination" class="ui modal">
     <i class="close icon"></i>
     <div class="header">Add New Destination</div>
@@ -246,12 +248,12 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <script>
-    $('#show-new-destination').click(function () {
-      $('#new-destination').modal('show');
-    });
+    // $('#show-new-destination').click(function () {
+    //   $('#new-destination').modal('show');
+    // });
 
     $('#show-new-service-provider').click(function () {
       $('#new-service-provider').modal('show');
