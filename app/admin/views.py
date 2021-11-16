@@ -6,9 +6,7 @@ from flask import (Blueprint, abort, flash, redirect, render_template, request,
                    send_file, url_for)
 from flask_login import current_user, login_required
 from flask_rq import get_queue
-from datetime import datetime
 
-from sqlalchemy.sql.operators import endswith_op
 from app import db
 from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
                              AddVetting, AddReview, ChangeAccountTypeForm,
@@ -380,7 +378,6 @@ def search_request():
     transportation_requests = TransportationRequest.query.all()
     office_time_requests = OfficeRequest.query.all()
     members_home_requests = MembersHomeRequest.query.all()
-    # TODO: Add Office time request in future PR
     db_requests = [transportation_requests,
                    office_time_requests, members_home_requests]
     formatted_db_requests = []
@@ -599,7 +596,8 @@ def create_transportation_request(request_id=None):
             id=request_id).first()
         form = TransportationRequestForm(
             type_id=0,
-            status_id=transportation_request.status_id,
+            status=RequestStatus.query.filter_by(
+                id=transportation_request.status_id).first(),
             short_description=transportation_request.short_description,
             date_created=transportation_request.created_date,
             requested_date=transportation_request.requested_date,
@@ -615,7 +613,8 @@ def create_transportation_request(request_id=None):
             special_instructions=transportation_request.special_instructions,
             follow_up_date=transportation_request.followup_date,
             responsible_staffer=transportation_request.responsible_staffer_id,
-            contact_log_priority=transportation_request.contact_log_priority_id,
+            contact_log_priority=ContactLogPriorityType.query.filter_by(
+                id=transportation_request.contact_log_priority_id).first(),
             cc_email=transportation_request.cc_email,
             time_flexible=transportation_request.is_date_time_flexible
         )
@@ -692,7 +691,6 @@ def create_transportation_request(request_id=None):
             db.session.add(transportation_request)
             db.session.commit()
         else:
-            print(type(form.date_created.data))
             transportation_request = TransportationRequest(
                 type_id=0,
                 status_id=form.status.data.id,
@@ -936,8 +934,6 @@ def create_members_home_request(request_id=None):
             id=members_home_request.service_category_id).first()
         service = Service.query.filter_by(
             id=members_home_request.service_id).first()
-        print(form.service_category.data)
-        print(service)
         if form.service_category.data == 3:
             form.tech_services.data = service
         elif form.service_category.data == 4:
@@ -1036,10 +1032,6 @@ def create_members_home_request(request_id=None):
         else:
             flash('Successfully submitted a new member\'s home request', 'success')
         return redirect(url_for('admin.search_request'))
-    else:
-        print(form.vol_support_services.data)
-        print(form.errors)
-
     return render_template('admin/request_manager/members_home_request.html',
                            title='Members Home Request',
                            form=form)
