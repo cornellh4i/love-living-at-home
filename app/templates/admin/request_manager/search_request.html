@@ -96,19 +96,39 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
         </div>
         <div class="one wide column" style="margin-left:-25px">
           <i style="margin-top: 15px" class="large pencil icon" style="cursor: pointer"
-          onclick="window.location.href = '{{ url_for('admin.create_transportation_request', request_id=request_num) if request_type_id == 0 else url_for('admin.search_request') }}';"></i>
+          onclick=
+          "window.location.href = '{{ url_for('admin.create_transportation_request', request_id=request_num) if request_type_id == 0 else url_for('admin.create_office_time_request', request_id = request_num) if request_type_id==1 else url_for('admin.create_members_home_request', request_id = request_num) if request_type_id==2 else url_for('admin.search_request') }}';"></i>
           <i style="margin-top: 20px" class= "large blue copy outline icon"></i>
           <i style="margin-top: 20px" class= "large red times circle icon"></i>
         </div>
         <div class="one wide column">
           <i style="margin-top: 15px" class="large green check icon"></i>
-          <i style="margin-top: 20px"class= "large trash icon"></i>
+          <i style="margin-top: 20px"class= "large trash icon delete-request" style="cursor: pointer" request_type_id = {{request_type_id}} request_num = {{request_num}}></i>
+
+          <div class="ui modal" id='modal-delete-request-{{request_type_id}}-{{request_num}}'>
+            <div class="header">Delete Request</div>
+            <div class="content">Would you like to delete {{request_type}} Request #{{request_num}}?</div>
+            <div class="actions">
+              <div class="positive ui approve button"
+                onclick="window.location.href = '{{ url_for('admin.delete_request', request_type_id=request_type_id, request_id=request_num)}}';">
+                Yes
+              </div>
+              <div class="negative ui deny button">No</div>
+            </div>
+          </div>
           <i style="margin-top: 20px" class= "large blue envelope icon"></i>
         </div>
       </div>
     </div>
   </div>
 </div>
+<script>
+  $('.delete-request').click(function () {
+  request_type_id = $(this).attr('request_type_id');
+  request_num = $(this).attr('request_num');
+  $(`#modal-delete-request-${request_type_id}-${request_num}`).modal('show');
+});
+</script>
 {% endmacro %}
 
 {# Render a multiple select dropdown field for filtering purposes.
