@@ -172,8 +172,8 @@ class TransportationRequestForm(FlaskForm):
     return_pickup = TimeField('Return Pickup:', format='%H:%M')
     drop_off = TimeField('Drop Off:', format='%H:%M')
     time_flexible = RadioField('Is Date/Time Flexible?',
-                               choices=[(True, 'Yes'), (False, 'No')],
-                               coerce=lambda x: x == 'True')
+                               choices=[(1, 'Yes'), (0, 'No')],
+                               coerce=int)
     description = TextAreaField('Short description (included in email):')
 
     service_category = QuerySelectField(
@@ -237,6 +237,7 @@ class TransportationRequestForm(FlaskForm):
 
     submit = SubmitField("Submit")
 
+
 class OfficeTimeRequestForm(FlaskForm):
     def selectedCategory():
         return db.session.query(ServiceCategory).order_by().filter(
@@ -281,13 +282,13 @@ class OfficeTimeRequestForm(FlaskForm):
 
     requested_date = DateField('Date Requested', validators=[InputRequired()])
     start_time = TimeField('From:',
-                               format='%H:%M',
-                               validators=[InputRequired()])
+                           format='%H:%M',
+                           validators=[InputRequired()])
     end_time = TimeField('Until:', format='%H:%M')
     high_priority = RadioField('Is high priority?',
-                               choices=[(True, 'Yes'), (False, 'No')],
-                               coerce=lambda x: x == 'True')
-    #add alerts
+                               choices=[(1, 'Yes'), (0, 'No')],
+                               coerce=int)
+    # add alerts
     description = TextAreaField('Short description (included in email):')
 
     service_category = QuerySelectField(
@@ -313,7 +314,7 @@ class OfficeTimeRequestForm(FlaskForm):
         get_label='name',
         query_factory=office_time_services)
     special_instructions = TextAreaField('Special Instructions:',
-                                    id="special-instructions-text")
+                                         id="special-instructions-text")
 
     responsible_staffer = SelectField('Responsible Staffer:', coerce=int)
 
@@ -322,17 +323,17 @@ class OfficeTimeRequestForm(FlaskForm):
                               get_label='name',
                               query_factory=statusQuery)
 
-
     contact_log_priority = QuerySelectField('Contact Log Priority:',
                                             validators=[InputRequired()],
                                             get_label='name',
                                             query_factory=contactLogQuery)
 
     person_to_cc = TextAreaField('Person to cc',
-                              validators=[Length(0, 64),
-                                          Optional()])
+                                 validators=[Length(0, 64),
+                                             Optional()])
 
     submit = SubmitField("Submit")
+
 
 class MembersHomeRequestForm(FlaskForm):
 
@@ -406,8 +407,8 @@ class MembersHomeRequestForm(FlaskForm):
                            validators=[InputRequired()])
 
     time_flexible = RadioField('Is Date/Time Flexible?',
-                               choices=[(True, 'Yes'), (False, 'No')],
-                               coerce=lambda x: x == 'True')
+                               choices=[(1, 'Yes'), (0, 'No')],
+                               coerce=int)
 
     description = TextAreaField('Short description (included in email):')
 
@@ -452,7 +453,6 @@ class MembersHomeRequestForm(FlaskForm):
         validators=[Optional()],
         get_label='name',
         query_factory=vol_support)
-
 
     home_location = SelectMultipleField(
         'Location',
@@ -840,10 +840,12 @@ class AddVetting(FlaskForm):
         "", render_kw={"rows": 15, "cols": 105}, validators=[Optional()])
     submit = SubmitField("Save")
 
+
 class EditServicesVolunteerCanProvide(FlaskForm):
     provided_services = MultiCheckboxField(
         'Services Volunteer can Provide', coerce=int)
     submit = SubmitField("Save")
+
 
 class AddReview(FlaskForm):
     review_identity = TextAreaField()
@@ -894,8 +896,8 @@ class EditDestinationAddressForm(FlaskForm):
                        validators=[InputRequired(),
                                    Length(1, 200)])
     address1 = StringField('Street address or P.O. Box',
-                                 validators=[InputRequired(),
-                                             Length(max=200)])
+                           validators=[InputRequired(),
+                                       Length(max=200)])
 
     address2 = StringField('Apt, suite, unit, building, floor, etc.',
                            validators=[Optional(),

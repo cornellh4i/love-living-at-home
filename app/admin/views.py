@@ -20,7 +20,7 @@ from app.decorators import admin_required
 from app.email import send_email
 from app.models import (Address, Availability, EditableHTML, LocalResource,
                         Member, MetroArea, ProvidedService, MembersHomeRequest, TransportationRequest, Role, Service, ServiceCategory, Staffer, User, Volunteer, RequestMemberRecord, Review)
-from app.models.transportation_request import RequestDurationType, RequestStatus, RequestType
+from app.models.transportation_request import ContactLogPriorityType, RequestDurationType, RequestStatus, RequestType
 from app.models.request_volunteer_record import RequestVolunteerRecord
 from app.models.office_request import OfficeRequest
 from wtforms.fields.core import Label
@@ -92,7 +92,7 @@ def people_manager():
     active = "member"
     if 'active' in request.args:
         active = request.args['active']
-    data ={'active':active }
+    data = {'active': active}
     members = Member.query.all()
     volunteers = Volunteer.query.all()
     local_resources = LocalResource.query.all()
@@ -101,7 +101,7 @@ def people_manager():
                            category_dict=category_dict,
                            members=members,
                            volunteers=volunteers,
-                           local_resources=local_resources, data = data)
+                           local_resources=local_resources, data=data)
 
 
 @admin.route('/new-user', methods=['GET', 'POST'])
@@ -320,71 +320,71 @@ def search_request():
          ]  # TODO -- what is required from local resources
 
     form.dated_filter.choices = [(0, 'Dated'), (1, 'Undated')]
-
-    temp_requests = [{
-        'request_num': 6724,
-        'request_status': "Requested",
-        'requested_date_display': "06/17",
-        'requested_date_full': "06/17/2021",
-        'requested_day_of_week': "Saturday",
-        'start_time': "12:00 PM",
-        'end_time': "12:00 PM",
-        'member_name': "Anne Rodda",
-        'volunteer_name': "Fran Spadafora Manzella",
-        'is_volunteer': True,
-        'request_type': "Member's Home",
-        'service': "Pet Care -Vol",
-        'created_date': "06/15/2021",
-        'modified_date': "N/A",
-        'service_category': "Volunteer In-Home Support",
-        'member_numbers': -2
-    }, {
-        'request_num': 6697,
-        'request_status': "Confirmed",
-        'requested_date_display': "06/21",
-        'requested_date_full': "06/21/2021",
-        'requested_day_of_week': "Wednesday",
-        'start_time': "11:30 AM",
-        'end_time': "12:40 PM",
-        'member_name': "Randy Warden",
-        'volunteer_name': "Hank Dullea",
-        'is_volunteer': True,
-        'request_type': "Transportation",
-        'service': "Vol Driver Local Medical Appt",
-        'created_date': "06/11/2021",
-        'modified_date': "06/18/2021",
-        'service_category': "Transportation",
-        'member_numbers': -1
-    }, {
-        'request_num': 6698,
-        'request_status': "Confirmed",
-        'requested_date_display': "",
-        'requested_date_full': "",
-        'requested_day_of_week': "Friday",
-        'start_time': "10:00 AM",
-        'end_time': "11:00 PM",
-        'member_name': "John Brown",
-        'volunteer_name': "Diana Cosgrove",
-        'is_volunteer': True,
-        'request_type': "Transportation",
-        'service': "Vol Driver Local Medical Appt",
-        'created_date': "06/11/2021",
-        'modified_date': "06/18/2021",
-        'service_category': "Transportation",
-        'member_numbers': -1
-    }]
+    temp_requests = []
+    # temp_requests = [{
+    #     'request_num': 6724,
+    #     'request_status': "Requested",
+    #     'requested_date_display': "06/17",
+    #     'requested_date_full': "06/17/2021",
+    #     'requested_day_of_week': "Saturday",
+    #     'start_time': "12:00 PM",
+    #     'end_time': "12:00 PM",
+    #     'member_name': "Anne Rodda",
+    #     'volunteer_name': "Fran Spadafora Manzella",
+    #     'is_volunteer': True,
+    #     'request_type': "Member's Home",
+    #     'service': "Pet Care -Vol",
+    #     'created_date': "06/15/2021",
+    #     'modified_date': "N/A",
+    #     'service_category': "Volunteer In-Home Support",
+    #     'member_numbers': -2
+    # }, {
+    #     'request_num': 6697,
+    #     'request_status': "Confirmed",
+    #     'requested_date_display': "06/21",
+    #     'requested_date_full': "06/21/2021",
+    #     'requested_day_of_week': "Wednesday",
+    #     'start_time': "11:30 AM",
+    #     'end_time': "12:40 PM",
+    #     'member_name': "Randy Warden",
+    #     'volunteer_name': "Hank Dullea",
+    #     'is_volunteer': True,
+    #     'request_type': "Transportation",
+    #     'service': "Vol Driver Local Medical Appt",
+    #     'created_date': "06/11/2021",
+    #     'modified_date': "06/18/2021",
+    #     'service_category': "Transportation",
+    #     'member_numbers': -1
+    # }, {
+    #     'request_num': 6698,
+    #     'request_status': "Confirmed",
+    #     'requested_date_display': "",
+    #     'requested_date_full': "",
+    #     'requested_day_of_week': "Friday",
+    #     'start_time': "10:00 AM",
+    #     'end_time': "11:00 PM",
+    #     'member_name': "John Brown",
+    #     'volunteer_name': "Diana Cosgrove",
+    #     'is_volunteer': True,
+    #     'request_type': "Transportation",
+    #     'service': "Vol Driver Local Medical Appt",
+    #     'created_date': "06/11/2021",
+    #     'modified_date': "06/18/2021",
+    #     'service_category': "Transportation",
+    #     'member_numbers': -1
+    # }]
 
     # Pull existing requests from the database and format each of them for display on front-end.
     transportation_requests = TransportationRequest.query.all()
     office_time_requests = OfficeRequest.query.all()
     members_home_requests = MembersHomeRequest.query.all()
-    #TODO: Add Office time request in future PR
-    db_requests = [transportation_requests, office_time_requests, members_home_requests]
+    db_requests = [transportation_requests,
+                   office_time_requests, members_home_requests]
     formatted_db_requests = []
     for index, db_request_type in enumerate(db_requests):
         for db_req in db_request_type:
             request_member_records = RequestMemberRecord.query.filter_by(
-                request_id=db_req.id).all()
+                request_id=db_req.id, request_category_id=index).all()
 
             members = []
             member_ids = []
@@ -394,7 +394,7 @@ def search_request():
                 member_ids.append(str(request_member_record.member_id))
 
             request_volunteer_records = RequestVolunteerRecord.query.filter_by(
-                request_id=db_req.id).all()
+                request_id=db_req.id, request_category_id=index).all()
 
             volunteers = []
             vol_ids = []
@@ -435,6 +435,47 @@ def search_request():
                     True,
                     'request_type':
                     RequestType.query.get(db_req.type_id).name,
+                    'request_type_id':
+                    db_req.type_id,
+                    'service_category':
+                    ServiceCategory.query.get(db_req.service_category_id).name,
+                    'service':
+                    Service.query.get(db_req.service_id).name,
+                    'created_date':
+                    db_req.created_date.strftime("%m/%d/%Y"),
+                    'modified_date':
+                    db_req.modified_date.strftime("%m/%d/%Y"),
+                    'member_numbers':
+                    " ".join(member_ids),
+                    'volunteer_ids':
+                    " ".join(vol_ids)
+                })
+            elif index == 1:
+                formatted_db_requests.append({
+                    'request_num':
+                    db_req.id,
+                    'request_status':
+                    RequestStatus.query.get(db_req.status_id).name,
+                    'requested_date_display':
+                    db_req.requested_date.strftime("%m/%d"),
+                    'requested_date_full':
+                    db_req.requested_date.strftime("%m/%d/%Y"),
+                    'requested_day_of_week':
+                    db_req.requested_date.strftime("%A"),
+                    'start_time':
+                    db_req.start_time.strftime("%I:%M %p"),
+                    'end_time':
+                    db_req.end_time.strftime("%I:%M %p"),
+                    'member_name':
+                    member_name,
+                    'volunteer_name':
+                    volunteer_name,
+                    'is_volunteer':
+                    True,
+                    'request_type':
+                    RequestType.query.get(db_req.type_id).name,
+                    'request_type_id':
+                    db_req.type_id,
                     'service_category':
                     ServiceCategory.query.get(db_req.service_category_id).name,
                     'service':
@@ -472,6 +513,8 @@ def search_request():
                     True,
                     'request_type':
                     RequestType.query.get(db_req.type_id).name,
+                    'request_type_id':
+                    db_req.type_id,
                     'service_category':
                     ServiceCategory.query.get(db_req.service_category_id).name,
                     'service':
@@ -492,10 +535,49 @@ def search_request():
                            form=form,
                            service_providers=service_providers,
                            requests=temp_requests,
-                           num_requests=len(temp_requests))
+                           num_requests=len(temp_requests)
+                           )
 
+
+@ admin.route('/search-request/_delete-request/<int:request_type_id>/<int:request_id>')
+@ login_required
+@ admin_required
+def delete_request(request_type_id, request_id):
+    """Delete a request"""
+    request_type = ""
+    # Transportation Request
+    if request_type_id == 0:
+        request_type = "Transportation"
+        request = TransportationRequest.query.filter_by(id=request_id).first()
+    # Office Request
+    elif request_type_id == 1:
+        request_type = "Office"
+        request = OfficeRequest.query.filter_by(id=request_id).first()
+    # Member's Home Request
+    elif request_type_id == 2:
+        request_type = "Member's Home"
+        request = MembersHomeRequest.query.filter_by(id=request_id).first()
+
+    members = RequestMemberRecord.query.filter_by(
+        request_id=request_id).filter_by(request_category_id=request_type_id).all()
+    for member in members:
+        db.session.delete(member)
+    volunteers = RequestVolunteerRecord.query.filter_by(
+        request_id=request_id).filter_by(request_category_id=request_type_id).all()
+    for volunteer in volunteers:
+        db.session.delete(volunteer)
+
+    db.session.delete(request)
+    db.session.commit()
+
+    flash(
+        'Successfully deleted request {}'.format(
+            request_type + " #" + str(request_id)), 'success')
+    return redirect(url_for('admin.search_request'))
 
 # Create a new service request.
+
+
 @admin.route('/create-request', methods=['GET', 'POST'])
 @admin_required
 def create_request():
@@ -503,10 +585,40 @@ def create_request():
 
 
 # Create a new Transportation service request.
+@admin.route('/create-request/transportation-request/<int:request_id>', methods=['GET', 'POST'])
 @admin.route('/create-request/transportation-request', methods=['GET', 'POST'])
 @admin_required
-def create_transportation_request():
+def create_transportation_request(request_id=None):
     form = TransportationRequestForm()
+    transportation_request = None
+    if request_id:
+        transportation_request = TransportationRequest.query.filter_by(
+            id=request_id).first()
+        form = TransportationRequestForm(
+            type_id=0,
+            status=RequestStatus.query.filter_by(
+                id=transportation_request.status_id).first(),
+            short_description=transportation_request.short_description,
+            date_created=transportation_request.created_date,
+            requested_date=transportation_request.requested_date,
+            initial_pickup=transportation_request.initial_pickup_time,
+            appointment=transportation_request.appointment_time,
+            return_pickup=transportation_request.return_pickup_time,
+            drop_off=transportation_request.drop_off_time,
+            duration=transportation_request.duration_type_id,
+            service_category=transportation_request.service_category_id,
+            transportation_service=transportation_request.service_id,
+            starting_location=transportation_request.starting_address,
+            destination=transportation_request.destination_address_id,
+            special_instructions=transportation_request.special_instructions,
+            follow_up_date=transportation_request.followup_date,
+            responsible_staffer=transportation_request.responsible_staffer_id,
+            contact_log_priority=ContactLogPriorityType.query.filter_by(
+                id=transportation_request.contact_log_priority_id).first(),
+            cc_email=transportation_request.cc_email,
+            time_flexible=transportation_request.is_date_time_flexible
+        )
+
     form.requesting_member.multiple = True
     form.requesting_member.choices = [
         (member.id, member.first_name + " " + member.last_name)
@@ -522,7 +634,7 @@ def create_transportation_request():
         for request_duration_type in RequestDurationType.query.all()
     ]
     form.destination.choices = [(address.id,
-                                 address.name + " - " + address.address1 + (" " + address.address2 if address.address2 else ""))
+                                address.name + " - " + address.address1 + (" " + address.address2 if address.address2 else ""))
                                 for address in Address.query.all()]
     form.starting_location.choices = [
         (address.id, address.name + " - " + address.address1 +
@@ -537,43 +649,82 @@ def create_transportation_request():
         (staffer.id, staffer.first_name + " " + staffer.last_name)
         for staffer in Staffer.query.all()
     ]
+    if request_id:
+        request_member_records = [member.member_id for member in RequestMemberRecord.query.filter_by(request_id=transportation_request.id,
+                                                                                                     request_category_id=0).all()]
+        form.requesting_member.data = request_member_records
+        request_volunteer_records = [volunteer.volunteer_id for volunteer in RequestVolunteerRecord.query.filter_by(request_id=transportation_request.id,
+                                                                                                                    request_category_id=0).all()]
+        form.service_provider.data = request_volunteer_records
+
     if form.validate_on_submit():
         special_input = request.form.get('special_instructions')
-        transportation_request = TransportationRequest(
-            type_id=0,
-            status_id=form.status.data.id,
-            short_description=form.description.data,
-            created_date=form.date_created.data,
-            requested_date=form.requested_date.data,
-            initial_pickup_time=form.initial_pickup.data,
-            appointment_time=form.appointment.data,
-            return_pickup_time=form.return_pickup.data,
-            drop_off_time=form.drop_off.data,
-            is_date_time_flexible=form.time_flexible.data,
-            duration_type_id=form.duration.data,
-            service_category_id=form.service_category.data.id,
-            service_id=form.transportation_service.data.id if
-            form.service_category.data.id == 0 else form.covid_service.data.id,
-            starting_address=form.starting_location.data,
-            destination_address_id=form.destination.data,
-            special_instructions=special_input,
-            followup_date=form.follow_up_date.data,
-            responsible_staffer_id=form.responsible_staffer.data,
-            contact_log_priority_id=form.contact_log_priority.data.id,
-            cc_email=form.person_to_cc.data)
-        db.session.add(transportation_request)
-        db.session.commit()
-        # request_batch.append(transportation_request.id)
+        if transportation_request is not None:
+            transportation_request.status_id = form.status.data.id
+            transportation_request.short_description = form.description.data
+            transportation_request.created_date = form.date_created.data
+            transportation_request.requested_date = form.requested_date.data
+            transportation_request.initial_pickup_time = form.initial_pickup.data
+            transportation_request.appointment_time = form.appointment.data
+            transportation_request.return_pickup_time = form.return_pickup.data
+            transportation_request.drop_off_time = form.drop_off.data
+            transportation_request.is_date_time_flexible = form.time_flexible.data
+            transportation_request.duration_type_id = form.duration.data
+            transportation_request.service_category_id = form.service_category.data.id
+            transportation_request.service_id = form.transportation_service.data.id if form.service_category.data.id == 0 else form.covid_service.data.id
+            transportation_request.starting_address = form.starting_location.data
+            transportation_request.destination_address_id = form.destination.data
+            transportation_request.special_instructions = special_input
+            transportation_request.followup_date = form.follow_up_date.data
+            transportation_request.responsible_staffer_id = form.responsible_staffer.data
+            transportation_request.contact_log_priority_id = form.contact_log_priority.data.id
+            transportation_request.cc_email = form.person_to_cc.data
 
-        # member_batch = []
-        for member in form.requesting_member.data:
+            members = RequestMemberRecord.query.filter_by(
+                request_id=transportation_request.id).filter_by(request_category_id=0).all()
+            for member in members:
+                db.session.delete(member)
+            volunteers = RequestVolunteerRecord.query.filter_by(
+                request_id=transportation_request.id).filter_by(request_category_id=0).all()
+            for volunteer in volunteers:
+                db.session.delete(volunteer)
+            db.session.add(transportation_request)
+            db.session.commit()
+        else:
+            transportation_request = TransportationRequest(
+                type_id=0,
+                status_id=form.status.data.id,
+                short_description=form.description.data,
+                created_date=form.date_created.data,
+                requested_date=form.requested_date.data,
+                initial_pickup_time=form.initial_pickup.data,
+                appointment_time=form.appointment.data,
+                return_pickup_time=form.return_pickup.data,
+                drop_off_time=form.drop_off.data,
+                is_date_time_flexible=bool(form.time_flexible.data),
+                duration_type_id=form.duration.data,
+                service_category_id=form.service_category.data.id,
+                service_id=form.transportation_service.data.id if
+                form.service_category.data.id == 0 else form.covid_service.data.id,
+                starting_address=form.starting_location.data,
+                destination_address_id=form.destination.data,
+                special_instructions=special_input,
+                followup_date=form.follow_up_date.data,
+                responsible_staffer_id=form.responsible_staffer.data,
+                contact_log_priority_id=form.contact_log_priority.data.id,
+                cc_email=form.person_to_cc.data)
+            db.session.add(transportation_request)
+            db.session.commit()
+
+        requesting_members = request.form.getlist("requesting_member")
+        for member in requesting_members:
             record = RequestMemberRecord(request_id=transportation_request.id,
                                          request_category_id=0,
                                          member_id=member)
             db.session.add(record)
             db.session.commit()
-        # Eventually this should be changed so multiple volunteers can be notified
-        for volunteer in form.service_provider.data:
+        service_providers = request.form.getlist("service_provider")
+        for volunteer in service_providers:
             request_volunteer_record = RequestVolunteerRecord(
                 request_id=transportation_request.id,
                 request_category_id=0,
@@ -586,20 +737,39 @@ def create_transportation_request():
 
         flash('Successfully submitted a new transportation request', 'success')
         return redirect(url_for('admin.search_request'))
-    # elif (len(form.errors) > 0):
-    # else:
-    # flash(request.method, 'error')
-    # flash(form.errors, 'error')
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
                            form=form)
 
 
+@admin.route('/create-request/office-time-request/<int:request_id>', methods=['GET', 'POST'])
 @admin.route('/create-request/office-time-request', methods=['GET', 'POST'])
 @admin_required
-def create_office_time_request():
-
+def create_office_time_request(request_id=None):
     form = OfficeTimeRequestForm()
+    office_time_request = None
+    if request_id:
+        office_time_request = OfficeRequest.query.filter_by(
+            id=request_id).first()
+        form = OfficeTimeRequestForm(
+            type_id=1,
+            description=office_time_request.short_description,
+            date_created=office_time_request.created_date,
+            requested_date=office_time_request.requested_date,
+            start_time=office_time_request.start_time,
+            end_time=office_time_request.end_time,
+            high_priority=office_time_request.is_high_priority,
+            responsible_staffer=office_time_request.responsible_staffer_id,
+            person_to_cc=office_time_request.cc_email,
+            service_category=ServiceCategory.query.filter_by(
+                id=office_time_request.service_category_id).first(),
+            office_time_service=Service.query.filter_by(
+                id=office_time_request.service_id),
+            status=RequestStatus.query.filter_by(
+                id=office_time_request.status_id),
+            contact_log_priority=ContactLogPriorityType.query.filter_by(
+                id=office_time_request.contact_log_priority_id)
+        )
     form.requesting_member.multiple = True
     form.requesting_member.choices = [
         (member.id, member.first_name + " " + member.last_name)
@@ -617,39 +787,74 @@ def create_office_time_request():
         (staffer.id, staffer.first_name + " " + staffer.last_name)
         for staffer in Staffer.query.all()
     ]
+    if request_id:
+        request_member_records = [member.member_id for member in RequestMemberRecord.query.filter_by(request_id=office_time_request.id,
+                                                                                                     request_category_id=1).all()]
+        form.requesting_member.data = request_member_records
+        request_volunteer_records = [volunteer.volunteer_id for volunteer in RequestVolunteerRecord.query.filter_by(request_id=office_time_request.id,
+                                                                                                                    request_category_id=1).all()]
+        form.service_provider.data = request_volunteer_records
     if form.validate_on_submit():
         special_input = request.form.get('special_instructions')
-       
-        office_time_request = OfficeRequest(
-            type_id=1,
-            status_id=form.status.data.id,
-            short_description=form.description.data,
-            created_date=form.date_created.data,
-            requested_date=form.requested_date.data,
-            start_time=form.start_time.data,
-            end_time=form.end_time.data,
-            is_high_priority=form.high_priority.data,
-            service_category_id=form.service_category.data.id,
-            service_id=form.office_time_service.data.id if
-            form.service_category.data.id == 6 else form.covid_service.data.id,
-            special_instructions=special_input,
-            responsible_staffer_id=form.responsible_staffer.data,
-            contact_log_priority_id=form.contact_log_priority.data.id,
-            cc_email= form.person_to_cc.data )
-        db.session.add(office_time_request)
-        db.session.commit()
-        
+        if office_time_request is not None:
+            office_time_request.type_id = 1
+            office_time_request.status_id = form.status.data.id
+            office_time_request.short_description = form.description.data
+            office_time_request.created_date = form.date_created.data
+            office_time_request.requested_date = form.requested_date.data
+            office_time_request.start_time = form.start_time.data
+            office_time_request.end_time = form.end_time.data
+            office_time_request.is_high_priority = form.high_priority.data
+            office_time_request.service_category_id = form.service_category.data.id
+            office_time_request.service_id = form.office_time_service.data.id if form.service_category.data.id == 6 else form.covid_service.data.id
+            office_time_request.special_instructions = special_input
+            office_time_request.responsible_staffer_id = form.responsible_staffer.data
+            office_time_request.contact_log_priority_id = form.contact_log_priority.data.id
+            office_time_request.cc_email = form.person_to_cc.data
 
-        for member in form.requesting_member.data:
-            request_member_record= RequestMemberRecord(
+            members = RequestMemberRecord.query.filter_by(
+                request_id=office_time_request.id).filter_by(request_category_id=1).all()
+            for member in members:
+                db.session.delete(member)
+            volunteers = RequestVolunteerRecord.query.filter_by(
+                request_id=office_time_request.id).filter_by(request_category_id=1).all()
+            for volunteer in volunteers:
+                db.session.delete(volunteer)
+            db.session.add(office_time_request)
+            db.session.commit()
+
+        else:
+            office_time_request = OfficeRequest(
+                type_id=1,
+                status_id=form.status.data.id,
+                short_description=form.description.data,
+                created_date=form.date_created.data,
+                requested_date=form.requested_date.data,
+                start_time=form.start_time.data,
+                end_time=form.end_time.data,
+                is_high_priority=form.high_priority.data,
+                service_category_id=form.service_category.data.id,
+                service_id=form.office_time_service.data.id if
+                form.service_category.data.id == 6 else form.covid_service.data.id,
+                special_instructions=special_input,
+                responsible_staffer_id=form.responsible_staffer.data,
+                contact_log_priority_id=form.contact_log_priority.data.id,
+                cc_email=form.person_to_cc.data)
+            db.session.add(office_time_request)
+            db.session.commit()
+
+        requesting_members = request.form.getlist("requesting_member")
+        for member in requesting_members:
+            request_member_record = RequestMemberRecord(
                 request_id=office_time_request.id,
-                request_category_id = 1,
+                request_category_id=1,
                 member_id=member
             )
             db.session.add(request_member_record)
             db.session.commit()
 
-        for volunteer in form.service_provider.data:
+        service_providers = request.form.getlist("service_provider")
+        for volunteer in service_providers:
             request_volunteer_record = RequestVolunteerRecord(
                 request_id=office_time_request.id,
                 request_category_id=1,
@@ -660,18 +865,34 @@ def create_office_time_request():
             db.session.add(request_volunteer_record)
             db.session.commit()
 
-        flash('Successfully submitted a new transportation request', 'success')
+        flash('Successfully submitted a new office request', 'success')
         return redirect(url_for('admin.search_request'))
-
     return render_template('admin/request_manager/office_time_request.html',
                            title='Office Time Request',
                            form=form)
 
+
+@admin.route('/create-request/members-home-request/<int:request_id>', methods=['GET', 'POST'])
 @admin.route('create-request/members-home-request', methods=['GET', 'POST'])
 @admin_required
 @login_required
-def create_members_home_request():
+def create_members_home_request(request_id=None):
     form = MembersHomeRequestForm()
+    members_home_request = None
+    if request_id:
+        members_home_request = MembersHomeRequest.query.filter_by(
+            id=request_id).first()
+        form = MembersHomeRequestForm(
+            description=members_home_request.short_description,
+            date_created=members_home_request.created_date,
+            requested_date=members_home_request.requested_date,
+            time_from=members_home_request.from_time,
+            time_until=members_home_request.until_time,
+            time_flexible=members_home_request.is_date_time_flexible,
+            follow_up_date=members_home_request.followup_date,
+            responsible_staffer=members_home_request.responsible_staffer_id,
+            person_to_cc=members_home_request.cc_email,
+            cc_email=form.person_to_cc.data)
 
     form.requesting_member.multiple = True
     form.requesting_member.choices = [
@@ -696,36 +917,105 @@ def create_members_home_request():
         for staffer in Staffer.query.all()
     ]
 
+    if request_id:
+        request_member_records = [
+            member.member_id for member in
+            RequestMemberRecord.query.filter_by(request_id=members_home_request.id,
+                                                request_category_id=2).all()]
+        form.requesting_member.data = request_member_records
+        request_volunteer_records = [
+            volunteer.volunteer_id for volunteer in
+            RequestVolunteerRecord.query.filter_by(request_id=members_home_request.id,
+                                                   request_category_id=2).all()]
+        form.service_provider.data = request_volunteer_records
+        form.status.data = RequestStatus.query.filter_by(
+            id=members_home_request.status_id).first()
+        form.service_category.data = ServiceCategory.query.filter_by(
+            id=members_home_request.service_category_id).first()
+        service = Service.query.filter_by(
+            id=members_home_request.service_id).first()
+        if form.service_category.data == 3:
+            form.tech_services.data = service
+        elif form.service_category.data == 4:
+            form.prof_home_services.data = service
+        elif form.service_category.data == 5:
+            form.prof_support_services.data = service
+        elif form.service_category.data == 7:
+            form.vol_home_services.data = service
+        elif form.service_category.data == 8:
+            form.vol_support_services.data = service
+        form.contact_log_priority.data = ContactLogPriorityType.query.filter_by(
+            id=members_home_request.contact_log_priority_id).first()
+
     if form.validate_on_submit():
         special_input = request.form.get('special_instructions')
-        members_home_request = MembersHomeRequest(
-            type_id=2,
-            status_id=form.status.data.id,
-            short_description=form.description.data,
-            created_date=form.date_created.data,
-            requested_date=form.requested_date.data,
-            from_time=form.time_from.data,
-            until_time=form.time_until.data,
-            is_date_time_flexible=form.time_flexible.data,
-            service_category_id=form.service_category.data.id,
-            service_id=form.tech_services.data.id if
-            form.service_category.data.id == 3 else (form.prof_home_services.data.id if form.service_category.data.id == 4 else (form.prof_support_services if form.service_category.data.id == 5 else (form.vol_home_services.data.id if form.service_category.data.id == 7 else form.vol_support_services.data.id))),
-            special_instructions=special_input,
-            followup_date=form.follow_up_date.data,
-            responsible_staffer_id=form.responsible_staffer.data,
-            contact_log_priority_id=form.contact_log_priority.data.id,
-            cc_email=form.person_to_cc.data)
-        db.session.add(members_home_request)
-        db.session.commit()
+        if members_home_request is not None:
+            members_home_request.type_id = 2
+            members_home_request.status_id = request.form.get("status")
+            members_home_request.short_description = form.description.data
+            members_home_request.created_date = form.date_created.data
+            members_home_request.requested_date = form.requested_date.data
+            members_home_request.from_time = form.time_from.data
+            members_home_request.until_time = form.time_until.data
+            members_home_request.is_date_time_flexible = form.time_flexible.data
+            members_home_request.service_category_id = form.service_category.data.id
+            members_home_request.service_id = (form.tech_services.data.id if
+                                               form.service_category.data.id == 3
+                                               else (form.prof_home_services.data.id
+                                                     if form.service_category.data.id == 4
+                                                     else (form.prof_support_services if
+                                                           form.service_category.data.id == 5
+                                                           else (form.vol_home_services.data.id
+                                                                 if form.service_category.data.id == 7
+                                                                 else form.vol_support_services.data.id))))
+            members_home_request.special_instructions = special_input
+            members_home_request.followup_date = form.follow_up_date.data
+            members_home_request.responsible_staffer_id = form.responsible_staffer.data
+            members_home_request.contact_log_priority_id = request.form.get(
+                "contact_log_priority")
+            members_home_request.cc_email = form.person_to_cc.data
 
-        for member in form.requesting_member.data:
+            members = RequestMemberRecord.query.filter_by(
+                request_id=members_home_request.id).filter_by(request_category_id=2).all()
+            for member in members:
+                db.session.delete(member)
+            volunteers = RequestVolunteerRecord.query.filter_by(
+                request_id=members_home_request.id).filter_by(request_category_id=2).all()
+            for volunteer in volunteers:
+                db.session.delete(volunteer)
+            db.session.add(members_home_request)
+            db.session.commit()
+        else:
+            members_home_request = MembersHomeRequest(
+                type_id=2,
+                status_id=form.status.data.id,
+                short_description=form.description.data,
+                created_date=form.date_created.data,
+                requested_date=form.requested_date.data,
+                from_time=form.time_from.data,
+                until_time=form.time_until.data,
+                is_date_time_flexible=form.time_flexible.data,
+                service_category_id=form.service_category.data.id,
+                service_id=form.tech_services.data.id if
+                form.service_category.data.id == 3 else (form.prof_home_services.data.id if form.service_category.data.id == 4 else (form.prof_support_services if form.service_category.data.id == 5 else (form.vol_home_services.data.id if form.service_category.data.id == 7 else form.vol_support_services.data.id))),
+                special_instructions=special_input,
+                followup_date=form.follow_up_date.data,
+                responsible_staffer_id=form.responsible_staffer.data,
+                contact_log_priority_id=form.contact_log_priority.data.id,
+                cc_email=form.person_to_cc.data)
+            db.session.add(members_home_request)
+            db.session.commit()
+
+        requesting_members = request.form.getlist("requesting_member")
+        for member in requesting_members:
             record = RequestMemberRecord(request_id=members_home_request.id,
                                          request_category_id=2,
                                          member_id=member)
             db.session.add(record)
             db.session.commit()
 
-        for volunteer in form.service_provider.data:
+        service_providers = request.form.getlist("service_provider")
+        for volunteer in service_providers:
             request_volunteer_record = RequestVolunteerRecord(
                 request_id=members_home_request.id,
                 request_category_id=2,
@@ -736,9 +1026,12 @@ def create_members_home_request():
             db.session.add(request_volunteer_record)
             db.session.commit()
 
-        flash('Successfully submitted a new member\'s home request', 'success')
+        if request_id:
+            flash('Successfully edited member\'s home request # {}'.
+                  format(request_id), 'success')
+        else:
+            flash('Successfully submitted a new member\'s home request', 'success')
         return redirect(url_for('admin.search_request'))
-
     return render_template('admin/request_manager/members_home_request.html',
                            title='Members Home Request',
                            form=form)
@@ -1425,7 +1718,7 @@ def add_availability_volunteer(volunteer_id=None):
                 volunteer.last_name), 'success')
         return redirect(url_for('admin.people_manager', active='volunteer'))
 
-    return render_template('admin/people_manager/availability.html', form=form, active = 'volunteer')
+    return render_template('admin/people_manager/availability.html', form=form, active='volunteer')
 
 
 @ admin.route('/add-availability-local-resource/<int:local_resource_id>',
@@ -1481,7 +1774,7 @@ def add_availability_local_resource(local_resource_id=None):
                 localResource.company_name), 'success')
         return redirect(url_for('admin.people_manager', active='local-resource'))
 
-    return render_template('admin/people_manager/availability.html', form=form, active = 'local-resource')
+    return render_template('admin/people_manager/availability.html', form=form, active='local-resource')
 
 
 @ admin.route('/people-manager/_delete-member/<int:member_id>')
