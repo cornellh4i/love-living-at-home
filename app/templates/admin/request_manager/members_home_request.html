@@ -96,26 +96,98 @@
       <div class="right floated six wide column"></div>
     </div>
 
-    <div class="twelve wide column">
+    <div id = "providers" class="twelve wide column">
       {{ f.render_form_field(form.service_provider)}}
     </div>
 
-    <div class="four fields">
+    <div class="four fields" style = "margin-top: 10px">
       <div class="field">
-        <button class="ui purple basic button" type="button">
+        <button id="show-send-req-modal" class="ui purple basic button" type="button">
           Send Request
         </button>
+        <div id="send-req-modal" class="ui modal">
+          <i class="close icon"></i>
+          <div class="header">Are you sure you'd like to send this request?</div>
+          <div class="content">
+            <h4>A blank email will be sent if you haven't yet created the request<h4>
+            <button onclick="sendRequests('send+request')" class="ui purple basic button" type="button">
+              Send Request
+            </button>
+            <div id = "send-request-success-message" class="ui hidden positive message">
+              <i class="close icon"></i>
+              <div class="header">
+                Request sent
+              </div>
+              <p>The volunteers have been emailed!</p>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="field">
-        <button class="ui purple basic button" type="button">
+        <button id = "show-confirmation-modal" class="ui purple basic button" type="button">
           Confirmation
         </button>
+        <div id="confirmation-modal" class="ui modal">
+          <i class="close icon"></i>
+          <div class="header">Are you sure you'd like to send a confirmation email?</div>
+          <div class="content">
+            <h4>A blank email will be sent if you haven't yet created the request<h4>
+            <button onclick="sendRequests('confirmation')" class="ui purple basic button" type="button">
+              Confirmation
+            </button>
+            <div id = "confirmation-success-message" class="ui hidden positive message">
+              <i class="close icon"></i>
+              <div class="header">
+                Confirmation sent
+              </div>
+              <p>The volunteers have been emailed!</p>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="field">
-        <button class="ui purple basic button" type="button">Not Needed</button>
+        <button id = "show-not-needed-modal" class="ui purple basic button" type="button">
+          Not Needed
+        </button>
+        <div id="not-needed-modal" class="ui modal">
+          <i class="close icon"></i>
+          <div class="header">Are you sure you'd like to send a not needed email?</div>
+          <div class="content">
+            <h4>A blank email will be sent if you haven't yet created the request<h4>
+            <button onclick="sendRequests('not+needed')" class="ui purple basic button" type="button">
+              Not Needed
+            </button>
+            <div id = "not-needed-success-message" class="ui hidden positive message">
+              <i class="close icon"></i>
+              <div class="header">
+                Request sent
+              </div>
+              <p>The volunteers have been emailed!</p>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="field">
-        <button class="ui purple basic button" type="button">Summary</button>
+        <button id = "show-summary-modal" class="ui purple basic button" type="button">
+          Summary
+        </button>
+        <div id="summary-modal" class="ui modal">
+          <i class="close icon"></i>
+          <div class="header">Are you sure you'd like to send a summary email?</div>
+          <div class="content">
+            <h4>A blank email will be sent if you haven't yet created the request<h4>
+            <button onclick="sendRequests('summary')" class="ui purple basic button" type="button">
+              Send Summary
+            </button>
+            <div id = "summary-success-message" class="ui hidden positive message">
+              <i class="close icon"></i>
+              <div class="header">
+                Request sent
+              </div>
+              <p>The volunteers have been emailed!</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -155,15 +227,30 @@
     {{ f.render_form_field(form.person_to_cc) }}
   </div>
 
-  <script>
-    $('#show-new-destination').click(function () {
-      $('#new-destination').modal('show');
-    });
 
-    $('#show-new-service-provider').click(function () {
+  <script>
+    $('#show-new-service-provider').click(() => {
       $('#new-service-provider').modal('show');
     });
 
+    $('#show-send-req-modal').click(() => {
+      $('#send-req-modal').modal('show');
+    });
+
+    $('#show-confirmation-modal').click(() => {
+      $('#confirmation-modal').modal('show');
+    });
+
+    $('#show-not-needed-modal').click(() => {
+      $('#not-needed-modal').modal('show');
+    });
+
+    $('#show-summary-modal').click(() => {
+      $('#summary-modal').modal('show');
+    });
+  </script>
+
+  <script>
     function serviceChoices() {
       let service_category = document.getElementById('service_category').value;
       console.log("got:" + service_category)
@@ -198,6 +285,80 @@
       special_input = obj[member_id];
     }
   </script>
+
+  <!-- Begin table logic -->
+  <script>
+    const providerSelect = document.getElementById("service_provider");
+    function updateTable() {
+      const providerDiv = document.getElementById("providers");
+      let selectedNames = [];
+      for (const option of providerSelect.options) {
+        if (option.selected)
+          selectedNames.push(option.innerHTML)
+      }
+
+      const table = document.createElement('table');
+      if (selectedNames.length > 0) {
+        table.className += "ui celled table";
+        const header = table.createTHead();
+        const row = header.insertRow(0);
+        const headers = ["Name", "Address", "Location", "Phone Number", "Contact Method", "Type", "Last/Next Svc. Date", "Fully Vetted", "Rating", "Actions"]
+        row.insertCell(0);
+        for (let i = 1; i < headers.length; i++) {
+          const tempHeaderCell = row.insertCell(i);
+          tempHeaderCell.innerHTML = "<b>" + headers[i - 1] + "</b>";
+        }
+        table.id = "volunteerDataTable";
+      }
+
+      const volDataArr = {{ volunteer_data | safe }}
+
+      for (const volName of selectedNames) {
+        const row = table.insertRow(1);
+        const boxEntry = row.insertCell(0);
+        const checkBox = document.createElement("INPUT");
+        checkBox.setAttribute("type", "checkbox");
+        checkBox.className += "ui checkbox";
+        checkBox.name = "selectedVolunteersCheckBox";
+        volDataArr.find(vol => {
+          if (vol[0] == volName)
+           checkBox.value = vol[3] + "|" + vol[6];
+        })
+        boxEntry.appendChild(checkBox);
+        const volunteer = volDataArr.find(volObj => volObj[0] == volName);
+        for (let i = 0; i < volunteer.length; i++) {
+          const tempVolData = row.insertCell(i + 1);
+          tempVolData.innerHTML = volunteer[i];
+        }
+      }
+
+      if (!document.getElementById("volunteerDataTable")) {
+        providerDiv.prepend(table);
+      } else {
+        providerDiv.replaceChild(table, document.getElementById("volunteerDataTable"));
+      }
+    }
+    providerSelect.setAttribute("onchange", "updateTable()");
+
+    function sendRequests(buttonType) {
+      const checkBoxStates = document.getElementsByName("selectedVolunteersCheckBox");
+      const checkBoxArr = Array.prototype.slice.call(checkBoxStates);
+      const volunteersToReq = checkBoxArr.filter(box => box.checked);
+      let emails = ""
+      for (const vol of volunteersToReq)
+        emails += vol.value.split("|")[1] + "&";
+
+      emails = emails.substring(0, emails.length - 1);
+
+      const websiteHost = window.location.host;
+      fetch(`http://${websiteHost}/admin/create-request/send-emails?${buttonType}&-1&Transportation&${emails}`);
+
+      const buttonId = `${buttonType.replace('+', '-') + '-success-message'}`
+      document.getElementById(buttonId).classList.remove('hidden');
+      document.getElementById(buttonId).classList.add('visible');
+    }
+  </script>
+  <!-- End table logic -->
 
   <div class="twelve wide column">
     {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}

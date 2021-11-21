@@ -3,7 +3,7 @@ import sys
 from operator import __truediv__
 
 from flask import (Blueprint, abort, flash, redirect, render_template, request,
-                   send_file, url_for)
+                   send_file, url_for, jsonify)
 from flask_login import current_user, login_required
 from flask_rq import get_queue
 
@@ -19,7 +19,7 @@ from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import (Address, Availability, EditableHTML, LocalResource,
-                        Member, MetroArea, ProvidedService, MembersHomeRequest, TransportationRequest, Role, Service, ServiceCategory, Staffer, User, Volunteer, RequestMemberRecord, Review)
+                        Member, MetroArea, ProvidedService, MembersHomeRequest, TransportationRequest, Role, Service, ServiceCategory, Staffer, User, Volunteer, VolunteerType, RequestMemberRecord, RequestMemberRecord, Review)
 from app.models.transportation_request import ContactLogPriorityType, RequestDurationType, RequestStatus, RequestType
 from app.models.request_volunteer_record import RequestVolunteerRecord
 from app.models.office_request import OfficeRequest
@@ -92,7 +92,7 @@ def people_manager():
     active = "member"
     if 'active' in request.args:
         active = request.args['active']
-    data = {'active': active}
+    data ={'active':active }
     members = Member.query.all()
     volunteers = Volunteer.query.all()
     local_resources = LocalResource.query.all()
@@ -274,7 +274,6 @@ def update_editor_contents():
     db.session.commit()
 
     return 'OK', 200
-
 
 def select_all(selection, field):
     if '-1' in selection:
@@ -723,6 +722,7 @@ def create_transportation_request(request_id=None):
                                          member_id=member)
             db.session.add(record)
             db.session.commit()
+
         service_providers = request.form.getlist("service_provider")
         for volunteer in service_providers:
             request_volunteer_record = RequestVolunteerRecord(
@@ -735,12 +735,87 @@ def create_transportation_request(request_id=None):
             db.session.add(request_volunteer_record)
             db.session.commit()
 
-        flash('Successfully submitted a new transportation request', 'success')
+        if request_id:
+            flash('Successfully editied transportation request # {}'.
+                  format(request_id), 'success')
+        else:
+            flash('Successfully submitted a transportation request', 'success')
         return redirect(url_for('admin.search_request'))
+
+    volunteer_info = []
+    for volunteer in Volunteer.query.all():
+        vol_status = VolunteerType.query.get(volunteer.type_id).name
+        address = Address.query.get(volunteer.primary_address_id)
+        street_address = address.address1
+        location = address.city
+        volunteer_info.append(
+            (volunteer.first_name + " " + volunteer.last_name,
+            street_address,
+            location,
+            volunteer.primary_phone_number,
+            volunteer.preferred_contact_method,
+            vol_status,
+            str(volunteer.email_address),
+            str(volunteer.is_fully_vetted),
+            round(volunteer.rating, 2))
+        )
+
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
-                           form=form)
+                           form=form,
+                           volunteer_data=json.dumps(volunteer_info))
 
+@admin.route('/create-request/send-emails', methods=['GET'])
+def send_vols_emails():
+    """
+    Email sending endpoint
+    action_type -- type of action being done (send request, confirmation, etc)
+    req_id -- the request id to pull data from
+    req_type -- Transportation, Member's home, etc
+    Fourth param onwards: volunteer emails
+    """
+    params = list(request.args)
+    #TODO: Determine email template based on this variable
+    action_type = params[0]
+    req_id = int(params[1])
+    req_type = params[2]
+    emails = []
+    for i in range(3, len(params)):
+        emails.append(params[i])
+
+    for vol_email in emails:
+        if RequestMemberRecord.query.filter_by(request_id=req_id).first() is None:
+            get_queue().enqueue(
+                send_email,
+                recipient=vol_email,
+                subject="Admin Request",
+                template="admin/email/blank_email"
+            )
+        else:
+            for member_rec in RequestMemberRecord.query.filter_by(request_id=req_id):
+                if req_type == "Transportation":
+                    req_data = TransportationRequest.query.get(req_id)
+                elif req_type == "Member\'s Home":
+                    req_data = MembersHomeRequest.query.get(req_id)
+                elif req_type == "Office Time":
+                    req_data = OfficeTimeRequest.query.get(req_id)
+                '''
+                In the future the get_queue function would be moved into each of the if statements above.
+
+                Within each function call a unique template would be supplied.
+                '''
+                get_queue().enqueue(
+                    send_email,
+                    recipient=vol_email,
+                    subject=f"New {req_type} Request",
+                    template="admin/email/send_request",
+                    volunteer=Volunteer.get(RequestMemberRecord.query.get(req_id).volunteer_id),
+                    member=Members.get(member_rec.member_id),
+                    request_type=req_type,
+                    request_data=req_data,
+                    address=Address
+                )
+    return jsonify("OK")
 
 @admin.route('/create-request/office-time-request/<int:request_id>', methods=['GET', 'POST'])
 @admin.route('/create-request/office-time-request', methods=['GET', 'POST'])
@@ -865,12 +940,35 @@ def create_office_time_request(request_id=None):
             db.session.add(request_volunteer_record)
             db.session.commit()
 
-        flash('Successfully submitted a new office request', 'success')
+        if request_id:
+            flash('Successfully edited office time request # {}'.
+                  format(request_id), 'success')
+        else:
+            flash('Successfully submitted am office time request', 'success')
         return redirect(url_for('admin.search_request'))
+
+    volunteer_info = []
+    for volunteer in Volunteer.query.all():
+        vol_status = VolunteerType.query.get(volunteer.type_id).name
+        address = Address.query.get(volunteer.primary_address_id)
+        street_address = address.address1
+        location = address.city
+        volunteer_info.append(
+            (volunteer.first_name + " " + volunteer.last_name,
+            street_address,
+            location,
+            volunteer.primary_phone_number,
+            volunteer.preferred_contact_method,
+            vol_status,
+            str(volunteer.email_address),
+            str(volunteer.is_fully_vetted),
+            round(volunteer.rating, 2))
+        )
+
     return render_template('admin/request_manager/office_time_request.html',
                            title='Office Time Request',
-                           form=form)
-
+                           form=form,
+                           volunteer_data=json.dumps(volunteer_info))
 
 @admin.route('/create-request/members-home-request/<int:request_id>', methods=['GET', 'POST'])
 @admin.route('create-request/members-home-request', methods=['GET', 'POST'])
@@ -1032,9 +1130,29 @@ def create_members_home_request(request_id=None):
         else:
             flash('Successfully submitted a new member\'s home request', 'success')
         return redirect(url_for('admin.search_request'))
+
+    volunteer_info = []
+    for volunteer in Volunteer.query.all():
+        vol_status = VolunteerType.query.get(volunteer.type_id).name
+        address = Address.query.get(volunteer.primary_address_id)
+        street_address = address.address1
+        location = address.city
+        volunteer_info.append(
+            (volunteer.first_name + " " + volunteer.last_name,
+            street_address,
+            location,
+            volunteer.primary_phone_number,
+            volunteer.preferred_contact_method,
+            vol_status,
+            str(volunteer.email_address),
+            str(volunteer.is_fully_vetted),
+            round(volunteer.rating, 2))
+        )
+
     return render_template('admin/request_manager/members_home_request.html',
                            title='Members Home Request',
-                           form=form)
+                           form=form,
+                           volunteer_data=json.dumps(volunteer_info))
 
 
 @admin.route('/invite-member', methods=['GET', 'POST'])
@@ -1775,7 +1893,6 @@ def add_availability_local_resource(local_resource_id=None):
         return redirect(url_for('admin.people_manager', active='local-resource'))
 
     return render_template('admin/people_manager/availability.html', form=form, active='local-resource')
-
 
 @ admin.route('/people-manager/_delete-member/<int:member_id>')
 @ login_required

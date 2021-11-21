@@ -237,7 +237,6 @@ class TransportationRequestForm(FlaskForm):
 
     submit = SubmitField("Submit")
 
-
 class OfficeTimeRequestForm(FlaskForm):
     def selectedCategory():
         return db.session.query(ServiceCategory).order_by().filter(
@@ -352,7 +351,7 @@ class MembersHomeRequestForm(FlaskForm):
     def prof_home():
         return db.session.query(Service).order_by().filter(
             Service.category_id == 4)
-
+      
     def prof_support():
         return db.session.query(Service).order_by().filter(
             Service.category_id == 5)
@@ -481,7 +480,6 @@ class MembersHomeRequestForm(FlaskForm):
                                           Optional()])
 
     submit = SubmitField("Submit")
-
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
@@ -896,8 +894,8 @@ class EditDestinationAddressForm(FlaskForm):
                        validators=[InputRequired(),
                                    Length(1, 200)])
     address1 = StringField('Street address or P.O. Box',
-                           validators=[InputRequired(),
-                                       Length(max=200)])
+                                 validators=[InputRequired(),
+                                             Length(max=200)])
 
     address2 = StringField('Apt, suite, unit, building, floor, etc.',
                            validators=[Optional(),
