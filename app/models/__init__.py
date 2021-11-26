@@ -20,5 +20,6 @@ from .service import *
 from .service_category import *
 from .staffer import *
 from .user import *  # noqa
+from .vacation import *
 from .volunteer import *
 from .office_request import *

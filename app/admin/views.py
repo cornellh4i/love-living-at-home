@@ -9,7 +9,7 @@ from flask_rq import get_queue
 
 from app import db
 from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
-                             AddVetting, AddReview, ChangeAccountTypeForm,
+                             AddVetting, AddReview, AddVacation, ChangeAccountTypeForm,
                              ChangeUserEmailForm, ContractorManager,
                              EditMetroAreaForm, EditServiceForm, EditServiceCategoryForm,
                              EditDestinationAddressForm,
@@ -18,12 +18,15 @@ from app.admin.forms import (AddAvailability, AddServiceToVolunteer,
                              VolunteerManager, OfficeTimeRequestForm, GeneratePdfForm, EditServicesVolunteerCanProvide)
 from app.decorators import admin_required
 from app.email import send_email
-from app.models import (Address, Availability, EditableHTML, LocalResource,
-                        Member, MetroArea, ProvidedService, MembersHomeRequest, TransportationRequest, Role, Service, ServiceCategory, Staffer, User, Volunteer, VolunteerType, RequestMemberRecord, RequestMemberRecord, Review)
+from app.models import (Address, Availability, EditableHTML, LocalResource, Member, MetroArea,
+                        ProvidedService, MembersHomeRequest, TransportationRequest, Role, Vacation,
+                        Service, ServiceCategory, Staffer, User, Volunteer, VolunteerType, RequestMemberRecord, Review)
 from app.models.transportation_request import ContactLogPriorityType, RequestDurationType, RequestStatus, RequestType
 from app.models.request_volunteer_record import RequestVolunteerRecord
 from app.models.office_request import OfficeRequest
 from wtforms.fields.core import Label
+
+from datetime import date
 
 admin = Blueprint('admin', __name__)
 
@@ -1659,7 +1662,7 @@ def invite_contractor(local_resource_id=None):
 @login_required
 @admin_required
 def add_volunteer_services(volunteer_id=None):
-    """Page for volunteer's services management."""
+    """Page for volunteer services management."""
 
     volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
     volunteer_name = volunteer.first_name + " " + volunteer.last_name
@@ -1711,7 +1714,7 @@ def add_volunteer_services(volunteer_id=None):
 @ login_required
 @ admin_required
 def add_local_resource_review(local_resource_id=None):
-    """Page for review management."""
+    """Page for local resource review management."""
 
     localResource = LocalResource.query.filter_by(id=local_resource_id).first()
     reviews = Review.query.filter_by(lr_id=local_resource_id).all()
@@ -1748,9 +1751,93 @@ def delete_review(review_id):
     db.session.delete(review)
     db.session.commit()
     flash(
-        'Successfully deleted review by {}'.format(
+        'Successfully deleted Review by {}'.format(
             review.reviewer_name), 'success')
     return redirect(url_for('admin.add_local_resource_review', local_resource_id=local_resource_id))
+
+
+@ admin.route('/add-volunteer-vacation/<int:volunteer_id>',
+              methods=['GET', 'POST'])
+@ login_required
+@ admin_required
+def add_volunteer_vacation(volunteer_id=None):
+    """Page for volunteer vacation management."""
+
+    volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
+    vacations = Vacation.query.filter_by(v_id=volunteer_id).all()
+    current_date = date.today()
+
+    def vacation_sort(v):
+        return v.start_date
+    vacations.sort(key=vacation_sort)
+
+    for v in vacations:
+        if v.end_date < current_date:
+            vacations.remove(v)
+            db.session.delete(v)
+            db.session.commit()
+
+    form = AddVacation()
+    form.vacation_identity.label = Label("vacation_identity", "Volunteer " + volunteer.first_name + " " +
+                                         volunteer.last_name)
+
+    if form.validate_on_submit():
+        start_before_end = True
+        if form.start_date.data >= form.end_date.data:
+            start_before_end = False
+
+        if not start_before_end:
+            flash(
+                'The starting date of the vacation must come before the ending date!', 'error')
+            return redirect(url_for('admin.add_volunteer_vacation', volunteer_id=volunteer_id))
+
+        else:
+            add_new_vacation = True
+            # Vacation Overlap Handling
+            # for v in vacations:
+            #    if (v.start_date >= form.start_date.data and v.start_date <= form.end_date.data) or (v.end_date >= form.start_date.data and v.end_date <= form.end_date.data) or (v.start_date <= form.start_date.data and v.end_date >= form.end_date.data):
+            #         add_new_vacation = False
+            #         updated_vacation = v
+            #         updated_vacation.start_date = form.start_date.data
+            #         updated_vacation.end_date = form.end_date.data
+            #         not_duplicate = True
+            #         for vac in vacations:
+            #             if updated_vacation.id != vac.id and updated_vacation.start_date == vac.start_date and updated_vacation.end_date == vac.end_date:
+            #                 not_duplicate = False
+            #                 db.session.delete(updated_vacation)
+            #                 db.session.commit()
+            #         if not_duplicate:
+            #             db.session.add(updated_vacation)
+            #             db.session.commit()
+            if add_new_vacation:
+                vacation = Vacation(
+                    start_date=form.start_date.data,
+                    end_date=form.end_date.data,
+                    v_id=volunteer_id)
+                db.session.add(vacation)
+                db.session.commit()
+
+            flash(
+                'Vacation for Volunteer {} successfully updated'.format(
+                    volunteer.last_name), 'success')
+            return redirect(url_for('admin.people_manager', active='volunteer'))
+
+    return render_template('admin/people_manager/vacation.html', form=form, vacations=vacations)
+
+
+@ admin.route('/add-volunteer-vacation/_delete-vacation/<int:vacation_id>')
+@ login_required
+@ admin_required
+def delete_vacation(vacation_id):
+    """Delete a vacation."""
+    vacation = Vacation.query.filter_by(id=vacation_id).first()
+    volunteer_id = vacation.v_id
+    db.session.delete(vacation)
+    db.session.commit()
+    flash(
+        'Successfully deleted Vacation starting on {}'.format(
+            vacation.start_date), 'success')
+    return redirect(url_for('admin.add_volunteer_vacation', volunteer_id=volunteer_id))
 
 
 @admin.route('/add-volunteer-vetting/<int:volunteer_id>',

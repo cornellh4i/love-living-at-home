@@ -12,4 +12,4 @@ class Review(db.Model):
     date_created = db.Column(db.Date, nullable=False)
 
     def __repr__(self):
-        return (f"Review('{self.name}')")
+        return (f"Review('{self.id}')")

@@ -858,6 +858,13 @@ class AddReview(FlaskForm):
     submit = SubmitField('Save')
 
 
+class AddVacation(FlaskForm):
+    vacation_identity = TextAreaField()
+    start_date = DateField('Start Date')
+    end_date = DateField('End Date')
+    submit = SubmitField('Set As Not Available')
+
+
 class AddServiceToVolunteer(FlaskForm):
     submit = SubmitField('Save')
 

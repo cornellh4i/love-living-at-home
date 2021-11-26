@@ -24,7 +24,7 @@
       <br>
       <div class="description">
         <div class="twelve wide column">{{ r.review_text }}</div>
-        <div class="twelve wide column">
+        <div class="two wide column">
           <i class="large trash alternate outline icon right floated delete-review" style="cursor: pointer" id={{r.id}}></i>
 
           <div class="ui modal" id='modal-delete-review-{{r.id}}'>
@@ -42,6 +42,7 @@
       </div>
     </div>
   </div>
+</div>
 {% endmacro %}
 
 <!-- Content -->
@@ -88,7 +89,6 @@
             </div>
             {{ f.render_form_field(form.review_text) }}
             {{ f.render_form_field(form.submit) }}
-            
           </div>
           <div class="title">
             <i class="dropdown icon"></i>

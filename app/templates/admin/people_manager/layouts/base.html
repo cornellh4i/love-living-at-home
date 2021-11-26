@@ -73,7 +73,8 @@ description=None, icon=None) %}
 
     <i class="clock outline icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.add_availability_volunteer', volunteer_id=v.id) }}';"></i>
-    <i class="calendar minus outline icon right floated" style="cursor: pointer"></i>
+    <i class="calendar minus outline icon right floated" style="cursor: pointer"
+      onclick="window.location.href = '{{ url_for('admin.add_volunteer_vacation', volunteer_id=v.id) }}';"></i>
     <i class="check square outline icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.add_volunteer_vetting', volunteer_id=v.id) }}';"></i>
     <i class="handshake outline icon right floated" style="cursor: pointer"
@@ -155,135 +156,6 @@ description=None, icon=None) %}
 
 <!-- Content -->
 {% block content %}
-<script>
-  $(document).ready(function(){
-    $('.ui .tab').removeClass('active');
-      $("#{{ data.active }}-tab").addClass('active');
-      $('.ui .tabular .menu').removeClass('active');
-      $("#{{ data.active }}-tab-menu").addClass('active');
-  })
-</script>
-<style>
-  .highlight {
-    background-color: lightblue;
-  }
-
-  #calendar-body td:empty {
-    cursor: text;
-    border: none;
-  }
-
-  #calendar-body td {
-    cursor: pointer;
-  }
-
-  #calendar thead {
-    border-bottom: 2px solid #cecece;
-  }
-
-  #calendar th {
-    border: none;
-    text-align: center;
-    padding: 0;
-    width: 10%;
-  }
-
-  #calendar td {
-    border: 1px solid rgba(0, 0, 0, .125);
-    text-align: center;
-    padding: 5px;
-    width: 10%;
-  }
-
-  .previous {
-    margin-top: 4%;
-    margin-left: 2%;
-  }
-
-  .next {
-    margin-top: 4%;
-    margin-right: 2%;
-  }
-
-  .round {
-    border-radius: 50%;
-  }
-
-  .month-selected {
-    font-family: inherit;
-    font-weight: 500;
-    line-height: 1.2;
-    color: inherit;
-  }
-
-  a:hover {
-    text-decoration: none;
-  }
-
-
-  #calendar-header {
-    margin-bottom: 0px;
-    background-color: #e7e7e7;
-    border-bottom: 1px solid rgba(0, 0, 0, .125);
-  }
-
-  .header-row {
-    background-color: lightgray;
-    margin: 0px;
-    padding: 5px;
-  }
-
-  #monthAndYear {
-    border-bottom: none;
-    background-color: transparent;
-    padding-left: 14px;
-    padding-right: 14px;
-    display: none;
-  }
-
-  #previous,
-  #next {
-    color: darkslategrey;
-  }
-
-  .today-color {
-    background-color: #D3D3D3;
-  }
-
-  #parent {
-    border: 2px dotted rgba(0, 0, 0, .125);
-    border-radius: .25rem;
-    padding: 5px;
-  }
-
-  .buttonPanel td {
-    border: none !important;
-    padding: 6px 0 0 0 !important;
-  }
-
-  .buttonPanel td div:nth-of-type(odd) {
-    padding: 5px;
-    width: 100%;
-    text-align: left;
-  }
-
-  .buttonPanel td div:nth-of-type(even) {
-    padding: 5px;
-    width: 100%;
-    text-align: right;
-  }
-
-  .buttonPanel-row {
-    margin: 0;
-    border-top: 2px solid lightgray;
-  }
-
-  #calendarBody {
-    cursor: pointer;
-    user-select: none;
-  }
-</style>
-
 <div class="ui container">
   <h2 class="ui header">People Manager</h2>
 
@@ -427,110 +299,7 @@ description=None, icon=None) %}
     </div>
   </div>
 
-    <!-- Service Categories Pop Up 
-    <div class="ui modal" id="services">
-      <i class="close icon"></i>
-      <div class="header">Services Provided By</div>
-      {% set flashes =
-      { 'error': get_flashed_messages(category_filter=['form-error']),
-      'warning': get_flashed_messages(category_filter=['form-check-email']),
-      'info': get_flashed_messages(category_filter=['form-info']),
-      'success': get_flashed_messages(category_filter=['form-success']) }
-      %}
-      {{ f.begin_form(service_form, flashes) }}
-      <div class="content">
-        <div class="ui styled fluid accordion">
-          {% for key, value in category_dict.items() %}
-          <div class="title">
-            <i class="dropdown icon"></i>
-            {{ key }}
-          </div>
-          <div class="content">
-            {{ service_form|attr(key)() }}
-          </div>
-          {% endfor %}
-        </div>
-        <div class="actions">
-          {{ f.form_message(flashes['error'], header='Something went wrong.',
-          class='error') }}
-          {{ f.form_message(flashes['warning'], header='Check your
-          email.', class='warning') }}
-          {{ f.form_message(flashes['info'],
-          header='Information', class='info') }}
-          {{ f.form_message(flashes['success'],
-          header='Success!', class='success') }}
-          {{ f.render_form_field(service_form.submit) }}
-        </div>
-      </div>
-      {{ f.end_form() }}
-    </div>-->
-
-    <!-- Vacation Calendar Pop Up -->
-    <div class="ui modal" id="vacation_calendar">
-      <i class="close icon"></i>
-      <div class="header">Vacation Calendar</div> 
-
-      <!-- Calendar Code -->
-      <div id="parent" class="ui container" style="display:none;">
-        <div class="ui cards">
-          <div class="ui centered card">
-            <div class="ui header mini form" id="calendar-header">
-              <div class="four fields">
-                <div class="field previous">
-                  <a href="#" id="previous" onclick="previous()">
-                    <i class="ui icon angle left" aria-hidden="true"></i>
-                  </a>
-                </div>
-                <div class="field">
-                  <select class="fluid" name="month" id="month" onchange="change()">
-                  </select>
-                </div>
-                <div class="field">
-                  <select class="ui dropdown fluid" name="year" id="year" onchange="change()">
-                  </select>
-
-                </div>
-                <div class="field next">
-                  <a href="#" id="next" onclick="next()">
-                    <i class="ui icon angle right" aria-hidden="true"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="description">
-              <table id="calendar">
-                <thead>
-                  <tr>
-                    <th>S</th>
-                    <th>M</th>
-                    <th>T</th>
-                    <th>W</th>
-                    <th>T</th>
-                    <th>F</th>
-                    <th>S</th>
-                  </tr>
-                </thead>
-                <tbody id="calendarBody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
   <script language='javascript'>
-      
-    $(document).ready(function () {
-      $('.ui.accordion').accordion();
-      $('.ui.checkbox').checkbox();
-    });
-
-    $(document)
-      .ready(function () {
-        $('.menu .item').tab();
-        
         // function filterPeople() {
         //   let peopleFilter = $('#role-field').val();
         //   $('.card').each(function () {
@@ -559,14 +328,13 @@ description=None, icon=None) %}
         //   }
         // });
 
-      });
-
       $(document).ready(function(){
-          //How active tabs worked before:
-          // $('.ui .item').on('click', function() {
-          //     $('.ui .item').removeClass('active');
-          //     $(this).addClass('active');
-          // });  
+        $('.ui.checkbox').checkbox();
+        $('.menu .item').tab();
+        $('.ui .tab').removeClass('active');
+        $("#{{ data.active }}-tab").addClass('active');
+        $('.ui .tabular .menu').removeClass('active');
+        $("#{{ data.active }}-tab-menu").addClass('active');
       });
 
 
@@ -583,18 +351,6 @@ description=None, icon=None) %}
           $('.card.hidden').removeClass('hidden').show();
         }
       });
-
-    $('i.handshake.outline.icon.right.floated').click(function () {
-      $('#services').modal('show');
-    });
-
-    $('#context1.menu.item').tab({
-      context: $('#context1'),
-    });
-
-    $('i.calendar.minus.outline.icon.right.floated').click(function () {
-      $('#vacation_calendar').modal('show');
-    });    
 
     $('.delete-member').click(function () {
       member_id = $(this).attr('id');
