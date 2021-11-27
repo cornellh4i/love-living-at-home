@@ -1,17 +1,254 @@
+
+
+<style>
+  .wlcm{
+    text-align: center; 
+    position: absolute; 
+    left:30%; 
+    top: 5%; 
+    font-size: 100; 
+    color:white;
+  }
+  .llh{
+    font-family: 'Times New Roman', Times, serif;
+    position: absolute; 
+    top: 100%; 
+    font-size: 380; 
+    color:black; 
+    opacity: 0.03; 
+    text-align: center;
+  }
+
+  .thmbnl{
+    
+    border-radius: 4px;
+    padding: 5px;
+    width: 150px;
+  }
+  .img1{
+    max-width: 100%;
+    height: 800;
+    background-color: royalblue;
+    
+
+  }
+  .img2{
+    border-radius: 300px; 
+    position: absolute; 
+    width: 300;  
+    height: 300; 
+    border:1px solid black; padding: 5px;
+    border-color: blue;
+  }
+
+  .text2{
+    position: relative; 
+    width: 320;  
+    height: 100;
+    left: 50%; 
+    top: 80; 
+    font-family:Georgia, 'Times New Roman', Times, serif
+  }
+
+  
+</style>
+
 {% extends 'layouts/base.html' %}
 
 {% block content %}
-    <div class="ui text container">
-      <h1>{% if not (current_user.is_authenticated) %} LOVE LIVING AT HOME {% else %} Hello {{ current_user.full_name() }} {% endif %}</h1>
+        {% if not (current_user.is_authenticated) %} 
+          <div style = "position: relative;top : -15">
+            <p> <h1  class = "wlcm"> W E L C O M E </h1></p>
+            <div style = " position: absolute; background-color:blue; opacity: 0.2; height: 100%; width: 100%"> </div>
+            <img src = "..\static\images\llhpic5.png" class = "img1" style = "width: 100%;">
+            <p class = "llh">LOVE LIVING AT HOME</p>
+          </div>
+    
+          </br>
+          <div><hr></hr></div>
+         
+          <div class="ui text container">
+            <div style = " position: relative; height: 200%; width: 100%; top: 100">
 
-        <p>This is <a href="http://hack4impact.org">Hack4Impact</a>'s web application template. We'll use this as a
-        foundation for each of our <a href="http://flask.pocoo.org">Flask</a> projects. The goal is to reduce the work
-        necessary to get a new project off the ground, by providing boilerplate code (such as account management
-        facilities), as well as uncontroversial and extensible defaults. We have integrated an
-        <a href="http://sass-lang.com">SCSS</a>-based asset pipeline based around a (fantastic!) framework
-        called <a href="http://semantic-ui.com">Semantic UI</a>. Much of this code is appropriated from the examples
-        in Miguel Grinberg's book, <a href="http://flaskbook.com"><em>Flask Web Development</em></a>.</p>
+              <div>
+                <img src = "..\static\images\llhpic2.png" class = "img2">
+                <p class = "text2"><em><strong>Love Living at Home </strong></em>is not a place on a map - 
+                  it is a gateway to relationships and resources for older adults who desire to live 
+                  in the homes and neighborhoods they love. 
+                </p>
+              </div>
+              
+          
+              <div style = "position: relative; top: 300; ">
+                <p class = "text2" style = "left:5%" ><em><strong>We are a welcoming network</strong></em> 
+                  of people helping people. Our programs enrich life and forge connections for new friendships. 
+                  When you need peace of mind, support is one phone call away. 
+                </p>
+                <img src = "..\static\images\llhpic3.png" class = "img2" style = "left: 60%; top:0">
+              </div>
 
-        <p>{{ lipsum(6) }}</p>
-    </div>
+                
+              <div style = "position: relative; top: 600;">
+                <img src = "..\static\images\llhpic4.png" class = "img2">
+                <p class = "text2"> <em><strong>This is your village.</strong></em>  
+                  Contact us at office@lovelivingathome.org or at 607-319-0162.
+                </p>
+              </div>
+      
+            </div>
+          </div>
+        
+
+        {% else %} 
+
+         <div class="ui text container">
+            <h1>Hello {{ current_user.full_name() }}</h1>
+            <p> This is the official website of the Love Living at Home Organisation. It employs a range of functionalities 
+              that makes the management of new and current members, volunteers and resources more efficient. Some of these functionalities include:
+            </p>
+
+            <div  style=" border-width: 3px; border-color: dimgray; border-style: solid; padding: 2%; margin-top: 5%; border-radius: 20px;">
+              <p> <h2> Administrator Dashboard </h2> </p>
+
+              <ul>
+
+                <p>
+                  <li><p><strong>Account Management</strong></p></li>
+                  <ul>
+                  <li> 
+                    <em><u>Registered User</u></em> - This displays a table where the user can view and manage 
+                    currently registered users and other administrators.
+                  </li>
+                  <li> 
+                    <em><u>Add New User</u></em> - Provides a form that allows the user to create a new user account.
+                  </li>
+                  <li> 
+                    <em><u>Invite New User</u></em> - Allows the user to enter a new user name and email address and to send a request 
+                    to a new user to create an account.
+                  </li>
+                  </ul>
+                </p>
+              
+                <p>
+                  <li><p><strong>System Configuration</strong></p></li>
+                  <ul>
+                    <li> 
+                      <em><u>Edit Services</u></em> - Allows the user to remove or edit a current service and add a new service. 
+                    </li>
+                    <li> 
+                      <em><u>Edit Service Categories</u></em> - Allows the user to remove or edit a current service category or add a 
+                      new service category. 
+                    </li>
+                    <li> 
+                      <em><u>Edit Metro Areas</u></em> - Allows the user to edit or remove a current metro area or add a new metro area. 
+                    </li>
+                    <li> 
+                      <em><u>Edit Destination Address</u></em>- Allows the user to view and manage the destination addresses. 
+                    </li>
+                  </ul>
+                </p>
+                
+                <p>
+                  <li><p><strong>Additional Actions</strong></p></li>
+                  <ul>
+                  <li> 
+                    <em><u>Generate Report</u></em> - Allows the user to create a report of all the completed volunteer services by category. 
+                  </li>
+                  </ul>
+                </p>
+                
+              </ul>
+            </div>
+
+
+
+            <div  style=" border-width: 3px; border-color: dimgray; border-style: solid; padding: 2%; margin-top: 5%; border-radius: 20px;">
+              <p> <h2> Request Manager </h2> </p>
+
+              <ul>
+
+                <p>
+                  <li><p><strong>Create Request</strong></p></li>
+                  <p> Provides a form to allow the user to create a request. The form can be of three types: </p>
+                  <ul>
+                    <li> 
+                      <em>Transportation Request Form</em>
+                    </li>
+                    <li> 
+                      <em>Member's Home Request Form</em>
+                    </li>
+                    <li> 
+                      <em>Office Time Request Form</em>
+                    </li>
+                  </ul>
+                </p>
+              
+                <p>
+                  <li><p><strong>Search Request</strong></p></li>
+                  <p> Uses various filters to help the user search for a specific type of request</p>
+                </p>
+
+              </ul>
+            </div>
+
+
+            <div  style=" border-width: 3px; border-color: dimgray; border-style: solid; padding: 2%; margin-top: 5%; border-radius: 20px;">
+              <p> <h2> People Manager</h2> </p>
+
+              <ul>
+
+                <p>
+                  <li><p><strong>Members</strong></p></li>
+                  <ul>
+                    <li> 
+                      <em><u>Add Member</u></em> - Allows the user to add a new member to the Love Living at Home Members database. 
+                    </li>
+                    <li> 
+                      <em><u>Search Results</u></em> - Displays a table showing all the members associated with Love Living at Home
+                      that suit a specific search criteria. Each member is portrayed as a card that allows the user to edit member information.
+                    </li>
+                  </ul>
+                </p>
+                
+                <p>
+                  <li><p><strong>Volunteers</strong></p></li>
+                  <ul>
+                    <li> 
+                      <em><u>Add Volunteers </u></em> - Allows the user to add a new volunteer to the Love Living at Home Volunteers database.  
+                    </li>
+                    <li> 
+                      <em><u>Search Results</u></em> - Displays a table showing all the volunteers associated with Love Living at Home
+                      that suit a specific search criteria. Each volunteer is portrayed as a card that allows the user to edit volunteer information.
+                    </li>
+                  </ul>
+                </p>
+                
+                <p>
+                  <li><p><strong>Local Resources</strong></p></li>
+                  <ul>
+                    <li> 
+                      <em><u>Add Local Resource</u></em> - Allows the user to add a new affiliated organisation 
+                      to the Love Living at Home Local Resource database.  
+                    </li>
+                    <li> 
+                      <em><u>Search Results</u></em> - Displays a table showing all the organisations associated with Love Living at Home
+                      Each resource is portrayed as a card that allows the user to edit resource information.
+                    </li>
+                  </ul>
+                </p>
+                
+              </ul>
+            </div>
+
+          
+            <div  style=" border-width: 3px; border-color: dimgray; border-style: solid; padding: 2%; margin-top: 5%; border-radius: 20px;">
+
+              <p> <h2> Your Account </h2> 
+              <p> Allows the user to manage their account settings and change their login information.</p>
+              </p>
+
+            </div>
+          </div>
+
+          {% endif %}
 {% endblock %}
