@@ -397,7 +397,8 @@
       emails = emails.substring(0, emails.length - 1);
 
       const websiteHost = window.location.host;
-      fetch(`http://${websiteHost}/admin/create-request/send-emails?${buttonType}&-1&Transportation&${emails}`);
+      const protocol = window.location.protocol;
+      fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&-1&Transportation&${emails}`);
 
       const buttonId = `${buttonType.replace('+', '-') + '-success-message'}`
       document.getElementById(buttonId).classList.remove('hidden');
