@@ -26,6 +26,61 @@
     </div>
   </div>
 
+  <div class = "twelve wide column">
+    <div class="ui two column stackable grid">
+      <div class="ui two column row">
+        <div class="ten wide column">
+          {{ f.render_custom_select(form.destination) }}
+        </div>
+        <div class="right floated four wide column">
+          <button
+            type="button"
+            class="ui inverted violet fluid button side-button"
+            id="show-new-address-button"
+          >
+              Add new address
+          </button>
+        </div>
+      </div>
+      <div id = "new-address-modal" class = "ui modal">
+        <form class = "ui form"></form>
+        <center><h2 style = "padding: 10px">Add New Address</h2></center>
+        <form class = "ui form" style = "padding: 10px">
+          {{ form.csrf_token }}
+          <div class="field">
+            <label>Destination Address Name</label>
+            <input type="text" id="address-name" required>
+          </div>
+          <div class = "field">
+            <label>Street Address or P.O. Box</label>
+            <input type="text" id="street-address" required>
+          </div>
+          <div class = "field">
+            <label>Apt, suite, unit, building, floor, etc.</label>
+            <input type="text" id="addr-cont">
+          </div>
+          <div class = "field">
+            <label>City</label>
+            <input type="text" id="city" required>
+          </div>
+          <div class = "field">
+            <label>State</label>
+            <input type="text" id="state" value="New York" required>
+          </div>
+          <div class = "field">
+            <label>Country</label>
+            <input type="text" id="country" value="United States"required>
+          </div>
+          <div class = "field">
+            <label>Zip Code</label>
+            <input type="text" id="zip">
+          </div>
+          <button class = "ui button" id = "address-modal-submit" onclick = "sendAddressFormData()">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <div class="twelve wide column">
     {{ f.render_form_field(form.requesting_member)}}
   </div>
@@ -92,32 +147,44 @@
     </style>
 
     <div>{{ f.render_form_field(form.starting_location) }}</div>
-    <!-- <div class="ui two column stackable relaxed grid"> -->
-    <!-- <div class="two column row"> -->
-    <!-- <div class="eight wide column"> -->
-    <div class="ui two column stackable grid">
-      <div class="ui two column row">
-        <div class="ten wide column">
-          {{ f.render_custom_select(form.destination) }}
-        </div>
-        <div class="right floated four wide column">
-          <a href = "{{ url_for('admin.new_destination_address') }}">
-            <button
-              type="button"
-              class="ui inverted violet fluid button side-button"
-              id="show-new-destination"
-            >
-                Add new address
-            </button>
-          </a>
-        </div>
-      </div>
-    </div>
+
     {{ f.render_form_field(form.duration) }}
 
     <div id = "providers" class="twelve wide column">
       {{ f.render_form_field(form.service_provider)}}
     </div>
+
+    <script>
+      $('#show-new-address-button').click(() => {
+        $('#new-address-modal').modal('show');
+      })
+
+       function sendAddressFormData() {
+         let fields = ["address-name", "street-address", "addr-cont", "city", "state", "country", "zip"]
+         let required = new Set(["address-name", "street-address", "city", "state","country"])
+         let queryJSON = {};
+
+         for (let i = 0; i < fields.length; i++) {
+           const input = document.getElementById(fields[i]);
+           if (required.has(fields[i]) && input.value === ""){
+             return;
+           }
+           queryJSON[fields[i]] = input.value;
+         }
+
+         const protocol = window.location.protocol;
+         const host = window.location.host;
+         fetch(`${protocol}//${host}/admin/add-transportation-address`, {
+           method: "POST",
+           headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.getElementById("csrf_token").value,
+            },
+            body: JSON.stringify(queryJSON)
+         })
+       }
+     </script>
 
     <div class="four fields" style = "margin-top: 10px">
       <div class="field">
@@ -246,7 +313,7 @@
     </div>
   </div>
 
-<!-- 
+<!--
   <div id="new-destination" class="ui modal">
     <i class="close icon"></i>
     <div class="header">Add New Destination</div>

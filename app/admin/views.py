@@ -2301,6 +2301,21 @@ def new_destination_address():
     return render_template('admin/system_manager/manage_destination_address.html',
                            form=form)
 
+@admin.route('/add-transportation-address', methods = ["GET", "POST"])
+def transport_address_addition():
+    json = request.get_json()
+    new_address = Address(
+                            name=json["address-name"],
+                            address1=json["street-address"],
+                            address2=json["addr-cont"],
+                            city=json["city"],
+                            state=json["state"],
+                            country=json["country"],
+                            zipcode=json["zip"]
+                          )
+    db.session.add(new_address)
+    db.session.commit()
+    return jsonify("OK")
 
 @admin.route('/destination-addresses/<int:destination_address_id>/_delete')
 @login_required
