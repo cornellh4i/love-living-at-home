@@ -26,7 +26,7 @@
     {# Use overflow-x: scroll so that mobile views don't freak out
     # when the table is too wide #}
     <div style="overflow-x: scroll;">
-      <a class="ui basic compact button" href="{{ url_for('admin.new_metro_area') }}">
+      <a class="ui basic compact button" href="{{ url_for('admin.edit_metro_areas') }}">
         <i class="plus icon"></i>
         Add a Metro Area
       </a>
@@ -40,7 +40,7 @@
         <tbody>
           {% for ma in metro_areas | sort(attribute='name') %}
           <tr>
-            <td onclick="window.location.href = '{{ url_for('admin.metro_area_info', metro_area_id=ma.id) }}';">{{
+            <td onclick="window.location.href = '{{ url_for('admin.edit_metro_areas', metro_area_id=ma.id) }}';">{{
               ma.name }}
             </td>
             <td>

@@ -27,7 +27,8 @@ description=None, icon=None) %}
   {% else %}
   {% set name = m.first_name + ' ' + m.last_name %}
   {% endif %}
-  <div class="header">{{ name + " (" + m.member_number|string + ")"}}
+  <div class="header">
+    <text class="m-identity">{{ name + " (" + m.member_number|string + ")"}}</text>
     <i class="trash alternate outline icon right floated delete-member" style="cursor: pointer" id={{m.id}}></i>
 
     <div class="ui modal" id='modal-deletem-{{m.id}}'>
@@ -51,12 +52,13 @@ description=None, icon=None) %}
 
 {% macro volunteer_card(v) %}
 {% if v.middle_initial %}
-{% set name = v.first_name + ' ' + v.middle_initial + '. ' + v.last_name %}
+  {% set name = v.first_name + ' ' + v.middle_initial + '. ' + v.last_name %}
 {% else %}
-{% set name = v.first_name + ' ' + v.last_name %}
+  {% set name = v.first_name + ' ' + v.last_name %}
 {% endif %}
 <div class="content">
-  <div class="header">{{ name }}
+  <div class="header">
+    <text class="v-identity">{{ name }}</text>
     <i class="trash alternate outline icon right floated delete-volunteer" style="cursor: pointer" id={{v.id}}></i>
 
     <div class="ui modal" id='modal-deletev-{{v.id}}'>
@@ -116,7 +118,8 @@ description=None, icon=None) %}
 
 {% macro local_resource_card(lr) %}
 <div class="content">
-  <div class="header">{{lr.company_name}}
+  <div class="header">
+    <text class="lr-identity">{{lr.company_name}}</text>
     <i class="trash alternate outline icon right floated delete-local-resource" style="cursor: pointer" id={{lr.id}}></i>
 
     <div class="ui modal" id='modal-deletelr-{{lr.id}}'>
@@ -136,7 +139,7 @@ description=None, icon=None) %}
     <i class="clock outline icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.add_availability_local_resource', local_resource_id=lr.id) }}';"></i>
     <i class="pencil icon right floated" style="cursor: pointer"
-      onclick="window.location.href = '{{ url_for('admin.invite_contractor', local_resource_id=lr.id) }}';"></i>
+      onclick="window.location.href = '{{ url_for('admin.invite_local_resource', local_resource_id=lr.id) }}';"></i>
   </div>
 </div>
 <div class="content ui grid" style="padding:0">
@@ -175,13 +178,66 @@ description=None, icon=None) %}
         <h3>Search:</h3>
         <div class="ui search item">
           <div class="ui transparent icon input">
-            <input id="search-people" type="text" placeholder="Enter name...">
+            <input id="search-member" type="text" placeholder="Enter name...">
+            <i class="search icon"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Search Results -->
+      <div class="twelve wide column">
+        <h3>Search Results</h3>
+        <div class="ui segment member-search-results">
+          {% for m in members %}
+          <div class="ui fluid card" data-role={{"Member"}}>
+            {{member_card(m)}}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Volunteer Tab -->
+  <div class="ui tab" id = "volunteer-tab" data-tab="volunteer">
+    <div class="ui stackable centered grid container">
+      <div class="four wide column">
+        {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', icon='add user icon') }}
+        
+        <!-- Search Box -->
+        <h3>Search:</h3>
+        <div class="ui search item">
+          <div class="ui transparent icon input">
+            <input id="search-volunteer" type="text" placeholder="Enter name...">
             <i class="search icon"></i>
           </div>
         </div>
 
         <!-- Filter Box -->
         <h3>Filters</h3>
+
+        <!-- Vetting Status Filter -->
+        <div class="attached ui top segment">
+          <form class="ui form" id="member-filter-form">
+            <div class="grouped fields">
+              <label>Vetting Status:</label>
+              <div class="field">
+                <div class="ui checkbox">
+                  <input type="checkbox" name="volunteer_type" />
+                  <label>Fully Vetted</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui checkbox">
+                  <input type="checkbox" name="volunteer_type" />
+                  <label>Not Fully Vetted</label>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Volunteer Type Filter -->
         <div class="attached ui top segment">
           <form class="ui form" id="member-filter-form">
             <div class="grouped fields">
@@ -206,59 +262,7 @@ description=None, icon=None) %}
       <!-- Search Results -->
       <div class="twelve wide column">
         <h3>Search Results</h3>
-        <div class="ui segment search-results">
-          {% for m in members %}
-          <div class="ui fluid card" data-role={{"Member"}}>
-            {{member_card(m)}}
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Volunteer Tab -->
-  <div class="ui tab" id = "volunteer-tab" data-tab="volunteer">
-    <div class="ui stackable centered grid container">
-      <div class="four wide column">
-        {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', icon='add user icon') }}
-        
-        <!-- Search Box -->
-        <h3>Search:</h3>
-        <div class="ui search item">
-          <div class="ui transparent icon input">
-            <input id="search-people" type="text" placeholder="Enter name...">
-            <i class="search icon"></i>
-          </div>
-        </div>
-
-        <!-- Filter Box -->
-        <h3>Filters</h3>
-        <div class="attached ui top segment">
-          <form class="ui form" id="member-filter-form">
-            <div class="grouped fields">
-              <label>Vetting Status:</label>
-              <div class="field">
-                <div class="ui checkbox">
-                  <input type="checkbox" name="volunteer_type" />
-                  <label>Fully Vetted</label>
-                </div>
-              </div>
-              <div class="field">
-                <div class="ui checkbox">
-                  <input type="checkbox" name="volunteer_type" />
-                  <label>Not Fully Vetted</label>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- Search Results -->
-      <div class="twelve wide column">
-        <h3>Search Results</h3>
-        <div class="ui segment search-results">
+        <div class="ui segment volunteer-search-results">
           {% for v in volunteers %}
           <div class="ui fluid card" data-role={{"Volunteer"}}>
             {{volunteer_card(v)}}
@@ -273,13 +277,13 @@ description=None, icon=None) %}
   <div class="ui tab" id="local-resource-tab" data-tab="local-resource">
     <div class="ui stackable centered grid container">
       <div class="four wide column">
-        {{ dashboard_option('Add Local Resource', 'admin.invite_contractor', icon='add user icon') }}
+        {{ dashboard_option('Add Local Resource', 'admin.invite_local_resource', icon='add user icon') }}
         
         <!-- Search Box -->
         <h3>Search:</h3>
         <div class="ui search item">
           <div class="ui transparent icon input">
-            <input id="search-people" type="text" placeholder="Enter name...">
+            <input id="search-local-resource" type="text" placeholder="Enter name...">
             <i class="search icon"></i>
           </div>
         </div>
@@ -288,7 +292,7 @@ description=None, icon=None) %}
       <!-- Search Results -->
       <div class="twelve wide column">
         <h3>Search Results</h3>
-        <div class="ui segment search-results">
+        <div class="ui segment local-resource-search-results">
           {% for lr in local_resources %}
           <div class="ui fluid card" data-role={{"Local Resource"}}>
             {{local_resource_card(lr)}}
@@ -300,54 +304,52 @@ description=None, icon=None) %}
   </div>
 
   <script language='javascript'>
-        // function filterPeople() {
-        //   let peopleFilter = $('#role-field').val();
-        //   $('.card').each(function () {
-        //     $this = $(this);
-        //     $this.show();
 
-        //     // Filter by role
-        //     let role = this.getAttribute('data-role');
-        //     if (role != peopleFilter) {
-        //       $this.hide();
-        //     }
-        //   });
-        // }
-        
-        // $('#search-people').keyup(function () {
-        //   //   filterPeople();
-        //   var searchText = $(this).val();
-        //   if (searchText.length > 0) {
-        //     $('.search-results .header:icontains(' + searchText + ')').closest('.card').addClass('positive');
-        //     $('.card.positive .header').not(':icontains(' + searchText + ')').removeClass('positive');
-        //     $('.search-results .header').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
-        //     $('.card.hidden .header:icontains(' + searchText + ')').removeClass('hidden').show();
-        //   } else {
-        //     $('.card.positive').removeClass('positive');
-        //     $('.card.hidden').removeClass('hidden').show();
-        //   }
-        // });
-
-      $(document).ready(function(){
-        $('.ui.checkbox').checkbox();
-        $('.menu .item').tab();
-        $('.ui .tab').removeClass('active');
-        $("#{{ data.active }}-tab").addClass('active');
-        $('.ui .tabular .menu').removeClass('active');
-        $("#{{ data.active }}-tab-menu").addClass('active');
-      });
+    $(document).ready(function(){
+      $('.ui.checkbox').checkbox();
+      $('.menu .item').tab();
+      $('.ui .tab').removeClass('active');
+      $("#{{ data.active }}-tab").addClass('active');
+      $('.ui .tabular .menu').removeClass('active');
+      $("#{{ data.active }}-tab-menu").addClass('active');
+    });
 
 
-    $('.tab #search-people').keyup(function () {
-        //   filterPeople();
+    $('.tab #search-member').keyup(function () {
         var searchText = $(this).val();
         if (searchText.length > 0) {
-          $('.search-results .header:icontains(' + searchText + ')').closest('.card').addClass('positive');
-          $('.card.positive .header').not(':icontains(' + searchText + ')').removeClass('positive');
-          $('.search-results .header').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
-          $('.card.hidden .header:icontains(' + searchText + ')').removeClass('hidden').show();
+          $('.m-identity:icontains(' + searchText + ')').addClass('positive');
+          $('.m-identity.positive').not(':icontains(' + searchText + ')').removeClass('positive');
+          $('.m-identity').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
+          $('.card.hidden .m-identity:icontains(' + searchText + ')').removeClass('hidden').show();
         } else {
-          $('.card.positive').removeClass('positive');
+          $('.m-identity.positive').removeClass('positive');
+          $('.card.hidden').removeClass('hidden').show();
+        }
+      });
+
+      $('.tab #search-volunteer').keyup(function () {
+        var searchText = $(this).val();
+        if (searchText.length > 0) {
+          $('.v-identity:icontains(' + searchText + ')').addClass('positive');
+          $('.v-identity.positive').not(':icontains(' + searchText + ')').removeClass('positive');
+          $('.v-identity').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
+          $('.card.hidden .v-identity:icontains(' + searchText + ')').removeClass('hidden').show();
+        } else {
+          $('.v-identity.positive').removeClass('positive');
+          $('.card.hidden').removeClass('hidden').show();
+        }
+      });
+
+      $('.tab #search-local-resource').keyup(function () {
+        var searchText = $(this).val();
+        if (searchText.length > 0) {
+          $('.lr-identity:icontains(' + searchText + ')').addClass('positive');
+          $('.lr-identity.positive').not(':icontains(' + searchText + ')').removeClass('positive');
+          $('.lr-identity').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
+          $('.card.hidden .lr-identity:icontains(' + searchText + ')').removeClass('hidden').show();
+        } else {
+          $('.lr-identity.positive').removeClass('positive');
           $('.card.hidden').removeClass('hidden').show();
         }
       });

@@ -48,7 +48,7 @@
     <div class="ui header">Primary Address</div>
     <div class="field required">
       <label>Address</label>
-      <div class="field required">
+      <div class="field">
         {{ form.primary_address1(placeholder = form.primary_address1.label.text) }}
       </div>
       <div class="field">
@@ -90,7 +90,7 @@
     {{ f.render_form_field(form.primary_phone_number, extra_classes="required") }}
     {{ f.render_form_field(form.secondary_phone_number) }}
     {{ f.render_form_field(form.email_address) }}
-    {{ f.render_form_field(form.preferred_contact_method, extra_classes="inline fields") }}
+    {{ f.render_form_field(form.preferred_contact_method) }}
 
     <div class="ui header">Emergency Contact Information</div>
     {{ f.render_form_field(form.emergency_contact_name)}}
@@ -101,9 +101,7 @@
     {{ f.render_form_field(form.volunteer_notes) }}
     {{ f.render_form_field(form.staffer_notes)}}
 
-    {% for field in form | selectattr('type', 'equalto', 'SubmitField') %}
-    {{ f.render_form_field(field) }}
-    {% endfor %}
+    {{f.render_form_field(form.submit)}} 
 
     {{ f.end_form() }}
   </div>

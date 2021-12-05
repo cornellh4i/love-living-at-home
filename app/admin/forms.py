@@ -12,8 +12,7 @@ from wtforms.validators import (Email, EqualTo, InputRequired,
                                 Length, Optional)
 
 from app import db
-from app.models import (Address, ContactLogPriorityType, Member,
-                        RequestDurationType, RequestStatus, RequestType, Role,
+from app.models import (MetroArea, ContactLogPriorityType, Member, RequestStatus, RequestType, Role,
                         Service, ServiceCategory, Staffer, User, VolunteerType)
 
 salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
@@ -23,7 +22,8 @@ genders = [("female", "Female"), ("male", "Male"),
            ("no_answer", "Does not wish to answer")]
 time_zones = [("est", "Eastern Time (US & Canada) (UTC-05:00)"), ("b", "B"),
               ("c", "C")]
-metro_areas = [("none", "<SELECT>"), ("a", "A"), ("b", "B"), ("c", "C")]
+contact_methods = [('phone', "Phone"), ('email', "Email"), ('phone and email',
+                                                            "Phone and Email")]
 
 
 class ChangeUserEmailForm(FlaskForm):
@@ -237,6 +237,7 @@ class TransportationRequestForm(FlaskForm):
 
     submit = SubmitField("Submit")
 
+
 class OfficeTimeRequestForm(FlaskForm):
     def selectedCategory():
         return db.session.query(ServiceCategory).order_by().filter(
@@ -351,7 +352,7 @@ class MembersHomeRequestForm(FlaskForm):
     def prof_home():
         return db.session.query(Service).order_by().filter(
             Service.category_id == 4)
-      
+
     def prof_support():
         return db.session.query(Service).order_by().filter(
             Service.category_id == 5)
@@ -481,176 +482,175 @@ class MembersHomeRequestForm(FlaskForm):
 
     submit = SubmitField("Submit")
 
+
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
 
 
 class MemberManager(FlaskForm):
-    first_name = StringField('First Name',
-                             validators=[InputRequired(),
-                                         Length(1, 64)])
+    # General Information
+    first_name = StringField('First Name', validators=[
+                             InputRequired(), Length(1, 64)])
+
     middle_initial = StringField('Middle Initial',
-                                 validators=[Length(min=0, max=1)])
-    last_name = StringField('Last Name',
-                            validators=[InputRequired(),
-                                        Length(1, 64)])
-    preferred_name = StringField(
-        'Preferred Name', validators=[Optional(),
-                                      Length(min=1, max=30)])
+                                 validators=[Optional(), Length(min=0, max=1)])
+
+    last_name = StringField('Last Name', validators=[InputRequired(),
+                                                     Length(1, 64)])
+
+    preferred_name = StringField('Preferred Name', validators=[Optional(),
+                                                               Length(min=1, max=30)])
+
+    member_number = IntegerField(validators=[InputRequired()])
+
+    membership_expiration_date = DateField("Member Expiration Date: ",
+                                           validators=[InputRequired()])
 
     salutation = SelectField("Salutation", choices=salutations)
 
     birthdate = DateField("Birthdate", validators=[InputRequired()])
 
-    gender = SelectField("Gender",
-                         choices=genders,
+    gender = SelectField("Gender", choices=genders,
                          validators=[InputRequired()])
 
-    # Address Information
-    primary_address1 = StringField(
-        'Street address or P.O. Box',
-        validators=[InputRequired(), Length(max=200)])
+    # Primary Address Information
+    primary_address1 = StringField('Street address or P.O. Box',
+                                   validators=[InputRequired(), Length(max=200)])
+
     primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
-                                   validators=[Optional(),
-                                               Length(max=200)])
-    primary_city = StringField('City',
-                               validators=[InputRequired(),
-                                           Length(max=200)])
-    primary_state = StringField('State',
-                                validators=[InputRequired(),
-                                            Length(max=200)], default='New York')
-    primary_country = StringField('Country',
-                                  validators=[InputRequired(),
-                                              Length(max=200)], default='United States')
-    primary_zip_code = StringField('Zip Code',
-                                   validators=[Optional(),
-                                               Length(max=45)])
-    primary_metro_area = SelectField('Metro Area',
-                                     choices=metro_areas,
-                                     validators=[Optional()])
+                                   validators=[Optional(), Length(max=200)])
+
+    primary_city = StringField('City', validators=[InputRequired(),
+                                                   Length(max=200)])
+
+    primary_state = StringField(
+        'State', validators=[InputRequired(), Length(max=200)], default='New York')
+
+    primary_country = StringField('Country', validators=[
+                                  InputRequired(), Length(max=200)], default='United States')
+
+    primary_zip_code = StringField('Zip Code', validators=[
+                                   InputRequired(), Length(max=45)])
+
+    primary_metro_area = QuerySelectField('Metro Area',
+                                          validators=[Optional()], allow_blank=True, get_label='name',
+                                          query_factory=lambda: db.session.query(MetroArea).order_by('name'))
+
+    # Secondary Address Information
     secondary_as_primary_checkbox = BooleanField(
         'Use this address instead of the primary address',
         validators=[Optional()])
 
     secondary_address1 = StringField('Street address or P.O. Box',
-                                     validators=[Optional(),
-                                                 Length(max=200)])
+                                     validators=[Optional(), Length(max=200)])
+
     secondary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
-                                     validators=[Optional(),
-                                                 Length(max=200)])
-    secondary_city = StringField('City',
-                                 validators=[Optional(),
-                                             Length(max=200)])
-    secondary_state = StringField('State',
-                                  validators=[Optional(),
-                                              Length(max=200)])
-    secondary_country = StringField('Country',
-                                    validators=[Optional(),
-                                                Length(max=200)])
-    secondary_zip_code = StringField('Zip Code',
-                                     validators=[Optional(),
-                                                 Length(max=45)])
-    secondary_metro_area = SelectField('Metro Area',
-                                       choices=metro_areas,
-                                       validators=[Optional()])
+                                     validators=[Optional(), Length(max=200)])
+
+    secondary_city = StringField('City', validators=[Optional(),
+                                                     Length(max=200)])
+
+    secondary_state = StringField('State', validators=[Optional(),
+                                                       Length(max=200)])
+
+    secondary_country = StringField('Country', validators=[Optional(),
+                                                           Length(max=200)])
+
+    secondary_zip_code = StringField('Zip Code', validators=[Optional(),
+                                                             Length(max=45)])
+
+    secondary_metro_area = QuerySelectField('Metro Area',
+                                            validators=[Optional()], allow_blank=True, get_label='name',
+                                            query_factory=lambda: db.session.query(MetroArea).order_by('name'))
 
     # Contact Information
     primary_phone_number = StringField('Primary Phone Number',
                                        widget=widgets.Input(input_type="tel"),
                                        validators=[InputRequired()])
-    secondary_phone_number = StringField(
-        'Secondary Phone Number',
-        widget=widgets.Input(input_type="tel"),
-        validators=[Optional()])
-    email_address = EmailField('Email',
-                               widget=widgets.Input(input_type="tel"),
-                               validators=[InputRequired()])
-    secondary_phone_number = StringField(
-        'Secondary Phone Number',
-        widget=widgets.Input(input_type="tel"),
-        validators=[Optional()])
-    email = EmailField('Email',
-                       validators=[Optional(),
-                                   Length(1, 64),
-                                   Email()])
+
+    secondary_phone_number = StringField('Secondary Phone Number',
+                                         widget=widgets.Input(input_type="tel"), validators=[Optional()])
+
+    email_address = EmailField('Email', validators=[Optional(),
+                                                    Length(1, 64), Email()])
+
     preferred_contact_method = RadioField('Preferred Contact Method *',
-                                          choices=[('phone', 'Phone'),
-                                                   ('email', 'Email'),
-                                                   ('phone and email',
-                                                    'Phone and Email')])
+                                          choices=contact_methods)
 
     # Emergency Contact Information
     emergency_contact_name = StringField(
         'Contact Name', validators=[Optional(), Length(1, 64)])
-    emergency_contact_relationship = StringField(
-        'Relationship to Member', validators=[Optional(),
-                                              Length(1, 64)])
-    emergency_contact_phone_number = IntegerField(
-        'Phone Number of Contact',
-        widget=widgets.Input(input_type="tel"),
-        validators=[Optional()])
-    emergency_contact_email_address = EmailField(
-        'Email Address of Contact',
-        validators=[Optional(), Length(1, 64),
-                    Email()])
 
-    membership_expiration_date = DateField("Member Expiration Date: ",
-                                           validators=[InputRequired()])
-    member_number = IntegerField(validators=[InputRequired()])
+    emergency_contact_relationship = StringField(
+        'Relationship to Member', validators=[Optional(), Length(1, 64)])
+
+    emergency_contact_phone_number = IntegerField('Phone Number of Contact',
+                                                  widget=widgets.Input(input_type="tel"), validators=[Optional()])
+
+    emergency_contact_email_address = EmailField(
+        'Email Address of Contact', validators=[Optional(), Length(1, 64), Email()])
+
+    # Member Notes
     volunteer_notes = TextAreaField('Notes for Volunteers',
-                                    validators=[Optional(),
-                                                Length(max=500)])
+                                    validators=[Optional(), Length(max=500)])
 
     staffer_notes = TextAreaField('Notes for Office Staff',
-                                  validators=[Optional(),
-                                              Length(max=500)])
+                                  validators=[Optional(), Length(max=500)])
 
     submit = SubmitField("Submit")
 
 
 class VolunteerManager(FlaskForm):
-    salutation = SelectField("Salutation", choices=salutations)
-
+    # General Information
     first_name = StringField(
         'First Name', validators=[InputRequired(),
                                   Length(min=1, max=30)])
+
     middle_initial = StringField('Middle Initial',
-                                 validators=[Length(min=0, max=1)])
-    last_name = StringField(
-        'Last Name', validators=[InputRequired(),
-                                 Length(min=1, max=30)])
+                                 validators=[Optional(), Length(min=0, max=1)])
 
-    gender = SelectField("Gender",
-                         validators=[InputRequired()],
-                         choices=[("male", "Male"), ('female', "Female"),
-                                  ("unspecified", "Unspecified"),
-                                  ("no_answer", "Do not wish to answer")])
+    last_name = StringField('Last Name', validators=[InputRequired(),
+                                                     Length(min=1, max=30)])
 
-    birthdate = DateField("Birthdate ", validators=[InputRequired()])
     preferred_name = StringField('Preferred Name', validators=[Optional(),
                                                                Length(min=1, max=30)])
 
-    # Address Information
+    salutation = SelectField("Salutation", choices=salutations)
+
+    gender = SelectField("Gender", choices=genders,
+                         validators=[InputRequired()])
+
+    birthdate = DateField("Birthdate ", validators=[InputRequired()])
+
+    # Primary Address Information
     primary_address1 = StringField('Street address or P.O. Box',
                                    validators=[InputRequired(), Length(max=200)])
+
     primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
                                    validators=[Optional(), Length(max=200)])
+
     primary_city = StringField('City',
                                validators=[InputRequired(),
                                            Length(max=200)])
+
     primary_state = StringField('State',
                                 validators=[InputRequired(),
                                             Length(max=200)], default='New York')
+
     primary_country = StringField('Country',
                                   validators=[InputRequired(),
                                               Length(max=200)], default='United States')
+
     primary_zip_code = StringField('Zip Code',
-                                   validators=[Optional(),
+                                   validators=[InputRequired(),
                                                Length(max=45)])
-    primary_metro_area = SelectField('Metro Area',
-                                     choices=metro_areas,
-                                     validators=[Optional()])
+
+    primary_metro_area = QuerySelectField('Metro Area',
+                                          validators=[Optional()], allow_blank=True, get_label='name',
+                                          query_factory=lambda: db.session.query(MetroArea).order_by('name'))
+
+    # Secondary Address Information
     secondary_as_primary_checkbox = BooleanField(
         'Use this address instead of the primary address',
         validators=[Optional()])
@@ -658,37 +658,30 @@ class VolunteerManager(FlaskForm):
     secondary_address1 = StringField('Street address or P.O. Box',
                                      validators=[Optional(),
                                                  Length(max=200)])
+
     secondary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
                                      validators=[Optional(),
                                                  Length(max=200)])
+
     secondary_city = StringField('City',
                                  validators=[Optional(),
                                              Length(max=200)])
+
     secondary_state = StringField('State',
                                   validators=[Optional(),
                                               Length(max=200)])
+
     secondary_country = StringField('Country',
                                     validators=[Optional(),
                                                 Length(max=200)])
+
     secondary_zip_code = StringField('Zip Code',
                                      validators=[Optional(),
                                                  Length(max=45)])
-    secondary_metro_area = SelectField('Metro Area',
-                                       choices=metro_areas,
-                                       validators=[Optional()])
 
-    # Emergency Contact Information
-    emergency_contact_name = StringField(
-        'Contact Name', validators=[Optional(), Length(1, 64)])
-    emergency_contact_relationship = StringField(
-        'Relationship', validators=[Optional(), Length(1, 64)])
-    emergency_contact_phone_number = StringField(
-        'Phone Number',
-        widget=widgets.Input(input_type="tel"),
-        validators=[Optional()])
-    emergency_contact_email_address = EmailField(
-        'Email', validators=[Optional(), Length(1, 64),
-                             Email()])
+    secondary_metro_area = QuerySelectField('Metro Area',
+                                            validators=[Optional()], allow_blank=True, get_label='name',
+                                            query_factory=lambda: db.session.query(MetroArea).order_by('name'))
 
     # Contact Information
     primary_phone_number = StringField("Primary Phone Number",
@@ -698,77 +691,91 @@ class VolunteerManager(FlaskForm):
         "Secondary Phone Number",
         widget=widgets.Input(input_type="tel"),
         validators=[Optional()])
+
     email_address = EmailField('Email',
                                validators=[Optional(),
                                            Length(1, 64),
                                            Email()])
-    preferred_contact_method = RadioField('Preferred Contact Method',
-                                          choices=[('phone', "Phone"),
-                                                   ('email', "Email"),
-                                                   ('phone and email',
-                                                    "Phone and Email")])
 
-    provided_services = MultiCheckboxField(
-        'Services Volunteer can Provide', coerce=int)
-    notes = TextAreaField("Notes for Office Staff", validators=[Optional()])
+    preferred_contact_method = RadioField('Preferred Contact Method *',
+                                          choices=contact_methods)
+
+    # Emergency Contact Information
+    emergency_contact_name = StringField(
+        'Contact Name', validators=[Optional(), Length(1, 64)])
+
+    emergency_contact_relationship = StringField(
+        'Relationship to Volunteer', validators=[Optional(), Length(1, 64)])
+
+    emergency_contact_phone_number = StringField(
+        'Phone Number of Contact',
+        widget=widgets.Input(input_type="tel"),
+        validators=[Optional()])
+
+    emergency_contact_email_address = EmailField(
+        'Email Address of Contact', validators=[Optional(), Length(1, 64),
+                                                Email()])
+
+    # Additional Information
+    general_notes = TextAreaField("General Notes", validators=[Optional()])
 
     submit = SubmitField("Submit")
 
 
-class ContractorManager(FlaskForm):
+class LocalResourceManager(FlaskForm):
+    # General Information
     first_name = StringField('First name',
                              validators=[InputRequired(),
                                          Length(1, 64)])
+
     middle_initial = StringField('Middle Initial',
-                                 validators=[Length(min=0, max=1)])
+                                 validators=[Optional(), Length(min=0, max=1)])
+
     last_name = StringField('Last name',
                             validators=[InputRequired(),
                                         Length(1, 64)])
-    salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
-                   ("mr", "Mr")]
-    salutation = SelectField("Salutation", choices=salutations)
-    company_name = StringField('Company',
-                               validators=[Optional(),
-                                           Length(min=1, max=64)])
+
+    salutation = SelectField('Salutation', choices=salutations)
+
+    company_name = StringField('Company', validators=[InputRequired(),
+                                                      Length(min=1, max=64)])
 
     # Address Information
     primary_address1 = StringField('Street address or P.O. Box',
                                    validators=[InputRequired(), Length(max=200)])
+
     primary_address2 = StringField('Apt, suite, unit, building, floor, etc.',
                                    validators=[Optional(), Length(max=200)])
-    primary_city = StringField('City',
-                               validators=[Optional(),
-                                           Length(max=200)])
-    primary_state = StringField('State',
-                                validators=[InputRequired(),
-                                            Length(max=200)], default='New York')
-    primary_country = StringField('Country',
-                                  validators=[InputRequired(),
-                                              Length(max=200)], default='United States')
-    primary_zip_code = StringField('Zip Code',
-                                   validators=[Optional(),
-                                               Length(max=45)])
-    primary_metro_area = SelectField('Metro Area',
-                                     choices=metro_areas,
-                                     validators=[Optional()])
+
+    primary_city = StringField('City', validators=[InputRequired(),
+                                                   Length(max=200)])
+
+    primary_state = StringField('State', validators=[InputRequired(),
+                                                     Length(max=200)], default='New York')
+
+    primary_country = StringField('Country', validators=[InputRequired(),
+                                                         Length(max=200)], default='United States')
+
+    primary_zip_code = StringField('Zip Code', validators=[InputRequired(),
+                                                           Length(max=45)])
+
+    primary_metro_area = QuerySelectField('Metro Area',
+                                          validators=[Optional()], allow_blank=True, get_label='name',
+                                          query_factory=lambda: db.session.query(MetroArea).order_by('name'))
 
     # Contact Information
     primary_phone_number = IntegerField('Primary Phone Number',
                                         widget=widgets.Input(input_type="tel"),
                                         validators=[InputRequired()])
-    secondary_phone_number = IntegerField('Secondary Phone Number',
-                                          widget=widgets.Input(
-                                              input_type="tel"),
-                                          validators=[Optional()])
-    email_address = EmailField('Email',
-                               validators=[Optional(),
-                                           Length(1, 64),
-                                           Email()])
 
-    preferred_contact_method = RadioField(
-        choices=[('phone',
-                  'Phone'), ('email',
-                             'Email'), ('phone_and_email', 'Phone and Email')])
+    secondary_phone_number = IntegerField('Secondary Phone Number',
+                                          widget=widgets.Input(input_type="tel"), validators=[Optional()])
+
+    email_address = EmailField('Email', validators=[Optional(),
+                                                    Length(1, 64), Email()])
+
+    preferred_contact_method = RadioField('Preferred Contact Method *',
+                                          choices=contact_methods)
 
     website = StringField('Website',
                           validators=[Optional(),
@@ -865,10 +872,6 @@ class AddVacation(FlaskForm):
     submit = SubmitField('Set As Not Available')
 
 
-class AddServiceToVolunteer(FlaskForm):
-    submit = SubmitField('Save')
-
-
 class EditServiceForm(FlaskForm):
     name = StringField('Service Name',
                        validators=[InputRequired(),
@@ -901,8 +904,8 @@ class EditDestinationAddressForm(FlaskForm):
                        validators=[InputRequired(),
                                    Length(1, 200)])
     address1 = StringField('Street address or P.O. Box',
-                                 validators=[InputRequired(),
-                                             Length(max=200)])
+                           validators=[InputRequired(),
+                                       Length(max=200)])
 
     address2 = StringField('Apt, suite, unit, building, floor, etc.',
                            validators=[Optional(),

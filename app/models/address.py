@@ -3,7 +3,7 @@ from .. import db
 
 class Address(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    # A name for the address (i.e., 'Wegmans Food Market')
+    # The name of the person associated with the address
     name = db.Column(db.String(64), nullable=False)
     address1 = db.Column(db.String(64), nullable=False)
     address2 = db.Column(db.String(64))
@@ -11,15 +11,14 @@ class Address(db.Model):
     state = db.Column(db.String(64), default='New York')
     country = db.Column(db.String(64), default='United States')
     zipcode = db.Column(db.String(64))
-    # metro_area = db.Column(db.String(64))
+    metro_area_id = db.Column(db.Integer, db.ForeignKey('metro_area.id'))
 
     @staticmethod
     def generate_fake(count=200, **kwargs):
         """Generate a number of fake addresses for testing."""
         from sqlalchemy.exc import IntegrityError
-        from random import seed, choice, random
+        from random import seed, randint
         from faker import Faker
-        from datetime import datetime
 
         fake = Faker()
 
@@ -28,6 +27,7 @@ class Address(db.Model):
             a = Address(name=fake.company(),
                         address1=fake.street_address(),
                         city=fake.city(),
+                        metro_area_id=randint(1, 10),
                         **kwargs)
             db.session.add(a)
             try:
