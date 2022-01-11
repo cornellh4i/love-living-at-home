@@ -808,7 +808,9 @@ def create_office_time_request(request_id=None):
             status=RequestStatus.query.filter_by(
                 id=office_time_request.status_id),
             contact_log_priority=ContactLogPriorityType.query.filter_by(
-                id=office_time_request.contact_log_priority_id)
+                id=office_time_request.contact_log_priority_id),
+            special_instructions = office_time_request.special_instructions
+            
         )
     form.requesting_member.multiple = True
     form.requesting_member.choices = [
@@ -955,7 +957,8 @@ def create_members_home_request(request_id=None):
             follow_up_date=members_home_request.followup_date,
             responsible_staffer=members_home_request.responsible_staffer_id,
             person_to_cc=members_home_request.cc_email,
-            cc_email=form.person_to_cc.data)
+            cc_email=form.person_to_cc.data,
+            special_instructions = members_home_request.special_instructions)
 
     form.requesting_member.multiple = True
     form.requesting_member.choices = [

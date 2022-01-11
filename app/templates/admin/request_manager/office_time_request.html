@@ -175,6 +175,10 @@
     </div>
 
 
+    <p id="special-instructions" style="display: none">
+      {{form.special_instructions_list}}
+    </p>
+
     <div class="twelve wide column">
       <div class="field" id="special-instructions-div">
         {{ f.render_form_field(form.special_instructions) }}
@@ -225,7 +229,28 @@
       $('#summary-modal').modal('show');
     });
   </script>
+<script>
+  
+    function specialInstructions() {
+      const member = document.getElementById('member')
+      let acum = ""
+      for (const option of member.options) {
+        if (option.selected) {
+          $('textarea#special-instructions-text').empty();
+          let member_id = option.value.toString();
+          let str = document.getElementById('special-instructions').innerHTML;
+          let obj = JSON.parse(str);
+          acum = acum + option.label + ": " + obj[member_id] + "\n\n"
+        }
 
+      }
+      $('textarea#special-instructions-text').val(
+        acum
+      );
+      special_input = acum;
+    
+    }
+          </script>
   <script>
     const providerSelect = document.getElementById("service_provider");
     function updateTable() {
