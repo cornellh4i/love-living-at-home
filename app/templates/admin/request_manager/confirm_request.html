@@ -1,0 +1,133 @@
+{% extends "admin/request_manager/layouts/base.html" %}
+
+{% import 'macros/form_macros.html' as f %}
+
+{% block content %}
+<div class="ui stackable centered grid container">
+    <div class="twelve wide column">
+        <a class="ui basic compact button" href="{{ url_for('admin.search_request') }}">
+            <i class="caret left icon"></i>
+            Back to dashboard
+        </a>
+
+        {% set flashes =
+            { 'error': get_flashed_messages(category_filter=['form-error']),
+            'warning': get_flashed_messages(category_filter=['form-check-email']),
+            'info': get_flashed_messages(category_filter=['form-info']),
+            'success': get_flashed_messages(category_filter=['form-success']) }
+        %}
+
+        {{ f.begin_form(form, flashes) }}
+
+        {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}
+        {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
+        {{ f.form_message(flashes['info'], header='Information', class='info') }}
+        {{ f.form_message(flashes['success'], header='Success!', class='success') }}
+
+        <h2 class="ui header">
+            Complete Service Request
+        </h2>
+        <div class="field">
+            <label>Requesting Members</label>
+            <p>{{member_name}}</p>
+        </div>
+        <div class="field">
+            <label>Service Details</label>
+            <p>{{service_category}}-{{service}}</p>
+        </div>
+        <div class="field">
+            <label>Date</label>
+            <p>{{requested_date}} at {{start_time}}</p>
+        </div>
+        <div class="field">
+            <label>Providers</label>
+            <p>{{volunteer_name}}</p>
+        </div>
+        <div class="field">
+        </div>
+
+        <div class="field">
+            <label>Rating</label>
+            <input name = "rating" type = "hidden" id="rating"><div class="ui star rating" data-max-rating=5></div></input>
+        </div>
+
+        {{f.render_form_field(form.member_comments)}}
+
+        {{f.render_form_field(form.provider_comments)}}
+
+        <b>Duration</b>
+        <div class="ui mini message">Leave blank (non-zero) to automatically fill in duration based on start and finish times</div>
+
+        <div class = "inline fields">
+            <div class = "inline fields">
+            {{ f.render_form_field(form.duration_hours) }} hours
+            </div> 
+            <div class = "inline fields">
+            {{ f.render_form_field(form.duration_minutes) }} minutes
+            </div> 
+        </div>
+       
+        <div class = "three fields">
+        {{ f.render_form_field(form.number_of_trips) }}
+        {{ f.render_form_field(form.mileage) }}
+        {{ f.render_form_field(form.expenses) }}
+        </div>
+
+        {{ f.render_form_field(form.verified_by) }}
+
+        {{ f.render_form_field(form.submit) }}
+
+        {{ f.end_form() }}
+    </div>
+</div>
+<script>
+    $('.ui.star.rating')
+        .rating({
+        })
+        ;
+
+    $('.ui.star.rating').on('click', function() {
+        let rating = $('.ui.star.rating').rating('get rating');
+        document.getElementById('rating').value=rating; 
+    });
+
+    $(document).ready(function() {
+        $("input#duration_hours").attr({
+        "max" : 99,       
+        "min" : 0         
+        });
+        $("input#duration_minutes").attr({
+        "max" : 99,       
+        "min" : 0         
+        });
+        $("input#number_of_trips").attr({     
+        "min" : 0         
+        });
+        $("input#mileage").attr({     
+        "min" : 0         
+        });
+        $("input#expenses").attr({     
+        "min" : 0         
+        });
+    });
+    
+    $("input#submit").click(function(){
+        if ((($("input#duration_hours").val() && 
+        ($("input#duration_hours").val() < 0 || $("input#duration_hours").val() > 99))) 
+        || ($("input#duration_minutes").val() && 
+        ($("input#duration_minutes").val() < 0 || $("input#duration_minutes").val() > 99)))
+            {
+            alert('Please input a number range between 0 and 99');
+        }
+        else if (($("input#number_of_trips").val() && $("input#number_of_trips").val() < 0) 
+        || ($("input#mileage").val() && $("input#mileage").val() < 0) 
+        || ($("input#expenses").val() && $("input#expenses").val() < 0) 
+        )
+            {
+            alert('Please input a number greater than or equal to 0');
+        }
+    })
+   
+   
+</script>
+{% endblock %}

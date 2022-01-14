@@ -99,10 +99,44 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
           onclick=
           "window.location.href = '{{ url_for('admin.create_transportation_request', request_id=request_num) if request_type_id == 0 else url_for('admin.create_office_time_request', request_id = request_num) if request_type_id==1 else url_for('admin.create_members_home_request', request_id = request_num) if request_type_id==2 else url_for('admin.search_request') }}';"></i>
           <i style="margin-top: 20px" class= "large blue copy outline icon"></i>
-          <i style="margin-top: 20px" class= "large red times circle icon"></i>
+          <i style="margin-top: 20px; cursor:pointer" class= "large red times circle icon cancel-request" title="Cancel" request_type_id = {{request_type_id}} request_num = {{request_num}}></i>
+          <div class="ui modal" id='modal-cancel-request-{{request_type_id}}-{{request_num}}'>
+            <div class="header">Cancel Request</div>
+            <div class="content">
+              <p>Enter the reason for cancelling this service request. Click 'Save' when finished.</p>
+              <div class = "ui form">
+                {{ form.csrf_token }}
+                <div class = "field">
+                  <label>Reason</label>
+                  <select id="reasons-{{request_type_id}}-{{request_num}}" name="reasons" class = "ui search dropdown">
+                    <option selected>Select</option>
+                    <option>Can't supply a service provider</option>
+                    <option>Duplicate</option>
+                    <option>Entered in error</option>
+                    <option>Event cancelled</option>
+                    <option>Member cancelled</option>
+                    <option>Member dropped</option>
+                    <option>Not enough advance notice</option>
+                    <option>Problem was separately resolved</option>
+                    <option>Provider cancelled</option>
+                    <option>Weather</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="actions">
+              <div class="positive ui approve button"
+                onclick='cancelRequest(request_type_id,request_num)'>
+                Save
+              </div>
+              <div class="negative ui deny button">Cancel</div>
+            </div>
+          </div>
+        
         </div>
         <div class="one wide column">
-          <i style="margin-top: 15px" class="large green check icon"></i>
+          <i style="margin-top: 15px; cursor:pointer" class="large green check icon" title = "Confirm" request_type_id = {{request_type_id}} request_num = {{request_num}}
+          onclick="window.location.href = '{{ url_for('admin.confirm_request', request_type_id=request_type_id, request_id=request_num)}}';"></i>
           <i style="margin-top: 20px"class= "large trash icon delete-request" style="cursor: pointer" request_type_id = {{request_type_id}} request_num = {{request_num}}></i>
 
           <div class="ui modal" id='modal-delete-request-{{request_type_id}}-{{request_num}}'>
@@ -128,6 +162,36 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
   request_num = $(this).attr('request_num');
   $(`#modal-delete-request-${request_type_id}-${request_num}`).modal('show');
 });
+
+  $('.cancel-request').click(function () {
+    request_type_id = $(this).attr('request_type_id');
+    request_num = $(this).attr('request_num');
+    $(`#modal-cancel-request-${request_type_id}-${request_num}`).modal('show');
+  });
+
+  function cancelRequest(request_type_id,request_num) {
+    let queryJSON = {};
+    request_type_id = $(this).attr('request_type_id');
+    request_num = $(this).attr('request_num');
+    const select = document.getElementById(`reasons-${request_type_id}-${request_num}`).value;
+
+    queryJSON['reason'] = select;
+
+    const protocol = window.location.protocol;
+    const host = window.location.host;
+    fetch(`${protocol}//${host}/admin/cancel-request/${request_type_id}/${request_num}`, {
+      method: "POST",
+      headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "X-CSRFToken": document.getElementById("csrf_token").value,
+      },
+      body: JSON.stringify(queryJSON)
+    }).then(() => {
+            window.location.reload();
+        })
+  }
+
 </script>
 {% endmacro %}
 

@@ -48,5 +48,16 @@ class OfficeRequest(db.Model):
         nullable=False)
     cc_email = db.Column(db.String(120), unique=False, nullable=False)
 
+    #based on status of the request
+    cancellation_reason = db.Column(db.String(120), unique = False)
+    rating = db.Column(db.Integer)
+    member_comments = db.Column(db.String(1000))
+    provider_comments = db.Column(db.String(1000))
+    duration_in_mins = db.Column(db.Integer)
+    number_of_trips = db.Column(db.Integer)
+    mileage = db.Column(db.Integer)
+    expenses = db.Column(db.Integer)
+    verified_by = db.Column(db.Integer)
+
     def __repr__(self):
         return f"Request('{self.created_date}, '{self.cc_email}')"

@@ -10,7 +10,7 @@ from flask_rq import get_queue
 from app import db
 from app.admin.forms import (AddAvailability,
                              AddVetting, AddReview, AddVacation, ChangeAccountTypeForm,
-                             ChangeUserEmailForm, LocalResourceManager,
+                             ChangeUserEmailForm, CompleteServiceRequestForm, LocalResourceManager,
                              EditMetroAreaForm, EditServiceForm, EditServiceCategoryForm,
                              EditDestinationAddressForm,
                              InviteUserForm, MemberManager, MembersHomeRequestForm,
@@ -24,6 +24,7 @@ from app.models import (Address, Availability, EditableHTML, LocalResource, Memb
 from app.models.transportation_request import ContactLogPriorityType, RequestDurationType, RequestStatus, RequestType
 from app.models.request_volunteer_record import RequestVolunteerRecord
 from app.models.office_request import OfficeRequest
+from datetime import timedelta
 from wtforms.fields.core import Label
 
 from datetime import date
@@ -537,7 +538,117 @@ def delete_request(request_type_id, request_id):
             request_type + " #" + str(request_id)), 'success')
     return redirect(url_for('admin.search_request'))
 
-# Create a new service request.
+
+@ admin.route('/cancel-request/<int:request_type_id>/<int:request_id>', methods=['GET', 'POST'])
+@ login_required
+@ admin_required
+def cancel_request(request_type_id, request_id):
+    """Cancel a request"""
+    json = request.get_json()
+    request_type = ""
+    # Transportation Request
+    if request_type_id == 0:
+        request_type = "Transportation"
+        request_obj = TransportationRequest.query.filter_by(
+            id=request_id).first()
+    # Office Request
+    elif request_type_id == 1:
+        request_type = "Office"
+        request_obj = OfficeRequest.query.filter_by(id=request_id).first()
+    # Member's Home Request
+    elif request_type_id == 2:
+        request_type = "Member's Home"
+        request_obj = MembersHomeRequest.query.filter_by(id=request_id).first()
+
+    # status id of cancel is 3
+    request_obj.status_id = 3
+    request_obj.cancellation_reason = json['reason']
+    flash(
+        'Successfully cancelled request {}'.format(
+            request_type + " #" + str(request_id)), 'success')
+    resp = jsonify(success=True)
+    return resp
+
+
+@ admin.route('/confirm-request/<int:request_type_id>/<int:request_id>', methods=['GET', 'POST'])
+@ login_required
+@ admin_required
+def confirm_request(request_type_id, request_id):
+    """Confirm a request"""
+    form = CompleteServiceRequestForm()
+    form.verified_by.choices = [
+        (staffer.id, staffer.first_name + " " + staffer.last_name)
+        for staffer in Staffer.query.all()
+    ]
+    request_member_records = RequestMemberRecord.query.filter_by(
+        request_id=request_id, request_category_id=request_type_id).all()
+    member_name = ""
+    for request_member_record in request_member_records:
+        member = Member.query.get(request_member_record.member_id)
+        member_name += member.first_name + " " + member.last_name + ", "
+    member_name = member_name[:-2]
+
+    request_volunteer_records = RequestVolunteerRecord.query.filter_by(
+        request_id=request_id, request_category_id=request_type_id).all()
+
+    volunteer_name = ""
+    for request_volunteer_record in request_volunteer_records:
+        volunteer = Volunteer.query.get(request_volunteer_record.volunteer_id)
+        volunteer_name += volunteer.first_name + " " + volunteer.last_name + ", "
+    volunteer_name = volunteer_name[:-2]
+
+    # Transportation Request
+    if request_type_id == 0:
+        request_type = "Transportation"
+        request_obj = TransportationRequest.query.filter_by(
+            id=request_id).first()
+        start_time = request_obj.initial_pickup_time
+        end_time = request_obj.drop_off_time
+    # Office Request
+    elif request_type_id == 1:
+        request_type = "Office"
+        request_obj = OfficeRequest.query.filter_by(id=request_id).first()
+        start_time = request_obj.start_time
+        end_time = request_obj.end_time
+    # Member's Home Request
+    elif request_type_id == 2:
+        request_type = "Member's Home"
+        request_obj = MembersHomeRequest.query.filter_by(id=request_id).first()
+        start_time = request_obj.from_time
+        end_time = request_obj.until_time
+    service_category = ServiceCategory.query.get(
+        request_obj.service_category_id).name
+    service = Service.query.get(request_obj.service_id).name
+    requested_date = request_obj.requested_date.strftime("%m/%d/%Y")
+    if form.validate_on_submit():
+        request_obj.rating = form.rating.data
+        request_obj.member_comments = form.member_comments.data
+        request_obj.provider_comments = form.provider_comments.data
+        request_obj.duration_in_mins = form.duration_minutes.data
+        if form.duration_hours.data:
+            request_obj.duration_in_mins += form.duration_hours.data*60
+        if not (form.duration_hours.data or form.duration_minutes.data):
+            start_delta = timedelta(
+                hours=start_time.hour, minutes=start_time.minute)
+            end_delta = timedelta(hours=end_time.hour, minutes=end_time.minute)
+            duration = end_delta - start_delta
+            request_obj.duration_in_mins = duration.seconds/60
+        request_obj.number_of_trips = form.number_of_trips.data
+        request_obj.mileage = form.mileage.data
+        request_obj.expenses = form.expenses.data
+        request_obj.verified_by = form.verified_by.data
+
+        # status id of complete is 2
+        request_obj.status_id = 2
+
+        flash(
+            'Successfully completed request {}'.format(
+                request_type + " #" + str(request_id)), 'success')
+        return redirect(url_for('admin.search_request'))
+    return render_template('admin/request_manager/confirm_request.html',
+                           form=form, service_category=service_category, service=service,
+                           member_name=member_name, volunteer_name=volunteer_name,
+                           requested_date=requested_date, start_time=start_time.strftime("%I:%M %p"))
 
 
 @admin.route('/create-request', methods=['GET', 'POST'])
@@ -641,6 +752,8 @@ def create_transportation_request(request_id=None):
             transportation_request.responsible_staffer_id = form.responsible_staffer.data
             transportation_request.contact_log_priority_id = form.contact_log_priority.data.id
             transportation_request.cc_email = form.person_to_cc.data
+            if transportation_request.status_id != 3:
+                transportation_request.cancellation_reason = None
 
             members = RequestMemberRecord.query.filter_by(
                 request_id=transportation_request.id).filter_by(request_category_id=0).all()
@@ -699,7 +812,7 @@ def create_transportation_request(request_id=None):
             db.session.commit()
 
         if request_id:
-            flash('Successfully editied transportation request # {}'.
+            flash('Successfully edited transportation request # {}'.
                   format(request_id), 'success')
         else:
             flash('Successfully submitted a transportation request', 'success')
@@ -853,6 +966,8 @@ def create_office_time_request(request_id=None):
             office_time_request.responsible_staffer_id = form.responsible_staffer.data
             office_time_request.contact_log_priority_id = form.contact_log_priority.data.id
             office_time_request.cc_email = form.person_to_cc.data
+            if office_time_request.status_id != 3:
+                office_time_request.cancellation_reason = None
 
             members = RequestMemberRecord.query.filter_by(
                 request_id=office_time_request.id).filter_by(request_category_id=1).all()
@@ -1040,6 +1155,8 @@ def create_members_home_request(request_id=None):
             members_home_request.contact_log_priority_id = request.form.get(
                 "contact_log_priority")
             members_home_request.cc_email = form.person_to_cc.data
+            if members_home_request.status_id != 3:
+                members_home_request.cancellation_reason = None
 
             members = RequestMemberRecord.query.filter_by(
                 request_id=members_home_request.id).filter_by(request_category_id=2).all()
@@ -2404,21 +2521,23 @@ def new_destination_address():
     return render_template('admin/system_manager/manage_destination_address.html',
                            form=form)
 
-@admin.route('/add-transportation-address', methods = ["GET", "POST"])
+
+@admin.route('/add-transportation-address', methods=["GET", "POST"])
 def transport_address_addition():
     json = request.get_json()
     new_address = Address(
-                            name=json["address-name"],
-                            address1=json["street-address"],
-                            address2=json["addr-cont"],
-                            city=json["city"],
-                            state=json["state"],
-                            country=json["country"],
-                            zipcode=json["zip"]
-                          )
+        name=json["address-name"],
+        address1=json["street-address"],
+        address2=json["addr-cont"],
+        city=json["city"],
+        state=json["state"],
+        country=json["country"],
+        zipcode=json["zip"]
+    )
     db.session.add(new_address)
     db.session.commit()
     return jsonify("OK")
+
 
 @admin.route('/destination-addresses/<int:destination_address_id>/_delete')
 @login_required

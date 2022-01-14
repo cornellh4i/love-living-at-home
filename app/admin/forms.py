@@ -9,7 +9,7 @@ from wtforms.fields import (BooleanField, IntegerField, PasswordField,
                             StringField, SubmitField, TextAreaField)
 from wtforms.fields.html5 import DateField, EmailField, IntegerField, TimeField
 from wtforms.validators import (Email, EqualTo, InputRequired,
-                                Length, Optional)
+                                Length, Optional, NumberRange)
 
 from app import db
 from app.models import (MetroArea, ContactLogPriorityType, Member, RequestStatus, RequestType, Role,
@@ -921,3 +921,24 @@ class EditDestinationAddressForm(FlaskForm):
                            validators=[Optional(),
                                        Length(max=45)])
     submit = SubmitField('Save Destination Address Information')
+
+
+class CompleteServiceRequestForm(FlaskForm):
+    rating = IntegerField('Rating', validators=[Optional()])
+    member_comments = TextAreaField('Member Comments', id="member_comments",
+                                    validators=[Optional(),
+                                                Length(max=1000)])
+    provider_comments = TextAreaField('Provider Comments', id="provider_comments",
+                                      validators=[Optional(), Length(max=1000)])
+    duration_hours = IntegerField(
+        '', validators=[Optional(), NumberRange(min=0, max=99)])
+    duration_minutes = IntegerField(
+        '', validators=[Optional(), NumberRange(min=0, max=99)])
+    number_of_trips = IntegerField('# of Trips', validators=[
+                                   Optional(), NumberRange(min=0)])
+    mileage = IntegerField('Mileage', validators=[
+                           Optional(), NumberRange(min=0)])
+    expenses = IntegerField('Expenses ($)', validators=[
+                            Optional(), NumberRange(min=0)])
+    verified_by = SelectField('Verified by', coerce=int)
+    submit = SubmitField('Save')
