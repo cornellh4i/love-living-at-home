@@ -2287,6 +2287,10 @@ def service_info(service_id):
 @admin_required
 def delete_service(service_id):
     """Delete a service."""
+    provided_services = ProvidedService.query.filter_by(service_id=service_id).all()
+    for provided_service in provided_services:
+        db.session.delete(provided_service)
+        db.session.commit()
     service = Service.query.filter_by(id=service_id).first()
     db.session.delete(service)
     db.session.commit()
@@ -2380,6 +2384,10 @@ def delete_service_category(category_id):
     """Delete a service category."""
     services = Service.query.filter_by(category_id=category_id).all()
     for service in services:
+        provided_services = ProvidedService.query.filter_by(service_id=service.id).all()
+        for provided_service in provided_services:
+            db.session.delete(provided_service)
+            db.session.commit()
         db.session.delete(service)
     category = ServiceCategory.query.filter_by(id=category_id).first()
     db.session.delete(category)
