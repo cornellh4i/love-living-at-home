@@ -1,0 +1,4 @@
+# This file configures automatic PR requests
+
+# Global auto PRs (likely the only type of auto review we'll need)
+*	@am2283 @eef49
