@@ -13,16 +13,16 @@
 } %}
 
 <style>
-    .column {
-      position: relative;
-    }
+  .column {
+    position: relative;
+  }
 
-    .column .side-button {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-    }
-  </style>
+  .column .side-button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+</style>
 
 {{ f.begin_form(form, flashes, extra_classes="large") }}
 <div class="ui stackable centered grid container">
@@ -38,7 +38,7 @@
     </div>
   </div>
 
-  <div class="twelve wide column">
+  <div id="members" class="twelve wide column">
     {{ f.render_form_field(form.requesting_member)}}
   </div>
 
@@ -67,9 +67,9 @@
     {{ f.render_form_field(form.description) }}
   </div>
 
-    <div class = "twelve wide column">
+  <div class="twelve wide column">
     <div>{{ f.render_form_field(form.home_location) }}</div>
-    </div>
+  </div>
 
   <div class="twelve wide column">
     <div class="ui two column stackable grid">
@@ -77,30 +77,30 @@
         {{ f.render_form_field(form.service_category) }}
       </div>
       <div class="right floated six wide column">
-        <div id="techServices" style = "display: initial">
+        <div id="techServices" style="display: initial">
           {{ f.render_form_field(form.tech_services) }}
         </div>
-        <div id="profHomeServices" style = "display: none">
+        <div id="profHomeServices" style="display: none">
           {{ f.render_form_field(form.prof_home_services) }}
         </div>
-        <div id="profSupportServices" style = "display: none">
+        <div id="profSupportServices" style="display: none">
           {{ f.render_form_field(form.prof_support_services) }}
         </div>
-        <div id="volHomeServices" style = "display: none">
+        <div id="volHomeServices" style="display: none">
           {{ f.render_form_field(form.vol_home_services) }}
         </div>
-        <div id="volSupportServices" style = "display: none">
+        <div id="volSupportServices" style="display: none">
           {{ f.render_form_field(form.vol_support_services) }}
         </div>
       </div>
       <div class="right floated six wide column"></div>
     </div>
 
-    <div id = "providers" class="twelve wide column">
+    <div id="providers" class="twelve wide column">
       {{ f.render_form_field(form.service_provider)}}
     </div>
 
-    <div class="four fields" style = "margin-top: 10px">
+    <div class="four fields" style="margin-top: 10px">
       <div class="field">
         <button id="show-send-req-modal" class="ui purple basic button" type="button">
           Send Request
@@ -110,21 +110,21 @@
           <div class="header">Are you sure you'd like to send this request?</div>
           <div class="content">
             <h4>A blank email will be sent if you haven't yet created the request<h4>
-            <button onclick="sendRequests('send+request')" class="ui purple basic button" type="button">
-              Send Request
-            </button>
-            <div id = "send-request-success-message" class="ui hidden positive message">
-              <i class="close icon"></i>
-              <div class="header">
-                Request sent
-              </div>
-              <p>The volunteers have been emailed!</p>
-            </div>
+                <button onclick="sendRequests('send+request')" class="ui purple basic button" type="button">
+                  Send Request
+                </button>
+                <div id="send-request-success-message" class="ui hidden positive message">
+                  <i class="close icon"></i>
+                  <div class="header">
+                    Request sent
+                  </div>
+                  <p>The volunteers have been emailed!</p>
+                </div>
           </div>
         </div>
       </div>
       <div class="field">
-        <button id = "show-confirmation-modal" class="ui purple basic button" type="button">
+        <button id="show-confirmation-modal" class="ui purple basic button" type="button">
           Confirmation
         </button>
         <div id="confirmation-modal" class="ui modal">
@@ -132,21 +132,21 @@
           <div class="header">Are you sure you'd like to send a confirmation email?</div>
           <div class="content">
             <h4>A blank email will be sent if you haven't yet created the request<h4>
-            <button onclick="sendRequests('confirmation')" class="ui purple basic button" type="button">
-              Confirmation
-            </button>
-            <div id = "confirmation-success-message" class="ui hidden positive message">
-              <i class="close icon"></i>
-              <div class="header">
-                Confirmation sent
-              </div>
-              <p>The volunteers have been emailed!</p>
-            </div>
+                <button onclick="sendRequests('confirmation')" class="ui purple basic button" type="button">
+                  Confirmation
+                </button>
+                <div id="confirmation-success-message" class="ui hidden positive message">
+                  <i class="close icon"></i>
+                  <div class="header">
+                    Confirmation sent
+                  </div>
+                  <p>The volunteers have been emailed!</p>
+                </div>
           </div>
         </div>
       </div>
       <div class="field">
-        <button id = "show-not-needed-modal" class="ui purple basic button" type="button">
+        <button id="show-not-needed-modal" class="ui purple basic button" type="button">
           Not Needed
         </button>
         <div id="not-needed-modal" class="ui modal">
@@ -154,21 +154,21 @@
           <div class="header">Are you sure you'd like to send a not needed email?</div>
           <div class="content">
             <h4>A blank email will be sent if you haven't yet created the request<h4>
-            <button onclick="sendRequests('not+needed')" class="ui purple basic button" type="button">
-              Not Needed
-            </button>
-            <div id = "not-needed-success-message" class="ui hidden positive message">
-              <i class="close icon"></i>
-              <div class="header">
-                Request sent
-              </div>
-              <p>The volunteers have been emailed!</p>
-            </div>
+                <button onclick="sendRequests('not+needed')" class="ui purple basic button" type="button">
+                  Not Needed
+                </button>
+                <div id="not-needed-success-message" class="ui hidden positive message">
+                  <i class="close icon"></i>
+                  <div class="header">
+                    Request sent
+                  </div>
+                  <p>The volunteers have been emailed!</p>
+                </div>
           </div>
         </div>
       </div>
       <div class="field">
-        <button id = "show-summary-modal" class="ui purple basic button" type="button">
+        <button id="show-summary-modal" class="ui purple basic button" type="button">
           Summary
         </button>
         <div id="summary-modal" class="ui modal">
@@ -176,16 +176,16 @@
           <div class="header">Are you sure you'd like to send a summary email?</div>
           <div class="content">
             <h4>A blank email will be sent if you haven't yet created the request<h4>
-            <button onclick="sendRequests('summary')" class="ui purple basic button" type="button">
-              Send Summary
-            </button>
-            <div id = "summary-success-message" class="ui hidden positive message">
-              <i class="close icon"></i>
-              <div class="header">
-                Request sent
-              </div>
-              <p>The volunteers have been emailed!</p>
-            </div>
+                <button onclick="sendRequests('summary')" class="ui purple basic button" type="button">
+                  Send Summary
+                </button>
+                <div id="summary-success-message" class="ui hidden positive message">
+                  <i class="close icon"></i>
+                  <div class="header">
+                    Request sent
+                  </div>
+                  <p>The volunteers have been emailed!</p>
+                </div>
           </div>
         </div>
       </div>
@@ -315,32 +315,33 @@
         table.id = "volunteerDataTable";
       }
 
-      const volDataArr = {{ volunteer_data | safe }}
+      const volDataArr = {{ volunteer_data | safe
+    }}
 
-      for (const volName of selectedNames) {
-        const row = table.insertRow(1);
-        const boxEntry = row.insertCell(0);
-        const checkBox = document.createElement("INPUT");
-        checkBox.setAttribute("type", "checkbox");
-        checkBox.className += "ui checkbox";
-        checkBox.name = "selectedVolunteersCheckBox";
-        volDataArr.find(vol => {
-          if (vol[0] == volName)
-           checkBox.value = vol[3] + "|" + vol[6];
-        })
-        boxEntry.appendChild(checkBox);
-        const volunteer = volDataArr.find(volObj => volObj[0] == volName);
-        for (let i = 0; i < volunteer.length; i++) {
-          const tempVolData = row.insertCell(i + 1);
-          tempVolData.innerHTML = volunteer[i];
-        }
+    for (const volName of selectedNames) {
+      const row = table.insertRow(1);
+      const boxEntry = row.insertCell(0);
+      const checkBox = document.createElement("INPUT");
+      checkBox.setAttribute("type", "checkbox");
+      checkBox.className += "ui checkbox";
+      checkBox.name = "selectedVolunteersCheckBox";
+      volDataArr.find(vol => {
+        if (vol[0] == volName)
+          checkBox.value = vol[3] + "|" + vol[6];
+      })
+      boxEntry.appendChild(checkBox);
+      const volunteer = volDataArr.find(volObj => volObj[0] == volName);
+      for (let i = 0; i < volunteer.length; i++) {
+        const tempVolData = row.insertCell(i + 1);
+        tempVolData.innerHTML = volunteer[i];
       }
+    }
 
-      if (!document.getElementById("volunteerDataTable")) {
-        providerDiv.prepend(table);
-      } else {
-        providerDiv.replaceChild(table, document.getElementById("volunteerDataTable"));
-      }
+    if (!document.getElementById("volunteerDataTable")) {
+      providerDiv.prepend(table);
+    } else {
+      providerDiv.replaceChild(table, document.getElementById("volunteerDataTable"));
+    }
     }
     providerSelect.setAttribute("onchange", "updateTable()");
 
@@ -364,6 +365,58 @@
     }
   </script>
   <!-- End table logic -->
+
+  <!-- Begin Table for Displaying Member Information -->
+  <script>
+
+    const memberSelect = document.getElementById("member");
+
+    function updateMemberTable() {
+      const memberDiv = document.getElementById("members");
+      let selectedMembers = [];
+
+      for (const option of memberSelect.options) {
+        if (option.selected)
+          selectedMembers.push(option.innerHTML)
+      }
+
+      const table = document.createElement('table');
+
+      if (selectedMembers.length > 0) {
+        table.className += "ui celled table";
+        const header = table.createTHead();
+        const row = header.insertRow(0);
+        const headers = ["Name", "Exp. Date", "Email", "Phone Number", "Home Address"]
+        //Add condition to check that home address exists, if not just leave blank
+        //Add header for member type but put in dummy value
+        for (let i = 0; i < headers.length; i++) {
+          const tempHeaderCell = row.insertCell(i);
+          tempHeaderCell.innerHTML = "<b>" + headers[i] + "</b>";
+        }
+        table.id = "memberDataTable";
+      }
+
+      const memberDataArr = {{ member_data | safe }}
+
+      for (const memberName of selectedMembers) {
+        const row = table.insertRow(1);
+        const member = memberDataArr.find(memObj => memObj[0] == memberName);
+        for (let i = 0; i < member.length; i++) {
+          const tempMemData = row.insertCell(i);
+          tempMemData.innerHTML = member[i];
+        }
+      }
+
+      if (!document.getElementById("memberDataTable")) {
+        memberDiv.prepend(table);
+      } else {
+        memberDiv.replaceChild(table, document.getElementById("memberDataTable"));
+      }
+    }
+    memberSelect.setAttribute("onchange", "updateMemberTable()");
+
+  </script>
+  <!-- End Table for Displaying Member Information-->
 
   <div class="twelve wide column">
     {{ f.form_message(flashes['error'], header='Something went wrong.', class='error') }}

@@ -838,7 +838,9 @@ def create_transportation_request(request_id=None):
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
                            form=form,
-                           volunteer_data=json.dumps(volunteer_info))
+                           volunteer_data=json.dumps(volunteer_info),
+                           member_data=json.dumps(member_info, default=str))
+
 
 
 @admin.route('/create-request/send-emails', methods=['GET'])
@@ -1049,7 +1051,9 @@ def create_office_time_request(request_id=None):
     return render_template('admin/request_manager/office_time_request.html',
                            title='Office Time Request',
                            form=form,
-                           volunteer_data=json.dumps(volunteer_info))
+                           volunteer_data=json.dumps(volunteer_info),
+                           member_data=json.dumps(member_info, default=str))
+
 
 
 @admin.route('/create-request/members-home-request/<int:request_id>', methods=['GET', 'POST'])
@@ -1236,7 +1240,8 @@ def create_members_home_request(request_id=None):
     return render_template('admin/request_manager/members_home_request.html',
                            title='Members Home Request',
                            form=form,
-                           volunteer_data=json.dumps(volunteer_info))
+                           volunteer_data=json.dumps(volunteer_info),
+                           member_data=json.dumps(member_info, default=str))
 
 
 @admin.route('/invite-member', methods=['GET', 'POST'])
