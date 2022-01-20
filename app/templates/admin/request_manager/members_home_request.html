@@ -77,21 +77,7 @@
         {{ f.render_form_field(form.service_category) }}
       </div>
       <div class="right floated six wide column">
-        <div id="techServices" style="display: initial">
-          {{ f.render_form_field(form.tech_services) }}
-        </div>
-        <div id="profHomeServices" style="display: none">
-          {{ f.render_form_field(form.prof_home_services) }}
-        </div>
-        <div id="profSupportServices" style="display: none">
-          {{ f.render_form_field(form.prof_support_services) }}
-        </div>
-        <div id="volHomeServices" style="display: none">
-          {{ f.render_form_field(form.vol_home_services) }}
-        </div>
-        <div id="volSupportServices" style="display: none">
-          {{ f.render_form_field(form.vol_support_services) }}
-        </div>
+        {{ f.render_form_field(form.member_home_service) }}
       </div>
       <div class="right floated six wide column"></div>
     </div>
@@ -253,20 +239,22 @@
   <script>
     function serviceChoices() {
       let service_category = document.getElementById('service_category').value;
-      console.log("got:" + service_category)
-      const dropdowns = new Map();
-      dropdowns.set(3, document.getElementById("techServices"));
-      dropdowns.set(4, document.getElementById("profHomeServices"));
-      dropdowns.set(5, document.getElementById("profSupportServices"));
-      dropdowns.set(7, document.getElementById("volHomeServices"));
-      dropdowns.set(8, document.getElementById("volSupportServices"));
-      const cat_ids = [3, 4, 5, 7, 8];
-      cat_ids.forEach(id => {
-        if (id == service_category)
-          dropdowns.get(id).style.display = "initial";
-        else
-          dropdowns.get(id).style.display = "none";
-      })
+      let service_select = document.getElementById('services');
+      console.log(service_category);
+      const protocol = window.location.protocol;
+      const host = window.location.host;
+      fetch(`${protocol}//${host}/admin/create-request/${service_category}`, {
+        }).then(function(response){
+          response.json().then(function(data){
+            console.log(data);
+            let optionHTML = '';
+            for (let service of data.services){
+              optionHTML += '<option value="' + service.id + '">' + service.name + '</option>'
+            }
+            service_select.innerHTML = optionHTML;
+          })
+
+        })
     }
 
     function specialInstructions() {

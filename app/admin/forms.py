@@ -124,10 +124,6 @@ class TransportationRequestForm(FlaskForm):
         return db.session.query(ServiceCategory).order_by().filter(
             ServiceCategory.request_type_id == 0)
 
-    def covid_services():
-        return db.session.query(Service).order_by().filter(
-            Service.category_id == 1)
-
     def transportation_services():
         return db.session.query(Service).order_by().filter(
             Service.category_id == 0)
@@ -176,28 +172,16 @@ class TransportationRequestForm(FlaskForm):
                                coerce=int)
     description = TextAreaField('Short description (included in email):')
 
-    service_category = QuerySelectField(
+    service_category = SelectField(
         'Service Category:',
         render_kw={'onchange': "serviceChoices()"},
-        validators=[InputRequired()],
-        get_label='name',
-        query_factory=selectedCategory)
+        validators=[InputRequired()], coerce = int
+    )
 
-    covid_service = QuerySelectField(
+    transportation_service = SelectField(
         'Service:',
-        id="covid_service",
-        render_kw={'onchange': "serviceChoices()"},
-        validators=[Optional()],
-        get_label='name',
-        query_factory=covid_services)
-
-    transportation_service = QuerySelectField(
-        'Service:',
-        render_kw={'onchange': "serviceChoices()"},
-        id="transportation_service",
-        validators=[Optional()],
-        get_label='name',
-        query_factory=transportation_services)
+        id="services",
+        validators=[Optional()], coerce = int)
 
     starting_location = StringField('Pickup Location:',
                                     validators=[InputRequired()])
@@ -243,10 +227,6 @@ class OfficeTimeRequestForm(FlaskForm):
         return db.session.query(ServiceCategory).order_by().filter(
             ServiceCategory.request_type_id == 1)
 
-    def covid_services():
-        return db.session.query(Service).order_by().filter(
-            Service.category_id == 1)
-
     def office_time_services():
         return db.session.query(Service).order_by().filter(
             Service.category_id == 6)
@@ -291,28 +271,17 @@ class OfficeTimeRequestForm(FlaskForm):
     # add alerts
     description = TextAreaField('Short description (included in email):')
 
-    service_category = QuerySelectField(
+    service_category = SelectField(
         'Service Category:',
         render_kw={'onchange': "serviceChoices()"},
-        validators=[InputRequired()],
-        get_label='name',
-        query_factory=selectedCategory)
+        validators=[InputRequired()], coerce=int)
 
-    covid_service = QuerySelectField(
+    office_time_service = SelectField(
         'Service:',
-        id="covid_service",
-        render_kw={'onchange': "serviceChoices()"},
+        id="services",
         validators=[Optional()],
-        get_label='name',
-        query_factory=covid_services)
+        coerce=int)
 
-    office_time_service = QuerySelectField(
-        'Service:',
-        render_kw={'onchange': "serviceChoices()"},
-        id="office_time_service",
-        validators=[Optional()],
-        get_label='name',
-        query_factory=office_time_services)
     special_instructions = TextAreaField('Special Instructions:',
                                          id="special-instructions-text")
 
@@ -412,47 +381,17 @@ class MembersHomeRequestForm(FlaskForm):
 
     description = TextAreaField('Short description (included in email):')
 
-    service_category = QuerySelectField(
+    service_category = SelectField(
         'Service Category:',
         render_kw={'onchange': "serviceChoices()"},
         validators=[InputRequired()],
-        get_label='name',
-        query_factory=selectedCategory)
+        coerce=int)
 
-    tech_services = QuerySelectField(
+    member_home_service = SelectField(
         'Service:',
-        id="tech_service",
+        id="services",
         validators=[Optional()],
-        get_label='name',
-        query_factory=tech_service)
-
-    prof_home_services = QuerySelectField(
-        'Service:',
-        id="prof_home_service",
-        validators=[Optional()],
-        get_label='name',
-        query_factory=prof_home)
-
-    prof_support_services = QuerySelectField(
-        'Service:',
-        id="prof_support_service",
-        validators=[Optional()],
-        get_label='name',
-        query_factory=prof_support)
-
-    vol_home_services = QuerySelectField(
-        'Service:',
-        id="vol_home_service",
-        validators=[Optional()],
-        get_label='name',
-        query_factory=vol_home)
-
-    vol_support_services = QuerySelectField(
-        'Service:',
-        id="vol_support_service",
-        validators=[Optional()],
-        get_label='name',
-        query_factory=vol_support)
+        coerce=int)
 
     home_location = SelectMultipleField(
         'Location',

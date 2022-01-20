@@ -124,12 +124,7 @@
         {{ f.render_form_field(form.service_category) }}
       </div>
       <div class="right floated six wide column">
-        <div id="covid" style="display: none">
-          {{ f.render_form_field(form.covid_service) }}
-        </div>
-        <div id="transportation">
-          {{ f.render_form_field(form.transportation_service) }}
-        </div>
+        {{ f.render_form_field(form.transportation_service) }}
       </div>
       <div class="right floated six wide column"></div>
     </div>
@@ -373,15 +368,21 @@
   <script>
     function serviceChoices() {
       let service_category = document.getElementById('service_category').value;
-      if (service_category === '1') {
-        document.getElementById('covid').style.display = 'initial';
-        document.getElementById('transportation').style.display = 'none';
-      } else if (service_category === '0') {
-        document.getElementById('covid').style.display = 'none';
-        document.getElementById('transportation').style.display = 'initial';
-      }
-    }
+      let service_select = document.getElementById('services');
+      const protocol = window.location.protocol;
+      const host = window.location.host;
+      fetch(`${protocol}//${host}/admin/create-request/${service_category}`, {
+        }).then(function(response){
+          response.json().then(function(data){
+            let optionHTML = '';
+            for (let service of data.services){
+              optionHTML += '<option value="' + service.id + '">' + service.name + '</option>'
+            }
+            service_select.innerHTML = optionHTML;
+          })
 
+        })
+    }
 
     function specialInstructions() {
       const member = document.getElementById('member')
