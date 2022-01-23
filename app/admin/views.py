@@ -13,9 +13,12 @@ from app.admin.forms import (AddAvailability,
                              ChangeUserEmailForm, CompleteServiceRequestForm, LocalResourceManager,
                              EditMetroAreaForm, EditServiceForm, EditServiceCategoryForm,
                              EditDestinationAddressForm,
-                             InviteUserForm, MemberManager, MembersHomeRequestForm,
+                             InviteUserForm, MakeMonthlyRepeatingCopiesForm, MakeYearlyRepeatingCopiesForm, MemberManager, MembersHomeRequestForm,
                              NewUserForm, SearchRequestForm, TransportationRequestForm,
-                             VolunteerManager, OfficeTimeRequestForm, GeneratePdfForm, EditServicesVolunteerCanProvide)
+                             VolunteerManager, OfficeTimeRequestForm, GeneratePdfForm, 
+                             EditServicesVolunteerCanProvide, MakeIndividualCopiesForm,
+                             MakeDailyRepeatingCopiesForm, 
+                             MakeWeeklyRepeatingCopiesForm, MakeCopiesWithoutDateForm)
 from app.decorators import admin_required
 from app.email import send_email
 from app.models import (Address, Availability, EditableHTML, LocalResource, Member, MetroArea,
@@ -27,7 +30,8 @@ from app.models.office_request import OfficeRequest
 from datetime import timedelta
 from wtforms.fields.core import Label
 
-from datetime import date
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta, MO, TU, WE, TH, FR, SA, SU
 
 admin = Blueprint('admin', __name__)
 
@@ -251,6 +255,45 @@ def select_all(selection, field):
             return [0, 1, 2]
     return list(map(int, selection))
 
+def get_request_obj(request_type_id, request_id):
+    """
+    Return request object based on the request_type_id and request_id
+
+    request_type_id: 0,1,or 2 where 0 is Transportation, 1 is Office Time, 
+                    2 is Member's Home 
+    request_id: int
+    """
+    # Transportation Request
+    if request_type_id == 0:
+        request_obj = TransportationRequest.query.filter_by(id=request_id).first()
+    # Office Request
+    elif request_type_id == 1:
+        request_obj = OfficeRequest.query.filter_by(id=request_id).first()
+    # Member's Home Request
+    elif request_type_id == 2:
+        request_obj = MembersHomeRequest.query.filter_by(id=request_id).first()
+    return request_obj
+
+def get_request_obj(request_type_id, request_id):
+    """
+    Return request object based on the request_type_id and request_id
+
+    request_type_id: 0,1,or 2 where 0 is Transportation, 1 is Office Time, 
+                    2 is Member's Home 
+    request_id: int
+    """
+    # Transportation Request
+    if request_type_id == 0:
+        request_obj = TransportationRequest.query.filter_by(
+            id=request_id).first()
+    # Office Request
+    elif request_type_id == 1:
+        request_obj = OfficeRequest.query.filter_by(id=request_id).first()
+    # Member's Home Request
+    elif request_type_id == 2:
+        request_obj = MembersHomeRequest.query.filter_by(id=request_id).first()
+    return request_obj
+
 
 @admin.route('/search-request', methods=['POST', 'GET'])
 @login_required
@@ -381,11 +424,14 @@ def search_request():
                     'request_status':
                     RequestStatus.query.get(db_req.status_id).name,
                     'requested_date_display':
-                    db_req.requested_date.strftime("%m/%d"),
+                    db_req.requested_date.strftime(
+                        "%m/%d") if db_req.requested_date else "",
                     'requested_date_full':
-                    db_req.requested_date.strftime("%m/%d/%Y"),
+                    db_req.requested_date.strftime(
+                        "%m/%d/%Y") if db_req.requested_date else "",
                     'requested_day_of_week':
-                    db_req.requested_date.strftime("%A"),
+                    db_req.requested_date.strftime(
+                        "%A") if db_req.requested_date else "",
                     'start_time':
                     db_req.initial_pickup_time.strftime("%I:%M %p"),
                     'end_time':
@@ -499,6 +545,841 @@ def search_request():
                            service_providers=service_providers,
                            requests=temp_requests,
                            num_requests=len(temp_requests)
+                           )
+
+########################## Make Copy in Search Request ########################
+
+
+def make_individual_transportation_copies(
+        request_obj, new_service_dates, new_service_times,
+        include_selected_service_providers, include_service_request_status):
+    """
+    Make individual copy(s) of the selected transportation request
+    """
+    for i in range(len(new_service_dates)):
+        transportation_request = TransportationRequest(
+            type_id=0,
+            status_id=request_obj.status_id if include_service_request_status else 0,
+            requested_date=new_service_dates[i],
+            short_description=request_obj.short_description,
+            initial_pickup_time=new_service_times[i],
+            appointment_time=request_obj.appointment_time,
+            return_pickup_time=request_obj.return_pickup_time,
+            drop_off_time=request_obj.drop_off_time,
+            is_date_time_flexible=request_obj.is_date_time_flexible,
+            duration_type_id=request_obj.duration_type_id,
+            service_category_id=request_obj.service_category_id,
+            service_id=request_obj.service_id,
+            starting_address=request_obj.starting_address,
+            destination_address_id=request_obj.destination_address_id,
+            special_instructions=request_obj.special_instructions,
+            followup_date=request_obj.followup_date,
+            responsible_staffer_id=request_obj.responsible_staffer_id,
+            contact_log_priority_id=request_obj.contact_log_priority_id,
+            cc_email=request_obj.cc_email)
+        db.session.add(transportation_request)
+        db.session.commit()
+
+        members = RequestMemberRecord.query.filter_by(
+            request_id=request_obj.id).filter_by(request_category_id=0).all()
+        for member in members:
+            record = RequestMemberRecord(request_id=transportation_request.id,
+                                         request_category_id=0,
+                                         member_id=member.member_id)
+            db.session.add(record)
+            db.session.commit()
+        if include_selected_service_providers:
+            volunteers = RequestVolunteerRecord.query.filter_by(
+                request_id=request_obj.id).filter_by(request_category_id=0).all()
+            for volunteer in volunteers:
+                request_volunteer_record = RequestVolunteerRecord(
+                    request_id=transportation_request.id,
+                    request_category_id=0,
+                    volunteer_id=volunteer.volunteer_id,
+                    status_id=1,
+                    staffer_id=1,
+                    updated_datetime=datetime.utcnow().date())
+                db.session.add(request_volunteer_record)
+                db.session.commit()
+
+
+def make_individual_office_copies(
+    request_obj, new_service_dates, new_service_times,
+    include_selected_service_providers, include_service_request_status
+):
+    """
+    Make individual copy(s) of the selected office time request
+    """
+    for i in range(len(new_service_dates)):
+        office_request = OfficeRequest(
+            type_id=1,
+            status_id=request_obj.status_id if include_service_request_status else 0,
+            short_description=request_obj.short_description,
+            requested_date=new_service_dates[i],
+            start_time=new_service_times[i],
+            end_time=request_obj.end_time,
+            is_high_priority=request_obj.is_high_priority,
+            service_category_id=request_obj.service_category_id,
+            service_id=request_obj.service_id,
+            special_instructions=request_obj.special_instructions,
+            responsible_staffer_id=request_obj.responsible_staffer_id,
+            contact_log_priority_id=request_obj.contact_log_priority_id,
+            cc_email=request_obj.cc_email
+        )
+        db.session.add(office_request)
+        db.session.commit()
+        members = RequestMemberRecord.query.filter_by(
+            request_id=request_obj.id).filter_by(request_category_id=1).all()
+        for member in members:
+            record = RequestMemberRecord(request_id=office_request.id,
+                                         request_category_id=1,
+                                         member_id=member.member_id)
+            db.session.add(record)
+            db.session.commit()
+        if include_selected_service_providers:
+            volunteers = RequestVolunteerRecord.query.filter_by(
+                request_id=request_obj.id).filter_by(request_category_id=1).all()
+            for volunteer in volunteers:
+                request_volunteer_record = RequestVolunteerRecord(
+                    request_id=office_request.id,
+                    request_category_id=1,
+                    volunteer_id=volunteer.volunteer_id,
+                    status_id=1,
+                    staffer_id=1,
+                    updated_datetime=datetime.utcnow().date())
+                db.session.add(request_volunteer_record)
+                db.session.commit()
+
+
+def make_individual_members_home_copies(
+    request_obj, new_service_dates, new_service_times,
+    include_selected_service_providers, include_service_request_status
+):
+    """
+    Make individual copy(s) of the selected Member's Home request
+    """
+    for i in range(len(new_service_dates)):
+        members_home_request = MembersHomeRequest(
+            type_id=2,
+            status_id=request_obj.status_id if include_service_request_status else 0,
+            short_description=request_obj.short_description,
+            requested_date=new_service_dates[i],
+            from_time=new_service_times[i],
+            until_time=request_obj.until_time,
+            is_date_time_flexible=request_obj.is_date_time_flexible,
+            service_category_id=request_obj.service_category_id,
+            service_id=request_obj.service_id,
+            special_instructions=request_obj.special_instructions,
+            followup_date=request_obj.followup_date,
+            responsible_staffer_id=request_obj.responsible_staffer_id,
+            contact_log_priority_id=request_obj.contact_log_priority_id,
+            cc_email=request_obj.cc_email
+        )
+        db.session.add(members_home_request)
+        db.session.commit()
+        members = RequestMemberRecord.query.filter_by(
+            request_id=request_obj.id).filter_by(request_category_id=2).all()
+        for member in members:
+            record = RequestMemberRecord(request_id=members_home_request.id,
+                                         request_category_id=2,
+                                         member_id=member.member_id)
+            db.session.add(record)
+            db.session.commit()
+        if include_selected_service_providers:
+            volunteers = RequestVolunteerRecord.query.filter_by(
+                request_id=request_obj.id).filter_by(request_category_id=2).all()
+            for volunteer in volunteers:
+                request_volunteer_record = RequestVolunteerRecord(
+                    request_id=members_home_request.id,
+                    request_category_id=2,
+                    volunteer_id=volunteer.volunteer_id,
+                    status_id=1,
+                    staffer_id=1,
+                    updated_datetime=datetime.utcnow().date())
+                db.session.add(request_volunteer_record)
+                db.session.commit()
+
+
+def make_individual_copies(
+        request_type_id, request_obj, new_service_dates, new_service_times,
+        include_selected_service_providers, include_service_request_status):
+    """
+    Make individual copies of the selected request
+    """
+    if request_type_id == 0:
+        make_individual_transportation_copies(
+            request_obj, new_service_dates, new_service_times,
+            include_selected_service_providers, include_service_request_status)
+        return
+    elif request_type_id == 1:
+        make_individual_office_copies(
+            request_obj, new_service_dates, new_service_times,
+            include_selected_service_providers, include_service_request_status
+        )
+        return
+    elif request_type_id == 2:
+        make_individual_members_home_copies(
+            request_obj, new_service_dates, new_service_times,
+            include_selected_service_providers, include_service_request_status
+        )
+        return
+
+
+def make_transportation_copies_without_date(request_obj, number_of_copies,
+                                            include_selected_service_providers, include_service_request_status):
+    """
+    Make copies of selected transportation request without date
+    """
+    for _ in range(number_of_copies):
+        transportation_request = TransportationRequest(
+            type_id=0,
+            status_id=request_obj.status_id if include_service_request_status else 0,
+            requested_date=None,
+            short_description=request_obj.short_description,
+            initial_pickup_time=request_obj.initial_pickup_time,
+            appointment_time=request_obj.appointment_time,
+            return_pickup_time=request_obj.return_pickup_time,
+            drop_off_time=request_obj.drop_off_time,
+            is_date_time_flexible=request_obj.is_date_time_flexible,
+            duration_type_id=request_obj.duration_type_id,
+            service_category_id=request_obj.service_category_id,
+            service_id=request_obj.service_id,
+            starting_address=request_obj.starting_address,
+            destination_address_id=request_obj.destination_address_id,
+            special_instructions=request_obj.special_instructions,
+            followup_date=request_obj.followup_date,
+            responsible_staffer_id=request_obj.responsible_staffer_id,
+            contact_log_priority_id=request_obj.contact_log_priority_id,
+            cc_email=request_obj.cc_email)
+        db.session.add(transportation_request)
+        db.session.commit()
+
+        members = RequestMemberRecord.query.filter_by(
+            request_id=request_obj.id).filter_by(request_category_id=0).all()
+        for member in members:
+            record = RequestMemberRecord(request_id=transportation_request.id,
+                                         request_category_id=0,
+                                         member_id=member.member_id)
+            db.session.add(record)
+            db.session.commit()
+        if include_selected_service_providers:
+            volunteers = RequestVolunteerRecord.query.filter_by(
+                request_id=request_obj.id).filter_by(request_category_id=0).all()
+            for volunteer in volunteers:
+                request_volunteer_record = RequestVolunteerRecord(
+                    request_id=transportation_request.id,
+                    request_category_id=0,
+                    volunteer_id=volunteer.volunteer_id,
+                    status_id=1,
+                    staffer_id=1,
+                    updated_datetime=datetime.utcnow().date())
+                db.session.add(request_volunteer_record)
+                db.session.commit()
+
+
+def make_office_copies_without_date(request_obj, number_of_copies,
+                                    include_selected_service_providers, include_service_request_status):
+    """
+    Make copies of selected office time request without date
+    """
+    for _ in range(number_of_copies):
+        office_request = OfficeRequest(
+            type_id=1,
+            status_id=request_obj.status_id if include_service_request_status else 0,
+            short_description=request_obj.short_description,
+            requested_date=None,
+            start_time=request_obj.start_time,
+            end_time=request_obj.end_time,
+            is_high_priority=request_obj.is_high_priority,
+            service_category_id=request_obj.service_category_id,
+            service_id=request_obj.service_id,
+            special_instructions=request_obj.special_instructions,
+            responsible_staffer_id=request_obj.responsible_staffer_id,
+            contact_log_priority_id=request_obj.contact_log_priority_id,
+            cc_email=request_obj.cc_email
+        )
+        db.session.add(office_request)
+        db.session.commit()
+        members = RequestMemberRecord.query.filter_by(
+            request_id=request_obj.id).filter_by(request_category_id=1).all()
+        for member in members:
+            record = RequestMemberRecord(request_id=office_request.id,
+                                         request_category_id=1,
+                                         member_id=member.member_id)
+            db.session.add(record)
+            db.session.commit()
+        if include_selected_service_providers:
+            volunteers = RequestVolunteerRecord.query.filter_by(
+                request_id=request_obj.id).filter_by(request_category_id=1).all()
+            for volunteer in volunteers:
+                request_volunteer_record = RequestVolunteerRecord(
+                    request_id=office_request.id,
+                    request_category_id=1,
+                    volunteer_id=volunteer.volunteer_id,
+                    status_id=1,
+                    staffer_id=1,
+                    updated_datetime=datetime.utcnow().date())
+                db.session.add(request_volunteer_record)
+                db.session.commit()
+
+
+def make_members_home_copies_without_date(request_obj, number_of_copies,
+                                          include_selected_service_providers, include_service_request_status):
+    """
+    Make copies of selected member's home request without date
+    """
+    for _ in range(number_of_copies):
+        members_home_request = MembersHomeRequest(
+            type_id=2,
+            status_id=request_obj.status_id if include_service_request_status else 0,
+            short_description=request_obj.short_description,
+            requested_date=None,
+            from_time=request_obj.from_time,
+            until_time=request_obj.until_time,
+            is_date_time_flexible=request_obj.is_date_time_flexible,
+            service_category_id=request_obj.service_category_id,
+            service_id=request_obj.service_id,
+            special_instructions=request_obj.special_instructions,
+            followup_date=request_obj.followup_date,
+            responsible_staffer_id=request_obj.responsible_staffer_id,
+            contact_log_priority_id=request_obj.contact_log_priority_id,
+            cc_email=request_obj.cc_email
+        )
+        db.session.add(members_home_request)
+        db.session.commit()
+        members = RequestMemberRecord.query.filter_by(
+            request_id=request_obj.id).filter_by(request_category_id=2).all()
+        for member in members:
+            record = RequestMemberRecord(request_id=members_home_request.id,
+                                         request_category_id=2,
+                                         member_id=member.member_id)
+            db.session.add(record)
+            db.session.commit()
+        if include_selected_service_providers:
+            volunteers = RequestVolunteerRecord.query.filter_by(
+                request_id=request_obj.id).filter_by(request_category_id=2).all()
+            for volunteer in volunteers:
+                request_volunteer_record = RequestVolunteerRecord(
+                    request_id=members_home_request.id,
+                    request_category_id=2,
+                    volunteer_id=volunteer.volunteer_id,
+                    status_id=1,
+                    staffer_id=1,
+                    updated_datetime=datetime.utcnow().date())
+                db.session.add(request_volunteer_record)
+                db.session.commit()
+
+
+def make_copies_without_date(
+        request_type_id, request_obj, number_of_copies,
+        include_selected_service_providers, include_service_request_status):
+    """
+    Make copies of the selected request without date
+    """
+    # Transportation Request
+    if request_type_id == 0:
+        make_transportation_copies_without_date(request_obj, number_of_copies,
+                                                include_selected_service_providers, include_service_request_status)
+        return
+    # Office Request
+    elif request_type_id == 1:
+        make_office_copies_without_date(request_obj, number_of_copies,
+                                        include_selected_service_providers, include_service_request_status)
+        return
+    # Member's Home Request
+    elif request_type_id == 2:
+        make_members_home_copies_without_date(request_obj, number_of_copies,
+                                              include_selected_service_providers, include_service_request_status)
+        return
+
+
+def make_daily_repeating_copies(is_every_weekday, make_daily_repeating_copies_form, new_service_date,
+                                new_service_time, request_type_id, request_obj, weekdays):
+    """
+    Make daily repeating copies
+    """
+    if not is_every_weekday:
+        if make_daily_repeating_copies_form.end_after_2_1.data:
+            end_after = make_daily_repeating_copies_form.end_after_2_1.data
+            number_of_days = make_daily_repeating_copies_form.every_number_of_days.data
+            new_service_dates = [
+                new_service_date + timedelta(days=number_of_days*(i+1)) for i in range(end_after)]
+            new_service_times = [new_service_time for _ in range(end_after)]
+            make_individual_copies(request_type_id, request_obj, new_service_dates, new_service_times,
+                                   make_daily_repeating_copies_form.include_selected_service_providers.data,
+                                   make_daily_repeating_copies_form.include_service_request_status.data)
+        else:
+            end_by = make_daily_repeating_copies_form.end_by_2_1.data
+            date = new_service_date
+            number_of_days = make_daily_repeating_copies_form.every_number_of_days.data
+            number_of_copies = 0
+            new_service_dates = []
+            date = new_service_date + timedelta(days=number_of_days)
+            while date < end_by and number_of_copies < 50:
+                new_service_dates.append(date)
+                number_of_copies += 1
+                date = new_service_date + \
+                    timedelta(days=number_of_days*(number_of_copies+1))
+            new_service_times = [new_service_time]*len(new_service_dates)
+            make_individual_copies(request_type_id, request_obj, new_service_dates, new_service_times,
+                                   make_daily_repeating_copies_form.include_selected_service_providers.data,
+                                   make_daily_repeating_copies_form.include_service_request_status.data)
+    elif is_every_weekday:
+        # Make one copy in the selected new service date and time
+        make_individual_copies(request_type_id, request_obj, [new_service_date], [new_service_time],
+                               make_daily_repeating_copies_form.include_selected_service_providers.data,
+                               make_daily_repeating_copies_form.include_service_request_status.data)
+        ####
+        if make_daily_repeating_copies_form.end_after_2_1.data:
+            end_after = make_daily_repeating_copies_form.end_after_2_1.data
+            counter = 1
+            date = new_service_date+timedelta(days=1)
+            if date.weekday() not in weekdays:
+                date += timedelta(days=7-date.weekday())
+            while counter < end_after:
+                make_individual_copies(request_type_id, request_obj, [date], [new_service_time],
+                                       make_daily_repeating_copies_form.include_selected_service_providers.data,
+                                       make_daily_repeating_copies_form.include_service_request_status.data)
+                date += timedelta(days=1)
+                if date.weekday() not in weekdays:
+                    date += timedelta(days=7-date.weekday())
+                counter += 1
+        elif make_daily_repeating_copies_form.end_by_2_1.data:
+            end_by = make_daily_repeating_copies_form.end_by_2_1.data
+            date = new_service_date+timedelta(days=1)
+            counter = 0
+            if date.weekday() not in weekdays:
+                date += timedelta(days=7-date.weekday())
+            while date <= end_by and counter < 50:
+                make_individual_copies(request_type_id, request_obj, [date], [new_service_time],
+                                       make_daily_repeating_copies_form.include_selected_service_providers.data,
+                                       make_daily_repeating_copies_form.include_service_request_status.data)
+                date += timedelta(days=1)
+                counter += 1
+                if date.weekday() not in weekdays:
+                    date += timedelta(days=7-date.weekday())
+
+
+def make_weekly_repeating_copies(end_after, new_service_date, day_of_week,
+                                 request_type_id, request_obj, new_service_time,
+                                 make_weekly_repeating_copies_form, every_number_of_weeks,
+                                 end_by):
+    """
+    Make weekly repeating copies
+    """
+    if end_after:
+        counter = 0
+        # if trying to make a request on the same week of the inputted new service date
+        # ex. today is Monday, and the request needs to be made every Friday
+        if (new_service_date.weekday() < day_of_week[-1]) and counter < end_after:
+            idx = 0
+            while idx < len(day_of_week) and day_of_week[idx] < new_service_date.weekday():
+                idx += 1
+            while idx < len(day_of_week) and counter < end_after:
+                make_individual_copies(request_type_id, request_obj, [new_service_date+timedelta(days=day_of_week[idx]-new_service_date.weekday())],
+                                       [new_service_time], make_weekly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_weekly_repeating_copies_form.include_service_request_status.data)
+                idx += 1
+                counter += 1
+        date = new_service_date
+        while counter < end_after:
+            date += timedelta(days=(7-date.weekday()+7 *
+                              (every_number_of_weeks-1)))
+            for day in day_of_week:
+                if counter < end_after:
+                    new_date = date+timedelta(days=day)
+                    make_individual_copies(request_type_id, request_obj, [new_date], [new_service_time],
+                                           make_weekly_repeating_copies_form.include_selected_service_providers.data,
+                                           make_weekly_repeating_copies_form.include_service_request_status.data)
+                    counter += 1
+                else:
+                    break
+    elif end_by:
+        date = new_service_date
+        counter = 0
+        if (new_service_date.weekday() < day_of_week[-1] and new_service_date < end_by):
+            idx = 0
+            while idx < len(day_of_week) and day_of_week[idx] < new_service_date.weekday():
+                idx += 1
+            while idx < len(day_of_week) and date < end_by:
+                make_individual_copies(request_type_id, request_obj, [new_service_date+timedelta(days=day_of_week[idx]-new_service_date.weekday())],
+                                       [new_service_time], make_weekly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_weekly_repeating_copies_form.include_service_request_status.data)
+                date = new_service_date + \
+                    timedelta(days=new_service_date.weekday()-day_of_week[idx])
+                idx += 1
+                counter += 1
+        date = new_service_date
+        while date < end_by and counter < 52:
+            date += timedelta(days=(7-date.weekday()+7 *
+                              (every_number_of_weeks-1)))
+            for day in day_of_week:
+                new_date = date+timedelta(days=day)
+                if new_date < end_by and counter < 52:
+                    make_individual_copies(request_type_id, request_obj, [new_date], [new_service_time],
+                                           make_weekly_repeating_copies_form.include_selected_service_providers.data,
+                                           make_weekly_repeating_copies_form.include_service_request_status.data)
+                    counter += 1
+                else:
+                    break
+
+
+def make_monthly_repeating_copies(is_day_of_every_selected, make_monthly_repeating_copies_form,
+                                  end_after, new_service_date, request_type_id, request_obj,
+                                  new_service_time, end_by):
+    """
+    Make monthly repeating copies
+    """
+    if is_day_of_every_selected:
+        nth_day = make_monthly_repeating_copies_form.nth_day.data
+        of_every_nth_month = make_monthly_repeating_copies_form.of_every_nth_month.data
+        if end_after:
+            date = new_service_date
+            counter = 0
+            if new_service_date.day < nth_day:
+                make_individual_copies(request_type_id, request_obj, [new_service_date+relativedelta(day=nth_day)],
+                                       [new_service_time], make_monthly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_monthly_repeating_copies_form.include_service_request_status.data)
+                date += relativedelta(day=nth_day)
+                counter += 1
+            while counter < end_after:
+                date = date + \
+                    relativedelta(months=of_every_nth_month, day=nth_day)
+                make_individual_copies(request_type_id, request_obj, [date],
+                                       [new_service_time], make_monthly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_monthly_repeating_copies_form.include_service_request_status.data)
+                counter += 1
+        elif end_by:
+            date = new_service_date
+            counter = 0
+            if new_service_date.day < nth_day:
+                date += relativedelta(day=nth_day)
+                if new_service_date <= end_by:
+                    make_individual_copies(request_type_id, request_obj, [date],
+                                           [new_service_time], make_monthly_repeating_copies_form.include_selected_service_providers.data,
+                                           make_monthly_repeating_copies_form.include_service_request_status.data)
+                    counter += 1
+            date = date + relativedelta(months=of_every_nth_month, day=nth_day)
+            while date < end_by and counter < 24:
+                make_individual_copies(request_type_id, request_obj, [date],
+                                       [new_service_time], make_monthly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_monthly_repeating_copies_form.include_service_request_status.data)
+                date = date + \
+                    relativedelta(months=of_every_nth_month, day=nth_day)
+                counter += 1
+    elif not is_day_of_every_selected:
+        week_choice = make_monthly_repeating_copies_form.week_choice.data
+        weekday_choice = make_monthly_repeating_copies_form.weekday_choice.data
+        month_choice = make_monthly_repeating_copies_form.month_choice.data
+        if end_after:
+            date = new_service_date
+            counter = 0
+            # ex. last monday when the new service date is 1/15/2022 would be 1/31/2022. So we need
+            # to check if there is still a day in the same month for a request to be created in.
+            if new_service_date < (new_service_date + relativedelta(day=1 if week_choice != -1 else 31,
+                                                                    weekday=MO(week_choice) if weekday_choice == 0 else TU(week_choice) if weekday_choice == 1
+                                                                    else WE(week_choice) if weekday_choice == 2 else TH(week_choice) if weekday_choice == 3 else
+                                                                    FR(week_choice) if weekday_choice == 4 else SA(week_choice) if weekday_choice == 5 else SU(week_choice))):
+
+                date += relativedelta(day=1 if week_choice != -1 else 31,
+                                      weekday=MO(week_choice) if weekday_choice == 0 else TU(week_choice) if weekday_choice == 1
+                                      else WE(week_choice) if weekday_choice == 2 else TH(week_choice) if weekday_choice == 3 else
+                                      FR(week_choice) if weekday_choice == 4 else SA(
+                                          week_choice) if weekday_choice == 5 else SU(week_choice)
+                                      )
+
+                make_individual_copies(request_type_id, request_obj, [date],
+                                       [new_service_time], make_monthly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_monthly_repeating_copies_form.include_service_request_status.data)
+                counter += 1
+
+            while counter < end_after:
+                date += relativedelta(months=month_choice, day=1 if week_choice != -1 else 31,
+                                      weekday=MO(week_choice) if weekday_choice == 0 else TU(week_choice) if weekday_choice == 1
+                                      else WE(week_choice) if weekday_choice == 2 else TH(week_choice) if weekday_choice == 3 else
+                                      FR(week_choice) if weekday_choice == 4 else SA(
+                                          week_choice) if weekday_choice == 5 else SU(week_choice)
+                                      )
+                make_individual_copies(request_type_id, request_obj, [date],
+                                       [new_service_time], make_monthly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_monthly_repeating_copies_form.include_service_request_status.data)
+                counter += 1
+        elif end_by:
+            date = new_service_date
+            counter = 0
+            # ex. last monday when the new service date is 1/15/2022 would be 1/31/2022. So we need
+            # to check if there is still a day in the same month for a request to be created in.
+            if (new_service_date < (new_service_date + relativedelta(day=1 if week_choice != -1 else 31,
+                weekday=MO(week_choice) if weekday_choice == 0 else TU(week_choice) if weekday_choice == 1
+                    else WE(week_choice) if weekday_choice == 2 else TH(week_choice) if weekday_choice == 3 else
+                    FR(week_choice) if weekday_choice == 4 else SA(week_choice) if weekday_choice == 5 else SU(week_choice)))
+                and (new_service_date + relativedelta(day=1 if week_choice != -1 else 31,
+                                                      weekday=MO(week_choice) if weekday_choice == 0 else TU(week_choice) if weekday_choice == 1
+                                                      else WE(week_choice) if weekday_choice == 2 else TH(week_choice) if weekday_choice == 3 else
+                                                      FR(week_choice) if weekday_choice == 4 else SA(week_choice) if weekday_choice == 5 else SU(week_choice))) < end_by):
+
+                date += relativedelta(day=1 if week_choice != -1 else 31,
+                                      weekday=MO(week_choice) if weekday_choice == 0 else TU(week_choice) if weekday_choice == 1
+                                      else WE(week_choice) if weekday_choice == 2 else TH(week_choice) if weekday_choice == 3 else
+                                      FR(week_choice) if weekday_choice == 4 else SA(
+                                          week_choice) if weekday_choice == 5 else SU(week_choice)
+                                      )
+            else:
+                date += relativedelta(months=month_choice, day=1 if week_choice != -1 else 31,
+                                      weekday=MO(week_choice) if weekday_choice == 0 else TU(week_choice) if weekday_choice == 1
+                                      else WE(week_choice) if weekday_choice == 2 else TH(week_choice) if weekday_choice == 3 else
+                                      FR(week_choice) if weekday_choice == 4 else SA(
+                                          week_choice) if weekday_choice == 5 else SU(week_choice)
+                                      )
+
+            while date <= end_by and counter < 24:
+                make_individual_copies(request_type_id, request_obj, [date],
+                                       [new_service_time], make_monthly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_monthly_repeating_copies_form.include_service_request_status.data)
+                date += relativedelta(months=month_choice, day=1 if week_choice != -1 else 31,
+                                      weekday=MO(week_choice) if weekday_choice == 0 else TU(week_choice) if weekday_choice == 1
+                                      else WE(week_choice) if weekday_choice == 2 else TH(week_choice) if weekday_choice == 3 else
+                                      FR(week_choice) if weekday_choice == 4 else SA(
+                                          week_choice) if weekday_choice == 5 else SU(week_choice)
+                                      )
+                counter += 1
+
+
+def make_yearly_repeating_copies(is_day_of_every_selected, make_yearly_repeating_copies_form,
+                                 new_service_date, new_service_time, request_type_id,
+                                 request_obj, end_after, end_by):
+    """
+    Make yearly repeating copies
+    """
+    if is_day_of_every_selected:
+        every_month_choice = make_yearly_repeating_copies_form.every_month_choice.data
+        day_choice = make_yearly_repeating_copies_form.day_choice.data
+        if end_after:
+            date = new_service_date
+            counter = 0
+            if new_service_date < new_service_date + relativedelta(day=day_choice, month=every_month_choice):
+                make_individual_copies(request_type_id, request_obj, [new_service_date+relativedelta(day=day_choice, month=every_month_choice)],
+                                       [new_service_time], make_yearly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_yearly_repeating_copies_form.include_service_request_status.data)
+                counter += 1
+
+            while counter < end_after:
+                date += relativedelta(day=day_choice,
+                                      month=every_month_choice, years=+1)
+                make_individual_copies(request_type_id, request_obj, [date],
+                                       [new_service_time], make_yearly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_yearly_repeating_copies_form.include_service_request_status.data)
+                counter += 1
+
+        elif end_by:
+            date = new_service_date
+            counter = 0
+            if (new_service_date < (new_service_date + relativedelta(day=day_choice, month=every_month_choice))
+                    and (new_service_date + relativedelta(day=day_choice, month=every_month_choice)) <= end_by):
+                make_individual_copies(request_type_id, request_obj, [new_service_date+relativedelta(day=day_choice, month=every_month_choice)],
+                                       [new_service_time], make_yearly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_yearly_repeating_copies_form.include_service_request_status.data)
+                counter += 1
+            date += relativedelta(day=day_choice,
+                                  month=every_month_choice, years=+1)
+            while date < end_by and counter < 12:
+                make_individual_copies(request_type_id, request_obj, [date],
+                                       [new_service_time], make_yearly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_yearly_repeating_copies_form.include_service_request_status.data)
+                date += relativedelta(day=day_choice,
+                                      month=every_month_choice, years=+1)
+                counter += 1
+
+    elif not is_day_of_every_selected:
+        yearly_week_choice = make_yearly_repeating_copies_form.yearly_week_choice.data
+        yearly_weekday_choice = make_yearly_repeating_copies_form.yearly_weekday_choice.data
+        yearly_month_choice = make_yearly_repeating_copies_form.yearly_month_choice.data
+        if end_after:
+            date = new_service_date
+            counter = 0
+            if new_service_date < (date + relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
+                                                        weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
+                                                        else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
+                                                        FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice))):
+
+                date += relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
+                                      weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
+                                      else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
+                                      FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice))
+
+                make_individual_copies(request_type_id, request_obj, [date],
+                                       [new_service_time], make_yearly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_yearly_repeating_copies_form.include_service_request_status.data)
+                counter += 1
+            while counter < end_after:
+                date += relativedelta(years=+1, month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
+                                      weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
+                                      else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
+                                      FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice))
+                make_individual_copies(request_type_id, request_obj, [date],
+                                       [new_service_time], make_yearly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_yearly_repeating_copies_form.include_service_request_status.data)
+                counter += 1
+        elif end_by:
+            date = new_service_date
+            counter = 0
+            if (new_service_date < (date + relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
+                                                         weekday = MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
+                                                         else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
+                                                         FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
+                    and (date + relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
+                                              weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
+                                              else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
+                                              FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
+                < end_by
+                ):
+
+                date += relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
+                                      weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
+                                      else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
+                                      FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice))
+
+                make_individual_copies(request_type_id, request_obj, [date],
+                                       [new_service_time], make_yearly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_yearly_repeating_copies_form.include_service_request_status.data)
+                counter += 1
+            date += relativedelta(years=+1, month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
+                                  weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
+                                  else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
+                                  FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice))
+            while date <= end_by and counter < 12:
+                make_individual_copies(request_type_id, request_obj, [date],
+                                       [new_service_time], make_yearly_repeating_copies_form.include_selected_service_providers.data,
+                                       make_yearly_repeating_copies_form.include_service_request_status.data)
+                date += relativedelta(years=+1, month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
+                                      weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
+                                      else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
+                                      FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice))
+                counter += 1
+
+# Multiple forms on one page solution:
+# https://stackoverflow.com/questions/18290142/multiple-forms-in-a-single-page-using-flask-and-wtforms
+
+
+@admin.route('/make-copy/<int:request_type_id>/<int:request_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def make_copy(request_type_id, request_id):
+    "Make individual copy of the selected request"
+    make_individual_copies_form = MakeIndividualCopiesForm()
+
+    make_daily_repeating_copies_form = MakeDailyRepeatingCopiesForm()
+    make_weekly_repeating_copies_form = MakeWeeklyRepeatingCopiesForm()
+    make_monthly_repeating_copies_form = MakeMonthlyRepeatingCopiesForm()
+    make_yearly_repeating_copies_form = MakeYearlyRepeatingCopiesForm()
+
+    make_copies_without_date_form = MakeCopiesWithoutDateForm()
+
+    request_types = ["Transportation", "Office", "Member's Home"]
+
+    request_obj = get_request_obj(request_type_id, request_id)
+
+    if make_individual_copies_form.submit1.data and make_individual_copies_form.validate():
+        new_service_dates = make_individual_copies_form.new_service_dates.data
+        new_service_times = make_individual_copies_form.new_service_times.data
+        make_individual_copies(
+            request_type_id, request_obj, new_service_dates, new_service_times,
+            make_individual_copies_form.include_selected_service_providers.data,
+            make_individual_copies_form.include_service_request_status.data
+        )
+        flash(
+            'Successfully created copies of request {}'.format(
+                request_types[request_type_id] + " #" + str(request_id)), 'success')
+        return redirect(url_for('admin.search_request'))
+
+    if make_daily_repeating_copies_form.submit2_1.data and make_daily_repeating_copies_form.validate():
+        new_service_date = make_daily_repeating_copies_form.new_service_date.data
+        new_service_time = make_daily_repeating_copies_form.new_service_time.data
+        is_every_weekday = int(
+            make_daily_repeating_copies_form.every_weekday.data)
+        weekdays = {0, 1, 2, 3, 4}
+        if not is_every_weekday and not make_daily_repeating_copies_form.every_number_of_days.data:
+            make_daily_repeating_copies_form.every_number_of_days.errors.append(
+                "Please input a number greater than or equal to 1")
+        else:
+            make_daily_repeating_copies(is_every_weekday, make_daily_repeating_copies_form, new_service_date,
+                                        new_service_time, request_type_id, request_obj, weekdays)
+        flash('Successfully created copies of request {}'.format(
+            request_types[request_type_id] + " #" + str(request_id)), 'success')
+        return redirect(url_for('admin.search_request'))
+
+    if make_weekly_repeating_copies_form.submit2_2.data and make_weekly_repeating_copies_form.validate():
+        new_service_date = make_weekly_repeating_copies_form.new_service_date.data
+        new_service_time = make_weekly_repeating_copies_form.new_service_time.data
+        every_number_of_weeks = make_weekly_repeating_copies_form.number_of_weeks.data
+        end_after = make_weekly_repeating_copies_form.end_after_2_2.data
+        end_by = make_weekly_repeating_copies_form.end_by_2_2.data
+
+        # list of numbers where [0,1,2,3,4,5,6] is [Monday, Tuesday, Wednesday...]
+        day_of_week = sorted(
+            make_weekly_repeating_copies_form.day_of_week.data)
+
+        make_weekly_repeating_copies(end_after, new_service_date, day_of_week,
+                                     request_type_id, request_obj, new_service_time,
+                                     make_weekly_repeating_copies_form, every_number_of_weeks,
+                                     end_by)
+        flash(
+            'Successfully created copies of request {}'.format(
+                request_types[request_type_id] + " #" + str(request_id)), 'success')
+        return redirect(url_for('admin.search_request'))
+
+    if make_monthly_repeating_copies_form.submit2_3.data and make_monthly_repeating_copies_form.validate():
+        new_service_date = make_monthly_repeating_copies_form.new_service_date.data
+        new_service_time = make_monthly_repeating_copies_form.new_service_time.data
+        end_after = make_monthly_repeating_copies_form.end_after_2_3.data
+        end_by = make_monthly_repeating_copies_form.end_by_2_3.data
+        is_day_of_every_selected = int(
+            make_monthly_repeating_copies_form.is_day_of_every_selected.data)
+
+        make_monthly_repeating_copies(is_day_of_every_selected, make_monthly_repeating_copies_form,
+                                      end_after, new_service_date, request_type_id, request_obj,
+                                      new_service_time, end_by)
+        flash(
+            'Successfully created copies of request {}'.format(
+                request_types[request_type_id] + " #" + str(request_id)), 'success')
+        return redirect(url_for('admin.search_request'))
+
+    if make_yearly_repeating_copies_form.submit2_4.data and make_yearly_repeating_copies_form.validate():
+        new_service_date = make_yearly_repeating_copies_form.new_service_date.data
+        new_service_time = make_yearly_repeating_copies_form.new_service_time.data
+        end_after = make_yearly_repeating_copies_form.end_after_2_4.data
+        end_by = make_yearly_repeating_copies_form.end_by_2_4.data
+        is_day_of_every_selected = int(
+            make_yearly_repeating_copies_form.is_yearly_day_of_every_selected.data)
+        make_yearly_repeating_copies(is_day_of_every_selected, make_yearly_repeating_copies_form,
+                                     new_service_date, new_service_time, request_type_id,
+                                     request_obj, end_after, end_by)
+        flash(
+            'Successfully created copies of request {}'.format(
+                request_types[request_type_id] + " #" + str(request_id)), 'success')
+        return redirect(url_for('admin.search_request'))
+
+    if make_copies_without_date_form.submit3.data and make_copies_without_date_form.validate():
+        number_of_copies = make_copies_without_date_form.number_of_copies.data
+        make_copies_without_date(
+            request_type_id, request_obj, number_of_copies,
+            make_copies_without_date_form.include_selected_service_providers.data,
+            make_copies_without_date_form.include_service_request_status.data
+        )
+        flash(
+            'Successfully created copies of request {}'.format(
+                request_types[request_type_id] + " #" + str(request_id)), 'success')
+        return redirect(url_for('admin.search_request'))
+
+    return render_template('admin/request_manager/make_copy.html',
+                           form1=make_individual_copies_form,
+                           form2_1=make_daily_repeating_copies_form,
+                           form2_2=make_weekly_repeating_copies_form,
+                           form2_3=make_monthly_repeating_copies_form,
+                           form2_4=make_yearly_repeating_copies_form,
+                           form3=make_copies_without_date_form,
+                           request_type_id=request_type_id,
+                           request_id=request_id
                            )
 
 
@@ -977,6 +1858,10 @@ def create_office_time_request(request_id=None):
             contact_log_priority=ContactLogPriorityType.query.filter_by(
                 id=office_time_request.contact_log_priority_id),
             special_instructions=office_time_request.special_instructions
+<<<<<<< HEAD
+=======
+
+>>>>>>> a32306eb39fcf2f3cce5d017b57d515c1483d503
         )
         form.service_category.choices = service_category_choices
         form.office_time_service.choices = [
@@ -1151,17 +2036,7 @@ def create_members_home_request(request_id=None):
             responsible_staffer=members_home_request.responsible_staffer_id,
             person_to_cc=members_home_request.cc_email,
             cc_email=form.person_to_cc.data,
-            special_instructions=members_home_request.special_instructions,
-            service_category=members_home_request.service_category_id,
-            member_home_service = members_home_request.service_id,
-            )
-        form.service_category.choices = service_category_choices
-        form.member_home_service.choices = [
-            (service.id, service.name) for service in 
-            Service.query.filter_by(
-                category_id = members_home_request.service_category_id
-            ).all()
-            ]
+            special_instructions=members_home_request.special_instructions)
 
     form.requesting_member.multiple = True
     form.requesting_member.choices = [

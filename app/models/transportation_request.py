@@ -21,8 +21,9 @@ class TransportationRequest(db.Model):
                               default=datetime.utcnow().date())
     requested_date = db.Column(
         db.Date,
-        nullable=False,  # can this be null?
-        default=datetime.utcnow().date())
+        # nullable=False,  # can this be null?
+        # default=datetime.utcnow().date()
+        )
     # Time Info
     initial_pickup_time = db.Column(db.Time,
                                     nullable=False,

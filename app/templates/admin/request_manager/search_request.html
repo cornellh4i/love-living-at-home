@@ -98,7 +98,8 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
           <i style="margin-top: 15px" class="large pencil icon" style="cursor: pointer"
           onclick=
           "window.location.href = '{{ url_for('admin.create_transportation_request', request_id=request_num) if request_type_id == 0 else url_for('admin.create_office_time_request', request_id = request_num) if request_type_id==1 else url_for('admin.create_members_home_request', request_id = request_num) if request_type_id==2 else url_for('admin.search_request') }}';"></i>
-          <i style="margin-top: 20px" class= "large blue copy outline icon"></i>
+          <i style="margin-top: 20px; cursor:pointer" class= "large blue copy outline icon" title="Make Copy"
+          request_type_id = {{request_type_id}} request_num = {{request_num}} onclick = "window.location.href = '{{url_for('admin.make_copy', request_type_id=request_type_id, request_id=request_num)}}'"></i>
           <i style="margin-top: 20px; cursor:pointer" class= "large red times circle icon cancel-request" title="Cancel" request_type_id = {{request_type_id}} request_num = {{request_num}}></i>
           <div class="ui modal" id='modal-cancel-request-{{request_type_id}}-{{request_num}}'>
             <div class="header">Cancel Request</div>
@@ -132,7 +133,6 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
               <div class="negative ui deny button">Cancel</div>
             </div>
           </div>
-        
         </div>
         <div class="one wide column">
           <i style="margin-top: 15px; cursor:pointer" class="large green check icon" title = "Confirm" request_type_id = {{request_type_id}} request_num = {{request_num}}
@@ -283,7 +283,7 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
     </div>
     <div class="eight wide column" style="padding-top: 0.3; padding-bottom: 0; padding-left: 100px">
       <div class="inline fields">
-        <label>Show...</label>
+        <label>Show:</label>
         <div class="field">
           <div class="ui checkbox">
             <input type="checkbox" name="date_status" value="0">

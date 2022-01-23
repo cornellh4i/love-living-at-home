@@ -1,0 +1,581 @@
+{% extends "admin/request_manager/layouts/base.html" %} {% import
+'macros/form_macros.html' as f %} {% block content %}
+<style>
+  ul {
+    list-style-type: none;
+  }
+
+  #day_of_week > li {
+    display: inline-block;
+    padding: 5px;
+  }
+</style>
+<div class="ui stackable centered grid container">
+  <div class="twelve wide column">
+    <a
+      class="ui basic compact button"
+      href="{{ url_for('admin.search_request') }}"
+    >
+      <i class="caret left icon"></i>
+      Back to dashboard
+    </a>
+    {% set flashes = { 'error':
+    get_flashed_messages(category_filter=['form-error']), 'warning':
+    get_flashed_messages(category_filter=['form-check-email']), 'info':
+    get_flashed_messages(category_filter=['form-info']), 'success':
+    get_flashed_messages(category_filter=['form-success']) } %} {{
+    f.form_message(flashes['error'], header='Something went wrong.',
+    class='error') }} {{ f.form_message(flashes['warning'], header='Check your
+    email.', class='warning') }} {{ f.form_message(flashes['info'],
+    header='Information', class='info') }} {{ f.form_message(flashes['success'],
+    header='Success!', class='success') }}
+
+    <div class="ui top attached tabular menu">
+      <a class="active item" data-tab="first">Make Individual Copies</a>
+      <a class="item" data-tab="second">Make Repeating Copies</a>
+      <a class="item" data-tab="third">Make Copies Without a Date</a>
+    </div>
+    <div class="ui bottom attached active tab segment" data-tab="first">
+      <div class="ui mini message">
+        Specify how many individual copies you want to make (you can make up to
+        10 individual copies), press "Generate", and specify the new date and
+        time for each individual copy.
+      </div>
+      {{ f.begin_form(form1, flashes) }} {{
+      f.render_form_field(form1.number_of_individual_copies)}}
+
+      <div class="field">
+        <button class="fluid ui button" onclick="generate()">Generate</button>
+      </div>
+      <div class="ui divider"></div>
+      <div class="two fields">
+        {{ f.render_form_field(form1.new_service_dates) }} {{
+        f.render_form_field(form1.new_service_times) }}
+      </div>
+      <div class="ui divider"></div>
+      <div class="two fields">
+        {{ f.render_form_field(form1.include_selected_service_providers)}} {{
+        f.render_form_field(form1.include_service_request_status)}}
+      </div>
+      {{ f.render_form_field(form1.submit1) }} {{ f.end_form() }}
+    </div>
+
+    <div class="ui bottom attached tab segment" data-tab="second">
+      <div class="ui top attached tabular menu">
+        <a class="item" data-tab="second/a">Daily</a>
+        <a class="item active" data-tab="second/b">Weekly</a>
+        <a class="item" data-tab="second/c">Monthly</a>
+        <a class="item" data-tab="second/d">Yearly</a>
+      </div>
+      <div class="ui bottom attached tab segment" data-tab="second/a">
+        {{ f.begin_form(form2_1, flashes)}}
+        <div class="inline fields">
+          {{ f.render_form_field(form2_1.new_service_date)}} {{
+          f.render_form_field(form2_1.new_service_time)}}
+        </div>
+
+        <div class="grouped fields">
+          <div class="inline fields">
+            <div class="ui radio checkbox">
+              <input
+                type="radio"
+                class="every_number_of_days"
+                checked=""
+                tabindex="0"
+                class="hidden"
+              />
+            </div>
+            <div class="inline fields">
+              {{ f.render_form_field(form2_1.every_number_of_days)}}
+              <b>day(s)</b>
+            </div>
+          </div>
+          <div class="inline fields">
+            <div class="ui radio checkbox">
+              <label><b>Every weekday</b></label>
+              <input
+                type="radio"
+                class="every_weekday"
+                tabindex="0"
+                class="hidden"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="ui divider"></div>
+
+        <div class="two fields">
+          {{ f.render_form_field(form2_1.include_selected_service_providers)}}
+          {{ f.render_form_field(form2_1.include_service_request_status)}}
+        </div>
+
+        <div class="grouped fields">
+          <label for="copy_range">Copy Range</label>
+          <div class="inline fields">
+            <div class="ui radio checkbox">
+              <input
+                type="radio"
+                class="end_after_2_1"
+                name="copy_range"
+                checked=""
+                tabindex="0"
+                class="hidden"
+              />
+            </div>
+            <div class="inline fields">
+              {{ f.render_form_field(form2_1.end_after_2_1)}} <b>occurences</b>
+            </div>
+          </div>
+          <div class="inline fields">
+            <div class="ui radio checkbox">
+              <input
+                type="radio"
+                class="end_by_2_1"
+                name="copy_range"
+                tabindex="0"
+                class="hidden"
+              />
+            </div>
+            <div class="inline fields">
+              {{ f.render_form_field(form2_1.end_by_2_1)}}
+            </div>
+          </div>
+        </div>
+
+        <div class="ui info message">
+          A maximum of 50 new service requests can be created.
+        </div>
+
+        {{ f.render_form_field(form2_1.submit2_1) }} {{ f.end_form() }}
+      </div>
+
+      <div class="ui bottom attached tab segment active" data-tab="second/b">
+        {{ f.begin_form(form2_2, flashes) }}
+        <div class="inline fields">
+          {{ f.render_form_field(form2_2.new_service_date)}} {{
+          f.render_form_field(form2_2.new_service_time)}}
+        </div>
+        <div class="inline fields">
+          {{ f.render_form_field(form2_2.number_of_weeks)}} <b>week(s) on:</b>
+        </div>
+
+        <div class="day_of_week">
+          {{ f.render_form_field(form2_2.day_of_week)}}
+        </div>
+
+        <div class="ui divider"></div>
+
+        <div class="two fields">
+          {{ f.render_form_field(form2_2.include_selected_service_providers)}}
+          {{ f.render_form_field(form2_2.include_service_request_status)}}
+        </div>
+
+        <div class="ui divider"></div>
+
+        <div class="grouped fields">
+          <label for="copy_range">Copy Range</label>
+          <div class="inline fields">
+            <div class="ui radio checkbox">
+              <input
+                type="radio"
+                class="end_after_2_2"
+                name="copy_range"
+                checked=""
+                tabindex="0"
+                class="hidden"
+              />
+            </div>
+            <div class="inline fields">
+              {{ f.render_form_field(form2_2.end_after_2_2)}} <b>occurences</b>
+            </div>
+          </div>
+          <div class="inline fields">
+            <div class="ui radio checkbox">
+              <input
+                type="radio"
+                class="end_by_2_2"
+                name="copy_range"
+                tabindex="0"
+                class="hidden"
+              />
+            </div>
+            <div class="inline fields">
+              {{ f.render_form_field(form2_2.end_by_2_2)}}
+            </div>
+          </div>
+        </div>
+
+        <div class="ui info message">
+          A maximum of 52 new service requests can be created.
+        </div>
+
+        {{ f.render_form_field(form2_2.submit2_2) }} {{ f.end_form() }}
+      </div>
+      <div class="ui bottom attached tab segment" data-tab="second/c">
+        {{ f.begin_form(form2_3, flashes) }}
+        <div class="inline fields">
+          {{ f.render_form_field(form2_3.new_service_date)}} {{
+          f.render_form_field(form2_3.new_service_time)}}
+        </div>
+
+        <div class="grouped fields">
+          <div class="inline fields">
+            <div class="copy option ui radio checkbox">
+              <input
+                type="radio"
+                class="day_of_every"
+                checked=""
+                tabindex="0"
+                class="hidden"
+              />
+            </div>
+            <div class="inline fields">
+              {{ f.render_form_field(form2_3.nth_day)}} {{
+              f.render_form_field(form2_3.of_every_nth_month)}} <b>month(s)</b>
+            </div>
+          </div>
+          <div class="inline fields">
+            <div class="copy option ui radio checkbox">
+              <input
+                type="radio"
+                class="rank_day_month"
+                tabindex="0"
+                class="hidden"
+              />
+            </div>
+            <div class="inline fields">
+              <div>{{ f.render_form_field(form2_3.week_choice)}}</div>
+              <div>{{ f.render_form_field(form2_3.weekday_choice)}}</div>
+              <div>{{ f.render_form_field(form2_3.month_choice)}}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui divider"></div>
+
+        <div class="two fields">
+          {{ f.render_form_field(form2_3.include_selected_service_providers)}}
+          {{ f.render_form_field(form2_3.include_service_request_status)}}
+        </div>
+
+        <div class="ui divider"></div>
+
+        <div class="grouped fields">
+          <label for="copy_range">Copy Range</label>
+          <div class="inline fields">
+            <div class="ui radio checkbox">
+              <input
+                type="radio"
+                class="end_after_2_3"
+                name="copy_range"
+                checked=""
+                tabindex="0"
+                class="hidden"
+              />
+            </div>
+            <div class="inline fields">
+              {{ f.render_form_field(form2_3.end_after_2_3)}} <b>occurences</b>
+            </div>
+          </div>
+          <div class="inline fields">
+            <div class="ui radio checkbox">
+              <input
+                type="radio"
+                class="end_by_2_3"
+                name="copy_range"
+                tabindex="0"
+                class="hidden"
+              />
+            </div>
+            <div class="inline fields">
+              {{ f.render_form_field(form2_3.end_by_2_3)}}
+            </div>
+          </div>
+        </div>
+
+        <div class="ui info message">
+          A maximum of 24 new service requests can be created.
+        </div>
+
+        {{ f.render_form_field(form2_3.submit2_3) }} {{ f.end_form() }}
+      </div>
+      <div class="ui bottom attached tab segment" data-tab="second/d">
+        {{ f.begin_form(form2_4, flashes) }}
+        <div class="inline fields">
+          {{ f.render_form_field(form2_4.new_service_date)}} {{
+          f.render_form_field(form2_4.new_service_time)}}
+        </div>
+
+        <div class="grouped fields">
+          <div class="inline fields">
+            <div class="copy option ui radio checkbox">
+              <input
+                type="radio"
+                class="yearly_month_day"
+                checked=""
+                tabindex="0"
+                class="hidden"
+              />
+            </div>
+            <div class="inline fields">
+              {{ f.render_form_field(form2_4.every_month_choice)}} {{
+              f.render_form_field(form2_4.day_choice)}}
+            </div>
+          </div>
+          <div class="inline fields">
+            <div class="copy option ui radio checkbox">
+              <input
+                type="radio"
+                class="yearly_rank_day_month"
+                tabindex="0"
+                class="hidden"
+              />
+            </div>
+            <div class="inline fields">
+              <div>{{ f.render_form_field(form2_4.yearly_week_choice)}}</div>
+              <div>{{ f.render_form_field(form2_4.yearly_weekday_choice)}}</div>
+              <div>{{ f.render_form_field(form2_4.yearly_month_choice)}}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui divider"></div>
+
+        <div class="two fields">
+          {{ f.render_form_field(form2_4.include_selected_service_providers)}}
+          {{ f.render_form_field(form2_4.include_service_request_status)}}
+        </div>
+
+        <div class="ui divider"></div>
+
+        <div class="grouped fields">
+          <label for="copy_range">Copy Range</label>
+          <div class="inline fields">
+            <div class="ui radio checkbox">
+              <input
+                type="radio"
+                class="end_after_2_4"
+                name="copy_range"
+                checked=""
+                tabindex="0"
+                class="hidden"
+              />
+            </div>
+            <div class="inline fields">
+              {{ f.render_form_field(form2_4.end_after_2_4)}} <b>occurences</b>
+            </div>
+          </div>
+          <div class="inline fields">
+            <div class="ui radio checkbox">
+              <input
+                type="radio"
+                class="end_by_2_4"
+                name="copy_range"
+                tabindex="0"
+                class="hidden"
+              />
+            </div>
+            <div class="inline fields">
+              {{ f.render_form_field(form2_4.end_by_2_4)}}
+            </div>
+          </div>
+        </div>
+
+        <div class="ui info message">
+          A maximum of 12 new service requests can be created.
+        </div>
+
+        {{ f.render_form_field(form2_4.submit2_4) }} {{ f.end_form() }}
+      </div>
+    </div>
+
+    <div class="ui bottom attached tab segment" data-tab="third">
+      {{ f.begin_form(form3, flashes) }} {{
+      f.render_form_field(form3.number_of_copies) }}
+      <div class="ui divider"></div>
+      <div class="two fields">
+        {{ f.render_form_field(form3.include_selected_service_providers)}} {{
+        f.render_form_field(form3.include_service_request_status)}}
+      </div>
+      {{ f.render_form_field(form3.submit3) }} {{ f.end_form() }}
+    </div>
+  </div>
+</div>
+<script>
+  $('.menu .item').tab({});
+
+  // https://stackoverflow.com/questions/57332069/how-to-dynamically-create-fields-in-form-based-on-user-input-from-selectfield
+  function generate() {
+    $('#new_service_dates').empty();
+    $('#new_service_times').empty();
+
+    for (let i = 0; i < $('#number_of_individual_copies').val(); i++) {
+      let reference = i;
+      $('#new_service_dates').append(
+        '<li>' +
+          '<label for="new_service_dates-' +
+          reference +
+          '">New Service Date</label> ' +
+          '<input id="new_service_dates-' +
+          reference +
+          '" name="new_service_dates-' +
+          reference +
+          '" type="date" value="">' +
+          '</li>'
+      );
+      $('#new_service_times').append(
+        '<li>' +
+          '<label for="new_service_times-' +
+          reference +
+          '">at</label> ' +
+          '<input id="new_service_times-' +
+          reference +
+          '" name="new_service_times-' +
+          reference +
+          '" type="time" value="">' +
+          '</li>'
+      );
+    }
+  }
+  $('.ui.radio.checkbox').checkbox();
+
+  $('.copy.option.ui.radio.checkbox').checkbox();
+
+  $('.every_number_of_days').change(function () {
+    if (this.checked) {
+      $('.every_weekday').removeAttr('checked');
+      $('#every_number_of_days').removeAttr('disabled');
+      $('#every_weekday').attr('disabled', 'disabled');
+      $('input#every_weekday').val(0);
+    }
+  });
+
+  $('.every_weekday').change(function () {
+    if (this.checked) {
+      $('#every_number_of_days').attr('disabled', 'disabled');
+      $('.every_number_of_days').removeAttr('checked');
+      $('input#every_number_of_days').val('');
+      $('#every_weekday').removeAttr('disabled');
+      $('input#every_weekday').val(1);
+    }
+  });
+
+  $('.end_after_2_1').change(function () {
+    if (this.checked) {
+      $('#end_after_2_1').removeAttr('disabled');
+      $('#end_by_2_1').attr('disabled', 'disabled');
+      $('input#end_by_2_1').val('');
+    }
+  });
+
+  $('.end_by_2_1').change(function () {
+    if (this.checked) {
+      $('#end_after_2_1').attr('disabled', 'disabled');
+      $('input#end_after_2_1').val('');
+      $('#end_by_2_1').removeAttr('disabled');
+    }
+  });
+
+  $('.end_after_2_2').change(function () {
+    if (this.checked) {
+      $('#end_after_2_2').removeAttr('disabled');
+      $('#end_by_2_2').attr('disabled', 'disabled');
+      $('input#end_by_2_2').val('');
+    }
+  });
+
+  $('.end_by_2_2').change(function () {
+    if (this.checked) {
+      $('#end_after_2_2').attr('disabled', 'disabled');
+      $('input#end_after_2_2').val('');
+      $('#end_by_2_2').removeAttr('disabled');
+    }
+  });
+
+  $('.end_after_2_3').change(function () {
+    if (this.checked) {
+      $('#end_after_2_3').removeAttr('disabled');
+      $('#end_by_2_3').attr('disabled', 'disabled');
+      $('input#end_by_2_3').val('');
+    }
+  });
+
+  $('.end_by_2_3').change(function () {
+    if (this.checked) {
+      $('#end_after_2_3').attr('disabled', 'disabled');
+      $('input#end_after_2_3').val('');
+      $('#end_by_2_3').removeAttr('disabled');
+    }
+  });
+
+  $('.end_after_2_4').change(function () {
+    if (this.checked) {
+      $('#end_after_2_4').removeAttr('disabled');
+      $('#end_by_2_4').attr('disabled', 'disabled');
+      $('input#end_by_2_4').val('');
+    }
+  });
+
+  $('.end_by_2_4').change(function () {
+    if (this.checked) {
+      $('#end_after_2_4').attr('disabled', 'disabled');
+      $('input#end_after_2_4').val('');
+      $('#end_by_2_4').removeAttr('disabled');
+    }
+  });
+
+  $('.day_of_every').change(function () {
+    if (this.checked) {
+      $('.rank_day_month').removeAttr('checked');
+      $('#nth_day').parent().removeClass('disabled');
+      $('#of_every_nth_month').parent().removeClass('disabled');
+      $('#week_choice').parent().addClass('disabled');
+      $('#weekday_choice').parent().addClass('disabled');
+      $('#month_choice').parent().addClass('disabled');
+      $('input#is_day_of_every_selected').val(1);
+    }
+  });
+
+  $('.rank_day_month').change(function () {
+    if (this.checked) {
+      $('.day_of_every').removeAttr('checked');
+      $('#nth_day').parent().addClass('disabled');
+      $('#of_every_nth_month').parent().addClass('disabled');
+      $('#week_choice').parent().removeClass('disabled');
+      $('#week_choice').removeAttr('disabled');
+      $('#weekday_choice').parent().removeClass('disabled');
+      $('#weekday_choice').removeAttr('disabled');
+      $('#month_choice').parent().removeClass('disabled');
+      $('#month_choice').removeAttr('disabled');
+      $('input#is_day_of_every_selected').val(0);
+    }
+  });
+
+  $('.yearly_month_day').change(function () {
+    if (this.checked) {
+      $('.yearly_rank_day_month').removeAttr('checked');
+      $('#every_month_choice').parent().removeClass('disabled');
+      $('#day_choice').parent().removeClass('disabled');
+      $('#yearly_week_choice').parent().addClass('disabled');
+      $('#yearly_weekday_choice').parent().addClass('disabled');
+      $('#yearly_month_choice').parent().addClass('disabled');
+      $('input#is_yearly_day_of_every_selected').val(1);
+    }
+  });
+
+  $('.yearly_rank_day_month').change(function () {
+    if (this.checked) {
+      $('.yearly_month_day').removeAttr('checked');
+      $('#every_month_choice').parent().addClass('disabled');
+      $('#day_choice').parent().addClass('disabled');
+      $('#yearly_week_choice').parent().removeClass('disabled');
+      $('#yearly_weekday_choice').parent().removeClass('disabled');
+      $('#yearly_month_choice').parent().removeClass('disabled');
+      $('#yearly_week_choice').removeAttr('disabled');
+      $('#yearly_weekday_choice').parent().removeClass('disabled');
+      $('#yearly_month_choice').removeAttr('disabled');
+      $('input#is_yearly_day_of_every_selected').val(0);
+    }
+  });
+</script>
+{% endblock %}

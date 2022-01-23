@@ -19,7 +19,8 @@ class MembersHomeRequest(db.Model):
                                default=datetime.utcnow().date())
     requested_date = db.Column(
          db.Date,
-         nullable=False)
+        #  nullable=False
+        )
 
     from_time = db.Column(db.Time,
                             nullable=False,

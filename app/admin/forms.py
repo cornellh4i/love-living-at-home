@@ -6,7 +6,8 @@ from wtforms.ext.sqlalchemy.fields import (QuerySelectField,
                                            QuerySelectMultipleField)
 from wtforms.fields import (BooleanField, IntegerField, PasswordField,
                             RadioField, SelectField, SelectMultipleField,
-                            StringField, SubmitField, TextAreaField)
+                            StringField, SubmitField, TextAreaField, FieldList,
+                            HiddenField)
 from wtforms.fields.html5 import DateField, EmailField, IntegerField, TimeField
 from wtforms.validators import (Email, EqualTo, InputRequired,
                                 Length, Optional, NumberRange)
@@ -861,7 +862,6 @@ class EditDestinationAddressForm(FlaskForm):
                                        Length(max=45)])
     submit = SubmitField('Save Destination Address Information')
 
-
 class CompleteServiceRequestForm(FlaskForm):
     rating = IntegerField('Rating', validators=[Optional()])
     member_comments = TextAreaField('Member Comments', id="member_comments",
@@ -881,3 +881,181 @@ class CompleteServiceRequestForm(FlaskForm):
                             Optional(), NumberRange(min=0)])
     verified_by = SelectField('Verified by', coerce=int)
     submit = SubmitField('Save')
+
+class MakeIndividualCopiesForm(FlaskForm):
+    number_of_individual_copies = IntegerField(
+        'Number of individual copies', validators=[InputRequired(), NumberRange(min=1)], default=1)
+    new_service_dates = FieldList(
+        DateField('New Service Date'), min_entries=1, max_entries=10)
+    new_service_times = FieldList(
+        TimeField('at', format='%H:%M'), min_entries=1, max_entries=10)
+    include_selected_service_providers = BooleanField(
+        'Include Selected Service Provider(s)',
+        validators=[Optional()])
+    include_service_request_status = BooleanField(
+        'Include Service Request Status',
+        validators=[Optional()])
+    submit1 = SubmitField('Copy Service Request')
+
+
+class MakeDailyRepeatingCopiesForm(FlaskForm):
+    new_service_date = DateField('New Service Date')
+    new_service_time = TimeField('at', format='%H:%M')
+    every_number_of_days = IntegerField(
+        'Every', validators=[Optional(), NumberRange(min=1)])
+    every_weekday = HiddenField(default=0)
+    include_selected_service_providers = BooleanField(
+        'Include Selected Service Provider(s)',
+        validators=[Optional()])
+    include_service_request_status = BooleanField(
+        'Include Service Request Status',
+        validators=[Optional()])
+    end_after_2_1 = IntegerField('End after', validators=[
+                                 Optional(), NumberRange(min=1, max=50)])
+    end_by_2_1 = DateField('End by', validators=[
+                              Optional()], render_kw={'disabled': ''},)
+    submit2_1 = SubmitField('Copy Service Request')
+
+
+class MakeWeeklyRepeatingCopiesForm(FlaskForm):
+    new_service_date = DateField('New Service Date')
+    new_service_time = TimeField('at', format='%H:%M')
+    number_of_weeks = IntegerField('Every', validators=[NumberRange(min=1)])
+    day_of_week = MultiCheckboxField(
+        coerce=int,
+        choices=[
+            (0, 'Monday'),
+            (1, 'Tuesday'),
+            (2, 'Wednesday'),
+            (3, 'Thursday'),
+            (4, 'Friday'),
+            (5, 'Saturday'),
+            (6, 'Sunday')
+        ], validators=[InputRequired()])
+    include_selected_service_providers = BooleanField(
+        'Include Selected Service Provider(s)',
+        validators=[Optional()])
+    include_service_request_status = BooleanField(
+        'Include Service Request Status',
+        validators=[Optional()])
+    end_after_2_2 = IntegerField('End after', validators=[
+                                 Optional(), NumberRange(min=1, max=52)])
+    end_by_2_2 = DateField('End by', validators=[
+                              Optional()], render_kw={'disabled': ''},)
+    submit2_2 = SubmitField('Copy Service Request')
+
+
+class MakeMonthlyRepeatingCopiesForm(FlaskForm):
+    new_service_date = DateField('New Service Date')
+    new_service_time = TimeField('at', format='%H:%M')
+
+    is_day_of_every_selected = HiddenField(default=1)
+    # Ex. Day 1 of every 2 month(s)
+    nth_day = SelectField('Day',
+                          choices=[(i, i) for i in range(1, 32)], coerce=int)
+    of_every_nth_month = SelectField(
+        'of every', choices=[(i, i) for i in range(1, 13)], coerce=int)
+
+    # Ex. The First Sunday of every 1 month(s)
+    week_choice = SelectField('The',
+                              choices=[(1, 'First'), (2, 'Second'),
+                                       (3, 'Third'), (4, 'Fourth'), (-1, 'Last')],
+                              validators=[Optional()], render_kw={'disabled': ''}, coerce=int)
+    weekday_choice = SelectField('', choices=[
+        (0, 'Monday'),
+        (1, 'Tuesday'),
+        (2, 'Wednesday'),
+        (3, 'Thursday'),
+        (4, 'Friday'),
+        (5, 'Saturday'),
+        (6, 'Sunday')
+    ], validators=[Optional()], render_kw={'disabled': ''}, coerce=int)
+    month_choice = SelectField('of every', choices=[(
+        i, i) for i in range(1, 13)], validators=[Optional()], render_kw={'disabled': ''}, coerce=int)
+
+    include_selected_service_providers = BooleanField(
+        'Include Selected Service Provider(s)',
+        validators=[Optional()])
+    include_service_request_status = BooleanField(
+        'Include Service Request Status',
+        validators=[Optional()])
+    end_after_2_3 = IntegerField('End after', validators=[
+                                 Optional(), NumberRange(min=1, max=24)])
+    end_by_2_3 = DateField('End by', validators=[
+                              Optional()], render_kw={'disabled': ''},)
+    submit2_3 = SubmitField('Copy Service Request')
+
+
+class MakeYearlyRepeatingCopiesForm(FlaskForm):
+    new_service_date = DateField('New Service Date')
+    new_service_time = TimeField('at', format='%H:%M')
+    is_yearly_day_of_every_selected = HiddenField(default=1)
+    # Ex. Every January 1
+    every_month_choice = SelectField('Every', choices=[
+        (1, 'January'),
+        (2, 'February'),
+        (3, 'March'),
+        (4, 'April'),
+        (5, 'May'),
+        (6, 'June'),
+        (7, 'July'),
+        (8, 'August'),
+        (9, 'September'),
+        (10, 'October'),
+        (11, 'November'),
+        (12, 'December')
+    ], validators=[Optional()], coerce=int)
+    day_choice = SelectField('', choices=[(i, i) for i in range(1, 32)], validators=[Optional()], coerce=int)
+
+    # Ex. The First Sunday of January
+    yearly_week_choice = SelectField('The',
+                                     choices=[(1, 'First'), (2, 'Second'),
+                                              (3, 'Third'), (4, 'Fourth'), (-1, 'Last')],
+                                     validators=[Optional()], coerce=int, render_kw={'disabled': ''})
+    yearly_weekday_choice = SelectField('', choices=[
+        (0, 'Monday'),
+        (1, 'Tuesday'),
+        (2, 'Wednesday'),
+        (3, 'Thursday'),
+        (4, 'Friday'),
+        (5, 'Saturday'),
+        (6, 'Sunday')
+    ], validators=[Optional()], coerce=int,render_kw={'disabled': ''})
+    yearly_month_choice = SelectField('of', choices=[
+        (1, 'January'),
+        (2, 'February'),
+        (3, 'March'),
+        (4, 'April'),
+        (5, 'May'),
+        (6, 'June'),
+        (7, 'July'),
+        (8, 'August'),
+        (9, 'September'),
+        (10, 'October'),
+        (11, 'November'),
+        (12, 'December')
+    ], validators=[Optional()], coerce=int,render_kw={'disabled': ''})
+
+    include_selected_service_providers = BooleanField(
+        'Include Selected Service Provider(s)',
+        validators=[Optional()])
+    include_service_request_status = BooleanField(
+        'Include Service Request Status',
+        validators=[Optional()])
+    end_after_2_4 = IntegerField('End after', validators=[
+                                 Optional(), NumberRange(min=1, max=24)])
+    end_by_2_4 = DateField('End by', validators=[
+                              Optional()], render_kw={'disabled': ''},)
+    submit2_4 = SubmitField('Copy Service Request')
+
+
+class MakeCopiesWithoutDateForm(FlaskForm):
+    number_of_copies = IntegerField(
+        'Number of copies', validators=[InputRequired(), NumberRange(min=1)])
+    include_selected_service_providers = BooleanField(
+        'Include Selected Service Provider(s)',
+        validators=[Optional()])
+    include_service_request_status = BooleanField(
+        'Include Service Request Status',
+        validators=[Optional()])
+    submit3 = SubmitField('Copy Service Request')

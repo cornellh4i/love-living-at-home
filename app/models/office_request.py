@@ -20,7 +20,8 @@ class OfficeRequest(db.Model):
                               default=datetime.utcnow().date())
     requested_date = db.Column(
         db.Date,
-        default=datetime.utcnow().date())
+        # default=datetime.utcnow().date()
+        )
     # Time Info
     start_time =db.Column(db.Time,
                             nullable=False,
