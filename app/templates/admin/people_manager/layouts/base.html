@@ -82,7 +82,7 @@ description=None, icon=None) %}
     <i class="handshake outline icon right floated" style="cursor: pointer"
       onclick="window.location.href = '{{ url_for('admin.add_volunteer_services', volunteer_id=v.id) }}';"></i>
     <i class="pencil icon right floated" style="cursor: pointer"
-      onclick="window.location.href = '{{ url_for('admin.invite_volunteer', volunteer_id=v.id) }}';">
+      onclick="window.location.href = '{{ url_for('admin.invite_volunteer', user_id=v.id) }}';">
     </i>
   </div>
 </div>
@@ -90,7 +90,7 @@ description=None, icon=None) %}
 
   <div class="four wide column">
     <div class="ui label">
-      {% if v.type_id == 0 %}
+      {% if v.is_member_volunteer == true %}
       Member Volunteer
       {% else %}
       Non-Member Volunteer
@@ -202,7 +202,9 @@ description=None, icon=None) %}
   <div class="ui tab" id = "volunteer-tab" data-tab="volunteer">
     <div class="ui stackable centered grid container">
       <div class="four wide column">
-        {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', icon='add user icon') }}
+        {{ dashboard_option('Add Volunteer', 'admin.invite_volunteer', icon='add user icon') }} </br>
+        
+        {{ dashboard_option('Add Member Volunteer', 'admin.invite_member_volunteer', icon='add user icon') }} 
         
         <!-- Search Box -->
         <h3>Search:</h3>

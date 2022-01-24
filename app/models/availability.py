@@ -1,23 +1,40 @@
+from datetime import time
+
+from sqlalchemy.sql.elements import Null
 from .. import db
 
 
 class Availability(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # Availabilites
-    availability_monday = db.Column(db.String(64), default='Unavailable')
-    backup_monday = db.Column(db.String(64), default='Unavailable')
-    availability_tuesday = db.Column(db.String(64), default='Unavailable')
-    backup_tuesday = db.Column(db.String(64), default='Unavailable')
-    availability_wednesday = db.Column(db.String(64), default='Unavailable')
-    backup_wednesday = db.Column(db.String(64), default='Unavailable')
-    availability_thursday = db.Column(db.String(64), default='Unavailable')
-    backup_thursday = db.Column(db.String(64), default='Unavailable')
-    availability_friday = db.Column(db.String(64), default='Unavailable')
-    backup_friday = db.Column(db.String(64), default='Unavailable')
-    availability_saturday = db.Column(db.String(64), default='Unavailable')
-    backup_saturday = db.Column(db.String(64), default='Unavailable')
-    availability_sunday = db.Column(db.String(64), default='Unavailable')
-    backup_sunday = db.Column(db.String(64), default='Unavailable')
+    availability_monday_start = db.Column(db.Time)
+    availability_monday_end = db.Column(db.Time)
+    backup_monday_start = db.Column(db.Time)
+    backup_monday_end = db.Column(db.Time)
+    availability_tuesday_start = db.Column(db.Time)
+    availability_tuesday_end = db.Column(db.Time)
+    backup_tuesday_start = db.Column(db.Time)
+    backup_tuesday_end = db.Column(db.Time)
+    availability_wednesday_start = db.Column(db.Time)
+    availability_wednesday_end = db.Column(db.Time)
+    backup_wednesday_start = db.Column(db.Time)
+    backup_wednesday_end = db.Column(db.Time)
+    availability_thursday_start = db.Column(db.Time)
+    availability_thursday_end = db.Column(db.Time)
+    backup_thursday_start = db.Column(db.Time)
+    backup_thursday_end = db.Column(db.Time)
+    availability_friday_start = db.Column(db.Time)
+    availability_friday_end = db.Column(db.Time)
+    backup_friday_start = db.Column(db.Time)
+    backup_friday_end = db.Column(db.Time)
+    availability_saturday_start = db.Column(db.Time)
+    availability_saturday_end = db.Column(db.Time)
+    backup_saturday_start = db.Column(db.Time)
+    backup_saturday_end = db.Column(db.Time)
+    availability_sunday_start = db.Column(db.Time)
+    availability_sunday_end = db.Column(db.Time)
+    backup_sunday_start = db.Column(db.Time)
+    backup_sunday_end = db.Column(db.Time)
 
     @staticmethod
     def generate_fake(count=5, **kwargs):
@@ -25,10 +42,15 @@ class Availability(db.Model):
         from sqlalchemy.exc import IntegrityError
 
         for i in range(count):
-            a = Availability(availability_monday="7am-6pm",
-                             availability_tuesday="7am-6pm",
-                             availability_friday="7am-6pm",
-                             availability_sunday="7am-6pm",
+            a = Availability(availability_monday_start=time(10, 0, 0, 0),
+                             availability_monday_end=time(13, 30, 0, 0),
+                             availability_wednesday_start=time(
+                                 11, 0, 0, 0),
+                             availability_wednesday_end=time(
+                                 12, 30, 0, 0),
+                             availability_thursday_start=time(
+                                 8, 0, 0, 0),
+                             availability_thursday_end=time(19, 0, 0, 0),
                              **kwargs)
             db.session.add(a)
             try:

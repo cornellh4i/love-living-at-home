@@ -13,6 +13,9 @@ class Volunteer(db.Model):
     gender = db.Column(db.String(80))
     birthdate = db.Column(db.Date, nullable=False)
 
+    # Member ID infomration for member volunteers
+    member_id = db.Column(db.Integer(), db.ForeignKey("member.id"))
+
     # Location Information
     primary_address_id = db.Column(db.Integer(),
                                    db.ForeignKey("address.id"),
@@ -32,9 +35,8 @@ class Volunteer(db.Model):
     emergency_contact_relationship = db.Column(db.String(64))
 
     # Volunteer-Specific Information
-    type_id = db.Column(db.Integer(),
-                        db.ForeignKey("volunteer_type.id"),
-                        nullable=False)
+    is_member_volunteer = db.Column(
+        db.Boolean(), nullable=False, default=False)
     is_fully_vetted = db.Column(db.Boolean(), nullable=False, default=False)
     vetting_notes = db.Column(db.Text, default='')
     availability_id = db.Column(db.Integer(), db.ForeignKey("availability.id"))
@@ -60,7 +62,7 @@ class Volunteer(db.Model):
                           primary_address_id=randint(1, 200),
                           primary_phone_number=fake.phone_number(),
                           email_address=choice([fake.email(), None]),
-                          type_id=choice([1, 2]),
+                          is_member_volunteer=False,
                           preferred_contact_method=choice(
                               ['phone', 'email', 'phone and email']),
                           availability_id=i+1,
@@ -75,24 +77,3 @@ class Volunteer(db.Model):
 
     def __repr__(self):
         return f"Volunteer('{self.first_name} {self.last_name}')"
-
-
-class VolunteerType(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-    volunteers = db.relationship("Volunteer",
-                                 backref="volunteer_type",
-                                 lazy=True)
-
-    @staticmethod
-    def insert_types():
-        types = ['Member Volunteer', 'Non-Member Volunteer']
-        for t in types:
-            volunteer_type = VolunteerType.query.filter_by(name=t).first()
-            if volunteer_type is None:
-                volunteer_type = VolunteerType(name=t)
-            db.session.add(volunteer_type)
-        db.session.commit()
-
-    def __repr__(self):
-        return f"VolunteerType('{self.name}')"

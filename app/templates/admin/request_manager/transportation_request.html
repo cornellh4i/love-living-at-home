@@ -145,9 +145,16 @@
 
     {{ f.render_form_field(form.duration) }}
 
-    <div id="providers" class="twelve wide column">
-      {{ f.render_form_field(form.service_provider)}}
-    </div>
+    {{ f.render_form_field(form.service_provider)}}
+
+    <div id = "providers" class="twelve wide column"></div>
+
+    <!-- Checkbox to filter available service providers --> 
+    <br>
+    <label for="filter_providers">
+      <input type="checkbox" id="filter_providers" onclick="filterProviders(this)" />
+      Show Available Service Providers
+    </label>
 
     <script>
       $('#show-new-address-button').click(() => {
@@ -407,12 +414,49 @@
   <!-- Begin Table logic -->
   <script>
     const providerSelect = document.getElementById("service_provider");
+    var websiteHost = window.location.host;
+    var protocol = window.location.protocol;
+
+    var selectedIds = [], selectedNames = [];
+    var filtered = false;
+
+    // This function should be called whenever the checkbox clicked (onChange)
+    function filterProviders() {
+      if (!filtered) {
+        fetch(`${protocol}//${websiteHost}/admin/filter-service-providers`, {
+          method: "POST",
+          headers: {
+            "Content-Type" : "application/json"
+          },
+          body: JSON.stringify({
+            selected: selectedIds,
+            requestedDate: document.getElementById("requested_date").valueAsDate,
+            initialPickup: document.getElementById("initial_pickup").valueAsDate,
+            returnPickup: document.getElementById("return_pickup").valueAsDate
+          })
+        })
+        .then(res => { 
+          filtered = true;
+          // res should be a JSON list of volunteer names
+          selectedNames = res.json();
+        }).then(updateTable())
+      } else {
+        filtered = false;
+        updateTable();
+      }
+    }
+    
     function updateTable() {
       const providerDiv = document.getElementById("providers");
-      let selectedNames = [];
-      for (const option of providerSelect.options) {
-        if (option.selected)
-          selectedNames.push(option.innerHTML)
+      if (!filtered){
+        selectedNames = [];
+        selectedIds = [];
+        for (const option of providerSelect.options) {
+          if (option.selected) {
+            selectedNames.push(option.innerHTML)
+            selectedIds.push(option.getAttribute("data-value"));
+          }
+        }
       }
 
       const table = document.createElement('table');
@@ -468,9 +512,6 @@
         emails += vol.value.split("|")[1] + "&";
 
       emails = emails.substring(0, emails.length - 1);
-
-      const websiteHost = window.location.host;
-      const protocol = window.location.protocol;
       fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&-1&Transportation&${emails}`);
 
       const buttonId = `${buttonType.replace('+', '-') + '-success-message'}`

@@ -26,6 +26,14 @@
     {{ f.form_message(flashes['info'], header='Information', class='info') }}
     {{ f.form_message(flashes['success'], header='Success!', class='success') }}
 
+    {% if member_volunteer is not none %}
+      <div class="ui disabled checked checkbox">
+        <input type="checkbox" checked="" disabled="disabled">
+        <label>Member Volunteer</label>
+      </div>
+      <br></br>
+    {% endif %}
+
     <div class="three fields">
       {{ f.render_form_field(form.first_name, extra_classes="required") }}
       {{ f.render_form_field(form.middle_initial) }}

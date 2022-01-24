@@ -13,6 +13,9 @@ class Member(db.Model):
     gender = db.Column(db.String(64), nullable=False)
     birthdate = db.Column(db.Date, nullable=False)
 
+    # Volunteer ID infomration for member volunteers
+    volunteer_id = db.Column(db.Integer(), db.ForeignKey("volunteer.id"))
+
     # Membership Information
     member_number = db.Column(db.Integer, nullable=False)
     membership_expiration_date = db.Column(db.Date, nullable=False)

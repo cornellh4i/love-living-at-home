@@ -1,6 +1,7 @@
 from datetime import date
 
 from flask_wtf import FlaskForm
+from sqlalchemy.sql.elements import Null
 from wtforms import SelectMultipleField, ValidationError, widgets
 from wtforms.ext.sqlalchemy.fields import (QuerySelectField,
                                            QuerySelectMultipleField)
@@ -14,7 +15,7 @@ from wtforms.validators import (Email, EqualTo, InputRequired,
 
 from app import db
 from app.models import (MetroArea, ContactLogPriorityType, Member, RequestStatus, RequestType, Role,
-                        Service, ServiceCategory, Staffer, User, VolunteerType)
+                        Service, ServiceCategory, Staffer, User)
 
 salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
                ("mr", "Mr")]
@@ -98,10 +99,9 @@ class SearchRequestForm(FlaskForm):
     volunteer = SelectMultipleField('Volunteer(s)')
     local_resource = SelectMultipleField('Local Resource(s)')
     dated_filter = SelectMultipleField('Show...')
-    volunteer_type = QuerySelectMultipleField(
+    volunteer_type = SelectMultipleField(
         'Volunteer Type',
-        get_label='name',
-        query_factory=lambda: db.session.query(VolunteerType).order_by('name'))
+        choices=[(0, 'Member Volunteer'), (1, 'Non-Member Volunteer')])
 
     date_type = RadioField('Date Type:',
                            choices=[(0, 'Service Date'), (1, 'Created Date')],
@@ -563,6 +563,9 @@ class VolunteerManager(FlaskForm):
 
     birthdate = DateField("Birthdate ", validators=[InputRequired()])
 
+    # Volunteer ID infomration for member volunteers
+    member_id = HiddenField('Member ID', validators=[Optional()])
+
     # Primary Address Information
     primary_address1 = StringField('Street address or P.O. Box',
                                    validators=[InputRequired(), Length(max=200)])
@@ -723,57 +726,70 @@ class LocalResourceManager(FlaskForm):
     submit = SubmitField("Submit")
 
 
+class AddMemberVolunteer(FlaskForm):
+    members = SelectField('Members', validators=[
+                          InputRequired()], coerce=int)
+    submit = SubmitField("Submit")
+
+
 class AddAvailability(FlaskForm):
-    availability_times = [("Unavailable", "Unavailable"),
-                          ("7am-8am", "7am-8am"), ("7am-9am", "7am-9am"),
-                          ("7am-10am", "7am-10am"), ("7am-11am", "7am-11am"),
-                          ("7am-12pm", "7am-12pm"), ("7am-1pm", "7am-1pm"),
-                          ("7am-2pm", "7am-2pm"), ("7am-3pm", "7am-3pm"),
-                          ("7am-4pm", "7am-4pm"), ("7am-5pm", "7am-5pm"),
-                          ("7am-6pm", "7am-6pm"), ("8am-9am", "8am-9am"),
-                          ("8am-10am", "8am-10am"), ("8am-11am", "8am-11am"),
-                          ("8am-12pm", "8am-12pm"), ("8am-1pm", "8am-1pm"),
-                          ("8am-2pm", "8am-2pm"), ("8am-3pm", "8am-3pm"),
-                          ("8am-4pm", "8am-4pm"), ("8am-5pm", "8am-5pm"),
-                          ("8am-6pm", "8am-6pm"), ("9am-10am", "9am-10am"),
-                          ("9am-11am", "9am-11am"), ("9am-12pm", "9am-12pm"),
-                          ("9am-1pm", "9am-1pm"), ("9am-2pm", "9am-2pm"),
-                          ("9am-3pm", "9am-3pm"), ("9am-4pm", "9am-4pm"),
-                          ("9am-5pm", "9am-5pm"), ("9am-6pm", "9am-6pm"),
-                          ("10am-11am", "10am-11am"),
-                          ("10am-12pm", "10am-12pm"), ("10am-1pm", "10am-1pm"),
-                          ("10am-2pm", "10am-2pm"), ("10am-3pm", "10am-3pm"),
-                          ("10am-4pm", "10am-4pm"), ("10am-5pm", "10am-5pm"),
-                          ("10am-6pm", "10am-6pm"), ("11am-12pm", "11am-12pm"),
-                          ("11am-1pm", "11am-1pm"), ("11am-2pm", "11am-2pm"),
-                          ("11am-3pm", "11am-3pm"), ("11am-4pm", "11am-4pm"),
-                          ("11am-5pm", "11am-5pm"), ("11am-6pm", "11am-6pm"),
-                          ("12pm-1pm", "12pm-1pm"), ("12pm-2pm", "12pm-2pm"),
-                          ("12pm-3pm", "12pm-3pm"), ("12pm-4pm", "12pm-4pm"),
-                          ("12pm-5pm", "12pm-5pm"), ("12pm-6pm", "12pm-6pm"),
-                          ("1pm-2pm", "1pm-2pm"), ("1pm-3pm", "1pm-3pm"),
-                          ("1pm-4pm", "1pm-4pm"), ("1pm-5pm", "1pm-5pm"),
-                          ("1pm-6pm", "1pm-6pm"), ("2pm-3pm", "2pm-3pm"),
-                          ("2pm-4pm", "2pm-4pm"), ("2pm-5pm", "2pm-5pm"),
-                          ("2pm-6pm", "2pm-6pm"), ("3pm-4pm", "3pm-4pm"),
-                          ("3pm-5pm", "3pm-5pm"), ("3pm-6pm", "3pm-6pm"),
-                          ("4pm-5pm", "4pm-5pm"), ("4pm-6pm", "4pm-6pm"),
-                          ("5pm-6pm", "5pm-6pm")]
     availability_identity = TextAreaField()
-    availability_monday = SelectField('', choices=availability_times)
-    backup_monday = SelectField('', choices=availability_times)
-    availability_tuesday = SelectField('', choices=availability_times)
-    backup_tuesday = SelectField('', choices=availability_times)
-    availability_wednesday = SelectField('', choices=availability_times)
-    backup_wednesday = SelectField('', choices=availability_times)
-    availability_thursday = SelectField('', choices=availability_times)
-    backup_thursday = SelectField('', choices=availability_times)
-    availability_friday = SelectField('', choices=availability_times)
-    backup_friday = SelectField('', choices=availability_times)
-    availability_saturday = SelectField('', choices=availability_times)
-    backup_saturday = SelectField('', choices=availability_times)
-    availability_sunday = SelectField('', choices=availability_times)
-    backup_sunday = SelectField('', choices=availability_times)
+    availability_monday_start = TimeField('Availability Start:',
+                                          format='%H:%M', validators=[Optional()])
+    availability_monday_end = TimeField('Availability End:',
+                                        format='%H:%M', validators=[Optional()])
+    backup_monday_start = TimeField('Availability Start:',
+                                    format='%H:%M', validators=[Optional()])
+    backup_monday_end = TimeField('Availability End:',
+                                  format='%H:%M', validators=[Optional()])
+    availability_tuesday_start = TimeField('Availability Start:',
+                                           format='%H:%M', validators=[Optional()])
+    availability_tuesday_end = TimeField('Availability End:',
+                                         format='%H:%M', validators=[Optional()])
+    backup_tuesday_start = TimeField('Availability Start:',
+                                     format='%H:%M', validators=[Optional()])
+    backup_tuesday_end = TimeField('Availability End:',
+                                   format='%H:%M', validators=[Optional()])
+    availability_wednesday_start = TimeField('Availability Start:',
+                                             format='%H:%M', validators=[Optional()])
+    availability_wednesday_end = TimeField('Availability End:',
+                                           format='%H:%M', validators=[Optional()])
+    backup_wednesday_start = TimeField('Availability Start:',
+                                       format='%H:%M', validators=[Optional()])
+    backup_wednesday_end = TimeField('Availability End:',
+                                     format='%H:%M', validators=[Optional()])
+    availability_thursday_start = TimeField('Availability Start:',
+                                            format='%H:%M', validators=[Optional()])
+    availability_thursday_end = TimeField('Availability End:',
+                                          format='%H:%M', validators=[Optional()])
+    backup_thursday_start = TimeField('Availability Start:',
+                                      format='%H:%M', validators=[Optional()])
+    backup_thursday_end = TimeField('Availability End:',
+                                    format='%H:%M', validators=[Optional()])
+    availability_friday_start = TimeField('Availability Start:',
+                                          format='%H:%M', validators=[Optional()])
+    availability_friday_end = TimeField('Availability End:',
+                                        format='%H:%M', validators=[Optional()])
+    backup_friday_start = TimeField('Availability Start:',
+                                    format='%H:%M', validators=[Optional()])
+    backup_friday_end = TimeField('Availability End:',
+                                  format='%H:%M', validators=[Optional()])
+    availability_saturday_start = TimeField('Availability Start:',
+                                            format='%H:%M', validators=[Optional()])
+    availability_saturday_end = TimeField('Availability End:',
+                                          format='%H:%M', validators=[Optional()])
+    backup_saturday_start = TimeField('Availability Start:',
+                                      format='%H:%M', validators=[Optional()])
+    backup_saturday_end = TimeField('Availability End:',
+                                    format='%H:%M', validators=[Optional()])
+    availability_sunday_start = TimeField('Availability Start:',
+                                          format='%H:%M', validators=[Optional()])
+    availability_sunday_end = TimeField('Availability End:',
+                                        format='%H:%M', validators=[Optional()])
+    backup_sunday_start = TimeField('Availability Start:',
+                                    format='%H:%M', validators=[Optional()])
+    backup_sunday_end = TimeField('Availability End:',
+                                  format='%H:%M', validators=[Optional()])
     submit = SubmitField("Save")
 
 
