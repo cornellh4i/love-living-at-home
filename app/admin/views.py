@@ -1821,6 +1821,8 @@ def create_transportation_request(request_id=None):
              str(volunteer.is_fully_vetted))
         )
 
+    ##TODO: Define member_info
+    member_info = None 
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
                            form=form,
@@ -2053,6 +2055,8 @@ def create_office_time_request(request_id=None):
              str(volunteer.is_fully_vetted))
         )
 
+    ##TODO: Define member_info
+    member_info = None 
     return render_template('admin/request_manager/office_time_request.html',
                            title='Office Time Request',
                            form=form,
@@ -2234,6 +2238,8 @@ def create_members_home_request(request_id=None):
              str(volunteer.is_fully_vetted))
         )
 
+    ##TODO: Define member_info
+    member_info = None 
     return render_template('admin/request_manager/members_home_request.html',
                            title='Members Home Request',
                            form=form,
