@@ -243,7 +243,7 @@
 
         })
     }
-  
+
     function specialInstructions() {
       const member = document.getElementById('member')
       let acum = ""
@@ -261,7 +261,7 @@
         acum
       );
       special_input = acum;
-    
+
     }
           </script>
   <script>
@@ -383,7 +383,12 @@
         memberDiv.replaceChild(table, document.getElementById("memberDataTable"));
       }
     }
-    memberSelect.setAttribute("onchange", "updateMemberTable()");
+    
+    function onMemberChange() {
+        updateMemberTable();
+        specialInstructions();
+    }
+    memberSelect.setAttribute("onchange", "onMemberChange()");
 
   </script>
   <!-- End Table for Displaying Member Information-->

@@ -149,7 +149,7 @@
 
     <div id = "providers" class="twelve wide column"></div>
 
-    <!-- Checkbox to filter available service providers --> 
+    <!-- Checkbox to filter available service providers -->
     <br>
     <label for="filter_providers">
       <input type="checkbox" id="filter_providers" onclick="filterProviders(this)" />
@@ -435,7 +435,7 @@
             returnPickup: document.getElementById("return_pickup").valueAsDate
           })
         })
-        .then(res => { 
+        .then(res => {
           filtered = true;
           // res should be a JSON list of volunteer names
           selectedNames = res.json();
@@ -445,7 +445,7 @@
         updateTable();
       }
     }
-    
+
     function updateTable() {
       const providerDiv = document.getElementById("providers");
       if (!filtered){
@@ -568,7 +568,12 @@
         memberDiv.replaceChild(table, document.getElementById("memberDataTable"));
       }
     }
-    memberSelect.setAttribute("onchange", "updateMemberTable()");
+
+    function onMemberChange() {
+        updateMemberTable();
+        specialInstructions();
+    }
+    memberSelect.setAttribute("onchange", "onMemberChange()");
 
   </script>
   <!-- End Table for Displaying Member Information-->
