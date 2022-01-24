@@ -260,8 +260,8 @@ def get_request_obj(request_type_id, request_id):
     """
     Return request object based on the request_type_id and request_id
 
-    request_type_id: 0,1,or 2 where 0 is Transportation, 1 is Office Time, 
-                    2 is Member's Home 
+    request_type_id: 0,1,or 2 where 0 is Transportation, 1 is Office Time,
+                    2 is Member's Home
     request_id: int
     """
     # Transportation Request
@@ -281,8 +281,8 @@ def get_request_obj(request_type_id, request_id):
     """
     Return request object based on the request_type_id and request_id
 
-    request_type_id: 0,1,or 2 where 0 is Transportation, 1 is Office Time, 
-                    2 is Member's Home 
+    request_type_id: 0,1,or 2 where 0 is Transportation, 1 is Office Time,
+                    2 is Member's Home
     request_id: int
     """
     # Transportation Request
@@ -1821,8 +1821,19 @@ def create_transportation_request(request_id=None):
              str(volunteer.is_fully_vetted))
         )
 
-    ##TODO: Define member_info
-    member_info = None 
+    member_info = []
+    for member in Member.query.all():
+        address = Address.query.get(member.primary_address_id)
+        street_address = address.address1
+        member_info.append(
+            (member.first_name + " " + member.last_name,
+             member.membership_expiration_date,
+             str(member.email_address),
+             member.primary_phone_number,
+             street_address
+             )
+        )
+
     return render_template('admin/request_manager/transportation_request.html',
                            title='Transportation Request',
                            form=form,
@@ -2055,8 +2066,19 @@ def create_office_time_request(request_id=None):
              str(volunteer.is_fully_vetted))
         )
 
-    ##TODO: Define member_info
-    member_info = None 
+    member_info = []
+    for member in Member.query.all():
+        address = Address.query.get(member.primary_address_id)
+        street_address = address.address1
+        member_info.append(
+            (member.first_name + " " + member.last_name,
+             member.membership_expiration_date,
+             str(member.email_address),
+             member.primary_phone_number,
+             street_address
+             )
+        )
+
     return render_template('admin/request_manager/office_time_request.html',
                            title='Office Time Request',
                            form=form,
@@ -2238,8 +2260,19 @@ def create_members_home_request(request_id=None):
              str(volunteer.is_fully_vetted))
         )
 
-    ##TODO: Define member_info
-    member_info = None 
+    member_info = []
+    for member in Member.query.all():
+        address = Address.query.get(member.primary_address_id)
+        street_address = address.address1
+        member_info.append(
+            (member.first_name + " " + member.last_name,
+             member.membership_expiration_date,
+             str(member.email_address),
+             member.primary_phone_number,
+             street_address
+             )
+        )
+
     return render_template('admin/request_manager/members_home_request.html',
                            title='Members Home Request',
                            form=form,
