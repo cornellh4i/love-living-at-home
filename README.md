@@ -1,8 +1,9 @@
-# flask-base
+# Love Living At Home
 [![Circle CI](https://circleci.com/gh/hack4impact/flask-base.svg?style=svg)](https://circleci.com/gh/hack4impact/flask-base) 
 [![Code Climate](https://codeclimate.com/github/hack4impact/flask-base/badges/gpa.svg)](https://codeclimate.com/github/hack4impact/flask-base/coverage)
 [![Issue Count](https://codeclimate.com/github/hack4impact/flask-base/badges/issue_count.svg)](https://codeclimate.com/github/hack4impact/flask-base) ![python3.x](https://img.shields.io/badge/python-3.x-brightgreen.svg)  ![python2.x](https://img.shields.io/badge/python-2.x-yellow.svg)
 
+Built with:
 ![flask-base](readme_media/logo.png)
 
 A Flask application template with the boilerplate code already done for you.
@@ -176,17 +177,16 @@ $ python manage.py setup_dev
 
 Note that this will create an admin user with email and password specified by the `ADMIN_EMAIL` and `ADMIN_PASSWORD` config variables. If not specified, they are both `flask-base-admin@example.com` and `password` respectively.
 
-##### [Optional] Add fake data to the database
+##### [Optional] Reset the DB and add fake data (do this when you first download)
 
 ```
-$ python manage.py add_fake_data
+$ bash reset_db.sh
 ```
 
 ## Running the app
 
 ```
-$ source env/bin/activate
-$ honcho start -e config.env -f Local
+$ bash start.sh
 ```
 
 For Windows users having issues with binding to a redis port locally, refer to [this issue](https://github.com/hack4impact/flask-base/issues/132).
