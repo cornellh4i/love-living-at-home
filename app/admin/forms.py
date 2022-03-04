@@ -176,13 +176,13 @@ class TransportationRequestForm(FlaskForm):
     service_category = SelectField(
         'Service Category:',
         render_kw={'onchange': "serviceChoices()"},
-        validators=[InputRequired()], coerce = int
+        validators=[InputRequired()], coerce=int
     )
 
     transportation_service = SelectField(
         'Service:',
         id="services",
-        validators=[Optional()], coerce = int)
+        validators=[Optional()], coerce=int)
 
     starting_location = StringField('Pickup Location:',
                                     validators=[InputRequired()])
@@ -727,8 +727,7 @@ class LocalResourceManager(FlaskForm):
 
 
 class AddMemberVolunteer(FlaskForm):
-    members = SelectField('Members', validators=[
-                          InputRequired()], coerce=int)
+    member = StringField('Member', validators=[InputRequired()])
     submit = SubmitField("Submit")
 
 
@@ -878,6 +877,7 @@ class EditDestinationAddressForm(FlaskForm):
                                        Length(max=45)])
     submit = SubmitField('Save Destination Address Information')
 
+
 class CompleteServiceRequestForm(FlaskForm):
     rating = IntegerField('Rating', validators=[Optional()])
     member_comments = TextAreaField('Member Comments', id="member_comments",
@@ -897,6 +897,7 @@ class CompleteServiceRequestForm(FlaskForm):
                             Optional(), NumberRange(min=0)])
     verified_by = SelectField('Verified by', coerce=int)
     submit = SubmitField('Save')
+
 
 class MakeIndividualCopiesForm(FlaskForm):
     number_of_individual_copies = IntegerField(
@@ -929,7 +930,7 @@ class MakeDailyRepeatingCopiesForm(FlaskForm):
     end_after_2_1 = IntegerField('End after', validators=[
                                  Optional(), NumberRange(min=1, max=50)])
     end_by_2_1 = DateField('End by', validators=[
-                              Optional()], render_kw={'disabled': ''},)
+        Optional()], render_kw={'disabled': ''},)
     submit2_1 = SubmitField('Copy Service Request')
 
 
@@ -957,7 +958,7 @@ class MakeWeeklyRepeatingCopiesForm(FlaskForm):
     end_after_2_2 = IntegerField('End after', validators=[
                                  Optional(), NumberRange(min=1, max=52)])
     end_by_2_2 = DateField('End by', validators=[
-                              Optional()], render_kw={'disabled': ''},)
+        Optional()], render_kw={'disabled': ''},)
     submit2_2 = SubmitField('Copy Service Request')
 
 
@@ -998,7 +999,7 @@ class MakeMonthlyRepeatingCopiesForm(FlaskForm):
     end_after_2_3 = IntegerField('End after', validators=[
                                  Optional(), NumberRange(min=1, max=24)])
     end_by_2_3 = DateField('End by', validators=[
-                              Optional()], render_kw={'disabled': ''},)
+        Optional()], render_kw={'disabled': ''},)
     submit2_3 = SubmitField('Copy Service Request')
 
 
@@ -1021,7 +1022,8 @@ class MakeYearlyRepeatingCopiesForm(FlaskForm):
         (11, 'November'),
         (12, 'December')
     ], validators=[Optional()], coerce=int)
-    day_choice = SelectField('', choices=[(i, i) for i in range(1, 32)], validators=[Optional()], coerce=int)
+    day_choice = SelectField('', choices=[(i, i) for i in range(
+        1, 32)], validators=[Optional()], coerce=int)
 
     # Ex. The First Sunday of January
     yearly_week_choice = SelectField('The',
@@ -1036,7 +1038,7 @@ class MakeYearlyRepeatingCopiesForm(FlaskForm):
         (4, 'Friday'),
         (5, 'Saturday'),
         (6, 'Sunday')
-    ], validators=[Optional()], coerce=int,render_kw={'disabled': ''})
+    ], validators=[Optional()], coerce=int, render_kw={'disabled': ''})
     yearly_month_choice = SelectField('of', choices=[
         (1, 'January'),
         (2, 'February'),
@@ -1050,7 +1052,7 @@ class MakeYearlyRepeatingCopiesForm(FlaskForm):
         (10, 'October'),
         (11, 'November'),
         (12, 'December')
-    ], validators=[Optional()], coerce=int,render_kw={'disabled': ''})
+    ], validators=[Optional()], coerce=int, render_kw={'disabled': ''})
 
     include_selected_service_providers = BooleanField(
         'Include Selected Service Provider(s)',
@@ -1061,7 +1063,7 @@ class MakeYearlyRepeatingCopiesForm(FlaskForm):
     end_after_2_4 = IntegerField('End after', validators=[
                                  Optional(), NumberRange(min=1, max=24)])
     end_by_2_4 = DateField('End by', validators=[
-                              Optional()], render_kw={'disabled': ''},)
+        Optional()], render_kw={'disabled': ''},)
     submit2_4 = SubmitField('Copy Service Request')
 
 

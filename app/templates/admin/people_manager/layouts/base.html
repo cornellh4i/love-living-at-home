@@ -86,7 +86,7 @@ description=None, icon=None) %}
     </i>
   </div>
 </div>
-<div class="content ui grid" style="padding:0">
+<div class="content ui grid filter-options" style="padding:0">
 
   <div class="four wide column">
     <div class="ui label">
@@ -189,7 +189,7 @@ description=None, icon=None) %}
         <h3>Search Results</h3>
         <div class="ui segment member-search-results">
           {% for m in members %}
-          <div class="ui fluid card" data-role={{"Member"}}>
+          <div class="ui fluid card member-card" data-role={{"Member"}}>
             {{member_card(m)}}
           </div>
           {% endfor %}
@@ -220,18 +220,18 @@ description=None, icon=None) %}
 
         <!-- Vetting Status Filter -->
         <div class="attached ui top segment">
-          <form class="ui form" id="member-filter-form">
+          <form class="ui form">
             <div class="grouped fields">
               <label>Vetting Status:</label>
               <div class="field">
-                <div class="ui checkbox">
-                  <input type="checkbox" name="volunteer_type" />
+                <div class="ui checkbox" id="filter-fully-vetted">
+                  <input id="fully-vetted" type="checkbox"/>
                   <label>Fully Vetted</label>
                 </div>
               </div>
               <div class="field">
-                <div class="ui checkbox">
-                  <input type="checkbox" name="volunteer_type" />
+                <div class="ui checkbox" id="filter-not-vetted">
+                  <input id="not-vetted" type="checkbox"/>
                   <label>Not Fully Vetted</label>
                 </div>
               </div>
@@ -241,18 +241,18 @@ description=None, icon=None) %}
 
         <!-- Volunteer Type Filter -->
         <div class="attached ui top segment">
-          <form class="ui form" id="member-filter-form">
+          <form class="ui form">
             <div class="grouped fields">
               <label>Volunteer Type:</label>
               <div class="field">
-                <div class="ui checkbox">
-                  <input type="checkbox" name="volunteer_type" />
+                <div class="ui checkbox" id="filter-member-volunteers">
+                  <input id="member-volunteers" type="checkbox"/>
                   <label>Member</label>
                 </div>
               </div>
               <div class="field">
-                <div class="ui checkbox">
-                  <input type="checkbox" name="volunteer_type" />
+                <div class="ui checkbox" id="filter-nonmember-volunteers">
+                  <input id="nonmem-volunteers" type="checkbox"/>
                   <label>Non-Member</label>
                 </div>
               </div>
@@ -266,7 +266,7 @@ description=None, icon=None) %}
         <h3>Search Results</h3>
         <div class="ui segment volunteer-search-results">
           {% for v in volunteers %}
-          <div class="ui fluid card" data-role={{"Volunteer"}}>
+          <div class="ui fluid card volunteer-card" data-role={{"Volunteer"}}>
             {{volunteer_card(v)}}
           </div>
           {% endfor %}
@@ -296,7 +296,7 @@ description=None, icon=None) %}
         <h3>Search Results</h3>
         <div class="ui segment local-resource-search-results">
           {% for lr in local_resources %}
-          <div class="ui fluid card" data-role={{"Local Resource"}}>
+          <div class="ui fluid card lr-card" data-role={{"Local Resource"}}>
             {{local_resource_card(lr)}}
           </div>
           {% endfor %}
@@ -316,43 +316,107 @@ description=None, icon=None) %}
       $("#{{ data.active }}-tab-menu").addClass('active');
     });
 
+    $('.tab #filter-fully-vetted').click(function () {
+      //fullyVetted contains past value!
+      var fullyVetted = !document.getElementById('fully-vetted').checked; 
+      var notVetted = document.getElementById('not-vetted').checked;
+      filterByVetting(fullyVetted, notVetted);
+    });
+
+    $('.tab #filter-not-vetted').click(function () {
+      //notVetted contains past value!
+      var fullyVetted = document.getElementById('fully-vetted').checked;
+      var notVetted = !document.getElementById('not-vetted').checked;
+      filterByVetting(fullyVetted, notVetted);
+    });
+
+    function filterByVetting(fullyVetted, notVetted){
+      var check = "Not Fully Vetted";
+      if (fullyVetted && !notVetted) {
+          $('.volunteer-card.hidden-vetting').removeClass('hidden-vetting');
+          $('.filter-options:icontains(' + check + ')').closest('.volunteer-card').addClass('hidden-vetting');
+          generateVolunteers();
+
+      } 
+      else if (notVetted && !fullyVetted) {
+          $('.volunteer-card.hidden-vetting').removeClass('hidden-vetting');
+          $('.filter-options').not(':icontains(' + check + ')').closest('.volunteer-card').addClass('hidden-vetting');
+          generateVolunteers();
+      }
+      else {
+          $('.volunteer-card.hidden-vetting').removeClass('hidden-vetting');
+          generateVolunteers();
+      }
+    }
+
+    $('.tab #filter-member-volunteers').click(function () {
+      //memberVolunteers contains past value!
+      var memberVolunteers = !document.getElementById('member-volunteers').checked; 
+      var nonmemberVolunteers = document.getElementById('nonmem-volunteers').checked;
+      filterByMemVol(memberVolunteers, nonmemberVolunteers);
+    });
+
+    $('.tab #filter-nonmember-volunteers').click(function () {
+      //nonmemberVolunteers contains past value!
+      var memberVolunteers = document.getElementById('member-volunteers').checked; 
+      var nonmemberVolunteers = !document.getElementById('nonmem-volunteers').checked;
+      filterByMemVol(memberVolunteers, nonmemberVolunteers);
+    });
+
+    function filterByMemVol(memberVolunteers, nonmemberVolunteers){
+      var check = "Non-Member Volunteer";
+      if (memberVolunteers && !nonmemberVolunteers) {
+          $('.volunteer-card.hidden-memvol').removeClass('hidden-memvol');
+          $('.filter-options:icontains(' + check + ')').closest('.volunteer-card').addClass('hidden-memvol');
+          generateVolunteers();
+      } 
+      else if (nonmemberVolunteers && !memberVolunteers) {
+          $('.volunteer-card.hidden-memvol').removeClass('hidden-memvol');
+          $('.filter-options').not(':icontains(' + check + ')').closest('.volunteer-card').addClass('hidden-memvol');
+          generateVolunteers();
+      }
+      else {
+          $('.volunteer-card.hidden-memvol').removeClass('hidden-memvol');
+          generateVolunteers();
+      }
+    }
+
+    $('.tab #search-volunteer').keyup(function () {
+        var searchText = $(this).val();
+        if (searchText.length > 0) {
+          $('.volunteer-card.hidden-volunteer').removeClass('hidden-volunteer');
+          $('.v-identity').not(':icontains(' + searchText + ')').closest('.volunteer-card').addClass('hidden-volunteer');
+          generateVolunteers();
+        } else {
+          $('.volunteer-card.hidden-volunteer').removeClass('hidden-volunteer');
+          generateVolunteers();
+        }
+      });
+    
+    function generateVolunteers(){
+      $('.volunteer-card').show();
+      $('.volunteer-card.hidden-vetting').hide();
+      $('.volunteer-card.hidden-memvol').hide();
+      $('.volunteer-card.hidden-volunteer').hide();
+    }
 
     $('.tab #search-member').keyup(function () {
         var searchText = $(this).val();
         if (searchText.length > 0) {
-          $('.m-identity:icontains(' + searchText + ')').addClass('positive');
-          $('.m-identity.positive').not(':icontains(' + searchText + ')').removeClass('positive');
-          $('.m-identity').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
-          $('.card.hidden .m-identity:icontains(' + searchText + ')').removeClass('hidden').show();
+          $('.member-card.hidden-member').removeClass('hidden-member').show();
+          $('.m-identity').not(':icontains(' + searchText + ')').closest('.member-card').addClass('hidden-member').hide();
         } else {
-          $('.m-identity.positive').removeClass('positive');
-          $('.card.hidden').removeClass('hidden').show();
-        }
-      });
-
-      $('.tab #search-volunteer').keyup(function () {
-        var searchText = $(this).val();
-        if (searchText.length > 0) {
-          $('.v-identity:icontains(' + searchText + ')').addClass('positive');
-          $('.v-identity.positive').not(':icontains(' + searchText + ')').removeClass('positive');
-          $('.v-identity').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
-          $('.card.hidden .v-identity:icontains(' + searchText + ')').removeClass('hidden').show();
-        } else {
-          $('.v-identity.positive').removeClass('positive');
-          $('.card.hidden').removeClass('hidden').show();
+          $('.member-card.hidden-member').removeClass('hidden-member').show();
         }
       });
 
       $('.tab #search-local-resource').keyup(function () {
         var searchText = $(this).val();
         if (searchText.length > 0) {
-          $('.lr-identity:icontains(' + searchText + ')').addClass('positive');
-          $('.lr-identity.positive').not(':icontains(' + searchText + ')').removeClass('positive');
-          $('.lr-identity').not(':icontains(' + searchText + ')').closest('.card').addClass('hidden').hide();
-          $('.card.hidden .lr-identity:icontains(' + searchText + ')').removeClass('hidden').show();
+          $('.lr-card.hidden-lr').removeClass('hidden-lr').show();
+          $('.lr-identity').not(':icontains(' + searchText + ')').closest('.lr-card').addClass('hidden-lr').hide();
         } else {
-          $('.lr-identity.positive').removeClass('positive');
-          $('.card.hidden').removeClass('hidden').show();
+          $('.lr-card.hidden-lr').removeClass('hidden-lr').show();
         }
       });
 
