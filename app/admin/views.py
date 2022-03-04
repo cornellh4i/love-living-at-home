@@ -428,7 +428,7 @@ def search_request():
                     RequestStatus.query.get(db_req.status_id).name,
                     'requested_date_display':
                     db_req.requested_date.strftime(
-                        "%m/%d") if db_req.requested_date else "",
+                        "%m/%d/%Y") if db_req.requested_date else "",
                     'requested_date_full':
                     db_req.requested_date.strftime(
                         "%m/%d/%Y") if db_req.requested_date else "",
@@ -469,7 +469,7 @@ def search_request():
                     'request_status':
                     RequestStatus.query.get(db_req.status_id).name,
                     'requested_date_display':
-                    db_req.requested_date.strftime("%m/%d"),
+                    db_req.requested_date.strftime("%m/%d/%Y"),
                     'requested_date_full':
                     db_req.requested_date.strftime("%m/%d/%Y"),
                     'requested_day_of_week':
@@ -508,7 +508,7 @@ def search_request():
                     'request_status':
                     RequestStatus.query.get(db_req.status_id).name,
                     'requested_date_display':
-                    db_req.requested_date.strftime("%m/%d"),
+                    db_req.requested_date.strftime("%m/%d/%Y"),
                     'requested_date_full':
                     db_req.requested_date.strftime("%m/%d/%Y"),
                     'requested_day_of_week':
