@@ -22,7 +22,8 @@ volunteer_ids,
 is_volunteer
 #}
 {% macro request_card(
-request_num, request_type_id,request_status, requested_date_display, requested_date_full, requested_day_of_week, start_time,
+request_num, request_type_id,request_status, requested_date_display, requested_date_full, requested_day_of_week,
+start_time,
 end_time, member_name, volunteer_name, request_type, service, created_date,
 modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %}
 <div class="ui one cards request-card" style="margin-top:20px">
@@ -31,13 +32,11 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
       <div class="header">
         {{request_type}} Request #<span class="request-number-value">{{request_num}}</span>
         <div class="ui right floated request-status-value">
-          {% if request_status == "Requested" %}
-          <div class="ui yellow label">{{request_status}}</div>
-          {% elif request_status == "Confirmed" %}
-          <div class="ui green label">{{request_status}}</div>
-          {% else %}
-          <div class="ui red label">{{request_status}}</div>
-          {% endif %}
+          <div class='{{"ui yellow label" if request_status == "Requested"
+            else "ui orange label" if request_status == "Confirmed"
+            else "ui green label" if request_status == "Completed"
+            else "ui red label"}}'>
+            {{request_status}}</div>
         </div>
       </div>
 
@@ -87,7 +86,7 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
             <p>{{modified_date}}</p>
           </div>
         </div>
-        <div class="one wide column" >
+        <div class="one wide column">
           <div style="width: 1px;
           background-color: black;
           height: 100%;
@@ -96,20 +95,21 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
         </div>
         <div class="one wide column" style="margin-left:-25px">
           <i style="margin-top: 15px" class="large pencil icon" style="cursor: pointer"
-          onclick=
-          "window.location.href = '{{ url_for('admin.create_transportation_request', request_id=request_num) if request_type_id == 0 else url_for('admin.create_office_time_request', request_id = request_num) if request_type_id==1 else url_for('admin.create_members_home_request', request_id = request_num) if request_type_id==2 else url_for('admin.search_request') }}';"></i>
-          <i style="margin-top: 20px; cursor:pointer" class= "large blue copy outline icon" title="Make Copy"
-          request_type_id = {{request_type_id}} request_num = {{request_num}} onclick = "window.location.href = '{{url_for('admin.make_copy', request_type_id=request_type_id, request_id=request_num)}}'"></i>
-          <i style="margin-top: 20px; cursor:pointer" class= "large red times circle icon cancel-request" title="Cancel" request_type_id = {{request_type_id}} request_num = {{request_num}}></i>
+            onclick="window.location.href = '{{ url_for('admin.create_transportation_request', request_id=request_num) if request_type_id == 0 else url_for('admin.create_office_time_request', request_id = request_num) if request_type_id==1 else url_for('admin.create_members_home_request', request_id = request_num) if request_type_id==2 else url_for('admin.search_request') }}';"></i>
+          <i style="margin-top: 20px; cursor:pointer" class="large blue copy outline icon" title="Make Copy"
+            request_type_id={{request_type_id}} request_num={{request_num}}
+            onclick="window.location.href = '{{url_for('admin.make_copy', request_type_id=request_type_id, request_id=request_num)}}'"></i>
+          <i style="margin-top: 20px; cursor:pointer" class="large red times circle icon cancel-request" title="Cancel"
+            request_type_id={{request_type_id}} request_num={{request_num}}></i>
           <div class="ui modal" id='modal-cancel-request-{{request_type_id}}-{{request_num}}'>
             <div class="header">Cancel Request</div>
             <div class="content">
               <p>Enter the reason for cancelling this service request. Click 'Save' when finished.</p>
-              <div class = "ui form">
+              <div class="ui form">
                 {{ form.csrf_token }}
-                <div class = "field">
+                <div class="field">
                   <label>Reason</label>
-                  <select id="reasons-{{request_type_id}}-{{request_num}}" name="reasons" class = "ui search dropdown">
+                  <select id="reasons-{{request_type_id}}-{{request_num}}" name="reasons" class="ui search dropdown">
                     <option selected>Select</option>
                     <option>Can't supply a service provider</option>
                     <option>Duplicate</option>
@@ -126,8 +126,7 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
               </div>
             </div>
             <div class="actions">
-              <div class="positive ui approve button"
-                onclick='cancelRequest(request_type_id,request_num)'>
+              <div class="positive ui approve button" onclick='cancelRequest(request_type_id,request_num)'>
                 Save
               </div>
               <div class="negative ui deny button">Cancel</div>
@@ -135,9 +134,11 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
           </div>
         </div>
         <div class="one wide column">
-          <i style="margin-top: 15px; cursor:pointer" class="large green check icon" title = "Confirm" request_type_id = {{request_type_id}} request_num = {{request_num}}
-          onclick="window.location.href = '{{ url_for('admin.confirm_request', request_type_id=request_type_id, request_id=request_num)}}';"></i>
-          <i style="margin-top: 20px"class= "large trash icon delete-request" style="cursor: pointer" request_type_id = {{request_type_id}} request_num = {{request_num}}></i>
+          <i style="margin-top: 15px; cursor:pointer" class="large green check icon" title="Confirm"
+            request_type_id={{request_type_id}} request_num={{request_num}}
+            onclick="window.location.href = '{{ url_for('admin.confirm_request', request_type_id=request_type_id, request_id=request_num)}}';"></i>
+          <i style="margin-top: 20px" class="large trash icon delete-request" style="cursor: pointer"
+            request_type_id={{request_type_id}} request_num={{request_num}}></i>
 
           <div class="ui modal" id='modal-delete-request-{{request_type_id}}-{{request_num}}'>
             <div class="header">Delete Request</div>
@@ -150,7 +151,7 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
               <div class="negative ui deny button">No</div>
             </div>
           </div>
-         
+
         </div>
       </div>
     </div>
@@ -158,10 +159,10 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
 </div>
 <script>
   $('.delete-request').click(function () {
-  request_type_id = $(this).attr('request_type_id');
-  request_num = $(this).attr('request_num');
-  $(`#modal-delete-request-${request_type_id}-${request_num}`).modal('show');
-});
+    request_type_id = $(this).attr('request_type_id');
+    request_num = $(this).attr('request_num');
+    $(`#modal-delete-request-${request_type_id}-${request_num}`).modal('show');
+  });
 
   $('.cancel-request').click(function () {
     request_type_id = $(this).attr('request_type_id');
@@ -169,7 +170,7 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
     $(`#modal-cancel-request-${request_type_id}-${request_num}`).modal('show');
   });
 
-  function cancelRequest(request_type_id,request_num) {
+  function cancelRequest(request_type_id, request_num) {
     let queryJSON = {};
     request_type_id = $(this).attr('request_type_id');
     request_num = $(this).attr('request_num');
@@ -182,14 +183,14 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
     fetch(`${protocol}//${host}/admin/cancel-request/${request_type_id}/${request_num}`, {
       method: "POST",
       headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-          "X-CSRFToken": document.getElementById("csrf_token").value,
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "X-CSRFToken": document.getElementById("csrf_token").value,
       },
       body: JSON.stringify(queryJSON)
     }).then(() => {
-            window.location.reload();
-        })
+      window.location.reload();
+    })
   }
 
 </script>
@@ -347,7 +348,8 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
     request.start_time,
     request.end_time, request.member_name, request.volunteer_name,
     request.request_type, request.service, request.created_date,
-    request.modified_date, request.service_category, request.member_numbers, request.volunteer_ids, request.is_volunteer)
+    request.modified_date, request.service_category, request.member_numbers, request.volunteer_ids,
+    request.is_volunteer)
     }}
     {% endfor %}
   </div>
