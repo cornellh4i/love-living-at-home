@@ -41,7 +41,7 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
       </div>
 
     </div>
-    <div class="content">
+    <div class="content togglethis">
       <div class="ui grid">
         <div class="four wide column">
           <div class="ui card">
@@ -49,7 +49,8 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
               <div class="header">{{requested_day_of_week}}</div>
             </div>
             <div class="content">
-              <h2><span class="requested-date-value" data-value={{requested_date_full}}>{% if requested_date_display %}
+              <h2><span class="requested-date-value" data-value={{requested_date_full}}>{% if requested_date_display
+                  %}
                   {{requested_date_display}}
                   {% else %}
                   N/A
@@ -157,7 +158,21 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
     </div>
   </div>
 </div>
+
 <script>
+  $(document).ready(function () {
+    $('[class^="header"]').on('click', function () {
+      var content = $(this).closest('.ui').children('[class^="content togglethis"]');
+      var text = document.getElementsByClassName("request-number-value")[0];
+      content.is(":visible") ? content.hide() : content.show();
+      if (!content.is(":visible")) {
+        text.textContent = "testing collapse";
+      } else {
+        text.textContent = "testing expand";
+      }
+    });
+  });
+
   $('.delete-request').click(function () {
     request_type_id = $(this).attr('request_type_id');
     request_num = $(this).attr('request_num');
@@ -336,7 +351,8 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
   {{f.end_form()}}
 
 
-  <h3 class="header">Search Results</h3><span class="number-of-requests" style="float: right">({{num_requests}} Results
+  <h3 class="header">Search Results</h3><span class="number-of-requests" style="float: right">({{num_requests}}
+    Results
     Found)</span>
 
   <hr />
