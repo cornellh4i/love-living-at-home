@@ -165,6 +165,7 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
       var content = $(this).closest('.ui').children('[class^="content togglethis"]');
       var text = document.getElementsByClassName("request-number-value")[0];
       content.is(":visible") ? content.hide() : content.show();
+      // alert(content);
       if (!content.is(":visible")) {
         text.textContent = "testing collapse";
       } else {
