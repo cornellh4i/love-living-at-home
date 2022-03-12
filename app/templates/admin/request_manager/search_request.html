@@ -29,7 +29,7 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
 <div class="ui one cards request-card" style="margin-top:20px">
   <div class="ui card">
     <div class="content" style="background-color: burlywood;">
-      <div class="header">
+      <div class="header toggler">
         {{request_type}} Request #<span class="request-number-value">{{request_num}}</span>
         <div class="ui right floated request-status-value">
           <div class='{{"ui yellow label" if request_status == "Requested"
@@ -161,11 +161,10 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
 
 <script>
   $(document).ready(function () {
-    $('[class^="header"]').on('click', function () {
-      var content = $(this).closest('.ui').children('[class^="content togglethis"]');
+    $(".toggler").off('click').click(function () {
+      var content = $(this).closest(".ui").children(".togglethis");
       var text = document.getElementsByClassName("request-number-value")[0];
       content.is(":visible") ? content.hide() : content.show();
-      // alert(content);
       if (!content.is(":visible")) {
         text.textContent = "testing collapse";
       } else {
