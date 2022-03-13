@@ -1230,11 +1230,11 @@ def make_yearly_repeating_copies(is_day_of_every_selected, make_yearly_repeating
                                                              weekday = MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
                                                              else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
                                                              FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
-                    and (date + relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
-                                              weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
-                                              else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
-                                              FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
-                        < end_by
+                        and (date + relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
+                                                  weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
+                                                  else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
+                                                  FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
+                    < end_by
                     ):
 
                 date += relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
@@ -1405,14 +1405,14 @@ def delete_request(request_type_id, request_id):
         request_type = "Member's Home"
         request = MembersHomeRequest.query.filter_by(id=request_id).first()
 
-    members = RequestMemberRecord.query.filter_by(
+    member_records = RequestMemberRecord.query.filter_by(
         request_id=request_id).filter_by(request_category_id=request_type_id).all()
-    for member in members:
-        db.session.delete(member)
-    volunteers = RequestVolunteerRecord.query.filter_by(
+    for member_record in member_records:
+        db.session.delete(member_record)
+    volunteer_records = RequestVolunteerRecord.query.filter_by(
         request_id=request_id).filter_by(request_category_id=request_type_id).all()
-    for volunteer in volunteers:
-        db.session.delete(volunteer)
+    for volunteer_record in volunteer_records:
+        db.session.delete(volunteer_record)
 
     db.session.delete(request)
     db.session.commit()
@@ -3568,15 +3568,42 @@ def service_info(service_id):
 @admin_required
 def delete_service(service_id):
     """Delete a service."""
+
     provided_services = ProvidedService.query.filter_by(
         service_id=service_id).all()
-    for provided_service in provided_services:
-        db.session.delete(provided_service)
-        db.session.commit()
+    if provided_services is not None:
+        for provided_service in provided_services:
+            if provided_service is not None:
+                if len(ProvidedService.query.filter_by(service_id=service_id).all()) > 1:
+                    db.session.delete(provided_service)
+                    db.session.commit()
+
+    transportation_requests = TransportationRequest.query.filter_by(
+        service_id=service_id).all()
+    office_time_requests = OfficeRequest.query.filter_by(
+        service_id=service_id).all()
+    members_home_requests = MembersHomeRequest.query.filter_by(
+        service_id=service_id).all()
+
+    requests_to_delete = transportation_requests + \
+        office_time_requests + members_home_requests
+    for request in requests_to_delete:
+        if request is not None:
+            delete_request(request.type_id, request.id) 
+            
+
     service = Service.query.filter_by(id=service_id).first()
-    db.session.delete(service)
-    db.session.commit()
-    flash('Successfully deleted service %s.' % service.name, 'success')
+    # category = Service.query.filter_by(id= service.category_id).first()
+    services = Service.query.filter_by(category_id = service.category_id).all()
+    if services is not None and len(services) <=1:
+        flash('Cannot delete last service in a service category.', 'error') 
+    if services is not None and len(services) > 1:
+        service = Service.query.filter_by(id=service_id).first()
+        db.session.delete(service)
+        db.session.commit()
+        flash('Successfully deleted service %s.' % service.name, 'success')
+
+
     return redirect(url_for('admin.registered_services'))
 
 
@@ -3664,19 +3691,44 @@ def new_service_category():
 @admin_required
 def delete_service_category(category_id):
     """Delete a service category."""
-    services = Service.query.filter_by(category_id=category_id).all()
-    for service in services:
-        provided_services = ProvidedService.query.filter_by(
-            service_id=service.id).all()
-        for provided_service in provided_services:
-            db.session.delete(provided_service)
-            db.session.commit()
-        db.session.delete(service)
     category = ServiceCategory.query.filter_by(id=category_id).first()
-    db.session.delete(category)
-    db.session.commit()
-    flash('Successfully deleted service category %s.' %
-          category.name, 'success')
+    categories = ServiceCategory.query.filter_by(request_type_id=category.request_type_id).all()
+    services = Service.query.filter_by(category_id=category_id).all()
+
+    transportation_requests = TransportationRequest.query.filter_by(
+        service_category_id=category_id).all()
+    office_time_requests = OfficeRequest.query.filter_by(
+        service_category_id=category_id).all()
+    members_home_requests = MembersHomeRequest.query.filter_by(
+        service_category_id=category_id).all()
+
+    requests_to_delete = transportation_requests + \
+        office_time_requests + members_home_requests
+    for request in requests_to_delete:
+        if request is not None:
+            delete_request(request.type_id, request.id)
+            db.session.commit()
+
+    if categories is not None and len(categories) <= 1:
+        flash('Cannot delete last service category of request form.', 'error')
+        
+    elif categories is not None and len(categories) > 1:
+        category = ServiceCategory.query.filter_by(id=category_id).first()
+        for service in services:
+            db.session.delete(service)
+            db.session.commit()
+            provided_services = ProvidedService.query.filter_by(
+                service_id=service.id).all()
+            for provided_service in provided_services:
+                if len(ProvidedService.query.filter_by(
+                service_id=service.id).all()) > 1:
+                    db.session.delete(provided_service)
+                    db.session.commit()
+        db.session.delete(category)
+        db.session.commit()
+        flash('Successfully deleted service category %s.' %
+            category.name, 'success')
+ 
     return redirect(url_for('admin.registered_service_categories'))
 
 ####

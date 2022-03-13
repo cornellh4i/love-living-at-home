@@ -3,9 +3,7 @@ from .. import db
 
 class Service(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(
-        db.String(), nullable=False
-    )  # Took out unique = true because some services have same names for different categories
+    name = db.Column(db.String(), nullable=False)
     category_id = db.Column(db.Integer,
                             db.ForeignKey('service_category.id'),
                             nullable=False)
