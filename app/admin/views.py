@@ -3568,41 +3568,37 @@ def service_info(service_id):
 @admin_required
 def delete_service(service_id):
     """Delete a service."""
+    service = Service.query.filter_by(id=service_id).first()
+    services = Service.query.filter_by(category_id=service.category_id).all()
 
-    provided_services = ProvidedService.query.filter_by(
-        service_id=service_id).all()
-    if provided_services is not None:
-        for provided_service in provided_services:
-            if provided_service is not None:
-                if len(ProvidedService.query.filter_by(service_id=service_id).all()) > 1:
+    if services is not None and len(services) <= 1:
+        flash('Cannot delete the last service in a service category.', 'error')
+
+    elif services is not None and len(services) > 1:
+        provided_services = ProvidedService.query.filter_by(
+            service_id=service_id).all()
+        if provided_services is not None:
+            for provided_service in provided_services:
+                if provided_service is not None:
                     db.session.delete(provided_service)
                     db.session.commit()
 
-    transportation_requests = TransportationRequest.query.filter_by(
-        service_id=service_id).all()
-    office_time_requests = OfficeRequest.query.filter_by(
-        service_id=service_id).all()
-    members_home_requests = MembersHomeRequest.query.filter_by(
-        service_id=service_id).all()
+        transportation_requests = TransportationRequest.query.filter_by(
+            service_id=service_id).all()
+        office_time_requests = OfficeRequest.query.filter_by(
+            service_id=service_id).all()
+        members_home_requests = MembersHomeRequest.query.filter_by(
+            service_id=service_id).all()
 
-    requests_to_delete = transportation_requests + \
-        office_time_requests + members_home_requests
-    for request in requests_to_delete:
-        if request is not None:
-            delete_request(request.type_id, request.id) 
-            
+        requests_to_delete = transportation_requests + \
+            office_time_requests + members_home_requests
+        for request in requests_to_delete:
+            if request is not None:
+                delete_request(request.type_id, request.id)
 
-    service = Service.query.filter_by(id=service_id).first()
-    # category = Service.query.filter_by(id= service.category_id).first()
-    services = Service.query.filter_by(category_id = service.category_id).all()
-    if services is not None and len(services) <=1:
-        flash('Cannot delete last service in a service category.', 'error') 
-    if services is not None and len(services) > 1:
-        service = Service.query.filter_by(id=service_id).first()
         db.session.delete(service)
         db.session.commit()
         flash('Successfully deleted service %s.' % service.name, 'success')
-
 
     return redirect(url_for('admin.registered_services'))
 
@@ -3692,43 +3688,44 @@ def new_service_category():
 def delete_service_category(category_id):
     """Delete a service category."""
     category = ServiceCategory.query.filter_by(id=category_id).first()
-    categories = ServiceCategory.query.filter_by(request_type_id=category.request_type_id).all()
-    services = Service.query.filter_by(category_id=category_id).all()
-
-    transportation_requests = TransportationRequest.query.filter_by(
-        service_category_id=category_id).all()
-    office_time_requests = OfficeRequest.query.filter_by(
-        service_category_id=category_id).all()
-    members_home_requests = MembersHomeRequest.query.filter_by(
-        service_category_id=category_id).all()
-
-    requests_to_delete = transportation_requests + \
-        office_time_requests + members_home_requests
-    for request in requests_to_delete:
-        if request is not None:
-            delete_request(request.type_id, request.id)
-            db.session.commit()
+    categories = ServiceCategory.query.filter_by(
+        request_type_id=category.request_type_id).all()
 
     if categories is not None and len(categories) <= 1:
-        flash('Cannot delete last service category of request form.', 'error')
-        
+        flash('Cannot delete the last service category of a request form.', 'error')
+
     elif categories is not None and len(categories) > 1:
-        category = ServiceCategory.query.filter_by(id=category_id).first()
+        transportation_requests = TransportationRequest.query.filter_by(
+            service_category_id=category_id).all()
+        office_time_requests = OfficeRequest.query.filter_by(
+            service_category_id=category_id).all()
+        members_home_requests = MembersHomeRequest.query.filter_by(
+            service_category_id=category_id).all()
+
+        requests_to_delete = transportation_requests + \
+            office_time_requests + members_home_requests
+        for request in requests_to_delete:
+            if request is not None:
+                delete_request(request.type_id, request.id)
+                db.session.commit()
+
+        services = Service.query.filter_by(category_id=category_id).all()
         for service in services:
-            db.session.delete(service)
-            db.session.commit()
             provided_services = ProvidedService.query.filter_by(
                 service_id=service.id).all()
-            for provided_service in provided_services:
-                if len(ProvidedService.query.filter_by(
-                service_id=service.id).all()) > 1:
-                    db.session.delete(provided_service)
-                    db.session.commit()
+            if provided_services is not None:
+                for provided_service in provided_services:
+                    if provided_service is not None:
+                        db.session.delete(provided_service)
+                        db.session.commit()
+            db.session.delete(service)
+            db.session.commit()
+
         db.session.delete(category)
         db.session.commit()
         flash('Successfully deleted service category %s.' %
-            category.name, 'success')
- 
+              category.name, 'success')
+
     return redirect(url_for('admin.registered_service_categories'))
 
 ####
