@@ -163,13 +163,32 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
   $(document).ready(function () {
     $(".toggler").off('click').click(function () {
       var content = $(this).closest(".ui").children(".togglethis");
-      var text = document.getElementsByClassName("request-number-value")[0];
+      //var text = $(this).closest(".ui").children(".toggler");
       content.is(":visible") ? content.hide() : content.show();
-      if (!content.is(":visible")) {
-        text.textContent = "testing collapse";
-      } else {
-        text.textContent = "testing expand";
-      }
+      // if (!content.is(":visible")) {
+      //   text.text("testing collapse");
+      // } else {
+      //   text.textContent = "testing expand";
+      // }
+    });
+
+    $('#toggle-all-request-cards').off('click').click(function() {
+        var request_cards =$(".togglethis");
+          for (var i = 0; i<request_cards.length; i++) {
+            if ($('#toggle-all-request-cards').text() == "Collapse All") {
+              request_cards.eq(i).hide();
+            }
+            else{
+              request_cards.eq(i).show();
+            }
+          }
+       if ($('#toggle-all-request-cards').text() == "Collapse All") {
+        $('#toggle-all-request-cards').text("Expand All");
+       }
+       else{
+        $('#toggle-all-request-cards').text("Collapse All");
+       }
+        
     });
   });
 
@@ -346,12 +365,16 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
   <div class="ui one column centered grid">
     <div class="ui small button" type="submit" id="apply-filter-button">Apply Filters</div>
     <div class="ui small button" type="submit" id="clear-filter-button">Clear Filters</div>
+    
 
   </div>
   {{f.end_form()}}
 
 
-  <h3 class="header">Search Results</h3><span class="number-of-requests" style="float: right">({{num_requests}}
+  <h3 class="header">Search Results</h3>
+  <div class= "ui small button" type = "submit" id="toggle-all-request-cards">Collapse All</div>
+  <span class="number-of-requests" style="float: right">({{num_requests}}
+    
     Results
     Found)</span>
 
