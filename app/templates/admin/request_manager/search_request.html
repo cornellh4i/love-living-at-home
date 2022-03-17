@@ -38,6 +38,9 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
             else "ui red label"}}'>
             {{request_status}}</div>
         </div>
+        <div class ="collapsed-information" hidden>({{requested_date_full}}, {{start_time}}, {{member_name}})
+        </div>
+
       </div>
 
     </div>
@@ -163,23 +166,26 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
   $(document).ready(function () {
     $(".toggler").off('click').click(function () {
       var content = $(this).closest(".ui").children(".togglethis");
-      //var text = $(this).closest(".ui").children(".toggler");
+      var text = $(this).closest(".toggler").children(".collapsed-information");
       content.is(":visible") ? content.hide() : content.show();
-      // if (!content.is(":visible")) {
-      //   text.text("testing collapse");
-      // } else {
-      //   text.textContent = "testing expand";
-      // }
+      if (!content.is(":visible")) {
+         text.show()
+       } else {
+         text.hide()
+       }
     });
 
     $('#toggle-all-request-cards').off('click').click(function() {
         var request_cards =$(".togglethis");
+        var request_heads = $(".collapsed-information");
           for (var i = 0; i<request_cards.length; i++) {
             if ($('#toggle-all-request-cards').text() == "Collapse All") {
               request_cards.eq(i).hide();
+              request_heads.eq(i).show();
             }
             else{
               request_cards.eq(i).show();
+              request_heads.eq(i).hide();
             }
           }
        if ($('#toggle-all-request-cards').text() == "Collapse All") {
@@ -188,9 +194,9 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
        else{
         $('#toggle-all-request-cards').text("Collapse All");
        }
-        
     });
   });
+
 
   $('.delete-request').click(function () {
     request_type_id = $(this).attr('request_type_id');
