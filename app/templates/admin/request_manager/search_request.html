@@ -165,13 +165,28 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
 <script>
   $(document).ready(function () {
     $(".toggler").off('click').click(function () {
-      var content = $(this).closest(".ui").children(".togglethis");
+      var collapsed_content = $(this).closest(".ui").children(".togglethis");
       var text = $(this).closest(".toggler").children(".collapsed-information");
-      content.is(":visible") ? content.hide() : content.show();
-      if (!content.is(":visible")) {
-         text.show()
+      var request_cards =$(".togglethis");
+      var all_cards_collapsed= true;
+      if (collapsed_content.is(":visible")) {
+        collapsed_content.hide() 
+        text.show()
        } else {
-         text.hide()
+        collapsed_content.show()
+        text.hide()
+       }
+       for (var i =0; i<request_cards.length; i++) {
+          if (request_cards.eq(i).is(":visible")) {
+            all_cards_collapsed = false;
+            break;
+          }
+       }
+       if (all_cards_collapsed) {
+        $('#toggle-all-request-cards').text("Expand All");
+       }
+       else {
+        $('#toggle-all-request-cards').text("Collapse All");
        }
     });
 
