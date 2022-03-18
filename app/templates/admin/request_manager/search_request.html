@@ -31,8 +31,9 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
     <div class="content" style="background-color: burlywood;">
       <div class="header toggler">
         {{request_type}} Request #<span class="request-number-value">{{request_num}}</span><span
-          class="collapsed-information" style="display:none">, {{requested_date_full}} {{start_time}},
-          {{volunteer_name}}</span>
+          class="collapsed-information" style="display:none">, {% if requested_date_full %} {{requested_date_full}}
+          {% else %} [No date set] {% endif %} {{start_time}},
+          {% if volunteer_name %} {{volunteer_name}} {% else %} [No volunteers assigned] {% endif %}</span>
         <div class="ui right floated request-status-value">
           <div class='{{"ui yellow label" if request_status == "Requested"
             else "ui orange label" if request_status == "Confirmed"
@@ -162,85 +163,6 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
   </div>
 </div>
 
-<script>
-  $('.toggler').off('click').click(function () {
-    var collapsed_content = $(this).closest('.ui').children('.togglethis');
-    var full_header = $(this).closest('.toggler').children('.collapsed-information');
-    var request_cards = $('.togglethis');
-    var all_cards_collapsed = true;
-    if (collapsed_content.is(":visible")) {
-      collapsed_content.hide();
-      full_header.show();
-    } else {
-      collapsed_content.show();
-      full_header.hide();
-    }
-    for (var i = 0; i < request_cards.length; i++) {
-      if (request_cards.eq(i).is(":visible")) {
-        all_cards_collapsed = false;
-        break;
-      }
-    }
-    if (all_cards_collapsed) {
-      $('#toggle-all-request-cards').text("Expand All");
-    } else {
-      $('#toggle-all-request-cards').text("Collapse All");
-    }
-  });
-
-  $('#toggle-all-request-cards').off('click').click(function () {
-    var request_cards = $('.togglethis');
-    var request_heads = $('.collapsed-information');
-    if ($('#toggle-all-request-cards').text() == "Collapse All") {
-      request_cards.hide();
-      request_heads.show();
-    } else {
-      request_cards.show();
-      request_heads.hide();
-    }
-    if ($('#toggle-all-request-cards').text() == "Collapse All") {
-      $('#toggle-all-request-cards').text("Expand All");
-    } else {
-      $('#toggle-all-request-cards').text("Collapse All");
-    }
-  });
-
-  $('.delete-request').click(function () {
-    request_type_id = $(this).attr('request_type_id');
-    request_num = $(this).attr('request_num');
-    $(`#modal-delete-request-${request_type_id}-${request_num}`).modal('show');
-  });
-
-  $('.cancel-request').click(function () {
-    request_type_id = $(this).attr('request_type_id');
-    request_num = $(this).attr('request_num');
-    $(`#modal-cancel-request-${request_type_id}-${request_num}`).modal('show');
-  });
-
-  function cancelRequest(request_type_id, request_num) {
-    let queryJSON = {};
-    request_type_id = $(this).attr('request_type_id');
-    request_num = $(this).attr('request_num');
-    const select = document.getElementById(`reasons-${request_type_id}-${request_num}`).value;
-
-    queryJSON['reason'] = select;
-
-    const protocol = window.location.protocol;
-    const host = window.location.host;
-    fetch(`${protocol}//${host}/admin/cancel-request/${request_type_id}/${request_num}`, {
-      method: "POST",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "X-CSRFToken": document.getElementById("csrf_token").value,
-      },
-      body: JSON.stringify(queryJSON)
-    }).then(() => {
-      window.location.reload();
-    })
-  }
-
-</script>
 {% endmacro %}
 
 {# Render a multiple select dropdown field for filtering purposes.

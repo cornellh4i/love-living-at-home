@@ -469,11 +469,14 @@ def search_request():
                     'request_status':
                     RequestStatus.query.get(db_req.status_id).name,
                     'requested_date_display':
-                    db_req.requested_date.strftime("%m/%d/%Y"),
+                    db_req.requested_date.strftime(
+                        "%m/%d/%Y") if db_req.requested_date else "",
                     'requested_date_full':
-                    db_req.requested_date.strftime("%m/%d/%Y"),
+                    db_req.requested_date.strftime(
+                        "%m/%d/%Y") if db_req.requested_date else "",
                     'requested_day_of_week':
-                    db_req.requested_date.strftime("%A"),
+                    db_req.requested_date.strftime(
+                        "%A") if db_req.requested_date else "",
                     'start_time':
                     db_req.start_time.strftime("%I:%M %p"),
                     'end_time':
@@ -508,11 +511,14 @@ def search_request():
                     'request_status':
                     RequestStatus.query.get(db_req.status_id).name,
                     'requested_date_display':
-                    db_req.requested_date.strftime("%m/%d/%Y"),
+                    db_req.requested_date.strftime(
+                        "%m/%d/%Y") if db_req.requested_date else "",
                     'requested_date_full':
-                    db_req.requested_date.strftime("%m/%d/%Y"),
+                    db_req.requested_date.strftime(
+                        "%m/%d/%Y") if db_req.requested_date else "",
                     'requested_day_of_week':
-                    db_req.requested_date.strftime("%A"),
+                    db_req.requested_date.strftime(
+                        "%A") if db_req.requested_date else "",
                     'start_time':
                     db_req.from_time.strftime("%I:%M %p"),
                     'end_time':
@@ -1227,15 +1233,15 @@ def make_yearly_repeating_copies(is_day_of_every_selected, make_yearly_repeating
             date = new_service_date
             counter = 0
             if (new_service_date < (date + relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
-                                                         weekday = MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
-                                                         else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
-                                                         FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
-                and (date + relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
-                                                  weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
-                                                  else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
-                                                  FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
-                    < end_by
-                ):
+                                                             weekday = MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
+                                                             else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
+                                                             FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
+                    and (date + relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
+                                              weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
+                                              else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
+                                              FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
+                        < end_by
+                    ):
 
                 date += relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
                                       weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
