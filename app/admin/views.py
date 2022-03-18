@@ -469,8 +469,10 @@ def search_request():
                     'request_status':
                     RequestStatus.query.get(db_req.status_id).name,
                     'requested_date_display':
+
                     db_req.requested_date.strftime(
                         "%m/%d/%Y") if db_req.requested_date else "",
+
                     'requested_date_full':
                     db_req.requested_date.strftime(
                         "%m/%d/%Y") if db_req.requested_date else "",
@@ -511,8 +513,10 @@ def search_request():
                     'request_status':
                     RequestStatus.query.get(db_req.status_id).name,
                     'requested_date_display':
+
                     db_req.requested_date.strftime(
                         "%m/%d/%Y") if db_req.requested_date else "",
+
                     'requested_date_full':
                     db_req.requested_date.strftime(
                         "%m/%d/%Y") if db_req.requested_date else "",
@@ -1236,11 +1240,13 @@ def make_yearly_repeating_copies(is_day_of_every_selected, make_yearly_repeating
                                                              weekday = MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
                                                              else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
                                                              FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
-                    and (date + relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
-                                              weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
-                                              else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
-                                              FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
-                        < end_by
+
+                        and (date + relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
+                                                  weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
+                                                  else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
+                                                  FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
+                    < end_by
+
                     ):
 
                 date += relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
@@ -1411,14 +1417,14 @@ def delete_request(request_type_id, request_id):
         request_type = "Member's Home"
         request = MembersHomeRequest.query.filter_by(id=request_id).first()
 
-    members = RequestMemberRecord.query.filter_by(
+    member_records = RequestMemberRecord.query.filter_by(
         request_id=request_id).filter_by(request_category_id=request_type_id).all()
-    for member in members:
-        db.session.delete(member)
-    volunteers = RequestVolunteerRecord.query.filter_by(
+    for member_record in member_records:
+        db.session.delete(member_record)
+    volunteer_records = RequestVolunteerRecord.query.filter_by(
         request_id=request_id).filter_by(request_category_id=request_type_id).all()
-    for volunteer in volunteers:
-        db.session.delete(volunteer)
+    for volunteer_record in volunteer_records:
+        db.session.delete(volunteer_record)
 
     db.session.delete(request)
     db.session.commit()
@@ -2855,6 +2861,18 @@ def invite_volunteer(user_id=None, member_volunteer=None):
                 updated_member = member
                 updated_member.volunteer_id = volunteer.id
                 updated_member.salutation = form.salutation.data
+
+                old_member_primary_address = Address.query.filter_by(
+                    id=member.primary_address_id).first()
+                if old_member_primary_address is not None:
+                    db.session.delete(old_member_primary_address)
+                    db.session.commit()
+                old_member_secondary_address = Address.query.filter_by(
+                    id=member.secondary_address_id).first()
+                if old_member_secondary_address is not None:
+                    db.session.delete(old_member_secondary_address)
+                    db.session.commit()
+
                 updated_member.primary_address_id = primary_address.id
                 updated_member.secondary_address_id = secondary_address.id if secondary_address else None
                 updated_member.first_name = form.first_name.data
@@ -2889,20 +2907,20 @@ def invite_volunteer(user_id=None, member_volunteer=None):
 def invite_member_volunteer():
     """Invites a user to create a member volunteer account"""
     form = AddMemberVolunteer()
-    form.members.choices = [
+    member_choices = [
         (member.id, member.first_name + " " + member.last_name)
-        for member in Member.query.all()
+        for member in Member.query.filter_by(volunteer_id=None).all()
     ]
 
     if form.validate_on_submit():
-        member_name = dict(form.members.choices).get(form.members.data)
-        member_first_name = member_name.split()[0]
+        member_name = form.member.data
+        member_first_name = member_name.split()[0].capitalize()
         member = Member.query.filter_by(
             first_name=member_first_name).first()
 
         return redirect(url_for('admin.invite_volunteer', user_id=member.id, member_volunteer=True))
 
-    return render_template('admin/people_manager/member_volunteer.html', form=form)
+    return render_template('admin/people_manager/member_volunteer.html', form=form, member_choices=member_choices)
 
 
 @admin.route('/invite-local-resource', methods=['GET', 'POST'])
@@ -3158,43 +3176,26 @@ def add_volunteer_vacation(volunteer_id=None):
                                          volunteer.last_name)
 
     if form.validate_on_submit():
-        start_before_end = True
-        if form.start_date.data >= form.end_date.data:
-            start_before_end = False
-
-        if not start_before_end:
+        if form.start_date.data > form.end_date.data:
             flash(
                 'The starting date of the vacation must come before the ending date!', 'error')
             return redirect(url_for('admin.add_volunteer_vacation', volunteer_id=volunteer_id))
 
+        elif form.end_date.data < current_date:
+            flash(
+                'The ending date of the vacation must come after the current date!', 'error')
+            return redirect(url_for('admin.add_volunteer_vacation', volunteer_id=volunteer_id))
+
         else:
-            add_new_vacation = True
-            # Vacation Overlap Handling
-            # for v in vacations:
-            #    if (v.start_date >= form.start_date.data and v.start_date <= form.end_date.data) or (v.end_date >= form.start_date.data and v.end_date <= form.end_date.data) or (v.start_date <= form.start_date.data and v.end_date >= form.end_date.data):
-            #         add_new_vacation = False
-            #         updated_vacation = v
-            #         updated_vacation.start_date = form.start_date.data
-            #         updated_vacation.end_date = form.end_date.data
-            #         not_duplicate = True
-            #         for vac in vacations:
-            #             if updated_vacation.id != vac.id and updated_vacation.start_date == vac.start_date and updated_vacation.end_date == vac.end_date:
-            #                 not_duplicate = False
-            #                 db.session.delete(updated_vacation)
-            #                 db.session.commit()
-            #         if not_duplicate:
-            #             db.session.add(updated_vacation)
-            #             db.session.commit()
-            if add_new_vacation:
-                vacation = Vacation(
-                    start_date=form.start_date.data,
-                    end_date=form.end_date.data,
-                    v_id=volunteer_id)
-                db.session.add(vacation)
-                db.session.commit()
+            vacation = Vacation(
+                start_date=form.start_date.data,
+                end_date=form.end_date.data,
+                v_id=volunteer_id)
+            db.session.add(vacation)
+            db.session.commit()
 
             flash(
-                'Vacation for Volunteer {} successfully updated'.format(
+                'Vacation for Volunteer {} successfully added'.format(
                     volunteer.last_name), 'success')
             return redirect(url_for('admin.people_manager', active='volunteer'))
 
@@ -3421,17 +3422,26 @@ def delete_member(member_id):
     """Delete a member."""
     member = Member.query.filter_by(id=member_id).first()
 
-    # Delete addresses
-    primary_address = Address.query.filter_by(
-        id=member.primary_address_id).first()
-    if primary_address is not None:
-        db.session.delete(primary_address)
+    # Delete addresses unless the member is linked to a volunteer
+    if member.volunteer_id is not None:
+        linked_volunteer = Volunteer.query.filter_by(
+            id=member.volunteer_id).first()
+        linked_volunteer.member_id = None
+        linked_volunteer.is_member_volunteer = False
+        db.session.add(linked_volunteer)
         db.session.commit()
-    secondary_address = Address.query.filter_by(
-        id=member.secondary_address_id).first()
-    if secondary_address is not None:
-        db.session.delete(secondary_address)
-        db.session.commit()
+
+    else:
+        primary_address = Address.query.filter_by(
+            id=member.primary_address_id).first()
+        if primary_address is not None:
+            db.session.delete(primary_address)
+            db.session.commit()
+        secondary_address = Address.query.filter_by(
+            id=member.secondary_address_id).first()
+        if secondary_address is not None:
+            db.session.delete(secondary_address)
+            db.session.commit()
 
     # Delete member
     db.session.delete(member)
@@ -3449,19 +3459,27 @@ def delete_volunteer(volunteer_id):
     """Delete a volunteer."""
     volunteer = Volunteer.query.filter_by(id=volunteer_id).first()
 
-    # Delete addresses
-    primary_address = Address.query.filter_by(
-        id=volunteer.primary_address_id).first()
-    if primary_address is not None:
-        db.session.delete(primary_address)
-        db.session.commit()
-    secondary_address = Address.query.filter_by(
-        id=volunteer.secondary_address_id).first()
-    if secondary_address is not None:
-        db.session.delete(secondary_address)
+    # Delete addresses unless the volunteer is linked to a member
+    if volunteer.member_id is not None:
+        linked_member = Member.query.filter_by(
+            id=volunteer.member_id).first()
+        linked_member.volunteer_id = None
+        db.session.add(linked_member)
         db.session.commit()
 
-     # Delete availability
+    else:
+        primary_address = Address.query.filter_by(
+            id=volunteer.primary_address_id).first()
+        if primary_address is not None:
+            db.session.delete(primary_address)
+            db.session.commit()
+        secondary_address = Address.query.filter_by(
+            id=volunteer.secondary_address_id).first()
+        if secondary_address is not None:
+            db.session.delete(secondary_address)
+            db.session.commit()
+
+    # Delete availability
     availability = Availability.query.filter_by(
         id=volunteer.availability_id).first()
     if availability is not None:
@@ -3562,15 +3580,38 @@ def service_info(service_id):
 @admin_required
 def delete_service(service_id):
     """Delete a service."""
-    provided_services = ProvidedService.query.filter_by(
-        service_id=service_id).all()
-    for provided_service in provided_services:
-        db.session.delete(provided_service)
-        db.session.commit()
     service = Service.query.filter_by(id=service_id).first()
-    db.session.delete(service)
-    db.session.commit()
-    flash('Successfully deleted service %s.' % service.name, 'success')
+    services = Service.query.filter_by(category_id=service.category_id).all()
+
+    if services is not None and len(services) <= 1:
+        flash('Cannot delete the last service in a service category.', 'error')
+
+    elif services is not None and len(services) > 1:
+        provided_services = ProvidedService.query.filter_by(
+            service_id=service_id).all()
+        if provided_services is not None:
+            for provided_service in provided_services:
+                if provided_service is not None:
+                    db.session.delete(provided_service)
+                    db.session.commit()
+
+        transportation_requests = TransportationRequest.query.filter_by(
+            service_id=service_id).all()
+        office_time_requests = OfficeRequest.query.filter_by(
+            service_id=service_id).all()
+        members_home_requests = MembersHomeRequest.query.filter_by(
+            service_id=service_id).all()
+
+        requests_to_delete = transportation_requests + \
+            office_time_requests + members_home_requests
+        for request in requests_to_delete:
+            if request is not None:
+                delete_request(request.type_id, request.id)
+
+        db.session.delete(service)
+        db.session.commit()
+        flash('Successfully deleted service %s.' % service.name, 'success')
+
     return redirect(url_for('admin.registered_services'))
 
 
@@ -3658,19 +3699,45 @@ def new_service_category():
 @admin_required
 def delete_service_category(category_id):
     """Delete a service category."""
-    services = Service.query.filter_by(category_id=category_id).all()
-    for service in services:
-        provided_services = ProvidedService.query.filter_by(
-            service_id=service.id).all()
-        for provided_service in provided_services:
-            db.session.delete(provided_service)
-            db.session.commit()
-        db.session.delete(service)
     category = ServiceCategory.query.filter_by(id=category_id).first()
-    db.session.delete(category)
-    db.session.commit()
-    flash('Successfully deleted service category %s.' %
-          category.name, 'success')
+    categories = ServiceCategory.query.filter_by(
+        request_type_id=category.request_type_id).all()
+
+    if categories is not None and len(categories) <= 1:
+        flash('Cannot delete the last service category of a request form.', 'error')
+
+    elif categories is not None and len(categories) > 1:
+        transportation_requests = TransportationRequest.query.filter_by(
+            service_category_id=category_id).all()
+        office_time_requests = OfficeRequest.query.filter_by(
+            service_category_id=category_id).all()
+        members_home_requests = MembersHomeRequest.query.filter_by(
+            service_category_id=category_id).all()
+
+        requests_to_delete = transportation_requests + \
+            office_time_requests + members_home_requests
+        for request in requests_to_delete:
+            if request is not None:
+                delete_request(request.type_id, request.id)
+                db.session.commit()
+
+        services = Service.query.filter_by(category_id=category_id).all()
+        for service in services:
+            provided_services = ProvidedService.query.filter_by(
+                service_id=service.id).all()
+            if provided_services is not None:
+                for provided_service in provided_services:
+                    if provided_service is not None:
+                        db.session.delete(provided_service)
+                        db.session.commit()
+            db.session.delete(service)
+            db.session.commit()
+
+        db.session.delete(category)
+        db.session.commit()
+        flash('Successfully deleted service category %s.' %
+              category.name, 'success')
+
     return redirect(url_for('admin.registered_service_categories'))
 
 ####

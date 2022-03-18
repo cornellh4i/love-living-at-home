@@ -297,8 +297,8 @@
     for (let i = 1; i <= lastDay; i++) {
       let VacationDay = false;
       for (let j = 0; j< vacationStartDates.length; j++){
-        let startDate = new Date(vacationStartDates[j].textContent + 'T01:00:00');
-        let endDate = new Date(vacationEndDates[j].textContent + 'T23:00:00');
+        let startDate = new Date(vacationStartDates[j].textContent + 'T00:00:01');
+        let endDate = new Date(vacationEndDates[j].textContent + 'T23:59:59');
         const tempDate = new Date(date.toString());
         tempDate.setDate(i);
         if (tempDate >= startDate && tempDate <= endDate){

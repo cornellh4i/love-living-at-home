@@ -24,14 +24,34 @@
     {{ f.form_message(flashes['warning'], header='Check your email.', class='warning') }}
     {{ f.form_message(flashes['info'], header='Information', class='info') }}
     {{ f.form_message(flashes['success'], header='Success!', class='success') }}
-
-    {{f.render_form_field(form.members)}} 
-
-    <br>
+    
+    <div class="field">
+      <input name="member" type="hidden" id="member"></input>
+      <div id="select-member" class="ui search selection dropdown">
+        <input type="hidden" id="input"></input>
+        <i class="dropdown icon"></i>
+        <div class="default text">Members</div>
+        <div class="menu">
+            {% for choice in member_choices %}
+            <div class="item">{{choice[1]}}</div>
+            {% endfor %}
+        </div>
+      </div>
+    </div>
 
     {{f.render_form_field(form.submit)}} 
     
     {{ f.end_form() }} 
   </div>
 </div>
+
+<script language='javascript'>
+  $(document).ready(function () {
+    $('#select-member').dropdown({
+      onChange: function() {
+        document.getElementById('member').value=document.getElementById('input').value;
+      }
+    })
+  });
+</script>
 {% endblock %}
