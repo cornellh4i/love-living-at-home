@@ -29,8 +29,11 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
 <div class="ui one cards request-card" style="margin-top:20px">
   <div class="ui card">
     <div class="content" style="background-color: burlywood;">
-      <div class="header">
-        {{request_type}} Request #<span class="request-number-value">{{request_num}}</span>
+      <div class="header toggler">
+        {{request_type}} Request #<span class="request-number-value">{{request_num}}</span><span
+          class="collapsed-information" style="display:none">, {% if requested_date_full %} {{requested_date_full}}
+          {% else %} [No date set] {% endif %} {{start_time}},
+          {% if volunteer_name %} {{volunteer_name}} {% else %} [No volunteers assigned] {% endif %}</span>
         <div class="ui right floated request-status-value">
           <div class='{{"ui yellow label" if request_status == "Requested"
             else "ui orange label" if request_status == "Confirmed"
@@ -38,10 +41,11 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
             else "ui red label"}}'>
             {{request_status}}</div>
         </div>
+
       </div>
 
     </div>
-    <div class="content">
+    <div class="content togglethis">
       <div class="ui grid">
         <div class="four wide column">
           <div class="ui card">
@@ -49,7 +53,8 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
               <div class="header">{{requested_day_of_week}}</div>
             </div>
             <div class="content">
-              <h2><span class="requested-date-value" data-value={{requested_date_full}}>{% if requested_date_display %}
+              <h2><span class="requested-date-value" data-value={{requested_date_full}}>{% if requested_date_display
+                  %}
                   {{requested_date_display}}
                   {% else %}
                   N/A
@@ -157,43 +162,7 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
     </div>
   </div>
 </div>
-<script>
-  $('.delete-request').click(function () {
-    request_type_id = $(this).attr('request_type_id');
-    request_num = $(this).attr('request_num');
-    $(`#modal-delete-request-${request_type_id}-${request_num}`).modal('show');
-  });
 
-  $('.cancel-request').click(function () {
-    request_type_id = $(this).attr('request_type_id');
-    request_num = $(this).attr('request_num');
-    $(`#modal-cancel-request-${request_type_id}-${request_num}`).modal('show');
-  });
-
-  function cancelRequest(request_type_id, request_num) {
-    let queryJSON = {};
-    request_type_id = $(this).attr('request_type_id');
-    request_num = $(this).attr('request_num');
-    const select = document.getElementById(`reasons-${request_type_id}-${request_num}`).value;
-
-    queryJSON['reason'] = select;
-
-    const protocol = window.location.protocol;
-    const host = window.location.host;
-    fetch(`${protocol}//${host}/admin/cancel-request/${request_type_id}/${request_num}`, {
-      method: "POST",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "X-CSRFToken": document.getElementById("csrf_token").value,
-      },
-      body: JSON.stringify(queryJSON)
-    }).then(() => {
-      window.location.reload();
-    })
-  }
-
-</script>
 {% endmacro %}
 
 {# Render a multiple select dropdown field for filtering purposes.
@@ -332,11 +301,16 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
     <div class="ui small button" type="submit" id="apply-filter-button">Apply Filters</div>
     <div class="ui small button" type="submit" id="clear-filter-button">Clear Filters</div>
 
+
   </div>
   {{f.end_form()}}
 
 
-  <h3 class="header">Search Results</h3><span class="number-of-requests" style="float: right">({{num_requests}} Results
+  <h3 class="header">Search Results</h3>
+  <div class="ui mini button" type="submit" id="toggle-all-request-cards">Collapse All</div>
+  <span class="number-of-requests" style="float: right">({{num_requests}}
+
+    Results
     Found)</span>
 
   <hr />

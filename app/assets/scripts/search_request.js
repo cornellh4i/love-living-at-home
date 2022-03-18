@@ -141,7 +141,7 @@ $(document).ready(function () {
         .split(" ");
 
       for (const vol_id of volunteer_filter)
-        if(!volunteer_ids.includes(vol_id)) $this.hide();
+        if (!volunteer_ids.includes(vol_id)) $this.hide();
 
       // TODO: Date status filter ("Dated" vs "Undated")
       let requested_date = $this
@@ -196,13 +196,13 @@ $(document).ready(function () {
     $('.number-of-requests').text(
       $('.request-card:not([style*="display: none"])').length === 1
         ? '(' +
-            $('.request-card:not([style*="display: none"])').length +
-            ' Result Found' +
-            ')'
+        $('.request-card:not([style*="display: none"])').length +
+        ' Result Found' +
+        ')'
         : '(' +
-            $('.request-card:not([style*="display: none"])').length +
-            ' Results Found' +
-            ')'
+        $('.request-card:not([style*="display: none"])').length +
+        ' Results Found' +
+        ')'
     );
   });
 
@@ -411,3 +411,80 @@ $(document).ready(function () {
 
   return false;
 });
+
+$('.toggler').off('click').click(function () {
+  var collapsed_content = $(this).closest('.ui').children('.togglethis');
+  var full_header = $(this).closest('.toggler').children('.collapsed-information');
+  var request_cards = $('.togglethis');
+  var all_cards_collapsed = true;
+  if (collapsed_content.is(":visible")) {
+    collapsed_content.hide();
+    full_header.show();
+  } else {
+    collapsed_content.show();
+    full_header.hide();
+  }
+  for (var i = 0; i < request_cards.length; i++) {
+    if (request_cards.eq(i).is(":visible")) {
+      all_cards_collapsed = false;
+      break;
+    }
+  }
+  if (all_cards_collapsed) {
+    $('#toggle-all-request-cards').text("Expand All");
+  } else {
+    $('#toggle-all-request-cards').text("Collapse All");
+  }
+});
+
+$('#toggle-all-request-cards').off('click').click(function () {
+  var request_cards = $('.togglethis');
+  var request_heads = $('.collapsed-information');
+  if ($('#toggle-all-request-cards').text() == "Collapse All") {
+    request_cards.hide();
+    request_heads.show();
+  } else {
+    request_cards.show();
+    request_heads.hide();
+  }
+  if ($('#toggle-all-request-cards').text() == "Collapse All") {
+    $('#toggle-all-request-cards').text("Expand All");
+  } else {
+    $('#toggle-all-request-cards').text("Collapse All");
+  }
+});
+
+$('.delete-request').click(function () {
+  request_type_id = $(this).attr('request_type_id');
+  request_num = $(this).attr('request_num');
+  $(`#modal-delete-request-${request_type_id}-${request_num}`).modal('show');
+});
+
+$('.cancel-request').click(function () {
+  request_type_id = $(this).attr('request_type_id');
+  request_num = $(this).attr('request_num');
+  $(`#modal-cancel-request-${request_type_id}-${request_num}`).modal('show');
+});
+
+function cancelRequest(request_type_id, request_num) {
+  let queryJSON = {};
+  request_type_id = $(this).attr('request_type_id');
+  request_num = $(this).attr('request_num');
+  const select = document.getElementById(`reasons-${request_type_id}-${request_num}`).value;
+
+  queryJSON['reason'] = select;
+
+  const protocol = window.location.protocol;
+  const host = window.location.host;
+  fetch(`${protocol}//${host}/admin/cancel-request/${request_type_id}/${request_num}`, {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "X-CSRFToken": document.getElementById("csrf_token").value,
+    },
+    body: JSON.stringify(queryJSON)
+  }).then(() => {
+    window.location.reload();
+  })
+}
