@@ -30,15 +30,15 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
   <div class="ui card">
     <div class="content" style="background-color: burlywood;">
       <div class="header toggler">
-        {{request_type}} Request #<span class="request-number-value">{{request_num}}</span>
+        {{request_type}} Request #<span class="request-number-value">{{request_num}}</span><span
+          class="collapsed-information" style="display:none">, {{requested_date_full}} {{start_time}},
+          {{volunteer_name}}</span>
         <div class="ui right floated request-status-value">
           <div class='{{"ui yellow label" if request_status == "Requested"
             else "ui orange label" if request_status == "Confirmed"
             else "ui green label" if request_status == "Completed"
             else "ui red label"}}'>
             {{request_status}}</div>
-        </div>
-        <div class ="collapsed-information" hidden>({{requested_date_full}}, {{start_time}}, {{member_name}})
         </div>
 
       </div>
@@ -163,55 +163,47 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
 </div>
 
 <script>
-  $(document).ready(function () {
-    $(".toggler").off('click').click(function () {
-      var collapsed_content = $(this).closest(".ui").children(".togglethis");
-      var text = $(this).closest(".toggler").children(".collapsed-information");
-      var request_cards =$(".togglethis");
-      var all_cards_collapsed= true;
-      if (collapsed_content.is(":visible")) {
-        collapsed_content.hide() 
-        text.show()
-       } else {
-        collapsed_content.show()
-        text.hide()
-       }
-       for (var i =0; i<request_cards.length; i++) {
-          if (request_cards.eq(i).is(":visible")) {
-            all_cards_collapsed = false;
-            break;
-          }
-       }
-       if (all_cards_collapsed) {
-        $('#toggle-all-request-cards').text("Expand All");
-       }
-       else {
-        $('#toggle-all-request-cards').text("Collapse All");
-       }
-    });
-
-    $('#toggle-all-request-cards').off('click').click(function() {
-        var request_cards =$(".togglethis");
-        var request_heads = $(".collapsed-information");
-          for (var i = 0; i<request_cards.length; i++) {
-            if ($('#toggle-all-request-cards').text() == "Collapse All") {
-              request_cards.eq(i).hide();
-              request_heads.eq(i).show();
-            }
-            else{
-              request_cards.eq(i).show();
-              request_heads.eq(i).hide();
-            }
-          }
-       if ($('#toggle-all-request-cards').text() == "Collapse All") {
-        $('#toggle-all-request-cards').text("Expand All");
-       }
-       else{
-        $('#toggle-all-request-cards').text("Collapse All");
-       }
-    });
+  $('.toggler').off('click').click(function () {
+    var collapsed_content = $(this).closest('.ui').children('.togglethis');
+    var full_header = $(this).closest('.toggler').children('.collapsed-information');
+    var request_cards = $('.togglethis');
+    var all_cards_collapsed = true;
+    if (collapsed_content.is(":visible")) {
+      collapsed_content.hide();
+      full_header.show();
+    } else {
+      collapsed_content.show();
+      full_header.hide();
+    }
+    for (var i = 0; i < request_cards.length; i++) {
+      if (request_cards.eq(i).is(":visible")) {
+        all_cards_collapsed = false;
+        break;
+      }
+    }
+    if (all_cards_collapsed) {
+      $('#toggle-all-request-cards').text("Expand All");
+    } else {
+      $('#toggle-all-request-cards').text("Collapse All");
+    }
   });
 
+  $('#toggle-all-request-cards').off('click').click(function () {
+    var request_cards = $('.togglethis');
+    var request_heads = $('.collapsed-information');
+    if ($('#toggle-all-request-cards').text() == "Collapse All") {
+      request_cards.hide();
+      request_heads.show();
+    } else {
+      request_cards.show();
+      request_heads.hide();
+    }
+    if ($('#toggle-all-request-cards').text() == "Collapse All") {
+      $('#toggle-all-request-cards').text("Expand All");
+    } else {
+      $('#toggle-all-request-cards').text("Collapse All");
+    }
+  });
 
   $('.delete-request').click(function () {
     request_type_id = $(this).attr('request_type_id');
@@ -386,16 +378,16 @@ show_label – If true, text of selected menu items are displayed. Otherwise, on
   <div class="ui one column centered grid">
     <div class="ui small button" type="submit" id="apply-filter-button">Apply Filters</div>
     <div class="ui small button" type="submit" id="clear-filter-button">Clear Filters</div>
-    
+
 
   </div>
   {{f.end_form()}}
 
 
   <h3 class="header">Search Results</h3>
-  <div class= "ui small button" type = "submit" id="toggle-all-request-cards">Collapse All</div>
+  <div class="ui mini button" type="submit" id="toggle-all-request-cards">Collapse All</div>
   <span class="number-of-requests" style="float: right">({{num_requests}}
-    
+
     Results
     Found)</span>
 
