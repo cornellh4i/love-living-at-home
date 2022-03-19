@@ -469,10 +469,8 @@ def search_request():
                     'request_status':
                     RequestStatus.query.get(db_req.status_id).name,
                     'requested_date_display':
-
                     db_req.requested_date.strftime(
                         "%m/%d/%Y") if db_req.requested_date else "",
-
                     'requested_date_full':
                     db_req.requested_date.strftime(
                         "%m/%d/%Y") if db_req.requested_date else "",
@@ -513,10 +511,8 @@ def search_request():
                     'request_status':
                     RequestStatus.query.get(db_req.status_id).name,
                     'requested_date_display':
-
                     db_req.requested_date.strftime(
                         "%m/%d/%Y") if db_req.requested_date else "",
-
                     'requested_date_full':
                     db_req.requested_date.strftime(
                         "%m/%d/%Y") if db_req.requested_date else "",
@@ -578,7 +574,8 @@ def make_individual_transportation_copies(
             initial_pickup_time=new_service_times[i],
             appointment_time=request_obj.appointment_time,
             return_pickup_time=request_obj.return_pickup_time,
-            drop_off_time=request_obj.drop_off_time,
+            drop_off_time=(datetime.combine(new_service_dates[i], new_service_times[i]) + (datetime.combine(new_service_dates[i], request_obj.drop_off_time) -
+                                                                                           datetime.combine(new_service_dates[i], request_obj.initial_pickup_time))).time(),
             is_date_time_flexible=request_obj.is_date_time_flexible,
             duration_type_id=request_obj.duration_type_id,
             service_category_id=request_obj.service_category_id,
@@ -630,7 +627,8 @@ def make_individual_office_copies(
             short_description=request_obj.short_description,
             requested_date=new_service_dates[i],
             start_time=new_service_times[i],
-            end_time=request_obj.end_time,
+            end_time=(datetime.combine(new_service_dates[i], new_service_times[i]) + (datetime.combine(new_service_dates[i], request_obj.end_time) -
+                                                                                      datetime.combine(new_service_dates[i], request_obj.start_time))).time(),
             is_high_priority=request_obj.is_high_priority,
             service_category_id=request_obj.service_category_id,
             service_id=request_obj.service_id,
@@ -678,7 +676,8 @@ def make_individual_members_home_copies(
             short_description=request_obj.short_description,
             requested_date=new_service_dates[i],
             from_time=new_service_times[i],
-            until_time=request_obj.until_time,
+            until_time=(datetime.combine(new_service_dates[i], new_service_times[i]) + (datetime.combine(new_service_dates[i], request_obj.until_time) -
+                                                                                        datetime.combine(new_service_dates[i], request_obj.from_time))).time(),
             is_date_time_flexible=request_obj.is_date_time_flexible,
             service_category_id=request_obj.service_category_id,
             service_id=request_obj.service_id,
