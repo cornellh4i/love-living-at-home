@@ -1434,6 +1434,100 @@ def delete_request(request_type_id, request_id):
     return redirect(url_for('admin.search_request'))
 
 
+@admin.route('/filter-service-providers', methods=['GET', 'POST'])
+def filter_service_providers():
+    req_json = request.get_json()
+    id_list = req_json["serviceProviders"]
+    final_id_list = []
+    initial_pickup = datetime.strptime(
+        req_json["initialPickup"], "%a, %d %b %Y %H:%M:%S %Z").time()
+    return_pickup = datetime.strptime(
+        req_json["returnPickup"], "%a, %d %b %Y %H:%M:%S %Z").time()
+    requested_date = datetime.strptime(
+        req_json["requestedDate"], "%a, %d %b %Y %H:%M:%S %Z").date()
+    requested_day = requested_date.weekday()
+
+    for id in id_list:
+        # Compare each volunteer's availability on the requested day to the requested time
+        availability = Availability.query.filter_by(
+            id=id).first()
+
+        # Determine which availabilities we're looking at depending on req day
+        vol_day_mapping = {
+            0: [
+                availability.availability_monday_start,
+                availability.availability_monday_end
+            ],
+            1: [
+                availability.availability_tuesday_start,
+                availability.availability_tuesday_end
+            ],
+            2: [
+                availability.availability_wednesday_start,
+                availability.availability_wednesday_end
+            ],
+            3: [
+                availability.availability_thursday_start,
+                availability.availability_thursday_end
+            ],
+            4: [
+                availability.availability_friday_start,
+                availability.availability_friday_end
+            ],
+            5: [
+                availability.availability_saturday_start,
+                availability.availability_saturday_end
+            ],
+            6: [
+                availability.availability_sunday_start,
+                availability.availability_sunday_end
+            ]
+        }
+
+        vol_avail_start, vol_avail_end = vol_day_mapping[requested_day]
+
+        if vol_avail_start is not None and vol_avail_end is not None:
+            if initial_pickup <= return_pickup and initial_pickup >= vol_avail_start and return_pickup <= vol_avail_end:
+                final_id_list.append(id)
+                no_conflicts = True
+                # Check if the volunteers are on vacation
+                for vacation in Vacation.query.filter_by(v_id=id).all():
+                    if vacation.start_date <= requested_date and vacation.end_date >= requested_date:
+                        if no_conflicts:
+                            no_conflicts = False
+                            final_id_list.remove(id)
+                # Check if there are any overlapping requests for each volunteer
+                for volunteer_request in RequestVolunteerRecord.query.filter_by(volunteer_id=id).all():
+                    # Transportation Request
+                    if volunteer_request.request_category_id == 0:
+                        current_request = TransportationRequest.query.filter_by(
+                            id=volunteer_request.request_id).first()
+                        crequest_date = current_request.requested_date
+                        crequest_start = current_request.initial_pickup_time
+                        crequest_end = current_request.return_pickup_time
+                    # Office Request
+                    elif volunteer_request.request_category_id == 1:
+                        current_request = OfficeRequest.query.filter_by(
+                            id=volunteer_request.request_id).first()
+                        crequest_date = current_request.requested_date
+                        crequest_start = current_request.start_time
+                        crequest_end = current_request.end_time
+                    # Member's Home Request
+                    elif volunteer_request.request_category_id == 2:
+                        current_request = MembersHomeRequest.query.filter_by(
+                            id=volunteer_request.request_id).first()
+                        crequest_date = current_request.requested_date
+                        crequest_start = current_request.from_time
+                        crequest_end = current_request.until_time
+                    if crequest_date == requested_date:
+                        if (crequest_start >= initial_pickup and crequest_start <= return_pickup) or (crequest_end >= initial_pickup and crequest_end <= return_pickup):
+                            if no_conflicts:
+                                no_conflicts = False
+                                final_id_list.remove(id)
+
+    return json.dumps(final_id_list)                               
+
+  
 @ admin.route('/cancel-request/<int:request_type_id>/<int:request_id>', methods=['GET', 'POST'])
 @ login_required
 @ admin_required
@@ -1544,64 +1638,6 @@ def confirm_request(request_type_id, request_id):
                            form=form, service_category=service_category, service=service,
                            member_name=member_name, volunteer_name=volunteer_name,
                            requested_date=requested_date, start_time=start_time.strftime("%I:%M %p"))
-
-
-@admin.route('/filter-service-providers', methods=['POST'])
-def filter_service_providers():
-    id_list = request.json.selected
-    final_id_list = id_list
-
-    initial_pickup = request.json.initialPickup
-    return_pickup = request.json.returnPickup
-    requested_date = request.json.requestedDate
-    requested_day = requested_date.weekday()
-    weekdays = ["monday", "tuesday", "wednesday",
-                "thursday", "friday", "saturday", "sunday"]
-    for id in id_list:
-        volunteer = Volunteer.query.filter_by(id=id).first()
-
-        # Compare each volunteer's availability on the requested day to the requested time
-        availability = Availability.query.filter_by(
-            id=volunteer.availability_id).first()
-        vol_avail_start = availability[f"availability_{weekdays[requested_day]}_start"]
-        vol_avil_end = availability[f"availability_{weekdays[requested_day]}_end"]
-        if not(initial_pickup >= vol_avail_start and return_pickup <= vol_avil_end):
-            final_id_list.remove(id)
-
-        # Check if there are any overlapping requests for each volunteer
-        request_volunteer_records = RequestVolunteerRecord.query.filter_by(
-            volunteer_id=id).all()
-        for request_volunteer_record in request_volunteer_records:
-            # Transportation Request
-            if request_volunteer_record.request_category_id == 0:
-                current_request = TransportationRequest.query.filter_by(
-                    id=request_volunteer_record.request_id).first()
-                crequest_date = current_request.requested_date
-                crequest_start = current_request.initial_pickup_time
-                crequest_end = current_request.return_pickup_time
-            # Office Request
-            elif request_volunteer_record.request_category_id == 1:
-                current_request = OfficeRequest.query.filter_by(
-                    id=request_volunteer_record.request_id).first()
-                crequest_date = current_request.requested_date
-                crequest_start = current_request.start_time
-                crequest_end = current_request.end_time
-            # Member's Home Request
-            elif request_volunteer_record.request_category_id == 2:
-                current_request = MembersHomeRequest.query.filter_by(
-                    id=request_volunteer_record.request_id).first()
-                crequest_date = current_request.requested_date
-                crequest_start = current_request.from_time
-                crequest_end = current_request.until_time
-            if crequest_date == requested_date:
-                if (crequest_start >= initial_pickup and crequest_start <= return_pickup) or (crequest_end >= initial_pickup and crequest_end <= return_pickup):
-                    final_id_list.remove(id)
-        # Check if the volunteers are on vacation
-        for vacation in Vacation.query.filter_by(v_id=id):
-            if vacation.start_date <= requested_date and vacation.end_date >= requested_date:
-                final_id_list.remove(id)
-
-    return json.dumps(final_id_list)
 
 
 # Create a new service request

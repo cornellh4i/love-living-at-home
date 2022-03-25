@@ -19,11 +19,11 @@
   </div>
 
 
-  <div id = "members" class="twelve wide column">
+  <div class="twelve wide column">
     {{ f.render_form_field(form.requesting_member)}}
   </div>
 
-
+  <div id="members" class="twelve wide column"></div>
 
   <div class="twelve wide column">
     <div class="ui two column stackable relaxed grid">
@@ -61,23 +61,18 @@
       <div class="right floated six wide column"></div>
     </div>
 
-    <style>
-      .column {
-        position: relative;
-      }
-
-      .column .side-button {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-      }
-    </style>
-
     <div class="twelve wide column">
-      <div id="providers" class="twelve wide column">
-        {{ f.render_form_field(form.service_provider)}}
+      {{ f.render_form_field(form.service_provider)}}
+
+      <div id="providers" class="twelve wide column"></div>
+
+      <!-- Checkbox to filter available service providers -->
+      <div class="ui checkbox">
+        <input type="checkbox" id="filter-checkbox" onclick="filterProviders()">
+        <label>Show Available Service Providers</label>
       </div>
-      <div class="four fields" style="margin-top: 10px">
+      
+      <div class="four fields" style = "margin-top: 10px">
         <div class="field">
           <button id="show-send-req-modal" class="ui purple basic button" type="button">
             Send Request
@@ -169,7 +164,6 @@
       </div>
     </div>
 
-
     <p id="special-instructions" style="display: none">
       {{form.special_instructions_list}}
     </p>
@@ -205,91 +199,154 @@
       </div>
       {{ f.end_form() }}
     </div>
-  </div>
+</div>
 
-  <script>
-    $('#show-send-req-modal').click(() => {
-      $('#send-req-modal').modal('show');
-    });
-
-    $('#show-confirmation-modal').click(() => {
-      $('#confirmation-modal').modal('show');
-    });
-
-    $('#show-not-needed-modal').click(() => {
-      $('#not-needed-modal').modal('show');
-    });
-
-    $('#show-summary-modal').click(() => {
-      $('#summary-modal').modal('show');
-    });
-  </script>
 <script>
-    function serviceChoices(){
-      let service_category = document.getElementById('service_category').value;
-      let service_select = document.getElementById('services');
-      const protocol = window.location.protocol;
-      const host = window.location.host;
-      fetch(`${protocol}//${host}/admin/create-request/${service_category}`, {
-        }).then(function(response){
-          response.json().then(function(data){
-            console.log(data);
-            let optionHTML = '';
-            for (let service of data.services){
-              optionHTML += '<option value="' + service.id + '">' + service.name + '</option>'
-            }
-            service_select.innerHTML = optionHTML;
-          })
+  $('#show-send-req-modal').click(() => {
+    $('#send-req-modal').modal('show');
+  });
 
+  $('#show-confirmation-modal').click(() => {
+    $('#confirmation-modal').modal('show');
+  });
+
+  $('#show-not-needed-modal').click(() => {
+    $('#not-needed-modal').modal('show');
+  });
+
+  $('#show-summary-modal').click(() => {
+    $('#summary-modal').modal('show');
+  });
+
+  function serviceChoices(){
+    let service_category = document.getElementById('service_category').value;
+    let service_select = document.getElementById('services');
+    const protocol = window.location.protocol;
+    const host = window.location.host;
+    fetch(`${protocol}//${host}/admin/create-request/${service_category}`, {
+      }).then(function(response){
+        response.json().then(function(data){
+          console.log(data);
+          let optionHTML = '';
+          for (let service of data.services){
+            optionHTML += '<option value="' + service.id + '">' + service.name + '</option>'
+          }
+          service_select.innerHTML = optionHTML;
         })
-    }
 
-    function specialInstructions() {
-      const member = document.getElementById('member')
-      let acum = ""
-      for (const option of member.options) {
-        if (option.selected) {
-          $('textarea#special-instructions-text').empty();
-          let member_id = option.value.toString();
-          let str = document.getElementById('special-instructions').innerHTML;
-          let obj = JSON.parse(str);
-          acum = acum + option.label + ": " + obj[member_id] + "\n\n"
-        }
+      })
+  }
 
+  function specialInstructions() {
+    const member = document.getElementById('member')
+    let acum = ""
+    for (const option of member.options) {
+      if (option.selected) {
+        $('textarea#special-instructions-text').empty();
+        let member_id = option.value.toString();
+        let str = document.getElementById('special-instructions').innerHTML;
+        let obj = JSON.parse(str);
+        acum = acum + option.label + ": " + obj[member_id] + "\n\n"
       }
-      $('textarea#special-instructions-text').val(
-        acum
-      );
-      special_input = acum;
 
     }
-          </script>
-  <script>
-    const providerSelect = document.getElementById("service_provider");
-    function updateTable() {
-      const providerDiv = document.getElementById("providers");
-      let selectedNames = [];
-      for (const option of providerSelect.options) {
-        if (option.selected)
-          selectedNames.push(option.innerHTML)
-      }
+    $('textarea#special-instructions-text').val(
+      acum
+    );
+    special_input = acum;
 
-      const table = document.createElement('table');
-      if (selectedNames.length > 0) {
-        table.className += "ui celled table";
-        const header = table.createTHead();
-        const row = header.insertRow(0);
-        const headers = ["Name", "Address", "Location", "Phone Number", "Contact Method", "Type", "Last/Next Svc. Date", "Fully Vetted", "Rating", "Actions"]
-        row.insertCell(0);
-        for (let i = 1; i < headers.length; i++) {
-          const tempHeaderCell = row.insertCell(i);
-          tempHeaderCell.innerHTML = "<b>" + headers[i - 1] + "</b>";
-        }
-        table.id = "volunteerDataTable";
-      }
+  }
 
-      const volDataArr = {{ volunteer_data | safe
-    }}
+  // Service Provider Table Logic
+  const providerSelect = document.getElementById("service_provider");
+  var websiteHost = window.location.host;
+  var protocol = window.location.protocol;
+
+  var filtered = false;
+
+  // This function should be called whenever the checkbox clicked (onChange)
+  function filterProviders() {
+    if (!filtered) {
+      // Construct JSON payload to send to server
+      let payload;
+      try {
+        payload = JSON.stringify({
+          serviceProviders: selectedIds,
+          requestedDate: document.getElementById("requested_date").valueAsDate.toUTCString(),
+          initialPickup: document.getElementById("start_time").valueAsDate.toUTCString(),
+          returnPickup: document.getElementById("end_time").valueAsDate.toUTCString()
+        })
+      } catch (err) {
+        alert("Please enter valid dates, times, and service providers before attempting to filter");
+        document.getElementById("filter-checkbox").checked = false;
+        return;
+      }
+      fetch(`${protocol}//${websiteHost}/admin/filter-service-providers`, {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "X-CSRFToken": document.getElementById("csrf_token").value,
+        },
+        body: payload
+      })
+        .then((response) => {
+          // res should be a JSON list of volunteer names
+          return response.json()
+        })
+        .then((data) => {
+          filtered = true;
+          selectedIds = data;
+          selectedNames = [];
+          for (const option of providerSelect.options) {
+            if (option.selected) {
+              for (const id of selectedIds){
+                if (option.getAttribute("value") == id) {
+                  selectedNames.push(option.innerHTML);
+                }
+              }
+            }
+          }
+          updateTable();
+        })
+    } 
+    else {
+      filtered = false;
+      changeProviders();
+    }
+  }
+
+  function changeProviders(){
+    filtered = false;
+    document.getElementById("filter-checkbox").checked = false;
+    selectedNames = [];
+    selectedIds = [];
+    for (const option of providerSelect.options) {
+      if (option.selected) {
+        selectedNames.push(option.innerHTML);
+        selectedIds.push(option.getAttribute("value"));
+      }
+    }
+    updateTable();
+  }
+
+  function updateTable() {
+    const providerDiv = document.getElementById("providers");
+    const table = document.createElement('table');
+    if (selectedNames.length > 0) {
+      table.className += "ui celled table";
+      const header = table.createTHead();
+      const row = header.insertRow(0);
+      const headers = ["Name", "Address", "Location", "Phone Number", "Contact Method", "Type", "Email Address", "Fully Vetted"]
+      row.insertCell(0);
+      for (let i = 1; i <= headers.length; i++) {
+        const tempHeaderCell = row.insertCell(i);
+        tempHeaderCell.innerHTML = "<b>" + headers[i - 1] + "</b>";
+      }
+      table.id = "volunteerDataTable";
+    }
+
+    const volDataArr = {{ volunteer_data | safe }}
 
     for (const volName of selectedNames) {
       const row = table.insertRow(1);
@@ -315,83 +372,96 @@
     } else {
       providerDiv.replaceChild(table, document.getElementById("volunteerDataTable"));
     }
+  }
+  providerSelect.setAttribute("onchange", "changeProviders()");
+
+  function sendRequests(buttonType) {
+    const checkBoxStates = document.getElementsByName("selectedVolunteersCheckBox");
+    const checkBoxArr = Array.prototype.slice.call(checkBoxStates);
+    const volunteersToReq = checkBoxArr.filter(box => box.checked);
+    let emails = ""
+    for (const vol of volunteersToReq)
+      emails += vol.value.split("|")[1] + "&";
+
+    emails = emails.substring(0, emails.length - 1);
+
+    const websiteHost = window.location.host;
+    const protocol = window.location.protocol;
+    fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&-1&Transportation&${emails}`);
+
+    const buttonId = `${buttonType.replace('+', '-') + '-success-message'}`
+    document.getElementById(buttonId).classList.remove('hidden');
+    document.getElementById(buttonId).classList.add('visible');
+  }
+</script>
+<!-- End service provider table logic -->
+
+<!-- Begin Table for Displaying Member Information -->
+<script>
+
+  const memberSelect = document.getElementById("member");
+
+  function updateMemberTable() {
+    const memberDiv = document.getElementById("members");
+    let selectedMembers = [];
+
+    for (const option of memberSelect.options) {
+      if (option.selected)
+        selectedMembers.push(option.innerHTML)
     }
-    providerSelect.setAttribute("onchange", "updateTable()");
 
-    function sendRequests(buttonType) {
-      const checkBoxStates = document.getElementsByName("selectedVolunteersCheckBox");
-      const checkBoxArr = Array.prototype.slice.call(checkBoxStates);
-      const volunteersToReq = checkBoxArr.filter(box => box.checked);
-      let emails = ""
-      for (const vol of volunteersToReq)
-        emails += vol.value.split("|")[1] + "&";
+    const table = document.createElement('table');
 
-      emails = emails.substring(0, emails.length - 1);
-
-      const websiteHost = window.location.host;
-      const protocol = window.location.protocol;
-      fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&-1&Transportation&${emails}`);
-
-      const buttonId = `${buttonType.replace('+', '-') + '-success-message'}`
-      document.getElementById(buttonId).classList.remove('hidden');
-      document.getElementById(buttonId).classList.add('visible');
+    if (selectedMembers.length > 0) {
+      table.className += "ui celled table";
+      const header = table.createTHead();
+      const row = header.insertRow(0);
+      const headers = ["Name", "Exp. Date", "Email", "Phone Number", "Home Address"]
+      for (let i = 0; i < headers.length; i++) {
+        const tempHeaderCell = row.insertCell(i);
+        tempHeaderCell.innerHTML = "<b>" + headers[i] + "</b>";
+      }
+      table.id = "memberDataTable";
     }
-  </script>
 
-  <!-- Begin Table for Displaying Member Information -->
-  <script>
+    const memberDataArr = {{ member_data | safe }}
 
-    const memberSelect = document.getElementById("member");
-
-    function updateMemberTable() {
-      const memberDiv = document.getElementById("members");
-      let selectedMembers = [];
-
-      for (const option of memberSelect.options) {
-        if (option.selected)
-          selectedMembers.push(option.innerHTML)
-      }
-
-      const table = document.createElement('table');
-
-      if (selectedMembers.length > 0) {
-        table.className += "ui celled table";
-        const header = table.createTHead();
-        const row = header.insertRow(0);
-        const headers = ["Name", "Exp. Date", "Email", "Phone Number", "Home Address"]
-        for (let i = 0; i < headers.length; i++) {
-          const tempHeaderCell = row.insertCell(i);
-          tempHeaderCell.innerHTML = "<b>" + headers[i] + "</b>";
-        }
-        table.id = "memberDataTable";
-      }
-
-      const memberDataArr = {{ member_data | safe }}
-
-      for (const memberName of selectedMembers) {
-        const row = table.insertRow(1);
-        const member = memberDataArr.find(memObj => memObj[0] == memberName);
-        for (let i = 0; i < member.length; i++) {
-          const tempMemData = row.insertCell(i);
-          tempMemData.innerHTML = member[i];
-        }
-      }
-
-      if (!document.getElementById("memberDataTable")) {
-        memberDiv.prepend(table);
-      } else {
-        memberDiv.replaceChild(table, document.getElementById("memberDataTable"));
+    for (const memberName of selectedMembers) {
+      const row = table.insertRow(1);
+      const member = memberDataArr.find(memObj => memObj[0] == memberName);
+      for (let i = 0; i < member.length; i++) {
+        const tempMemData = row.insertCell(i);
+        tempMemData.innerHTML = member[i];
       }
     }
-    
-    function onMemberChange() {
-        updateMemberTable();
-        specialInstructions();
+
+    if (!document.getElementById("memberDataTable")) {
+      memberDiv.prepend(table);
+    } else {
+      memberDiv.replaceChild(table, document.getElementById("memberDataTable"));
     }
-    memberSelect.setAttribute("onchange", "onMemberChange()");
+  }
+  
+  function onMemberChange() {
+      updateMemberTable();
+      specialInstructions();
+  }
+  memberSelect.setAttribute("onchange", "onMemberChange()");
 
-  </script>
-  <!-- End Table for Displaying Member Information-->
+</script>
+<!-- End Table for Displaying Member Information-->
 
 
-  {% endblock %}
+<style>
+  .column {
+    position: relative;
+  }
+
+  .column .side-button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+</style>            
+            
+{% endblock %}

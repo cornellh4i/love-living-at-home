@@ -298,9 +298,9 @@ class OfficeTimeRequestForm(FlaskForm):
                                             get_label='name',
                                             query_factory=contactLogQuery)
 
-    person_to_cc = TextAreaField('Person to cc',
-                                 validators=[Length(0, 64),
-                                             Optional()])
+    person_to_cc = EmailField('Person to cc',
+                              validators=[Length(0, 64),
+                                          Optional()])
 
     submit = SubmitField("Submit")
 
