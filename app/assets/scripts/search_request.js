@@ -120,7 +120,7 @@ $(document).ready(function () {
       let request_status = $this
         .find('.request-status-value')
         .find('div')
-        .html();
+        .html().trim();
       if (
         request_status_filter.length > 0 &&
         !request_status_filter.includes(request_status)

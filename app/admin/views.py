@@ -318,8 +318,7 @@ def search_request():
     form.requesting_member.choices = [
         (member.id, member.first_name + " " + member.last_name)
         for member in Member.query.all()
-    ] + [(-1, "Randy Warden"),
-         (-2, "Anne Rodda")]  # temporarily added these extra members
+    ]
     service_providers = [
         ('volunteer', volunteer.id,
          volunteer.first_name + " " + volunteer.last_name)
@@ -1236,17 +1235,17 @@ def make_yearly_repeating_copies(is_day_of_every_selected, make_yearly_repeating
             date = new_service_date
             counter = 0
             if (new_service_date < (date + relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
-                                                             weekday = MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
-                                                             else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
-                                                             FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
+                                                         weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
+                                                         else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
+                                                         FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
 
-                        and (date + relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
-                                                  weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
-                                                  else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
-                                                  FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
+                and (date + relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
+                                          weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
+                                          else WE(yearly_week_choice) if yearly_weekday_choice == 2 else TH(yearly_week_choice) if yearly_weekday_choice == 3 else
+                                          FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
                     < end_by
 
-                    ):
+                ):
 
                 date += relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
                                       weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
@@ -1525,9 +1524,9 @@ def filter_service_providers():
                                 no_conflicts = False
                                 final_id_list.remove(id)
 
-    return json.dumps(final_id_list)                               
+    return json.dumps(final_id_list)
 
-  
+
 @ admin.route('/cancel-request/<int:request_type_id>/<int:request_id>', methods=['GET', 'POST'])
 @ login_required
 @ admin_required

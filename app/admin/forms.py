@@ -148,18 +148,18 @@ class TransportationRequestForm(FlaskForm):
                              render_kw={'readonly': True})
 
     requesting_member = SelectMultipleField(
-        'Requesting Member',
+        'Requesting Member:',
         render_kw={'onchange': "specialInstructions()"},
         id='member',
         validators=[InputRequired()],
         coerce=int)
 
-    service_provider = SelectMultipleField('Service Provider',
+    service_provider = SelectMultipleField('Service Provider:',
                                            id='service_provider',
                                            validators=[InputRequired()],
                                            coerce=int)
 
-    requested_date = DateField('Requested Date', validators=[InputRequired()])
+    requested_date = DateField('Requested Date:', validators=[InputRequired()])
     initial_pickup = TimeField('Inital Pickup:',
                                format='%H:%M',
                                validators=[InputRequired()])
@@ -203,11 +203,12 @@ class TransportationRequestForm(FlaskForm):
                                             get_label='name',
                                             query_factory=contactLogQuery)
 
-    person_to_cc = EmailField('Person to cc',
+    person_to_cc = EmailField('Person to cc:',
                               validators=[Length(0, 64),
                                           Optional()])
     destination = SelectField('Destination:',
                               validators=[InputRequired()],
+                              id='destination',
                               coerce=int)
     duration = RadioField('Duration:', coerce=int)
 
@@ -250,18 +251,18 @@ class OfficeTimeRequestForm(FlaskForm):
                              default=date.today,
                              render_kw={'readonly': True})
     requesting_member = SelectMultipleField(
-        'Requesting Member',
+        'Requesting Member:',
         render_kw={'onchange': "specialInstructions()"},
         id='member',
         validators=[InputRequired()],
         coerce=int)
 
-    service_provider = SelectMultipleField('Service Provider',
+    service_provider = SelectMultipleField('Service Provider:',
                                            id='service_provider',
                                            validators=[InputRequired()],
                                            coerce=int)
 
-    requested_date = DateField('Date Requested', validators=[InputRequired()])
+    requested_date = DateField('Date Requested:', validators=[InputRequired()])
     start_time = TimeField('From:',
                            format='%H:%M',
                            validators=[InputRequired()])
@@ -298,7 +299,7 @@ class OfficeTimeRequestForm(FlaskForm):
                                             get_label='name',
                                             query_factory=contactLogQuery)
 
-    person_to_cc = EmailField('Person to cc',
+    person_to_cc = EmailField('Person to cc:',
                               validators=[Length(0, 64),
                                           Optional()])
 
@@ -355,18 +356,18 @@ class MembersHomeRequestForm(FlaskForm):
                              render_kw={'readonly': True})
 
     requesting_member = SelectMultipleField(
-        'Requesting Member',
+        'Requesting Member:',
         render_kw={'onchange': "specialInstructions()"},
         id='member',
         validators=[InputRequired()],
         coerce=int)
 
-    service_provider = SelectMultipleField('Service Provider',
+    service_provider = SelectMultipleField('Service Provider:',
                                            id='service_provider',
                                            validators=[InputRequired()],
                                            coerce=int)
 
-    requested_date = DateField('Requested Date', validators=[InputRequired()])
+    requested_date = DateField('Requested Date:', validators=[InputRequired()])
 
     time_from = TimeField('From:',
                           format='%H:%M',
@@ -395,7 +396,7 @@ class MembersHomeRequestForm(FlaskForm):
         coerce=int)
 
     home_location = SelectMultipleField(
-        'Location',
+        'Location:',
         id='home_location',
         validators=[InputRequired()],
         coerce=int)
@@ -416,7 +417,7 @@ class MembersHomeRequestForm(FlaskForm):
                                             get_label='name',
                                             query_factory=contactLogQuery)
 
-    person_to_cc = EmailField('Person to cc',
+    person_to_cc = EmailField('Person to cc:',
                               validators=[Length(0, 64),
                                           Optional()])
 
