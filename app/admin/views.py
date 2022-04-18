@@ -2154,6 +2154,7 @@ def create_members_home_request(request_id=None):
         members_home_request = MembersHomeRequest.query.filter_by(
             id=request_id).first()
         form = MembersHomeRequestForm(
+            type_id=2,
             description=members_home_request.short_description,
             date_created=members_home_request.created_date,
             requested_date=members_home_request.requested_date,
@@ -2163,8 +2164,16 @@ def create_members_home_request(request_id=None):
             follow_up_date=members_home_request.followup_date,
             responsible_staffer=members_home_request.responsible_staffer_id,
             person_to_cc=members_home_request.cc_email,
-            cc_email=form.person_to_cc.data,
+            service_category=members_home_request.service_category_id,
+            member_home_service=members_home_request.service_id,
             special_instructions=members_home_request.special_instructions)
+        form.service_category.choices = service_category_choices
+        form.member_home_service.choices = [
+            (service.id, service.name) for service in
+            Service.query.filter_by(
+                category_id=members_home_request.service_category_id
+            ).all()
+        ]
 
     form.requesting_member.multiple = True
     form.requesting_member.choices = [
