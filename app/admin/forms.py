@@ -182,6 +182,7 @@ class TransportationRequestForm(FlaskForm):
     transportation_service = SelectField(
         'Service:',
         id="services",
+        render_kw={'onchange': "providerChoices()"},
         validators=[Optional()], coerce=int)
 
     starting_location = StringField('Pickup Location:',
@@ -281,6 +282,7 @@ class OfficeTimeRequestForm(FlaskForm):
     office_time_service = SelectField(
         'Service:',
         id="services",
+        render_kw={'onchange': "providerChoices()"},
         validators=[Optional()],
         coerce=int)
 
@@ -392,6 +394,7 @@ class MembersHomeRequestForm(FlaskForm):
     member_home_service = SelectField(
         'Service:',
         id="services",
+        render_kw={'onchange': "providerChoices()"},
         validators=[Optional()],
         coerce=int)
 

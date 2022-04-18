@@ -18,7 +18,6 @@
     <h2 class="ui center aligned header">Office Time Request Form</h2>
   </div>
 
-
   <div class="twelve wide column">
     {{ f.render_form_field(form.requesting_member)}}
   </div>
@@ -56,7 +55,7 @@
         {{ f.render_form_field(form.service_category) }}
       </div>
       <div class="right floated six wide column">
-          {{ f.render_form_field(form.office_time_service) }}
+        {{ f.render_form_field(form.office_time_service) }}
       </div>
       <div class="right floated six wide column"></div>
     </div>
@@ -71,8 +70,8 @@
         <input type="checkbox" id="filter-checkbox" onclick="filterProviders()">
         <label>Show Available Service Providers</label>
       </div>
-      
-      <div class="four fields" style = "margin-top: 10px">
+
+      <div class="four fields" style="margin-top: 10px">
         <div class="field">
           <button id="show-send-req-modal" class="ui purple basic button" type="button">
             Send Request
@@ -201,155 +200,158 @@
     </div>
 </div>
 
-<script>
-  document.getElementById("member").classList.add("search")
-  document.getElementById("service_provider").classList.add("search")
+  {% assets 'service_volunteers_js' %}
+  <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+  {% endassets %}
 
-  $('#show-send-req-modal').click(() => {
-    $('#send-req-modal').modal('show');
-  });
+  <script>
+    document.getElementById("member").classList.add("search")
+    document.getElementById("service_provider").classList.add("search")
+    
+    $('#show-send-req-modal').click(() => {
+      $('#send-req-modal').modal('show');
+    });
 
-  $('#show-confirmation-modal').click(() => {
-    $('#confirmation-modal').modal('show');
-  });
+    $('#show-confirmation-modal').click(() => {
+      $('#confirmation-modal').modal('show');
+    });
 
-  $('#show-not-needed-modal').click(() => {
-    $('#not-needed-modal').modal('show');
-  });
+    $('#show-not-needed-modal').click(() => {
+      $('#not-needed-modal').modal('show');
+    });
 
-  $('#show-summary-modal').click(() => {
-    $('#summary-modal').modal('show');
-  });
+    $('#show-summary-modal').click(() => {
+      $('#summary-modal').modal('show');
+    });
+    
+    function serviceChoices(){
+      let service_category = document.getElementById('service_category').value;
+      let service_select = document.getElementById('services');
+      const protocol = window.location.protocol;
+      const host = window.location.host;
+      fetch(`${protocol}//${host}/admin/create-request/${service_category}`, {
+        }).then(function(response){
+          response.json().then(function(data){
+            console.log(data);
+            let optionHTML = '';
+            for (let service of data.services){
+              optionHTML += '<option value="' + service.id + '">' + service.name + '</option>'
+            }
+            service_select.innerHTML = optionHTML;
+          })
 
-  function serviceChoices(){
-    let service_category = document.getElementById('service_category').value;
-    let service_select = document.getElementById('services');
-    const protocol = window.location.protocol;
-    const host = window.location.host;
-    fetch(`${protocol}//${host}/admin/create-request/${service_category}`, {
-      }).then(function(response){
-        response.json().then(function(data){
-          console.log(data);
-          let optionHTML = '';
-          for (let service of data.services){
-            optionHTML += '<option value="' + service.id + '">' + service.name + '</option>'
-          }
-          service_select.innerHTML = optionHTML;
         })
-
-      })
-  }
-
-  function specialInstructions() {
-    const member = document.getElementById('member')
-    let acum = ""
-    for (const option of member.options) {
-      if (option.selected) {
-        $('textarea#special-instructions-text').empty();
-        let member_id = option.value.toString();
-        let str = document.getElementById('special-instructions').innerHTML;
-        let obj = JSON.parse(str);
-        acum = acum + option.label + ": " + obj[member_id] + "\n\n"
-      }
-
     }
-    $('textarea#special-instructions-text').val(
-      acum
-    );
-    special_input = acum;
 
-  }
-
-  // Service Provider Table Logic
-  const providerSelect = document.getElementById("service_provider");
-  var websiteHost = window.location.host;
-  var protocol = window.location.protocol;
-
-  var filtered = false;
-
-  // This function should be called whenever the checkbox clicked (onChange)
-  function filterProviders() {
-    if (!filtered) {
-      // Construct JSON payload to send to server
-      let payload;
-      try {
-        payload = JSON.stringify({
-          serviceProviders: selectedIds,
-          requestedDate: document.getElementById("requested_date").valueAsDate.toUTCString(),
-          initialPickup: document.getElementById("start_time").valueAsDate.toUTCString(),
-          returnPickup: document.getElementById("end_time").valueAsDate.toUTCString()
-        })
-      } catch (err) {
-        alert("Please enter valid dates, times, and service providers before attempting to filter");
-        document.getElementById("filter-checkbox").checked = false;
-        return;
+    function specialInstructions() {
+      const member = document.getElementById('member')
+      let acum = ""
+      for (const option of member.options) {
+        if (option.selected) {
+          $('textarea#special-instructions-text').empty();
+          let member_id = option.value.toString();
+          let str = document.getElementById('special-instructions').innerHTML;
+          let obj = JSON.parse(str);
+          acum = acum + option.label + ": " + obj[member_id] + "\n\n"
+        }
       }
-      fetch(`${protocol}//${websiteHost}/admin/filter-service-providers`, {
-        method: "POST",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-          "X-CSRFToken": document.getElementById("csrf_token").value,
-        },
-        body: payload
-      })
-        .then((response) => {
-          // res should be a JSON list of volunteer names
-          return response.json()
+      $('textarea#special-instructions-text').val(
+        acum
+      );
+      special_input = acum;
+    }
+
+    // Service Provider Table Logic
+    const providerSelect = document.getElementById("service_provider");
+    var websiteHost = window.location.host;
+    var protocol = window.location.protocol;
+
+    var filtered = false;
+
+    // This function should be called whenever the checkbox clicked (onChange)
+    function filterProviders() {
+      if (!filtered) {
+        // Construct JSON payload to send to server
+        let payload;
+        try {
+          payload = JSON.stringify({
+            serviceProviders: selectedIds,
+            requestedDate: document.getElementById("requested_date").valueAsDate.toUTCString(),
+            initialPickup: document.getElementById("start_time").valueAsDate.toUTCString(),
+            returnPickup: document.getElementById("end_time").valueAsDate.toUTCString()
+          })
+        } catch (err) {
+          alert("Please enter valid dates, times, and service providers before attempting to filter");
+          document.getElementById("filter-checkbox").checked = false;
+          return;
+        }
+        fetch(`${protocol}//${websiteHost}/admin/filter-service-providers`, {
+          method: "POST",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "X-CSRFToken": document.getElementById("csrf_token").value,
+          },
+          body: payload
         })
-        .then((data) => {
-          filtered = true;
-          selectedIds = data;
-          selectedNames = [];
-          for (const option of providerSelect.options) {
-            if (option.selected) {
-              for (const id of selectedIds){
-                if (option.getAttribute("value") == id) {
-                  selectedNames.push(option.innerHTML);
+          .then((response) => {
+            // res should be a JSON list of volunteer names
+            return response.json()
+          })
+          .then((data) => {
+            filtered = true;
+            selectedIds = data;
+            selectedNames = [];
+            for (const option of providerSelect.options) {
+              if (option.selected) {
+                for (const id of selectedIds) {
+                  if (option.getAttribute("value") == id) {
+                    selectedNames.push(option.innerHTML);
+                  }
                 }
               }
             }
-          }
-          updateTable();
-        })
-    } 
-    else {
+            updateTable();
+          })
+      }
+      else {
+        filtered = false;
+        changeProviders();
+      }
+    }
+
+    function changeProviders() {
       filtered = false;
-      changeProviders();
-    }
-  }
-
-  function changeProviders(){
-    filtered = false;
-    document.getElementById("filter-checkbox").checked = false;
-    selectedNames = [];
-    selectedIds = [];
-    for (const option of providerSelect.options) {
-      if (option.selected) {
-        selectedNames.push(option.innerHTML);
-        selectedIds.push(option.getAttribute("value"));
+      document.getElementById("filter-checkbox").checked = false;
+      selectedNames = [];
+      selectedIds = [];
+      for (const option of providerSelect.options) {
+        if (option.selected) {
+          selectedNames.push(option.innerHTML);
+          selectedIds.push(option.getAttribute("value"));
+        }
       }
+      updateTable();
     }
-    updateTable();
-  }
 
-  function updateTable() {
-    const providerDiv = document.getElementById("providers");
-    const table = document.createElement('table');
-    if (selectedNames.length > 0) {
-      table.className += "ui celled table";
-      const header = table.createTHead();
-      const row = header.insertRow(0);
-      const headers = ["Name", "Address", "Location", "Phone Number", "Contact Method", "Type", "Email Address", "Fully Vetted"]
-      row.insertCell(0);
-      for (let i = 1; i <= headers.length; i++) {
-        const tempHeaderCell = row.insertCell(i);
-        tempHeaderCell.innerHTML = "<b>" + headers[i - 1] + "</b>";
+    function updateTable() {
+      const providerDiv = document.getElementById("providers");
+      const table = document.createElement('table');
+      if (selectedNames.length > 0) {
+        table.className += "ui celled table";
+        const header = table.createTHead();
+        const row = header.insertRow(0);
+        const headers = ["Name", "Address", "Location", "Phone Number", "Contact Method", "Type", "Email Address", "Fully Vetted"]
+        row.insertCell(0);
+        for (let i = 1; i <= headers.length; i++) {
+          const tempHeaderCell = row.insertCell(i);
+          tempHeaderCell.innerHTML = "<b>" + headers[i - 1] + "</b>";
+        }
+        table.id = "volunteerDataTable";
       }
-      table.id = "volunteerDataTable";
-    }
 
-    const volDataArr = {{ volunteer_data | safe }}
+      const volDataArr = {{ volunteer_data | safe
+    }}
 
     for (const volName of selectedNames) {
       const row = table.insertRow(1);
@@ -376,58 +378,59 @@
       providerDiv.replaceChild(table, document.getElementById("volunteerDataTable"));
     }
   }
-  providerSelect.setAttribute("onchange", "changeProviders()");
+    providerSelect.setAttribute("onchange", "changeProviders()");
 
-  function sendRequests(buttonType) {
-    const checkBoxStates = document.getElementsByName("selectedVolunteersCheckBox");
-    const checkBoxArr = Array.prototype.slice.call(checkBoxStates);
-    const volunteersToReq = checkBoxArr.filter(box => box.checked);
-    let emails = ""
-    for (const vol of volunteersToReq)
-      emails += vol.value.split("|")[1] + "&";
+    function sendRequests(buttonType) {
+      const checkBoxStates = document.getElementsByName("selectedVolunteersCheckBox");
+      const checkBoxArr = Array.prototype.slice.call(checkBoxStates);
+      const volunteersToReq = checkBoxArr.filter(box => box.checked);
+      let emails = ""
+      for (const vol of volunteersToReq)
+        emails += vol.value.split("|")[1] + "&";
 
-    emails = emails.substring(0, emails.length - 1);
+      emails = emails.substring(0, emails.length - 1);
 
-    const websiteHost = window.location.host;
-    const protocol = window.location.protocol;
-    fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&-1&Transportation&${emails}`);
+      const websiteHost = window.location.host;
+      const protocol = window.location.protocol;
+      fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&-1&Transportation&${emails}`);
 
-    const buttonId = `${buttonType.replace('+', '-') + '-success-message'}`
-    document.getElementById(buttonId).classList.remove('hidden');
-    document.getElementById(buttonId).classList.add('visible');
-  }
-</script>
-<!-- End service provider table logic -->
-
-<!-- Begin Table for Displaying Member Information -->
-<script>
-
-  const memberSelect = document.getElementById("member");
-
-  function updateMemberTable() {
-    const memberDiv = document.getElementById("members");
-    let selectedMembers = [];
-
-    for (const option of memberSelect.options) {
-      if (option.selected)
-        selectedMembers.push(option.innerHTML)
+      const buttonId = `${buttonType.replace('+', '-') + '-success-message'}`
+      document.getElementById(buttonId).classList.remove('hidden');
+      document.getElementById(buttonId).classList.add('visible');
     }
+  </script>
+  <!-- End service provider table logic -->
 
-    const table = document.createElement('table');
+  <!-- Begin Table for Displaying Member Information -->
+  <script>
 
-    if (selectedMembers.length > 0) {
-      table.className += "ui celled table";
-      const header = table.createTHead();
-      const row = header.insertRow(0);
-      const headers = ["Name", "Exp. Date", "Email", "Phone Number", "Home Address"]
-      for (let i = 0; i < headers.length; i++) {
-        const tempHeaderCell = row.insertCell(i);
-        tempHeaderCell.innerHTML = "<b>" + headers[i] + "</b>";
+    const memberSelect = document.getElementById("member");
+
+    function updateMemberTable() {
+      const memberDiv = document.getElementById("members");
+      let selectedMembers = [];
+
+      for (const option of memberSelect.options) {
+        if (option.selected)
+          selectedMembers.push(option.innerHTML)
       }
-      table.id = "memberDataTable";
-    }
 
-    const memberDataArr = {{ member_data | safe }}
+      const table = document.createElement('table');
+
+      if (selectedMembers.length > 0) {
+        table.className += "ui celled table";
+        const header = table.createTHead();
+        const row = header.insertRow(0);
+        const headers = ["Name", "Exp. Date", "Email", "Phone Number", "Home Address"]
+        for (let i = 0; i < headers.length; i++) {
+          const tempHeaderCell = row.insertCell(i);
+          tempHeaderCell.innerHTML = "<b>" + headers[i] + "</b>";
+        }
+        table.id = "memberDataTable";
+      }
+
+      const memberDataArr = {{ member_data | safe
+    }}
 
     for (const memberName of selectedMembers) {
       const row = table.insertRow(1);
@@ -444,27 +447,26 @@
       memberDiv.replaceChild(table, document.getElementById("memberDataTable"));
     }
   }
-  
-  function onMemberChange() {
+
+    function onMemberChange() {
       updateMemberTable();
       specialInstructions();
-  }
-  memberSelect.setAttribute("onchange", "onMemberChange()");
+    }
+    memberSelect.setAttribute("onchange", "onMemberChange()");
 
-</script>
-<!-- End Table for Displaying Member Information-->
+  </script>
+  <!-- End Table for Displaying Member Information-->
 
+  <style>
+    .column {
+      position: relative;
+    }
 
-<style>
-  .column {
-    position: relative;
-  }
+    .column .side-button {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+  </style>
 
-  .column .side-button {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-  }
-</style>            
-            
-{% endblock %}
+  {% endblock %}

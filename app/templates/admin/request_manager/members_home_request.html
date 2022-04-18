@@ -74,7 +74,7 @@
 
     {{ f.render_form_field(form.service_provider)}}
 
-    <div id = "providers" class="twelve wide column"></div>
+    <div id="providers" class="twelve wide column"></div>
 
     <!-- Checkbox to filter available service providers -->
     <div class="ui checkbox">
@@ -213,6 +213,10 @@
   </div>
 </div>
 
+  {% assets 'service_volunteers_js' %}
+  <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+  {% endassets %}
+
 <script>
   document.getElementById("member").classList.add("search")
   document.getElementById("service_provider").classList.add("search")
@@ -234,26 +238,6 @@
     $('#summary-modal').modal('show');
   });
 
-  function serviceChoices() {
-    let service_category = document.getElementById('service_category').value;
-    let service_select = document.getElementById('services');
-    console.log(service_category);
-    const protocol = window.location.protocol;
-    const host = window.location.host;
-    fetch(`${protocol}//${host}/admin/create-request/${service_category}`, {
-      }).then(function(response){
-        response.json().then(function(data){
-          console.log(data);
-          let optionHTML = '';
-          for (let service of data.services){
-            optionHTML += '<option value="' + service.id + '">' + service.name + '</option>'
-          }
-          service_select.innerHTML = optionHTML;
-        })
-
-      })
-  }
-
   function specialInstructions() {
     const member = document.getElementById('member')
     let acum = ""
@@ -271,7 +255,6 @@
       acum
     );
     special_input = acum;
-
   }
 
   // Service Provider Table Logic
@@ -317,7 +300,7 @@
           selectedNames = [];
           for (const option of providerSelect.options) {
             if (option.selected) {
-              for (const id of selectedIds){
+              for (const id of selectedIds) {
                 if (option.getAttribute("value") == id) {
                   selectedNames.push(option.innerHTML);
                 }
@@ -326,14 +309,14 @@
           }
           updateTable();
         })
-    } 
+    }
     else {
       filtered = false;
       changeProviders();
     }
-  } 
+  }
 
-  function changeProviders(){
+  function changeProviders() {
     filtered = false;
     document.getElementById("filter-checkbox").checked = false;
     selectedNames = [];
@@ -363,32 +346,33 @@
       table.id = "volunteerDataTable";
     }
 
-    const volDataArr = {{ volunteer_data | safe }}
+    const volDataArr = {{ volunteer_data | safe
+  }}
 
-    for (const volName of selectedNames) {
-      const row = table.insertRow(1);
-      const boxEntry = row.insertCell(0);
-      const checkBox = document.createElement("INPUT");
-      checkBox.setAttribute("type", "checkbox");
-      checkBox.className += "ui checkbox";
-      checkBox.name = "selectedVolunteersCheckBox";
-      volDataArr.find(vol => {
-        if (vol[0] == volName)
-          checkBox.value = vol[3] + "|" + vol[6];
-      })
-      boxEntry.appendChild(checkBox);
-      const volunteer = volDataArr.find(volObj => volObj[0] == volName);
-      for (let i = 0; i < volunteer.length; i++) {
-        const tempVolData = row.insertCell(i + 1);
-        tempVolData.innerHTML = volunteer[i];
-      }
+  for (const volName of selectedNames) {
+    const row = table.insertRow(1);
+    const boxEntry = row.insertCell(0);
+    const checkBox = document.createElement("INPUT");
+    checkBox.setAttribute("type", "checkbox");
+    checkBox.className += "ui checkbox";
+    checkBox.name = "selectedVolunteersCheckBox";
+    volDataArr.find(vol => {
+      if (vol[0] == volName)
+        checkBox.value = vol[3] + "|" + vol[6];
+    })
+    boxEntry.appendChild(checkBox);
+    const volunteer = volDataArr.find(volObj => volObj[0] == volName);
+    for (let i = 0; i < volunteer.length; i++) {
+      const tempVolData = row.insertCell(i + 1);
+      tempVolData.innerHTML = volunteer[i];
     }
+  }
 
-    if (!document.getElementById("volunteerDataTable")) {
-      providerDiv.prepend(table);
-    } else {
-      providerDiv.replaceChild(table, document.getElementById("volunteerDataTable"));
-    }
+  if (!document.getElementById("volunteerDataTable")) {
+    providerDiv.prepend(table);
+  } else {
+    providerDiv.replaceChild(table, document.getElementById("volunteerDataTable"));
+  }
   }
   providerSelect.setAttribute("onchange", "changeProviders()");
 
@@ -443,33 +427,34 @@
       table.id = "memberDataTable";
     }
 
-    const memberDataArr = {{ member_data | safe }}
+    const memberDataArr = {{ member_data | safe
+  }}
 
-    for (const memberName of selectedMembers) {
-      const row = table.insertRow(1);
-      const member = memberDataArr.find(memObj => memObj[0] == memberName);
-      for (let i = 0; i < member.length; i++) {
-        const tempMemData = row.insertCell(i);
-        tempMemData.innerHTML = member[i];
-      }
-    }
-
-    if (!document.getElementById("memberDataTable")) {
-      memberDiv.prepend(table);
-    } else {
-      memberDiv.replaceChild(table, document.getElementById("memberDataTable"));
+  for (const memberName of selectedMembers) {
+    const row = table.insertRow(1);
+    const member = memberDataArr.find(memObj => memObj[0] == memberName);
+    for (let i = 0; i < member.length; i++) {
+      const tempMemData = row.insertCell(i);
+      tempMemData.innerHTML = member[i];
     }
   }
-  
+
+  if (!document.getElementById("memberDataTable")) {
+    memberDiv.prepend(table);
+  } else {
+    memberDiv.replaceChild(table, document.getElementById("memberDataTable"));
+  }
+  }
+
   function onMemberChange() {
-      updateMemberTable();
-      specialInstructions();
+    updateMemberTable();
+    specialInstructions();
   }
   memberSelect.setAttribute("onchange", "onMemberChange()");
 
 </script>
 <!-- End Table for Displaying Member Information-->
-        
+
 
 <style>
   .column {

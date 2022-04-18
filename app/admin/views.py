@@ -1663,6 +1663,22 @@ def get_services(service_category_id):
         services_array.append(service_obj)
     return jsonify({'services': services_array})
 
+
+@admin.route('/create-request/service/<int:service_id>')
+@login_required
+@admin_required
+def get_services_of_volunteers(service_id):
+    services = {}
+    services["service_providers"] = []
+    for p in ProvidedService.query.filter_by(service_id=service_id).all():
+        services["service_providers"].append({
+            "id": p.volunteer_id,
+            "firstName": Volunteer.query.get(p.volunteer_id).first_name,
+            "lastName": Volunteer.query.get(p.volunteer_id).last_name
+        })
+    return jsonify(services)
+
+
 # Create a new Transportation service request.
 
 
@@ -1683,6 +1699,7 @@ def create_transportation_request(request_id=None):
             category_id=service_category_choices[0][0]
         ).all()
     ]
+
     transportation_request = None
     if request_id:
         transportation_request = TransportationRequest.query.filter_by(
@@ -1724,10 +1741,13 @@ def create_transportation_request(request_id=None):
         (member.id, member.first_name + " " + member.last_name)
         for member in Member.query.all()
     ]
-    form.service_provider.choices = [
-        (volunteer.id, volunteer.first_name + " " + volunteer.last_name)
-        for volunteer in Volunteer.query.all()
-    ]
+
+    service_provider_choices = []
+    for p in ProvidedService.query.filter_by(service_id=(Service.query.filter_by(
+            category_id=service_category_choices[0][0]).first()).id).all():
+        service_provider_choices.append(
+            (p.volunteer_id, Volunteer.query.get(p.volunteer_id).first_name + " " + Volunteer.query.get(p.volunteer_id).last_name))
+    form.service_provider.choices = service_provider_choices
 
     form.duration.choices = [
         (request_duration_type.id, request_duration_type.name)
@@ -1991,18 +2011,24 @@ def create_office_time_request(request_id=None):
         (member.id, member.first_name + " " + member.last_name)
         for member in Member.query.all()
     ]
-    form.service_provider.choices = [
-        (volunteer.id, volunteer.first_name + " " + volunteer.last_name)
-        for volunteer in Volunteer.query.all()
-    ]
+
+    service_provider_choices = []
+    for p in ProvidedService.query.filter_by(service_id=(Service.query.filter_by(
+            category_id=service_category_choices[0][0]).first()).id).all():
+        service_provider_choices.append(
+            (p.volunteer_id, Volunteer.query.get(p.volunteer_id).first_name + " " + Volunteer.query.get(p.volunteer_id).last_name))
+    form.service_provider.choices = service_provider_choices
+
     form.special_instructions_list = json.dumps({
         str(member.id): member.volunteer_notes
         for member in Member.query.all()
     })
+
     form.responsible_staffer.choices = [
         (staffer.id, staffer.first_name + " " + staffer.last_name)
         for staffer in Staffer.query.all()
     ]
+
     if request_id:
         request_member_records = [member.member_id for member in RequestMemberRecord.query.filter_by(request_id=office_time_request.id,
                                                                                                      request_category_id=1).all()]
@@ -2181,10 +2207,12 @@ def create_members_home_request(request_id=None):
         for member in Member.query.all()
     ]
 
-    form.service_provider.choices = [
-        (volunteer.id, volunteer.first_name + " " + volunteer.last_name)
-        for volunteer in Volunteer.query.all()
-    ]
+    service_provider_choices = []
+    for p in ProvidedService.query.filter_by(service_id=(Service.query.filter_by(
+            category_id=service_category_choices[0][0]).first()).id).all():
+        service_provider_choices.append(
+            (p.volunteer_id, Volunteer.query.get(p.volunteer_id).first_name + " " + Volunteer.query.get(p.volunteer_id).last_name))
+    form.service_provider.choices = service_provider_choices
 
     form.home_location.choices = [(1, "Home")]
 
