@@ -154,24 +154,26 @@ class TransportationRequestForm(FlaskForm):
         validators=[InputRequired()],
         coerce=int)
 
-    service_provider = SelectMultipleField('Service Provider:',
-                                           id='service_provider',
+    service_provider = SelectMultipleField('Service Provider',
+                                           id='service-provider',
                                            validators=[InputRequired()],
                                            coerce=int)
 
-    requested_date = DateField('Requested Date:', validators=[InputRequired()])
-    initial_pickup = TimeField('Inital Pickup:',
-                               format='%H:%M',
+    requested_date = DateField(
+        'Requested Date', id='requested-date', validators=[InputRequired()])
+    initial_pickup = TimeField('Inital Pickup:', id='initial-pickup', format='%H:%M',
                                validators=[InputRequired()])
-    appointment = TimeField('Appointment:',
+    appointment = TimeField('Appointment:', id='appointment',
                             format='%H:%M',
                             validators=[InputRequired()])
-    return_pickup = TimeField('Return Pickup:', format='%H:%M')
-    drop_off = TimeField('Drop Off:', format='%H:%M')
+    return_pickup = TimeField(
+        'Return Pickup:', id='return-pickup', format='%H:%M')
+    drop_off = TimeField('Drop Off:', id='dropoff', format='%H:%M')
     time_flexible = RadioField('Is Date/Time Flexible?',
-                               choices=[(1, 'Yes'), (0, 'No')],
+                               choices=[(1, 'Yes'), (0, 'No')], id='time-flexible',
                                coerce=int)
-    description = TextAreaField('Short description (included in email):')
+    description = TextAreaField(
+        'Short description (included in email):', id='description')
 
     service_category = SelectField(
         'Service Category:',
@@ -185,7 +187,7 @@ class TransportationRequestForm(FlaskForm):
         render_kw={'onchange': "providerChoices()"},
         validators=[Optional()], coerce=int)
 
-    starting_location = StringField('Pickup Location:',
+    starting_location = StringField('Pickup Location:', id='starting-location',
                                     validators=[InputRequired()])
 
     special_instructions = TextAreaField('Special Instructions:',
@@ -193,6 +195,7 @@ class TransportationRequestForm(FlaskForm):
 
     follow_up_date = DateField('Follow Up Date:')
     status = QuerySelectField('Status:',
+                              id='status',
                               validators=[InputRequired()],
                               get_label='name',
                               query_factory=statusQuery)
@@ -211,7 +214,7 @@ class TransportationRequestForm(FlaskForm):
                               validators=[InputRequired()],
                               id='destination',
                               coerce=int)
-    duration = RadioField('Duration:', coerce=int)
+    duration = RadioField('Duration:', coerce=int, id='duration')
 
     destination_name = StringField('Destination Name:')
     street_address1 = StringField('Street Address:')
@@ -258,21 +261,25 @@ class OfficeTimeRequestForm(FlaskForm):
         validators=[InputRequired()],
         coerce=int)
 
-    service_provider = SelectMultipleField('Service Provider:',
-                                           id='service_provider',
+    service_provider = SelectMultipleField('Service Provider',
+                                           id='service-provider',
                                            validators=[InputRequired()],
                                            coerce=int)
 
-    requested_date = DateField('Date Requested:', validators=[InputRequired()])
+    requested_date = DateField(
+        'Date Requested', id='requested-date', validators=[InputRequired()])
+
     start_time = TimeField('From:',
                            format='%H:%M',
+                           id='starting-time',
                            validators=[InputRequired()])
-    end_time = TimeField('Until:', format='%H:%M')
-    high_priority = RadioField('Is high priority?',
+    end_time = TimeField('Until:', id='ending-time', format='%H:%M')
+    high_priority = RadioField('Is high priority?', id='high-priority',
                                choices=[(1, 'Yes'), (0, 'No')],
                                coerce=int)
     # add alerts
-    description = TextAreaField('Short description (included in email):')
+    description = TextAreaField(
+        'Short description (included in email):', id='description')
 
     service_category = SelectField(
         'Service Category:',
@@ -293,6 +300,7 @@ class OfficeTimeRequestForm(FlaskForm):
 
     status = QuerySelectField('Status:',
                               validators=[InputRequired()],
+                              id='status',
                               get_label='name',
                               query_factory=statusQuery)
 
@@ -364,26 +372,30 @@ class MembersHomeRequestForm(FlaskForm):
         validators=[InputRequired()],
         coerce=int)
 
-    service_provider = SelectMultipleField('Service Provider:',
-                                           id='service_provider',
+    service_provider = SelectMultipleField('Service Provider',
+                                           id='service-provider',
                                            validators=[InputRequired()],
                                            coerce=int)
 
-    requested_date = DateField('Requested Date:', validators=[InputRequired()])
+    requested_date = DateField(
+        'Requested Date', id='requested-date', validators=[InputRequired()])
 
     time_from = TimeField('From:',
                           format='%H:%M',
+                          id='starting-time',
                           validators=[InputRequired()])
 
     time_until = TimeField('Until:',
                            format='%H:%M',
+                           id='ending-time',
                            validators=[InputRequired()])
 
     time_flexible = RadioField('Is Date/Time Flexible?',
-                               choices=[(1, 'Yes'), (0, 'No')],
+                               choices=[(1, 'Yes'), (0, 'No')], id='time-flexible',
                                coerce=int)
 
-    description = TextAreaField('Short description (included in email):')
+    description = TextAreaField(
+        'Short description (included in email):', id='description')
 
     service_category = SelectField(
         'Service Category:',
@@ -408,7 +420,7 @@ class MembersHomeRequestForm(FlaskForm):
                                          id="special-instructions-text")
 
     follow_up_date = DateField('Follow Up Date:')
-    status = QuerySelectField('Status:',
+    status = QuerySelectField('Status:', id='status',
                               validators=[InputRequired()],
                               get_label='name',
                               query_factory=statusQuery)

@@ -1737,6 +1737,7 @@ def create_transportation_request(request_id=None):
         ]
 
     form.requesting_member.multiple = True
+
     form.requesting_member.choices = [
         (member.id, member.first_name + " " + member.last_name)
         for member in Member.query.all()

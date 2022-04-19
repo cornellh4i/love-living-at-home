@@ -18,7 +18,7 @@ function serviceChoices() {
 
 function providerChoices() {
     let service = document.getElementById('services').value;
-    let service_provider_select = document.getElementById('service_provider');
+    let service_provider_select = document.getElementById('service-provider');
     const protocol = window.location.protocol;
     const host = window.location.host;
     fetch(`${protocol}//${host}/admin/create-request/service/${service}`, {

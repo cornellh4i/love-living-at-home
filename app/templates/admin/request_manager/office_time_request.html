@@ -139,24 +139,68 @@
           </div>
         </div>
         <div class="field">
-          <button id="show-summary-modal" class="ui purple basic button" type="button">
+          <button id="show-summary-modal" class="ui purple basic button" onclick = "onSummaryClick()" type="button">
             Summary
           </button>
           <div id="summary-modal" class="ui modal">
             <i class="close icon"></i>
-            <div class="header">Are you sure you'd like to send a summary email?</div>
+            <center><h2 style = "padding: 10px">Service Request Summary</h2></center>
+            <hr size="9" width="100%" color="black">  
+            <!-- <div class="header"><bold><font size="5">Service Request Summary</font></bold></div> -->
             <div class="content">
-              <h4>A blank email will be sent if you haven't yet created the request<h4>
-                  <button onclick="sendRequests('summary')" class="ui purple basic button" type="button">
-                    Send Summary
-                  </button>
-                  <div id="summary-success-message" class="ui hidden positive message">
-                    <i class="close icon"></i>
-                    <div class="header">
-                      Request sent
-                    </div>
-                    <p>The volunteers have been emailed!</p>
-                  </div>
+              <h4><h4>
+                <table BORDER=0 CELLSPACING=10>
+                <td>Service Provider(s)</td>
+                <td> 
+                  <div id = 'summary-providers'></div>
+                </td>
+                </tr>
+                <tr>
+                <td>Member(s)</td>
+                <td>
+                  <div id = 'summary-members'></div>  
+                </td>
+                </tr>
+                <tr>
+                <td>Description</td>
+                <td><div id = 'summary-description'></div></td>
+                </tr>
+                <tr>
+                <td>Date/ Time</td>
+                <td>
+                  <div id = 'summary-requested-date'></div>
+                </td>
+                </tr>
+                <tr>
+                <td>Starting Time</td>
+                <td><div id = 'summary-starting-time'></td>
+                </tr>
+                <tr>
+                <td>Ending Time</td>
+                <td><div id = 'summary-ending-time'></td>
+                </tr>
+                <tr>
+                <td>High Priority</td>
+                <td><div id = 'summary-high-priority'></div></td>
+                </tr>
+                <tr>
+                <td>Service</td>
+                <td><div id = 'summary-service'></div></td>
+                </tr>
+                <tr>
+                <td>Special Instructions</td>
+                <td><div id = 'summary-special-instructions-text'></div></td>
+                </tr>
+                <tr>
+                <td>Status</td>
+                <td><div id = 'summary-status'></div></td>
+                </tr>
+                </table>
+                <p><br></p>
+                <button onclick="copyToClipboard()" class="ui purple basic button" type="button">
+                  Copy to Clipboard
+                </button>
+              <p id="copySuccess"></p>
             </div>
           </div>
         </div>
@@ -200,158 +244,138 @@
     </div>
 </div>
 
-  {% assets 'service_volunteers_js' %}
+{% assets 'service_volunteers_js' %}
   <script type="text/javascript" src="{{ ASSET_URL }}"></script>
-  {% endassets %}
+{% endassets %}
 
-  <script>
-    document.getElementById("member").classList.add("search")
-    document.getElementById("service_provider").classList.add("search")
-    
-    $('#show-send-req-modal').click(() => {
-      $('#send-req-modal').modal('show');
-    });
+<script>
+  document.getElementById("member").classList.add("search")
+  document.getElementById("service-provider").classList.add("search")
+  
+  $('#show-send-req-modal').click(() => {
+    $('#send-req-modal').modal('show');
+  });
 
-    $('#show-confirmation-modal').click(() => {
-      $('#confirmation-modal').modal('show');
-    });
+  $('#show-confirmation-modal').click(() => {
+    $('#confirmation-modal').modal('show');
+  });
 
-    $('#show-not-needed-modal').click(() => {
-      $('#not-needed-modal').modal('show');
-    });
+  $('#show-not-needed-modal').click(() => {
+    $('#not-needed-modal').modal('show');
+  });
 
-    $('#show-summary-modal').click(() => {
-      $('#summary-modal').modal('show');
-    });
-    
-    function serviceChoices(){
-      let service_category = document.getElementById('service_category').value;
-      let service_select = document.getElementById('services');
-      const protocol = window.location.protocol;
-      const host = window.location.host;
-      fetch(`${protocol}//${host}/admin/create-request/${service_category}`, {
-        }).then(function(response){
-          response.json().then(function(data){
-            console.log(data);
-            let optionHTML = '';
-            for (let service of data.services){
-              optionHTML += '<option value="' + service.id + '">' + service.name + '</option>'
-            }
-            service_select.innerHTML = optionHTML;
-          })
+  $('#show-summary-modal').click(() => {
+    $('#summary-modal').modal('show');
+  });
 
-        })
-    }
-
-    function specialInstructions() {
-      const member = document.getElementById('member')
-      let acum = ""
-      for (const option of member.options) {
-        if (option.selected) {
-          $('textarea#special-instructions-text').empty();
-          let member_id = option.value.toString();
-          let str = document.getElementById('special-instructions').innerHTML;
-          let obj = JSON.parse(str);
-          acum = acum + option.label + ": " + obj[member_id] + "\n\n"
-        }
+  function specialInstructions() {
+    const member = document.getElementById('member')
+    let acum = ""
+    for (const option of member.options) {
+      if (option.selected) {
+        $('textarea#special-instructions-text').empty();
+        let member_id = option.value.toString();
+        let str = document.getElementById('special-instructions').innerHTML;
+        let obj = JSON.parse(str);
+        acum = acum + option.label + ": " + obj[member_id] + "\n\n"
       }
-      $('textarea#special-instructions-text').val(
-        acum
-      );
-      special_input = acum;
     }
+    $('textarea#special-instructions-text').val(
+      acum
+    );
+    special_input = acum;
+  }
 
-    // Service Provider Table Logic
-    const providerSelect = document.getElementById("service_provider");
-    var websiteHost = window.location.host;
-    var protocol = window.location.protocol;
+  // Service Provider Table Logic
+  const providerSelect = document.getElementById("service-provider");
+  var websiteHost = window.location.host;
+  var protocol = window.location.protocol;
 
-    var filtered = false;
+  var filtered = false;
 
-    // This function should be called whenever the checkbox clicked (onChange)
-    function filterProviders() {
-      if (!filtered) {
-        // Construct JSON payload to send to server
-        let payload;
-        try {
-          payload = JSON.stringify({
-            serviceProviders: selectedIds,
-            requestedDate: document.getElementById("requested_date").valueAsDate.toUTCString(),
-            initialPickup: document.getElementById("start_time").valueAsDate.toUTCString(),
-            returnPickup: document.getElementById("end_time").valueAsDate.toUTCString()
-          })
-        } catch (err) {
-          alert("Please enter valid dates, times, and service providers before attempting to filter");
-          document.getElementById("filter-checkbox").checked = false;
-          return;
-        }
-        fetch(`${protocol}//${websiteHost}/admin/filter-service-providers`, {
-          method: "POST",
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "X-CSRFToken": document.getElementById("csrf_token").value,
-          },
-          body: payload
+  // This function should be called whenever the checkbox clicked (onChange)
+  function filterProviders() {
+    if (!filtered) {
+      // Construct JSON payload to send to server
+      let payload;
+      try {
+        payload = JSON.stringify({
+          serviceProviders: selectedIds,
+          requestedDate: document.getElementById("requested-date").valueAsDate.toUTCString(),
+          initialPickup: document.getElementById("start-time").valueAsDate.toUTCString(),
+          returnPickup: document.getElementById("end-time").valueAsDate.toUTCString()
         })
-          .then((response) => {
-            // res should be a JSON list of volunteer names
-            return response.json()
-          })
-          .then((data) => {
-            filtered = true;
-            selectedIds = data;
-            selectedNames = [];
-            for (const option of providerSelect.options) {
-              if (option.selected) {
-                for (const id of selectedIds) {
-                  if (option.getAttribute("value") == id) {
-                    selectedNames.push(option.innerHTML);
-                  }
+      } catch (err) {
+        alert("Please enter valid dates, times, and service providers before attempting to filter");
+        document.getElementById("filter-checkbox").checked = false;
+        return;
+      }
+      fetch(`${protocol}//${websiteHost}/admin/filter-service-providers`, {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "X-CSRFToken": document.getElementById("csrf_token").value,
+        },
+        body: payload
+      })
+        .then((response) => {
+          // res should be a JSON list of volunteer names
+          return response.json()
+        })
+        .then((data) => {
+          filtered = true;
+          selectedIds = data;
+          selectedNames = [];
+          for (const option of providerSelect.options) {
+            if (option.selected) {
+              for (const id of selectedIds) {
+                if (option.getAttribute("value") == id) {
+                  selectedNames.push(option.innerHTML);
                 }
               }
             }
-            updateTable();
-          })
-      }
-      else {
-        filtered = false;
-        changeProviders();
-      }
+          }
+          updateTable();
+        })
     }
-
-    function changeProviders() {
+    else {
       filtered = false;
-      document.getElementById("filter-checkbox").checked = false;
-      selectedNames = [];
-      selectedIds = [];
-      for (const option of providerSelect.options) {
-        if (option.selected) {
-          selectedNames.push(option.innerHTML);
-          selectedIds.push(option.getAttribute("value"));
-        }
+      changeProviders();
+    }
+  }
+
+  function changeProviders() {
+    filtered = false;
+    document.getElementById("filter-checkbox").checked = false;
+    selectedNames = [];
+    selectedIds = [];
+    for (const option of providerSelect.options) {
+      if (option.selected) {
+        selectedNames.push(option.innerHTML);
+        selectedIds.push(option.getAttribute("value"));
       }
-      updateTable();
+    }
+    updateTable();
+  }
+
+  function updateTable() {
+    const providerDiv = document.getElementById("providers");
+    const table = document.createElement('table');
+    if (selectedNames.length > 0) {
+      table.className += "ui celled table";
+      const header = table.createTHead();
+      const row = header.insertRow(0);
+      const headers = ["Name", "Address", "Location", "Phone Number", "Contact Method", "Type", "Email Address", "Fully Vetted"]
+      row.insertCell(0);
+      for (let i = 1; i <= headers.length; i++) {
+        const tempHeaderCell = row.insertCell(i);
+        tempHeaderCell.innerHTML = "<b>" + headers[i - 1] + "</b>";
+      }
+      table.id = "volunteerDataTable";
     }
 
-    function updateTable() {
-      const providerDiv = document.getElementById("providers");
-      const table = document.createElement('table');
-      if (selectedNames.length > 0) {
-        table.className += "ui celled table";
-        const header = table.createTHead();
-        const row = header.insertRow(0);
-        const headers = ["Name", "Address", "Location", "Phone Number", "Contact Method", "Type", "Email Address", "Fully Vetted"]
-        row.insertCell(0);
-        for (let i = 1; i <= headers.length; i++) {
-          const tempHeaderCell = row.insertCell(i);
-          tempHeaderCell.innerHTML = "<b>" + headers[i - 1] + "</b>";
-        }
-        table.id = "volunteerDataTable";
-      }
-
-      const volDataArr = {{ volunteer_data | safe
-    }}
+    const volDataArr = {{ volunteer_data | safe }}
 
     for (const volName of selectedNames) {
       const row = table.insertRow(1);
@@ -378,59 +402,58 @@
       providerDiv.replaceChild(table, document.getElementById("volunteerDataTable"));
     }
   }
-    providerSelect.setAttribute("onchange", "changeProviders()");
+  providerSelect.setAttribute("onchange", "changeProviders()");
 
-    function sendRequests(buttonType) {
-      const checkBoxStates = document.getElementsByName("selectedVolunteersCheckBox");
-      const checkBoxArr = Array.prototype.slice.call(checkBoxStates);
-      const volunteersToReq = checkBoxArr.filter(box => box.checked);
-      let emails = ""
-      for (const vol of volunteersToReq)
-        emails += vol.value.split("|")[1] + "&";
+  function sendRequests(buttonType) {
+    const checkBoxStates = document.getElementsByName("selectedVolunteersCheckBox");
+    const checkBoxArr = Array.prototype.slice.call(checkBoxStates);
+    const volunteersToReq = checkBoxArr.filter(box => box.checked);
+    let emails = ""
+    for (const vol of volunteersToReq)
+      emails += vol.value.split("|")[1] + "&";
 
-      emails = emails.substring(0, emails.length - 1);
+    emails = emails.substring(0, emails.length - 1);
 
-      const websiteHost = window.location.host;
-      const protocol = window.location.protocol;
-      fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&-1&Transportation&${emails}`);
+    const websiteHost = window.location.host;
+    const protocol = window.location.protocol;
+    fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&-1&Transportation&${emails}`);
 
-      const buttonId = `${buttonType.replace('+', '-') + '-success-message'}`
-      document.getElementById(buttonId).classList.remove('hidden');
-      document.getElementById(buttonId).classList.add('visible');
+    const buttonId = `${buttonType.replace('+', '-') + '-success-message'}`
+    document.getElementById(buttonId).classList.remove('hidden');
+    document.getElementById(buttonId).classList.add('visible');
+  }
+</script>
+<!-- End service provider table logic -->
+
+<!-- Begin Script for Displaying Member Table + Summary Popup -->
+<script>
+  const memberSelect = document.getElementById("member");
+  const dateSelect = document.getElementById("requested-date");
+
+  function updateMemberTable() {
+    const memberDiv = document.getElementById("members");
+    let selectedMembers = [];
+
+    for (const option of memberSelect.options) {
+      if (option.selected)
+        selectedMembers.push(option.innerHTML)
     }
-  </script>
-  <!-- End service provider table logic -->
 
-  <!-- Begin Table for Displaying Member Information -->
-  <script>
+    const table = document.createElement('table');
 
-    const memberSelect = document.getElementById("member");
-
-    function updateMemberTable() {
-      const memberDiv = document.getElementById("members");
-      let selectedMembers = [];
-
-      for (const option of memberSelect.options) {
-        if (option.selected)
-          selectedMembers.push(option.innerHTML)
+    if (selectedMembers.length > 0) {
+      table.className += "ui celled table";
+      const header = table.createTHead();
+      const row = header.insertRow(0);
+      const headers = ["Name", "Exp. Date", "Email", "Phone Number", "Home Address"]
+      for (let i = 0; i < headers.length; i++) {
+        const tempHeaderCell = row.insertCell(i);
+        tempHeaderCell.innerHTML = "<b>" + headers[i] + "</b>";
       }
+      table.id = "memberDataTable";
+    }
 
-      const table = document.createElement('table');
-
-      if (selectedMembers.length > 0) {
-        table.className += "ui celled table";
-        const header = table.createTHead();
-        const row = header.insertRow(0);
-        const headers = ["Name", "Exp. Date", "Email", "Phone Number", "Home Address"]
-        for (let i = 0; i < headers.length; i++) {
-          const tempHeaderCell = row.insertCell(i);
-          tempHeaderCell.innerHTML = "<b>" + headers[i] + "</b>";
-        }
-        table.id = "memberDataTable";
-      }
-
-      const memberDataArr = {{ member_data | safe
-    }}
+    const memberDataArr = {{ member_data | safe }}
 
     for (const memberName of selectedMembers) {
       const row = table.insertRow(1);
@@ -448,25 +471,201 @@
     }
   }
 
-    function onMemberChange() {
-      updateMemberTable();
-      specialInstructions();
+  function onMemberChange() {
+    updateMemberTable();
+    specialInstructions();
+  }
+  memberSelect.setAttribute("onchange", "onMemberChange()");
+
+  function onSummaryClick() {
+      resetTextToCopy();
+      displayServiceProviders();
+      displayMemberChoices();
+      displayDescription();
+      displayRequestedDate();
+      displayTime();
+      displayHighPriority();
+      displayService();
+      displaySpecialInstructions();
+      displayStatus();
+  }
+
+  let textToCopy = "";
+  function copyToClipboard() {
+    var copyText = textToCopy;
+    navigator.clipboard.writeText(copyText);
+    document.getElementById("copySuccess").innerHTML = "Copied successfully!"
+  }
+
+  function resetTextToCopy() {
+    document.getElementById("copySuccess").innerHTML = ""
+    textToCopy = "";
+  }
+    
+  function displayMemberChoices() {
+    // onclick()--> populate the fields with these values
+    const selected = memberSelect.selectedOptions;
+    let toDisplay = "";
+    let i = 1;
+    for (const selOpt of selected) {
+      if (i == selected.length){
+        toDisplay += selOpt.innerHTML + " ";
+        i++;
+      } else {
+        toDisplay += selOpt.innerHTML + ", ";
+        i++;
+      }
+      
     }
-    memberSelect.setAttribute("onchange", "onMemberChange()");
+    textToCopy += "\n\nRequesting Members: " + toDisplay;
+    document.getElementById("summary-members").innerHTML = toDisplay;
+  }
 
-  </script>
-  <!-- End Table for Displaying Member Information-->
+  function displayService() {
+    // onclick()--> populate the fields with these values
+    const selected = document.getElementById("services");
+    let toDisplay = selected.options[selected.selectedIndex].text;
+    textToCopy += "\n\nService: " + toDisplay;
+    document.getElementById("summary-service").innerHTML = toDisplay;
+  }
 
-  <style>
-    .column {
-      position: relative;
+  function displayServiceProviders() {
+    // onclick()--> populate the fields with these values
+    const selected = document.getElementById('service-provider').selectedOptions;
+    let toDisplay = "";
+    let i = 1;
+    for (const selOpt of selected) {
+      if (i == selected.length){
+        toDisplay += selOpt.innerHTML + " ";
+        i++;
+      } else {
+        toDisplay += selOpt.innerHTML + ", ";
+        i++;
+      }
+      
     }
+    textToCopy += "Service Providers: " + toDisplay;
+    document.getElementById("summary-providers").innerHTML = toDisplay;
+  }
+  
 
-    .column .side-button {
-      position: absolute;
-      bottom: 0;
-      left: 0;
+  function displayDescription() {
+    // onclick()--> populate the fields with these values
+    const selected = document.getElementById('description').value;
+    let toDisplay = "";
+    toDisplay = selected;
+    textToCopy += "\n\nDescription: " + toDisplay;
+    document.getElementById("summary-description").innerHTML = toDisplay;
+  }
+
+  function displayRequestedDate(){
+    const selected = dateSelect.value;
+    let toDisplay = selected;
+    textToCopy += "\n\nRequested Date: " + toDisplay;
+    document.getElementById("summary-requested-date").innerHTML = toDisplay;
+  }
+
+  function displaySpecialInstructions() {
+    const selected = document.getElementById('special-instructions-text').value;
+    textToCopy += "\n\nSpecial Instructions: \n";
+    let arr = selected.split("\n\n");
+    let toDisplay = "";
+    for(i = 0; i < arr.length; i++) {
+      if(i<arr.length -1) {
+        toDisplay += arr[i] + "<br><br>";
+        textToCopy += arr[i] + "\n\n";
+      }
+      else {
+        toDisplay+= arr[i];
+        textToCopy += arr[i];
+      }
     }
-  </style>
+    document.getElementById('summary-special-instructions-text').innerHTML = toDisplay;
+  }
 
-  {% endblock %}
+  function displayStatus() {
+    // onclick()--> populate the fields with these values
+    const statuses = {
+      "0":"Requested",
+      "1":"Confirmed",
+      "2":"Completed",
+      "3":"Cancelled"
+    }
+    const selected = statuses[document.getElementById('status').value];
+    let toDisplay = selected;
+
+    textToCopy += "\nStatus: " + toDisplay;
+    document.getElementById("summary-status").innerHTML = toDisplay;
+  }
+
+  function displayTime(){
+    const selected = document.getElementById('starting-time').valueAsDate;
+    const selected2 = document.getElementById('ending-time').valueAsDate;
+
+    startingTime = convertTimeFromValueAsDate(selected);
+    endingTime = convertTimeFromValueAsDate(selected2);
+
+    textToCopy += "\n\nStarting Time: " + startingTime;
+    textToCopy += "\n\nEnding Time: " + endingTime;
+    document.getElementById("summary-starting-time").innerHTML = startingTime;
+    document.getElementById("summary-ending-time").innerHTML = endingTime;
+  }
+
+  function convertTimeFromValueAsDate(val) {
+    try {
+      const dateArr = val.toString().split(" "); //parsing GMT string for date
+      const timeArr = dateArr[4].split(":");  //finding time from date string
+      let hours = parseInt(timeArr[0]);
+      let daylightSavings = dateArr[5].charAt(5) == "5" ? true : false;
+      daylightSavings ? hours = hours + 5: hours = hours + 4; //accounting for daylight savings
+      if(hours >= 24) { //if military time goes over 24 then set to 0
+        hours = hours%24;
+      }
+      isPm = hours >=12 ? true : false; //isPm
+      if(isPm) {
+        hours = hours % 12; //converting military time to normal time
+      }
+      if(hours == 0) { //changing hours from 0 to 12
+        hours = 12;
+      }
+      let toDisplay = "" + hours + ":" + timeArr[1] + ":" + timeArr[2];
+      isPm ? toDisplay += " PM" : toDisplay += " AM";
+      //let toDisplay = selected; 
+      
+      return toDisplay
+    }
+    catch (error) {
+      console.log("empty date error")
+    }
+  }
+
+  function displayHighPriority(){
+    var yesisTruenoisFalse = -1;
+    for (var i = 0; i < document.querySelectorAll('[type="radio"]').length ; i++){
+      if (document.querySelectorAll('[type="radio"]')[0].checked){
+        yesisTruenoisFalse = 'Yes';
+      } else if (document.querySelectorAll('[type="radio"]')[1].checked){
+        yesisTruenoisFalse = 'No';
+      }
+    }
+    if (yesisTruenoisFalse != -1) {
+      textToCopy += "\n\nHigh Priority: " + yesisTruenoisFalse;
+      document.getElementById("summary-high-priority").innerHTML = yesisTruenoisFalse;
+    }
+  }
+</script>
+<!-- End Table for Displaying Member Information-->
+
+<style>
+  .column {
+    position: relative;
+  }
+
+  .column .side-button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+</style>
+
+{% endblock %}
