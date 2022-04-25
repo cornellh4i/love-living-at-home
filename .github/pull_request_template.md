@@ -1,6 +1,6 @@
 <!-- IF A SECTION IS NOT APPLICABLE TO YOU, PLEASE DELETE IT!! -->
 
-<!-- Your title should be able to summarize what changes you've made in one sentence. For example: "Exclude staff from the check for follows". For stacked PRs, please indicate clearly in the title where in the stack you are. For example: "[Eatery Refactor][4/5] Converted all files to MVP model" -->
+<!-- Your title should be able to summarize what changes you've made in one sentence. For example: "Exclude staff from the check for follows". For stacked PRs, please indicate clearly in the title where in the stack you are. For example: "[Request Manager Refactor][4/5] Factored out all duplicated JS" -->
 
 
 ## Overview
