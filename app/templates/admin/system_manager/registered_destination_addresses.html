@@ -124,11 +124,11 @@
         $('tr.hidden').removeClass('hidden').show();
       }
     });
+  });
 
-    $('.delete-destination-address').click(function () {
-      destination_address_id = $(this).attr('id');
-      $(`#modal-${destination_address_id}`).modal('show');
-    });
+  $(document).on('click', '.delete-destination-address', function(){
+    service_id = $(this).attr('id');
+    $(`#modal-${service_id}`).modal('show');
   });
 </script>
 {% endblock %}

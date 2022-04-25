@@ -86,11 +86,11 @@
         $('tr.hidden').removeClass('hidden').show();
       }
     });
+  });
 
-    $('.delete-service').click(function () {
-      service_id = $(this).attr('id');
-      $(`#modal-${service_id}`).modal('show');
-    });
+  $(document).on('click', '.delete-service', function(){
+    service_id = $(this).attr('id');
+    $(`#modal-${service_id}`).modal('show');
   });
 </script>
 {% endblock %}

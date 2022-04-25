@@ -23,8 +23,6 @@
       </div>
     </div>
 
-    {# Use overflow-x: scroll so that mobile views don't freak out
-    # when the table is too wide #}
     <div style="overflow-x: scroll;">
       <a class="ui basic compact button" href="{{ url_for('admin.new_service') }}">
         <i class="plus icon"></i>
@@ -85,11 +83,11 @@
         $('tr.hidden').removeClass('hidden').show();
       }
     });
+  });
 
-    $('.delete-service').click(function () {
-      service_id = $(this).attr('id');
-      $(`#modal-${service_id}`).modal('show');
-    });
+  $(document).on('click', '.delete-service', function(){
+    service_id = $(this).attr('id');
+    $(`#modal-${service_id}`).modal('show');
   });
 </script>
 {% endblock %}

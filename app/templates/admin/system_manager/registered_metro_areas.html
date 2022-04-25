@@ -82,11 +82,11 @@
         $('tr.hidden').removeClass('hidden').show();
       }
     });
+  });
 
-    $('.delete-metro-area').click(function () {
-      metro_area_id = $(this).attr('id');
-      $(`#modal-${metro_area_id}`).modal('show');
-    });
+  $(document).on('click', '.delete-metro-area', function(){
+    service_id = $(this).attr('id');
+    $(`#modal-${service_id}`).modal('show');
   });
 </script>
 {% endblock %}
