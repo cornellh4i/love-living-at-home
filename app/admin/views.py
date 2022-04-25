@@ -1787,16 +1787,6 @@ def create_transportation_request(request_id=None):
                 ).all()
             ]
         if form.validate_on_submit():
-            if form.requested_date.data > form.follow_up_date.data:
-                flash(
-                    'The requested date must come before the follow up date!', 'error')
-                return redirect(url_for('admin.create_transportation_request', request_id=request_id))
-
-            elif form.initial_pickup.data > form.return_pickup.data:
-                flash(
-                    'The initial pickup time must come before the return pickup time!', 'error')
-                return redirect(url_for('admin.create_transportation_request', request_id=request_id))
-
             special_input = request.form.get('special_instructions')
             if transportation_request is not None:
                 transportation_request.status_id = form.status.data.id
@@ -2056,11 +2046,6 @@ def create_office_time_request(request_id=None):
                 ).all()
             ]
         if form.validate_on_submit():
-            if form.start_time.data > form.end_time.data:
-                flash(
-                    'The start time of the request must come before the end time!', 'error')
-                return redirect(url_for('admin.create_office_time_request', request_id=request_id))
-
             special_input = request.form.get('special_instructions')
             if office_time_request is not None:
                 office_time_request.type_id = 1
@@ -2266,16 +2251,6 @@ def create_members_home_request(request_id=None):
                 ).all()
             ]
         if form.validate_on_submit():
-            if form.requested_date.data > form.follow_up_date.data:
-                flash(
-                    'The requested date must come before the follow up date!', 'error')
-                return redirect(url_for('admin.create_members_home_request', request_id=request_id))
-
-            elif form.time_from.data > form.time_until.data:
-                flash(
-                    'The start time of the request must come before the end time!', 'error')
-                return redirect(url_for('admin.create_members_home_request', request_id=request_id))
-
             special_input = request.form.get('special_instructions')
             if members_home_request is not None:
                 members_home_request.type_id = 2
@@ -3388,73 +3363,6 @@ def add_availability_volunteer(volunteer_id=None):
                                              volunteer.last_name)
 
     if form.validate_on_submit():
-        availability_mapping = {
-            0: [
-                form.availability_monday_start.data,
-                form.availability_monday_end.data
-            ],
-            1: [
-                form.availability_tuesday_start.data,
-                form.availability_tuesday_end.data
-            ],
-            2: [
-                form.availability_wednesday_start.data,
-                form.availability_wednesday_end.data
-            ],
-            3: [
-                form.availability_thursday_start.data,
-                form.availability_thursday_end.data
-            ],
-            4: [
-                form.availability_friday_start.data,
-                form.availability_friday_end.data
-            ],
-            5: [
-                form.availability_saturday_start.data,
-                form.availability_saturday_end.data
-            ],
-            6: [
-                form.availability_sunday_start.data,
-                form.availability_sunday_end.data
-            ],
-            7: [
-                form.backup_monday_start.data,
-                form.backup_monday_end.data
-            ],
-            8: [
-                form.backup_tuesday_start.data,
-                form.backup_tuesday_end.data
-            ],
-            9: [
-                form.backup_wednesday_start.data,
-                form.backup_wednesday_end.data
-            ],
-            10: [
-                form.backup_thursday_start.data,
-                form.backup_thursday_end.data
-            ],
-            11: [
-                form.backup_friday_start.data,
-                form.backup_friday_end.data
-            ],
-            12: [
-                form.backup_saturday_start.data,
-                form.backup_saturday_end.data
-            ],
-            13: [
-                form.backup_sunday_start.data,
-                form.backup_sunday_end.data
-            ]
-        }
-
-        for i in range(14):
-            avail_start, avail_end = availability_mapping[i]
-            if avail_start is not None and avail_end is not None:
-                if avail_start > avail_end:
-                    flash(
-                        'The start time of a volunteer\'s availability must come before the end time!', 'error')
-                    return redirect(url_for('admin.add_availability_volunteer', volunteer_id=volunteer_id))
-
         updated_availability = availability
         updated_availability.availability_monday_start = form.availability_monday_start.data
         updated_availability.availability_monday_end = form.availability_monday_end.data
@@ -3539,73 +3447,6 @@ def add_availability_local_resource(local_resource_id=None):
         "availability_identity", "Local Resource " + localResource.company_name)
 
     if form.validate_on_submit():
-        availability_mapping = {
-            0: [
-                form.availability_monday_start.data,
-                form.availability_monday_end.data
-            ],
-            1: [
-                form.availability_tuesday_start.data,
-                form.availability_tuesday_end.data
-            ],
-            2: [
-                form.availability_wednesday_start.data,
-                form.availability_wednesday_end.data
-            ],
-            3: [
-                form.availability_thursday_start.data,
-                form.availability_thursday_end.data
-            ],
-            4: [
-                form.availability_friday_start.data,
-                form.availability_friday_end.data
-            ],
-            5: [
-                form.availability_saturday_start.data,
-                form.availability_saturday_end.data
-            ],
-            6: [
-                form.availability_sunday_start.data,
-                form.availability_sunday_end.data
-            ],
-            7: [
-                form.backup_monday_start.data,
-                form.backup_monday_end.data
-            ],
-            8: [
-                form.backup_tuesday_start.data,
-                form.backup_tuesday_end.data
-            ],
-            9: [
-                form.backup_wednesday_start.data,
-                form.backup_wednesday_end.data
-            ],
-            10: [
-                form.backup_thursday_start.data,
-                form.backup_thursday_end.data
-            ],
-            11: [
-                form.backup_friday_start.data,
-                form.backup_friday_end.data
-            ],
-            12: [
-                form.backup_saturday_start.data,
-                form.backup_saturday_end.data
-            ],
-            13: [
-                form.backup_sunday_start.data,
-                form.backup_sunday_end.data
-            ]
-        }
-
-        for i in range(14):
-            avail_start, avail_end = availability_mapping[i]
-            if avail_start is not None and avail_end is not None:
-                if avail_start > avail_end:
-                    flash(
-                        'The start time of a local resource\'s availability must come before the end time!', 'error')
-                    return redirect(url_for('admin.add_availability_local_resource', local_resource_id=local_resource_id))
-
         updated_availability = availability
         updated_availability.availability_monday_start = form.availability_monday_start.data
         updated_availability.availability_monday_end = form.availability_monday_end.data
