@@ -15,7 +15,7 @@ from app.admin.forms import (AddAvailability,
                              EditDestinationAddressForm,
                              InviteUserForm, MakeMonthlyRepeatingCopiesForm, MakeYearlyRepeatingCopiesForm, MemberManager, MembersHomeRequestForm,
                              NewUserForm, SearchRequestForm, TransportationRequestForm,
-                             VolunteerManager, OfficeTimeRequestForm, GeneratePdfForm,
+                             VolunteerManager, OfficeTimeRequestForm, GenerateCSVForm,
                              EditServicesVolunteerCanProvide, MakeIndividualCopiesForm,
                              MakeDailyRepeatingCopiesForm,
                              MakeWeeklyRepeatingCopiesForm, MakeCopiesWithoutDateForm, AddMemberVolunteer)
@@ -4136,32 +4136,171 @@ def delete_destination_address(destination_address_id):
     return redirect(url_for('admin.registered_destination_addresses'))
 
 
-@admin.route("/generate-report", methods=['GET', 'POST'])
+@admin.route("/generate-report", methods=["GET", "POST"])
 @login_required
 @admin_required
 def generate_report():
-    pdf_form = GeneratePdfForm()
-    if pdf_form.validate_on_submit():
-        file_name = pdf_form.file_name.data
+    csv_form = GenerateCSVForm()
+    if csv_form.validate_on_submit():
+        year = csv_form.year.data
+        services = {
+            "Service Category": [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+                "Grand Total",
+            ]
+        }
+        spaces = 0
+        # must initilzaize the dictionary with empty array in order presented in csv
+        for ser in ServiceCategory.query.all():
+            if spaces == 0:
+                services[ser.name.upper()] = []
+                spaces += 1
+            else:
+                services[" " * spaces] = ["-", "-", "-", "-",
+                                          "-", "-", "-", "-", "-", "-", "-", "-", "-"]
+                services[ser.name.upper()] = []
+                spaces += 1
+            for item in Service.query.filter_by(category_id=ser.id).all():
+                services[item.name] = []
+        # get the count and add to the empty array in the dictionary
+        for ser in ServiceCategory.query.all():
+            for i in range(12):
+                if ser.request_type_id == 2:
+                    services[ser.name.upper()].append(
+                        len(
+                            MembersHomeRequest.query.filter(
+                                MembersHomeRequest.service_category_id == ser.id)
+                            .filter(MembersHomeRequest.requested_date.contains(str(year) + "-"))
+                            .filter(MembersHomeRequest.status_id == 2)
+                            .filter(
+                                MembersHomeRequest.requested_date.contains(
+                                    ("-0" + str(i + 1) + "-") if (i +
+                                                                  1) <= 9 else ("-" + str(i + 1) + "-")
+                                )
+                            )
+                            .all()
+                        )
+                    )
+                elif ser.request_type_id == 1:
+                    services[ser.name.upper()].append(
+                        len(
+                            OfficeRequest.query.filter(
+                                OfficeRequest.service_category_id == ser.id)
+                            .filter(OfficeRequest.requested_date.contains(str(year) + "-"))
+                            .filter(OfficeRequest.status_id == 2)
+                            .filter(
+                                OfficeRequest.requested_date.contains(
+                                    ("-0" + str(i + 1) + "-") if (i +
+                                                                  1) <= 9 else ("-" + str(i + 1) + "-")
+                                )
+                            )
+                            .all()
+                        )
+                    )
+                elif ser.request_type_id == 0:
+                    services[ser.name.upper()].append(
+                        len(
+                            TransportationRequest.query.filter(
+                                TransportationRequest.service_category_id == ser.id)
+                            .filter(TransportationRequest.requested_date.contains(str(year) + "-"))
+                            .filter(TransportationRequest.status_id == 2)
+                            .filter(
+                                TransportationRequest.requested_date.contains(
+                                    ("-0" + str(i + 1) + "-") if (i +
+                                                                  1) <= 9 else ("-" + str(i + 1) + "-")
+                                )
+                            )
+                            .all()
+                        )
+                    )
+                for item in Service.query.filter_by(category_id=ser.id).all():
+                    if ServiceCategory.query.filter_by(id=item.category_id).first().request_type_id == 2:
+                        services[item.name].append(
+                            len(
+                                MembersHomeRequest.query.filter(
+                                    MembersHomeRequest.service_category_id == item.category_id
+                                )
+                                .filter(MembersHomeRequest.requested_date.contains(str(year) + "-"))
+                                .filter(MembersHomeRequest.status_id == 2)
+                                .filter(MembersHomeRequest.service_id == item.id)
+                                .filter(
+                                    MembersHomeRequest.requested_date.contains(
+                                        ("-0" + str(i + 1) + "-") if (i +
+                                                                      1) <= 9 else ("-" + str(i + 1) + "-")
+                                    )
+                                )
+                                .all()
+                            )
+                        )
+                    elif ServiceCategory.query.filter_by(id=item.category_id).first().request_type_id == 1:
+                        services[item.name].append(
+                            len(
+                                OfficeRequest.query.filter(
+                                    OfficeRequest.service_category_id == item.category_id)
+                                .filter(OfficeRequest.requested_date.contains(str(year) + "-"))
+                                .filter(OfficeRequest.status_id == 2)
+                                .filter(OfficeRequest.service_id == item.id)
+                                .filter(
+                                    OfficeRequest.requested_date.contains(
+                                        ("-0" + str(i + 1) + "-") if (i +
+                                                                      1) <= 9 else ("-" + str(i + 1) + "-")
+                                    )
+                                )
+                                .all()
+                            )
+                        )
+                    elif ServiceCategory.query.filter_by(id=item.category_id).first().request_type_id == 0:
+                        services[item.name].append(
+                            len(
+                                TransportationRequest.query.filter(
+                                    TransportationRequest.service_category_id == item.category_id
+                                )
+                                .filter(TransportationRequest.requested_date.contains(str(year) + "-"))
+                                .filter(TransportationRequest.status_id == 2)
+                                .filter(TransportationRequest.service_id == item.id)
+                                .filter(
+                                    TransportationRequest.requested_date.contains(
+                                        ("-0" + str(i + 1) + "-") if (i +
+                                                                      1) <= 9 else ("-" + str(i + 1) + "-")
+                                    )
+                                )
+                                .all()
+                            )
+                        )
+        services["Total"] = []
+        for ser in ServiceCategory.query.all():
+            # sum of each of the service categories
+            services[ser.name.upper()].append(sum(services[ser.name.upper()]))
+        for item in Service.query.all():
+            # sum of each of the service
+            services[item.name].append(sum(services[item.name]))
+        # tallying up the final total row
+        for i in range(13):
+            acum = 0
+            for ser in ServiceCategory.query.all():
+                acum += services[ser.name.upper()][i]
+            services["Total"].append(acum)
+
+        file_name = csv_form.file_name.data
+
         import pandas as pd
-        import numpy as np
-        from jinja2 import Environment, FileSystemLoader
-        from weasyprint import HTML
 
-        data = pd.DataFrame()
-        data['Col1'] = np.arange(1, 50)
-        data['Col2'] = np.arange(2, 51)
-
-        env = Environment(loader=FileSystemLoader('.'))
-        template = env.get_template("./app/templates/admin/report.html")
-        template_vars = {"title": "Love Living at Home",
-                         "data": data.to_html()}
-        html_out = template.render(template_vars)
-        HTML(string=html_out).write_pdf(
-            "./app/reports/" + file_name + ".pdf", stylesheets=["./app/assets/styles/report.css"])
         try:
-            return send_file("reports/" + file_name + ".pdf", as_attachment=True)
+            results = pd.DataFrame.from_dict(data=services, orient="index")
+            results.to_csv("./app/reports/" + file_name + str(year) + ".csv")
+            return send_file("reports/" + file_name + str(year) + ".csv", as_attachment=True)
         except FileNotFoundError:
-            flash('Failed to generate report.', 'error')
+            flash("Failed to generate report.", "error")
             abort(404)
-    return render_template('admin/system_manager/generate_report.html', form=pdf_form)
+    return render_template("admin/system_manager/generate_report.html", form=csv_form)

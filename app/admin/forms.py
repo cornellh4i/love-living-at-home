@@ -83,11 +83,11 @@ class NewUserForm(InviteUserForm):
     submit = SubmitField('Create')
 
 
-class GeneratePdfForm(FlaskForm):
-    report_type = SelectField(
-        'Report Type', coerce=int,
-        choices=[(0, 'Completed Volunteer Services by Service Category')], validators=[InputRequired()])
-    file_name = StringField('Report File Name', validators=[InputRequired()])
+class GenerateCSVForm(FlaskForm):
+    
+    file_name = StringField('CSV Report File Name', validators=[InputRequired()])
+    year = IntegerField('Choose the year (2010-present)', validators=[
+                                NumberRange(min=2010, max=2050)])
     submit = SubmitField('Run Report')
 
 
