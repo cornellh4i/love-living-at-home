@@ -2,6 +2,7 @@ from datetime import datetime
 
 from .. import db
 
+
 class OfficeRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type_id = db.Column(db.Integer,
@@ -19,16 +20,14 @@ class OfficeRequest(db.Model):
                               nullable=False,
                               default=datetime.utcnow().date())
     requested_date = db.Column(
-        db.Date,
-        # default=datetime.utcnow().date()
-        )
+        db.Date)
     # Time Info
-    start_time =db.Column(db.Time,
-                            nullable=False,
-                            default=datetime.utcnow().time())
-    end_time =db.Column(db.Time,
-                        nullable=False,
-                        default=datetime.utcnow().time())
+    start_time = db.Column(db.Time,
+                           nullable=False,
+                           default=datetime.utcnow().time())
+    end_time = db.Column(db.Time,
+                         nullable=False,
+                         default=datetime.utcnow().time())
     is_high_priority = db.Column(db.Boolean, nullable=False)
     # Service Info
     service_category_id = db.Column(db.Integer,
@@ -49,8 +48,9 @@ class OfficeRequest(db.Model):
         nullable=False)
     cc_email = db.Column(db.String(120), unique=False, nullable=False)
 
-    #based on status of the request
-    cancellation_reason = db.Column(db.String(120), unique = False)
+    # based on status of the request
+    cancellation_reason_id = db.Column(
+        db.Integer, db.ForeignKey('cancellation_reason.id'), unique=False)
     rating = db.Column(db.Integer)
     member_comments = db.Column(db.String(1000))
     provider_comments = db.Column(db.String(1000))

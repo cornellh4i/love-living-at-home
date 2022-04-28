@@ -24,7 +24,7 @@ from app.email import send_email
 from app.models import (Address, Availability, EditableHTML, LocalResource, Member, MetroArea,
                         ProvidedService, MembersHomeRequest, TransportationRequest, Role, Vacation,
                         Service, ServiceCategory, Staffer, User, Volunteer, RequestMemberRecord, Review)
-from app.models.transportation_request import ContactLogPriorityType, RequestDurationType, RequestStatus, RequestType
+from app.models.transportation_request import ContactLogPriorityType, RequestDurationType, RequestStatus, RequestType, CancellationReason
 from app.models.request_volunteer_record import RequestVolunteerRecord
 from app.models.office_request import OfficeRequest
 from datetime import timedelta
@@ -319,68 +319,17 @@ def search_request():
         (member.id, member.first_name + " " + member.last_name)
         for member in Member.query.all()
     ]
+
     service_providers = [
         ('volunteer', volunteer.id,
          volunteer.first_name + " " + volunteer.last_name)
         for volunteer in Volunteer.query.all()
     ] + [('local-resource', local_resource.id, local_resource.company_name)
          for local_resource in LocalResource.query.all()
-         ]  # TODO -- what is required from local resources
+         ]
 
     form.dated_filter.choices = [(0, 'Dated'), (1, 'Undated')]
     temp_requests = []
-    # temp_requests = [{
-    #     'request_num': 6724,
-    #     'request_status': "Requested",
-    #     'requested_date_display': "06/17",
-    #     'requested_date_full': "06/17/2021",
-    #     'requested_day_of_week': "Saturday",
-    #     'start_time': "12:00 PM",
-    #     'end_time': "12:00 PM",
-    #     'member_name': "Anne Rodda",
-    #     'volunteer_name': "Fran Spadafora Manzella",
-    #     'is_volunteer': True,
-    #     'request_type': "Member's Home",
-    #     'service': "Pet Care -Vol",
-    #     'created_date': "06/15/2021",
-    #     'modified_date': "N/A",
-    #     'service_category': "Volunteer In-Home Support",
-    #     'member_numbers': -2
-    # }, {
-    #     'request_num': 6697,
-    #     'request_status': "Confirmed",
-    #     'requested_date_display': "06/21",
-    #     'requested_date_full': "06/21/2021",
-    #     'requested_day_of_week': "Wednesday",
-    #     'start_time': "11:30 AM",
-    #     'end_time': "12:40 PM",
-    #     'member_name': "Randy Warden",
-    #     'volunteer_name': "Hank Dullea",
-    #     'is_volunteer': True,
-    #     'request_type': "Transportation",
-    #     'service': "Vol Driver Local Medical Appt",
-    #     'created_date': "06/11/2021",
-    #     'modified_date': "06/18/2021",
-    #     'service_category': "Transportation",
-    #     'member_numbers': -1
-    # }, {
-    #     'request_num': 6698,
-    #     'request_status': "Confirmed",
-    #     'requested_date_display': "",
-    #     'requested_date_full': "",
-    #     'requested_day_of_week': "Friday",
-    #     'start_time': "10:00 AM",
-    #     'end_time': "11:00 PM",
-    #     'member_name': "John Brown",
-    #     'volunteer_name': "Diana Cosgrove",
-    #     'is_volunteer': True,
-    #     'request_type': "Transportation",
-    #     'service': "Vol Driver Local Medical Appt",
-    #     'created_date': "06/11/2021",
-    #     'modified_date': "06/18/2021",
-    #     'service_category': "Transportation",
-    #     'member_numbers': -1
-    # }]
 
     # Pull existing requests from the database and format each of them for display on front-end.
     transportation_requests = TransportationRequest.query.all()
@@ -568,6 +517,7 @@ def make_individual_transportation_copies(
         transportation_request = TransportationRequest(
             type_id=0,
             status_id=request_obj.status_id if include_service_request_status else 0,
+            cancellation_reason_id=request_obj.cancellation_reason_id if include_service_request_status and request_obj.status_id == 3 else None,
             requested_date=new_service_dates[i],
             short_description=request_obj.short_description,
             initial_pickup_time=new_service_times[i],
@@ -623,6 +573,7 @@ def make_individual_office_copies(
         office_request = OfficeRequest(
             type_id=1,
             status_id=request_obj.status_id if include_service_request_status else 0,
+            cancellation_reason_id=request_obj.cancellation_reason_id if include_service_request_status and request_obj.status_id == 3 else None,
             short_description=request_obj.short_description,
             requested_date=new_service_dates[i],
             start_time=new_service_times[i],
@@ -672,6 +623,7 @@ def make_individual_members_home_copies(
         members_home_request = MembersHomeRequest(
             type_id=2,
             status_id=request_obj.status_id if include_service_request_status else 0,
+            cancellation_reason_id=request_obj.cancellation_reason_id if include_service_request_status and request_obj.status_id == 3 else None,
             short_description=request_obj.short_description,
             requested_date=new_service_dates[i],
             from_time=new_service_times[i],
@@ -745,6 +697,7 @@ def make_transportation_copies_without_date(request_obj, number_of_copies,
         transportation_request = TransportationRequest(
             type_id=0,
             status_id=request_obj.status_id if include_service_request_status else 0,
+            cancellation_reason_id=request_obj.cancellation_reason_id if include_service_request_status and request_obj.status_id == 3 else None,
             requested_date=None,
             short_description=request_obj.short_description,
             initial_pickup_time=request_obj.initial_pickup_time,
@@ -797,6 +750,7 @@ def make_office_copies_without_date(request_obj, number_of_copies,
         office_request = OfficeRequest(
             type_id=1,
             status_id=request_obj.status_id if include_service_request_status else 0,
+            cancellation_reason_id=request_obj.cancellation_reason_id if include_service_request_status and request_obj.status_id == 3 else None,
             short_description=request_obj.short_description,
             requested_date=None,
             start_time=request_obj.start_time,
@@ -843,6 +797,7 @@ def make_members_home_copies_without_date(request_obj, number_of_copies,
         members_home_request = MembersHomeRequest(
             type_id=2,
             status_id=request_obj.status_id if include_service_request_status else 0,
+            cancellation_reason_id=request_obj.cancellation_reason_id if include_service_request_status and request_obj.status_id == 3 else None,
             short_description=request_obj.short_description,
             requested_date=None,
             from_time=request_obj.from_time,
@@ -1245,7 +1200,7 @@ def make_yearly_repeating_copies(is_day_of_every_selected, make_yearly_repeating
                                           FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
                     < end_by
 
-                ):
+                    ):
 
                 date += relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
                                       weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
@@ -1550,10 +1505,11 @@ def cancel_request(request_type_id, request_id):
 
     # status id of cancel is 3
     request_obj.status_id = 3
-    request_obj.cancellation_reason = json['reason']
-    flash(
-        'Successfully cancelled request {}'.format(
-            request_type + " #" + str(request_id)), 'success')
+    cancellation_reason = CancellationReason.query.filter_by(
+        name=json['reason']).first()
+    request_obj.cancellation_reason_id = cancellation_reason.id
+    flash('Successfully cancelled request {}'.format(
+        request_type + " #" + str(request_id)), 'success')
     resp = jsonify(success=True)
     return resp
 
@@ -1708,6 +1664,8 @@ def create_transportation_request(request_id=None):
             type_id=0,
             status=RequestStatus.query.filter_by(
                 id=transportation_request.status_id).first(),
+            cancellation_reasons=CancellationReason.query.filter_by(
+                id=transportation_request.cancellation_reason_id).first(),
             short_description=transportation_request.short_description,
             date_created=transportation_request.created_date,
             requested_date=transportation_request.requested_date,
@@ -1728,6 +1686,7 @@ def create_transportation_request(request_id=None):
             cc_email=transportation_request.cc_email,
             time_flexible=transportation_request.is_date_time_flexible
         )
+
         form.service_category.choices = service_category_choices
         form.transportation_service.choices = [
             (service.id, service.name) for service in
@@ -1741,6 +1700,11 @@ def create_transportation_request(request_id=None):
     form.requesting_member.choices = [
         (member.id, member.first_name + " " + member.last_name)
         for member in Member.query.all()
+    ]
+
+    form.cancellation_reasons.choices = [
+        (cancellation_reason.id, cancellation_reason.name)
+        for cancellation_reason in CancellationReason.query.all()
     ]
 
     service_provider_choices = []
@@ -1800,6 +1764,7 @@ def create_transportation_request(request_id=None):
             special_input = request.form.get('special_instructions')
             if transportation_request is not None:
                 transportation_request.status_id = form.status.data.id
+                transportation_request.cancellation_reason_id = form.cancellation_reasons.data.id
                 transportation_request.short_description = form.description.data
                 transportation_request.created_date = form.date_created.data
                 transportation_request.requested_date = form.requested_date.data
@@ -1833,6 +1798,7 @@ def create_transportation_request(request_id=None):
                 transportation_request = TransportationRequest(
                     type_id=0,
                     status_id=form.status.data.id,
+                    cancellation_reason_id=form.cancellation_reasons.data.id,
                     short_description=form.description.data,
                     created_date=form.date_created.data,
                     requested_date=form.requested_date.data,
@@ -2005,7 +1971,9 @@ def create_office_time_request(request_id=None):
             service_category=office_time_request.service_category_id,
             office_time_service=office_time_request.service_id,
             status=RequestStatus.query.filter_by(
-                id=office_time_request.status_id),
+                id=office_time_request.status_id).first(),
+            cancellation_reasons=CancellationReason.query.filter_by(
+                id=office_time_request.cancellation_reason_id).first(),
             contact_log_priority=ContactLogPriorityType.query.filter_by(
                 id=office_time_request.contact_log_priority_id),
             special_instructions=office_time_request.special_instructions
@@ -2040,6 +2008,11 @@ def create_office_time_request(request_id=None):
         for staffer in Staffer.query.all()
     ]
 
+    form.cancellation_reasons.choices = [
+        (cancellation_reason.id, cancellation_reason.name)
+        for cancellation_reason in CancellationReason.query.all()
+    ]
+
     if request_id:
         request_member_records = [member.member_id for member in RequestMemberRecord.query.filter_by(request_id=office_time_request.id,
                                                                                                      request_category_id=1).all()]
@@ -2065,6 +2038,7 @@ def create_office_time_request(request_id=None):
             if office_time_request is not None:
                 office_time_request.type_id = 1
                 office_time_request.status_id = form.status.data.id
+                office_time_request.cancellation_reason_id = form.cancellation_reasons.data.id
                 office_time_request.short_description = form.description.data
                 office_time_request.created_date = form.date_created.data
                 office_time_request.requested_date = form.requested_date.data
@@ -2093,6 +2067,7 @@ def create_office_time_request(request_id=None):
                 office_time_request = OfficeRequest(
                     type_id=1,
                     status_id=form.status.data.id,
+                    cancellation_reason_id=form.cancellation_reasons.data.id,
                     short_description=form.description.data,
                     created_date=form.date_created.data,
                     requested_date=form.requested_date.data,
@@ -2208,7 +2183,10 @@ def create_members_home_request(request_id=None):
             person_to_cc=members_home_request.cc_email,
             service_category=members_home_request.service_category_id,
             member_home_service=members_home_request.service_id,
-            special_instructions=members_home_request.special_instructions)
+            special_instructions=members_home_request.special_instructions,
+            status=members_home_request.status_id,
+            cancellation_reasons=CancellationReason.query.filter_by(
+                id=members_home_request.cancellation_reason_id).first())
         form.service_category.choices = service_category_choices
         form.member_home_service.choices = [
             (service.id, service.name) for service in
@@ -2240,6 +2218,11 @@ def create_members_home_request(request_id=None):
     form.responsible_staffer.choices = [
         (staffer.id, staffer.first_name + " " + staffer.last_name)
         for staffer in Staffer.query.all()
+    ]
+
+    form.cancellation_reasons.choices = [
+        (cancellation_reason.id, cancellation_reason.name)
+        for cancellation_reason in CancellationReason.query.all()
     ]
 
     if request_id:
@@ -2280,6 +2263,7 @@ def create_members_home_request(request_id=None):
             if members_home_request is not None:
                 members_home_request.type_id = 2
                 members_home_request.status_id = request.form.get("status")
+                members_home_request.cancellation_reason_id = form.cancellation_reasons.data.id
                 members_home_request.short_description = form.description.data
                 members_home_request.created_date = form.date_created.data
                 members_home_request.requested_date = form.requested_date.data
@@ -2309,6 +2293,7 @@ def create_members_home_request(request_id=None):
                 members_home_request = MembersHomeRequest(
                     type_id=2,
                     status_id=form.status.data.id,
+                    cancellation_reason_id=form.cancellation_reasons.data.id,
                     short_description=form.description.data,
                     created_date=form.date_created.data,
                     requested_date=form.requested_date.data,
@@ -4033,10 +4018,6 @@ def delete_metro_area(metro_area_id):
     db.session.commit()
     flash('Successfully deleted metro area %s.' % metro_area.name, 'success')
     return redirect(url_for('admin.registered_metro_areas'))
-
-####
-# Destination Addresses
-####
 
 
 @admin.route('/destination-addresses')

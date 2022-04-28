@@ -89,6 +89,7 @@ def setup_general():
     RequestType.insert_types()
     ContactLogPriorityType.insert_types()
     ServiceCategory.insert_categories()
+    CancellationReason.insert_reasons()
     # Volunteer - Request
     RequestVolunteerStatus.insert_statuses()
     # Service related

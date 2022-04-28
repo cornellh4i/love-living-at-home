@@ -488,3 +488,4 @@ function cancelRequest(request_type_id, request_num) {
     window.location.reload();
   })
 }
+

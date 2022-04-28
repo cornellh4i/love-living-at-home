@@ -20,10 +20,7 @@ class TransportationRequest(db.Model):
                               nullable=False,
                               default=datetime.utcnow().date())
     requested_date = db.Column(
-        db.Date,
-        # nullable=False,  # can this be null?
-        # default=datetime.utcnow().date()
-        )
+        db.Date)
     # Time Info
     initial_pickup_time = db.Column(db.Time,
                                     nullable=False,
@@ -53,10 +50,7 @@ class TransportationRequest(db.Model):
     destination_address_id = db.Column(db.Integer,
                                        db.ForeignKey('address.id'),
                                        nullable=False)
-    # Member Info
-    # requesting_member_id = db.Column(db.Integer,
-    #                                  db.ForeignKey('member.id'),
-    #                                  nullable=False)
+
     # Misc.
     special_instructions = db.Column(db.Text, nullable=False)
     followup_date = db.Column(db.Date,
@@ -71,8 +65,9 @@ class TransportationRequest(db.Model):
         nullable=False)
     cc_email = db.Column(db.String(120), unique=False, nullable=False)
 
-    #based on status of the request
-    cancellation_reason = db.Column(db.String(120), unique = False)
+    # based on status of the request
+    cancellation_reason_id = db.Column(
+        db.Integer, db.ForeignKey('cancellation_reason.id'), unique=False)
     rating = db.Column(db.Integer)
     member_comments = db.Column(db.String(1000))
     provider_comments = db.Column(db.String(1000))
@@ -111,7 +106,8 @@ class RequestDurationType(db.Model):
 class RequestStatus(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), unique=True, nullable=False)
-    requests = db.relationship("TransportationRequest", backref="request_status", lazy=True)
+    requests = db.relationship(
+        "TransportationRequest", backref="request_status", lazy=True)
 
     @staticmethod
     def insert_statuses():
@@ -127,10 +123,33 @@ class RequestStatus(db.Model):
         return f"transportation request status( '{self.name}')"
 
 
+class CancellationReason(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), unique=True, nullable=False)
+    requests = db.relationship(
+        "TransportationRequest", backref="cancellation_reason", lazy=True)
+
+    @staticmethod
+    def insert_reasons():
+        reasons = ['Can\'t supply a service provider', 'Duplicate', 'Entered in error', 'Event cancelled', 'Member cancelled', 'Member dropped',
+                   'Not enough advance notice', 'Problem was separately resolved', 'Provider cancelled', 'Weather']
+        for i, s in enumerate(reasons):
+            cancellation_reason = CancellationReason.query.filter_by(
+                name=s).first()
+            if cancellation_reason is None:
+                cancellation_reason = CancellationReason(id=i, name=s)
+            db.session.add(cancellation_reason)
+        db.session.commit()
+
+    def __repr__(self):
+        return f"transportation cancellation reason( '{self.name}')"
+
+
 class RequestType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), unique=True, nullable=False)
-    requests = db.relationship("TransportationRequest", backref="request_type", lazy=True)
+    requests = db.relationship(
+        "TransportationRequest", backref="request_type", lazy=True)
     service_categories = db.relationship("ServiceCategory",
                                          backref="request_type",
                                          lazy=True)

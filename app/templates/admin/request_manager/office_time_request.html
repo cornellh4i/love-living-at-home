@@ -222,10 +222,16 @@
         <div class="three fields">
           {{f.render_form_field(form.responsible_staffer) }}
 
-          {{ f.render_form_field(form.status) }} {{
-          f.render_form_field(form.contact_log_priority) }}
+          {{ f.render_form_field(form.status) }} 
+          
+          {{f.render_form_field(form.contact_log_priority) }}
         </div>
       </div>
+    </div>
+
+    <div id="cancellation" class="twelve wide column">
+      {{f.render_form_field(form.cancellation_reasons)}}
+      <br>
     </div>
 
     <div class="twelve wide column">
@@ -243,6 +249,11 @@
       {{ f.end_form() }}
     </div>
 </div>
+
+{% assets 'show_cancellation_reason_js' %}
+  <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
 
 {% assets 'service_volunteers_js' %}
   <script type="text/javascript" src="{{ ASSET_URL }}"></script>

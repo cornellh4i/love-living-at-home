@@ -2,32 +2,31 @@ from datetime import datetime
 
 from .. import db
 
+
 class MembersHomeRequest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type_id = db.Column(db.Integer,
-                         db.ForeignKey('request_type.id'),
-                         nullable=False)
+                        db.ForeignKey('request_type.id'),
+                        nullable=False)
     status_id = db.Column(db.Integer,
-                           db.ForeignKey('request_status.id'),
-                           nullable=False)
+                          db.ForeignKey('request_status.id'),
+                          nullable=False)
     short_description = db.Column(db.Text, nullable=False)
     created_date = db.Column(db.Date,
+                             nullable=False,
+                             default=datetime.utcnow().date())
+    modified_date = db.Column(db.Date,
                               nullable=False,
                               default=datetime.utcnow().date())
-    modified_date = db.Column(db.Date,
-                               nullable=False,
-                               default=datetime.utcnow().date())
     requested_date = db.Column(
-         db.Date,
-        #  nullable=False
-        )
+        db.Date)
 
     from_time = db.Column(db.Time,
-                            nullable=False,
-                            default=datetime.utcnow().time())
+                          nullable=False,
+                          default=datetime.utcnow().time())
     until_time = db.Column(db.Time,
-                        nullable=False,
-                        default=datetime.utcnow().time())
+                           nullable=False,
+                           default=datetime.utcnow().time())
 
     is_date_time_flexible = db.Column(db.Boolean, nullable=False)
 
@@ -49,8 +48,9 @@ class MembersHomeRequest(db.Model):
         nullable=False)
     cc_email = db.Column(db.String(120), unique=False, nullable=False)
 
-    #based on status of the request
-    cancellation_reason = db.Column(db.String(120), unique = False)
+    # based on status of the request
+    cancellation_reason_id = db.Column(
+        db.Integer, db.ForeignKey('cancellation_reason.id'), unique=False)
     rating = db.Column(db.Integer)
     member_comments = db.Column(db.String(1000))
     provider_comments = db.Column(db.String(1000))

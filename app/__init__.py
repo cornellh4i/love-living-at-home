@@ -18,7 +18,7 @@ from app.assets import (
     search_request_js,
     service_volunteers_js,
     vendor_css,
-    vendor_js,
+    vendor_js, show_cancellation_reason_js,
 )
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -77,6 +77,7 @@ def create_app(config):
     assets_env.register("multidatespicker_js", multidatespicker_js)
     assets_env.register("search_request_js", search_request_js)
     assets_env.register("service_volunteers_js", service_volunteers_js)
+    assets_env.register('show_cancellation_reason_js', show_cancellation_reason_js)
 
     assets_env.register("vendor_css", vendor_css)
     assets_env.register("vendor_js", vendor_js)

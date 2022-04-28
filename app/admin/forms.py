@@ -15,7 +15,7 @@ from wtforms.validators import (Email, EqualTo, InputRequired,
 
 from app import db
 from app.models import (MetroArea, ContactLogPriorityType, Member, RequestStatus, RequestType, Role,
-                        Service, ServiceCategory, Staffer, User)
+                        Service, ServiceCategory, Staffer, User, CancellationReason)
 
 salutations = [("none", ""), ("sir", "Sir"), ("mrs", "Mrs"), ("ms", "Ms"),
                ("mr", "Mr")]
@@ -138,6 +138,9 @@ class TransportationRequestForm(FlaskForm):
     def contactLogQuery():
         return db.session.query(ContactLogPriorityType).order_by()
 
+    def cancellationQuery():
+        return db.session.query(CancellationReason).order_by()
+
     def specialInstructionsQuery():
         return db.session.query(Member).order_by()
 
@@ -199,6 +202,12 @@ class TransportationRequestForm(FlaskForm):
                               validators=[InputRequired()],
                               get_label='name',
                               query_factory=statusQuery)
+    
+    cancellation_reasons = QuerySelectField('Cancellation Reason:', 
+                                            id = 'cancellation-reason', 
+                                            validators=[InputRequired()], 
+                                            get_label='name', 
+                                            query_factory=cancellationQuery)
 
     responsible_staffer = SelectField('Responsible Staffer:', coerce=int)
 
@@ -242,6 +251,9 @@ class OfficeTimeRequestForm(FlaskForm):
 
     def statusQuery():
         return db.session.query(RequestStatus).order_by()
+
+    def cancellationQuery():
+        return db.session.query(CancellationReason).order_by()
 
     def contactLogQuery():
         return db.session.query(ContactLogPriorityType).order_by()
@@ -292,6 +304,12 @@ class OfficeTimeRequestForm(FlaskForm):
         render_kw={'onchange': "providerChoices()"},
         validators=[Optional()],
         coerce=int)
+
+    cancellation_reasons = QuerySelectField('Cancellation Reason:', 
+                                            id = 'cancellation-reason', 
+                                            validators=[InputRequired()], 
+                                            get_label='name', 
+                                            query_factory=cancellationQuery)
 
     special_instructions = TextAreaField('Special Instructions:',
                                          id="special-instructions-text")
@@ -348,6 +366,9 @@ class MembersHomeRequestForm(FlaskForm):
 
     def stafferQuery():
         return db.session.query(Staffer).order_by()
+    
+    def cancellationQuery():
+        return db.session.query(CancellationReason).order_by()    
 
     def statusQuery():
         return db.session.query(RequestStatus).order_by()
@@ -424,6 +445,12 @@ class MembersHomeRequestForm(FlaskForm):
                               validators=[InputRequired()],
                               get_label='name',
                               query_factory=statusQuery)
+
+    cancellation_reasons = QuerySelectField('Cancellation Reason:', 
+                                            id = 'cancellation-reason', 
+                                            validators=[InputRequired()], 
+                                            get_label='name', 
+                                            query_factory=cancellationQuery)
 
     responsible_staffer = SelectField('Responsible Staffer:', coerce=int)
 

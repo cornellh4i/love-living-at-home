@@ -15,6 +15,10 @@ service_volunteers_js = Bundle(
     "service_volunteers.js", filters="jsmin", output="scripts/service_volunteers.js"
 )
 
+show_cancellation_reason_js = Bundle('show_cancellation_reason.js',
+                           filters='jsmin',
+                           output='scripts/show_cancellation_reason.js')
+
 vendor_css = Bundle("vendor/semantic.min.css", output="styles/vendor.css")
 
 vendor_js = Bundle(

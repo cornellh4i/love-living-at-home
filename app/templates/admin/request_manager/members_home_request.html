@@ -231,14 +231,18 @@
   <div class="twelve wide column">
     <div class="ui two column stackable grid">
       <div class="six wide column">
-        {{ f.render_form_field(form.follow_up_date) }} {{
-        f.render_form_field(form.responsible_staffer) }}
+        {{ f.render_form_field(form.follow_up_date) }} 
+        {{ f.render_form_field(form.status) }} 
       </div>
       <div class="right floated six wide column">
-        {{ f.render_form_field(form.status) }} {{
-        f.render_form_field(form.contact_log_priority) }}
+        {{ f.render_form_field(form.responsible_staffer) }}
+        {{ f.render_form_field(form.contact_log_priority) }}
       </div>
     </div>
+  </div>
+
+  <div id="cancellation" class ="twelve wide column">
+    {{f.render_form_field(form.cancellation_reasons)}}
   </div>
 
   <div class="twelve wide column">
@@ -258,6 +262,10 @@
 </div>
 
 {% assets 'service_volunteers_js' %}
+  <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
+{% assets 'show_cancellation_reason_js' %}
   <script type="text/javascript" src="{{ ASSET_URL }}"></script>
 {% endassets %}
 
