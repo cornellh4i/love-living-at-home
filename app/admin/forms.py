@@ -84,10 +84,11 @@ class NewUserForm(InviteUserForm):
 
 
 class GenerateCSVForm(FlaskForm):
-    
-    file_name = StringField('CSV Report File Name', validators=[InputRequired()])
+
+    file_name = StringField('CSV Report File Name',
+                            validators=[InputRequired()])
     year = IntegerField('Choose the year (2010-present)', validators=[
-                                NumberRange(min=2010, max=2050)])
+        NumberRange(min=2010, max=2050)])
     submit = SubmitField('Run Report')
 
 
@@ -193,6 +194,9 @@ class TransportationRequestForm(FlaskForm):
     starting_location = StringField('Pickup Location:', id='starting-location',
                                     validators=[InputRequired()])
 
+    dropoff_location = StringField('Dropoff Location:', id='dropoff-location',
+                                   validators=[InputRequired()])
+
     special_instructions = TextAreaField('Special Instructions:',
                                          id="special-instructions-text")
 
@@ -202,11 +206,11 @@ class TransportationRequestForm(FlaskForm):
                               validators=[InputRequired()],
                               get_label='name',
                               query_factory=statusQuery)
-    
-    cancellation_reasons = QuerySelectField('Cancellation Reason:', 
-                                            id = 'cancellation-reason', 
-                                            validators=[InputRequired()], 
-                                            get_label='name', 
+
+    cancellation_reasons = QuerySelectField('Cancellation Reason:',
+                                            id='cancellation-reason',
+                                            validators=[InputRequired()],
+                                            get_label='name',
                                             query_factory=cancellationQuery)
 
     responsible_staffer = SelectField('Responsible Staffer:', coerce=int)
@@ -305,10 +309,10 @@ class OfficeTimeRequestForm(FlaskForm):
         validators=[Optional()],
         coerce=int)
 
-    cancellation_reasons = QuerySelectField('Cancellation Reason:', 
-                                            id = 'cancellation-reason', 
-                                            validators=[InputRequired()], 
-                                            get_label='name', 
+    cancellation_reasons = QuerySelectField('Cancellation Reason:',
+                                            id='cancellation-reason',
+                                            validators=[InputRequired()],
+                                            get_label='name',
                                             query_factory=cancellationQuery)
 
     special_instructions = TextAreaField('Special Instructions:',
@@ -366,9 +370,9 @@ class MembersHomeRequestForm(FlaskForm):
 
     def stafferQuery():
         return db.session.query(Staffer).order_by()
-    
+
     def cancellationQuery():
-        return db.session.query(CancellationReason).order_by()    
+        return db.session.query(CancellationReason).order_by()
 
     def statusQuery():
         return db.session.query(RequestStatus).order_by()
@@ -431,11 +435,9 @@ class MembersHomeRequestForm(FlaskForm):
         validators=[Optional()],
         coerce=int)
 
-    home_location = SelectMultipleField(
+    home_location = StringField(
         'Location:',
-        id='home_location',
-        validators=[InputRequired()],
-        coerce=int)
+        validators=[InputRequired(), Length(1, 64)])
 
     special_instructions = TextAreaField('Special Instructions:',
                                          id="special-instructions-text")
@@ -446,10 +448,10 @@ class MembersHomeRequestForm(FlaskForm):
                               get_label='name',
                               query_factory=statusQuery)
 
-    cancellation_reasons = QuerySelectField('Cancellation Reason:', 
-                                            id = 'cancellation-reason', 
-                                            validators=[InputRequired()], 
-                                            get_label='name', 
+    cancellation_reasons = QuerySelectField('Cancellation Reason:',
+                                            id='cancellation-reason',
+                                            validators=[InputRequired()],
+                                            get_label='name',
                                             query_factory=cancellationQuery)
 
     responsible_staffer = SelectField('Responsible Staffer:', coerce=int)

@@ -18,8 +18,9 @@ class MembersHomeRequest(db.Model):
     modified_date = db.Column(db.Date,
                               nullable=False,
                               default=datetime.utcnow().date())
-    requested_date = db.Column(
-        db.Date)
+    requested_date = db.Column(db.Date)
+
+    home_location = db.Column(db.Text, nullable=False)
 
     from_time = db.Column(db.Time,
                           nullable=False,

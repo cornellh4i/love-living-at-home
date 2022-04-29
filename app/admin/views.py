@@ -530,6 +530,7 @@ def make_individual_transportation_copies(
             service_category_id=request_obj.service_category_id,
             service_id=request_obj.service_id,
             starting_address=request_obj.starting_address,
+            dropoff_address=request_obj.dropoff_address,
             destination_address_id=request_obj.destination_address_id,
             special_instructions=request_obj.special_instructions,
             followup_date=request_obj.followup_date,
@@ -626,6 +627,7 @@ def make_individual_members_home_copies(
             cancellation_reason_id=request_obj.cancellation_reason_id if include_service_request_status and request_obj.status_id == 3 else None,
             short_description=request_obj.short_description,
             requested_date=new_service_dates[i],
+            home_location=request_obj.home_location,
             from_time=new_service_times[i],
             until_time=(datetime.combine(new_service_dates[i], new_service_times[i]) + (datetime.combine(new_service_dates[i], request_obj.until_time) -
                                                                                         datetime.combine(new_service_dates[i], request_obj.from_time))).time(),
@@ -709,6 +711,7 @@ def make_transportation_copies_without_date(request_obj, number_of_copies,
             service_category_id=request_obj.service_category_id,
             service_id=request_obj.service_id,
             starting_address=request_obj.starting_address,
+            dropoff_address=request_obj.dropoff_address,
             destination_address_id=request_obj.destination_address_id,
             special_instructions=request_obj.special_instructions,
             followup_date=request_obj.followup_date,
@@ -800,6 +803,7 @@ def make_members_home_copies_without_date(request_obj, number_of_copies,
             cancellation_reason_id=request_obj.cancellation_reason_id if include_service_request_status and request_obj.status_id == 3 else None,
             short_description=request_obj.short_description,
             requested_date=None,
+            home_location=request_obj.home_location,
             from_time=request_obj.from_time,
             until_time=request_obj.until_time,
             is_date_time_flexible=request_obj.is_date_time_flexible,
@@ -1200,7 +1204,7 @@ def make_yearly_repeating_copies(is_day_of_every_selected, make_yearly_repeating
                                           FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
                     < end_by
 
-                    ):
+                ):
 
                 date += relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
                                       weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
@@ -1677,6 +1681,7 @@ def create_transportation_request(request_id=None):
             service_category=transportation_request.service_category_id,
             transportation_service=transportation_request.service_id,
             starting_location=transportation_request.starting_address,
+            dropoff_location=transportation_request.dropoff_address,
             destination=transportation_request.destination_address_id,
             special_instructions=transportation_request.special_instructions,
             follow_up_date=transportation_request.followup_date,
@@ -1777,6 +1782,7 @@ def create_transportation_request(request_id=None):
                 transportation_request.service_category_id = form.service_category.data
                 transportation_request.service_id = form.transportation_service.data
                 transportation_request.starting_address = form.starting_location.data
+                transportation_request.dropoff_address = form.dropoff_location.data
                 transportation_request.destination_address_id = form.destination.data
                 transportation_request.special_instructions = special_input
                 transportation_request.followup_date = form.follow_up_date.data
@@ -1811,6 +1817,7 @@ def create_transportation_request(request_id=None):
                     service_category_id=form.service_category.data,
                     service_id=form.transportation_service.data,
                     starting_address=form.starting_location.data,
+                    dropoff_address=form.dropoff_location.data,
                     destination_address_id=form.destination.data,
                     special_instructions=special_input,
                     followup_date=form.follow_up_date.data,
@@ -2175,6 +2182,7 @@ def create_members_home_request(request_id=None):
             description=members_home_request.short_description,
             date_created=members_home_request.created_date,
             requested_date=members_home_request.requested_date,
+            home_location=members_home_request.home_location,
             time_from=members_home_request.from_time,
             time_until=members_home_request.until_time,
             time_flexible=members_home_request.is_date_time_flexible,
@@ -2207,8 +2215,6 @@ def create_members_home_request(request_id=None):
         service_provider_choices.append(
             (p.volunteer_id, Volunteer.query.get(p.volunteer_id).first_name + " " + Volunteer.query.get(p.volunteer_id).last_name))
     form.service_provider.choices = service_provider_choices
-
-    form.home_location.choices = [(1, "Home")]
 
     form.special_instructions_list = json.dumps({
         str(member.id): member.volunteer_notes
@@ -2264,6 +2270,7 @@ def create_members_home_request(request_id=None):
                 members_home_request.type_id = 2
                 members_home_request.status_id = request.form.get("status")
                 members_home_request.cancellation_reason_id = form.cancellation_reasons.data.id
+                members_home_request.home_location = form.home_location.data
                 members_home_request.short_description = form.description.data
                 members_home_request.created_date = form.date_created.data
                 members_home_request.requested_date = form.requested_date.data
@@ -2295,6 +2302,7 @@ def create_members_home_request(request_id=None):
                     status_id=form.status.data.id,
                     cancellation_reason_id=form.cancellation_reasons.data.id,
                     short_description=form.description.data,
+                    home_location=form.home_location.data,
                     created_date=form.date_created.data,
                     requested_date=form.requested_date.data,
                     from_time=form.time_from.data,

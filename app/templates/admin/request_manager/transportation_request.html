@@ -163,7 +163,9 @@
       <div class="right floated six wide column"></div>
     </div>
 
-    <div>{{ f.render_form_field(form.starting_location) }}</div>
+    {{ f.render_form_field(form.starting_location) }}
+
+    {{ f.render_form_field(form.dropoff_location) }}
 
     {{ f.render_form_field(form.duration) }}
 

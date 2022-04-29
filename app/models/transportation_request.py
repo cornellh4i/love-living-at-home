@@ -47,6 +47,7 @@ class TransportationRequest(db.Model):
                            nullable=False)
     # Location Info
     starting_address = db.Column(db.String(200), nullable=True)
+    dropoff_address = db.Column(db.String(200), nullable=True)
     destination_address_id = db.Column(db.Integer,
                                        db.ForeignKey('address.id'),
                                        nullable=False)
