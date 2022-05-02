@@ -556,8 +556,8 @@ def make_individual_transportation_copies(
                     request_id=transportation_request.id,
                     request_category_id=0,
                     volunteer_id=volunteer.volunteer_id,
-                    status_id=1,
-                    staffer_id=1,
+                    status_id=transportation_request.status_id,
+                    staffer_id=transportation_request.responsible_staffer_id,
                     updated_datetime=datetime.utcnow().date())
                 db.session.add(request_volunteer_record)
                 db.session.commit()
@@ -606,8 +606,8 @@ def make_individual_office_copies(
                     request_id=office_request.id,
                     request_category_id=1,
                     volunteer_id=volunteer.volunteer_id,
-                    status_id=1,
-                    staffer_id=1,
+                    status_id=office_request.status_id,
+                    staffer_id=office_request.responsible_staffer_id,
                     updated_datetime=datetime.utcnow().date())
                 db.session.add(request_volunteer_record)
                 db.session.commit()
@@ -658,8 +658,8 @@ def make_individual_members_home_copies(
                     request_id=members_home_request.id,
                     request_category_id=2,
                     volunteer_id=volunteer.volunteer_id,
-                    status_id=1,
-                    staffer_id=1,
+                    status_id=members_home_request.status_id,
+                    staffer_id=members_home_request.responsible_staffer_id,
                     updated_datetime=datetime.utcnow().date())
                 db.session.add(request_volunteer_record)
                 db.session.commit()
@@ -737,8 +737,8 @@ def make_transportation_copies_without_date(request_obj, number_of_copies,
                     request_id=transportation_request.id,
                     request_category_id=0,
                     volunteer_id=volunteer.volunteer_id,
-                    status_id=1,
-                    staffer_id=1,
+                    status_id=transportation_request.status_id,
+                    staffer_id=transportation_request.responsible_staffer_id,
                     updated_datetime=datetime.utcnow().date())
                 db.session.add(request_volunteer_record)
                 db.session.commit()
@@ -784,8 +784,8 @@ def make_office_copies_without_date(request_obj, number_of_copies,
                     request_id=office_request.id,
                     request_category_id=1,
                     volunteer_id=volunteer.volunteer_id,
-                    status_id=1,
-                    staffer_id=1,
+                    status_id=office_request.status_id,
+                    staffer_id=office_request.responsible_staffer_id,
                     updated_datetime=datetime.utcnow().date())
                 db.session.add(request_volunteer_record)
                 db.session.commit()
@@ -833,8 +833,8 @@ def make_members_home_copies_without_date(request_obj, number_of_copies,
                     request_id=members_home_request.id,
                     request_category_id=2,
                     volunteer_id=volunteer.volunteer_id,
-                    status_id=1,
-                    staffer_id=1,
+                    status_id=members_home_request.status_id,
+                    staffer_id=members_home_request.responsible_staffer_id,
                     updated_datetime=datetime.utcnow().date())
                 db.session.add(request_volunteer_record)
                 db.session.commit()
@@ -1841,9 +1841,9 @@ def create_transportation_request(request_id=None):
                     request_id=transportation_request.id,
                     request_category_id=0,
                     volunteer_id=volunteer,
-                    status_id=1,
-                    staffer_id=1,
-                    updated_datetime=form.date_created.data)
+                    status_id=transportation_request.status_id,
+                    staffer_id=transportation_request.responsible_staffer_id,
+                    updated_datetime=datetime.utcnow().date())
                 db.session.add(request_volunteer_record)
                 db.session.commit()
 
@@ -2106,9 +2106,9 @@ def create_office_time_request(request_id=None):
                     request_id=office_time_request.id,
                     request_category_id=1,
                     volunteer_id=volunteer,
-                    status_id=1,
-                    staffer_id=1,
-                    updated_datetime=form.date_created.data)
+                    status_id=office_time_request.status_id,
+                    staffer_id=office_time_request.responsible_staffer_id,
+                    updated_datetime=datetime.utcnow().date())
                 db.session.add(request_volunteer_record)
                 db.session.commit()
 
@@ -2332,9 +2332,9 @@ def create_members_home_request(request_id=None):
                     request_id=members_home_request.id,
                     request_category_id=2,
                     volunteer_id=volunteer,
-                    status_id=1,
-                    staffer_id=1,
-                    updated_datetime=form.date_created.data)
+                    status_id=members_home_request.status_id,
+                    staffer_id=members_home_request.responsible_staffer_id,
+                    updated_datetime=datetime.utcnow().date())
                 db.session.add(request_volunteer_record)
                 db.session.commit()
 

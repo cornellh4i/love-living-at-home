@@ -950,7 +950,7 @@ class MakeIndividualCopiesForm(FlaskForm):
     new_service_dates = FieldList(
         DateField('New Service Date'), min_entries=1, max_entries=10)
     new_service_times = FieldList(
-        TimeField('at', format='%H:%M'), min_entries=1, max_entries=10)
+        TimeField('New Service Time', format='%H:%M'), min_entries=1, max_entries=10)
     include_selected_service_providers = BooleanField(
         'Include Selected Service Provider(s)',
         validators=[Optional()])
@@ -962,7 +962,7 @@ class MakeIndividualCopiesForm(FlaskForm):
 
 class MakeDailyRepeatingCopiesForm(FlaskForm):
     new_service_date = DateField('New Service Date')
-    new_service_time = TimeField('at', format='%H:%M')
+    new_service_time = TimeField('New Service Time', format='%H:%M')
     every_number_of_days = IntegerField(
         'Every', validators=[Optional(), NumberRange(min=1)])
     every_weekday = HiddenField(default=0)
@@ -981,7 +981,7 @@ class MakeDailyRepeatingCopiesForm(FlaskForm):
 
 class MakeWeeklyRepeatingCopiesForm(FlaskForm):
     new_service_date = DateField('New Service Date')
-    new_service_time = TimeField('at', format='%H:%M')
+    new_service_time = TimeField('New Service Time', format='%H:%M')
     number_of_weeks = IntegerField('Every', validators=[NumberRange(min=1)])
     day_of_week = MultiCheckboxField(
         coerce=int,
@@ -1009,7 +1009,7 @@ class MakeWeeklyRepeatingCopiesForm(FlaskForm):
 
 class MakeMonthlyRepeatingCopiesForm(FlaskForm):
     new_service_date = DateField('New Service Date')
-    new_service_time = TimeField('at', format='%H:%M')
+    new_service_time = TimeField('New Service Time', format='%H:%M')
 
     is_day_of_every_selected = HiddenField(default=1)
     # Ex. Day 1 of every 2 month(s)
@@ -1050,7 +1050,7 @@ class MakeMonthlyRepeatingCopiesForm(FlaskForm):
 
 class MakeYearlyRepeatingCopiesForm(FlaskForm):
     new_service_date = DateField('New Service Date')
-    new_service_time = TimeField('at', format='%H:%M')
+    new_service_time = TimeField('New Service Time', format='%H:%M')
     is_yearly_day_of_every_selected = HiddenField(default=1)
     # Ex. Every January 1
     every_month_choice = SelectField('Every', choices=[
