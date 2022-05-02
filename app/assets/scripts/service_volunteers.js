@@ -40,9 +40,11 @@ function providerChoices() {
             }
             num_selected_members = selected_members.length;
             var selected_locations = [];
-            for (var option of document.getElementById('home_location').options) {
-                if (option.selected) {
-                    selected_locations.push(option.value);
+            if ($('#home_location').length) {
+                for (var option of document.getElementById('home_location').options) {
+                    if (option.selected) {
+                        selected_locations.push(option.value);
+                    }
                 }
             }
             num_selected_locations = selected_locations.length;
