@@ -1,10 +1,1 @@
-Dear {{ user.full_name() }},
 
-Thanks for considering our request to provide the following service.
-Someone else has volunteered, so we do not need your assistance.
-
-If you have any questions, please call the office at (607) 319-0162 or reply to this email.
-
-Thanks for all you do.
-
-Love Living at Home

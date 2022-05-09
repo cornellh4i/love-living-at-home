@@ -427,7 +427,9 @@
 
     const websiteHost = window.location.host;
     const protocol = window.location.protocol;
-    fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&-1&Transportation&${emails}`);
+    const req_id = {{ req_id | safe
+    }}
+     fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&${req_id ? req_id : -1}&Office Time&${emails}`);
 
     const buttonId = `${buttonType.replace('+', '-') + '-success-message'}`
     document.getElementById(buttonId).classList.remove('hidden');

@@ -1670,7 +1670,7 @@ def create_transportation_request(request_id=None):
                 id=transportation_request.status_id).first(),
             cancellation_reasons=CancellationReason.query.filter_by(
                 id=transportation_request.cancellation_reason_id).first(),
-            short_description=transportation_request.short_description,
+            description=transportation_request.short_description,
             date_created=transportation_request.created_date,
             requested_date=transportation_request.requested_date,
             initial_pickup=transportation_request.initial_pickup_time,
@@ -1888,7 +1888,8 @@ def create_transportation_request(request_id=None):
                            title='Transportation Request',
                            form=form,
                            volunteer_data=json.dumps(volunteer_info),
-                           member_data=json.dumps(member_info, default=str))
+                           member_data=json.dumps(member_info, default=str),
+                           req_id=request_id)
 
 
 @admin.route('/create-request/send-emails', methods=['GET'])
@@ -1906,25 +1907,50 @@ def send_vols_emails():
     req_id = int(params[1])
     req_type = params[2]
     emails = []
+    contain = ""
+    string = ""
     for i in range(3, len(params)):
         emails.append(params[i])
-
+    for i in params:
+        string = string + str(i)
     for vol_email in emails:
         if RequestMemberRecord.query.filter_by(request_id=req_id).first() is None:
+
             get_queue().enqueue(
                 send_email,
                 recipient=vol_email,
-                subject="Admin Request",
-                template="admin/email/blank_email"
+                subject=string,
+                template="admin/email/not_needed",
+                member=Volunteer.query.all()[0],
+                volunteer=Volunteer.query.all()[0],
+                request_type=req_type,
+                request_data=req_data,
+                address=Address
+
             )
+
         else:
-            for member_rec in RequestMemberRecord.query.filter_by(request_id=req_id):
+            req_type_mapping = {
+                "Transportation": 0,
+                "Member\'s Home": 2,
+                "Office Time": 1
+            }
+            for member_rec in RequestMemberRecord.query.filter_by(request_id=req_id).filter_by(request_category_id=req_type_mapping[req_type]):
                 if req_type == "Transportation":
                     req_data = TransportationRequest.query.get(req_id)
                 elif req_type == "Member\'s Home":
                     req_data = MembersHomeRequest.query.get(req_id)
                 elif req_type == "Office Time":
-                    req_data = OfficeTimeRequest.query.get(req_id)
+                    req_data = OfficeRequest.query.get(req_id)
+
+                if action_type == "send request":
+                    contain = "send_request"
+
+                elif action_type == "confirmation":
+                    contain = "confirmation"
+
+                elif action_type == "not needed":
+                    contain = "not_needed"
                 '''
                 In the future the get_queue function would be moved into each of the if statements above.
 
@@ -1934,13 +1960,15 @@ def send_vols_emails():
                     send_email,
                     recipient=vol_email,
                     subject=f"New {req_type} Request",
-                    template="admin/email/send_request",
-                    volunteer=Volunteer.get(
-                        RequestMemberRecord.query.get(req_id).volunteer_id),
-                    member=Members.get(member_rec.member_id),
+                    template="admin/email/"+contain,
+                    volunteer=Volunteer.query.get(
+                        RequestVolunteerRecord.query.get(req_id).volunteer_id),
+                    member=Member.query.get(member_rec.member_id),
                     request_type=req_type,
                     request_data=req_data,
-                    address=Address
+                    address=Address.query.get(Member.query.get(
+                        member_rec.member_id).primary_address_id),
+                    duration=RequestDurationType
                 )
     return jsonify("OK")
 
@@ -2153,7 +2181,8 @@ def create_office_time_request(request_id=None):
                            title='Office Time Request',
                            form=form,
                            volunteer_data=json.dumps(volunteer_info),
-                           member_data=json.dumps(member_info, default=str))
+                           member_data=json.dumps(member_info, default=str),
+                           req_id=request_id)
 
 
 @admin.route('/create-request/members-home-request/<int:request_id>', methods=['GET', 'POST'])
@@ -2379,7 +2408,8 @@ def create_members_home_request(request_id=None):
                            title='Members Home Request',
                            form=form,
                            volunteer_data=json.dumps(volunteer_info),
-                           member_data=json.dumps(member_info, default=str))
+                           member_data=json.dumps(member_info, default=str),
+                           req_id=request_id)
 
 
 @admin.route('/invite-member', methods=['GET', 'POST'])

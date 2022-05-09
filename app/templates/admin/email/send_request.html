@@ -1,23 +1,237 @@
-<p>Hello {{ volunteer.first_name + " " + volunteer.last_name }},</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>
+</head>
 
-<p>
-{{ member.first_name + " " + member.last_name }} needs someone to provide {{ request_type }} as follows:
-</p>
+{% if request_type == "Transportation" %}
+<body>
 
-<p>
-Short Description: {{ req_data.short_description }}
-Requesting Member: {{ member.first_name + " " + member.last_name }}
-                   {{ address.get(member.primary_address_id).address1 }}
-                   {{ member.primary_phone_number }}
-Starting Location: {{ req_data.starting_address }}
-Date: {{ req_data.requested_date }}
-Destination: {{ address.get(req_data.destination_address_id).address1 }}
-Special Instructions: {{ req_data.special_instructions }}
-</p>
+  <h1 class="ui center aligned header" style="margin-top:10px">Love Living at Home</h1>
+  <div class="ui divider"></div>
 
-<p>
-Please let us know if you can help with this request, by replying to this email or calling the office at (607) 319-0162.
-</p>
+  <p style="margin-left:10px">Hello {{ volunteer.first_name + " " + volunteer.last_name }},</p>
+  <p style="margin-left:10px">{{ member.first_name + " " + member.last_name }} needs you to provide transportation as follows:</p>
 
-<p>Thank you for all you do,</p>
-<p>Love Living at Home</p>
+  <div class="ui one cards request-card" style="margin-top:10px; margin-bottom:10px;">
+    <div class="ui card">
+      <div class="content">
+        <div class="header" style="margin-bottom: 10px">Transportation Request</div>      
+
+        <div class="ui grid">
+          <div class="three wide column">
+
+            <div class="ui card">
+              <div class="content">
+                <div class="ui center aligned header">{{request_data.requested_date.strftime("%A")}}</div>
+              </div>
+              <div class="extra content">
+                <div class="ui center aligned header">{{request_data.requested_date.strftime("%m"+"/"+"%d")}}</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="twelve wide column">
+            <div class="row">
+              <span class="requesting-member-value" data-value="{{member_numbers}}" style="color:#6A23F9"><b>Requesting Member: </b>{{
+                member.first_name + " " + member.last_name }}</span>
+            </div>
+
+            <div class="row">
+              <div class="six wide column" style="float: left; width: 50%;">
+                <div>
+                  <p><span class='address-value'><b>Destination: </b>{{ address.query.filter_by(id=request_data.destination_address_id).first().name + " - " +
+                    address.query.filter_by(id=request_data.destination_address_id).first().address1 }}</span></p>
+                </div>
+                <div>
+                  <p><span class='starting-location-value'><b>Starting Location: </b>{{ request_data.starting_address }}</span></p>
+                </div>
+                <div>
+                  <p><span class='dropoff-location-value'><b>Dropoff Location: </b>{{ request_data.dropoff_address }}</span></p>
+                </div>
+                <div>
+                  <p><span class='duration-value'><b>Duration: </b>{{ duration.query.filter_by(id=request_data.duration_type_id).first().name }}</span></p>
+                </div>
+                <div>
+                  <p><span class='phone-value'><b>Phone: </b>{{ member.primary_phone_number }}</span></p>
+                </div>
+              </div>
+
+              <div class="six wide column" style="float: left; width: 50%;">
+                <div>
+                  <p><span class='initial-pickup-value'><b>Inital Pickup: </b>{{ request_data.initial_pickup_time.strftime("%I"+":"+"%M"+" %p") }}</span></p>
+                </div>
+                <div>
+                  <p><span class='drop-off-time-value'><b>Drop-off Time: </b>{{ request_data.drop_off_time.strftime("%I"+":"+"%M"+" %p") }}</span></p>
+                </div>
+                <div>
+                  <p><span class='appointment-time-value'><b>Appointment Time: </b>{{ request_data.appointment_time.strftime("%I"+":"+"%M"+" %p") }}</span></p>
+                </div>
+                <div>
+                  <p><span class='return-pickup-value'><b>Return Pickup: </b>{{ request_data.return_pickup_time.strftime("%I"+":"+"%M"+" %p") }}</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <b>Description: </b><span class='description-value' >{{ request_data.short_description }}</span>
+        </div>
+        <div style="margin-top:10px">
+          <b>Special Instructions: </b><span class='special-instructions-value' style="margin-top:10px">{{ request_data.special_instructions }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p style="margin-left:10px">Please let us know if you can help with this request. You can also 
+    contact the office at (607) 319-0162 or reply to this email if you have questions or concerns.</p>
+  <p style="margin-left:10px"> Thank you for all you do, <br>Love Living at Home</p>
+
+</body>
+</html>
+
+{% elif request_type == "Office Time" %}
+<body>
+
+  <h1 class="ui center aligned header" style="margin-top:10px">Love Living at Home</h1>
+  <div class="ui divider"></div>
+
+  <p style="margin-left:10px">Hello {{ volunteer.first_name + " " + volunteer.last_name }},</p>
+  <p style="margin-left:10px">{{ member.first_name + " " + member.last_name }} needs you to fulfill office time request as follows:</p>
+
+  <div class="ui one cards request-card" style="margin-top:20px; margin-bottom:20px;">
+    <div class="ui card">
+      <div class="content">
+        <div class="header" style="margin-bottom: 10px">Office Time Request</div>      
+
+        <div class="ui grid">
+          <div class="three wide column">
+
+            <div class="ui card">
+              <div class="content">
+                <div class="ui center aligned header">{{request_data.requested_date.strftime("%A")}}</div>
+              </div>
+              <div class="extra content">
+                <div class="ui center aligned header">{{request_data.requested_date.strftime("%m"+"/"+"%d")}}</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="twelve wide column">
+            <div class="row">
+              <span class="requesting-member-value" data-value="{{member_numbers}}" style="color:#6A23F9"><b>Requesting Member: </b>{{
+                member.first_name + " " + member.last_name }}</span>
+            </div>
+
+            <div class="six wide column">
+              <div style="margin-top:10px">
+                <p><span class='time'><b>Time: </b>{{ request_data.start_time.strftime("%I"+":"+"%M"+" "+"%p") }} to
+                  {{ request_data.end_time.strftime("%I"+":"+"%M"+" "+"%p") }} 
+                </span></p>
+              </div>
+            </div>
+
+            <div class="six wide column">
+              <div style="margin-top:10px">
+                <p><span class='phone-value'><b>Phone: </b>{{ member.primary_phone_number }}</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <b>Description: </b><span class='description-value' >{{ request_data.short_description }}</span>
+        </div>
+        <div style="margin-top:10px">
+          <b>Special Instructions: </b><span class='special-instructions-value' >{{ request_data.special_instructions }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p style="margin-left:10px">Please let us know if you can help with this request. You can also 
+    contact the office at (607) 319-0162 or reply to this email if you have questions or concerns.</p>
+  <p style="margin-left:10px"> Thank you for all you do, <br>Love Living at Home</p>
+
+</body>
+</html>
+
+{% elif request_type == "Member\'s Home" %}
+<body>
+
+  <h1 class="ui center aligned header" style="margin-top:10px">Love Living at Home</h1>
+  <div class="ui divider"></div>
+
+  <p style="margin-left:10px">Hello {{ volunteer.first_name + " " + volunteer.last_name }},</p>
+  <p style="margin-left:10px">{{ member.first_name + " " + member.last_name }} needs you to fulfill member's home request as follows: </p>
+
+  <div class="ui one cards request-card" style="margin-top:20px; margin-bottom:20px;">
+    <div class="ui card">
+      <div class="content">
+        <div class="header" style="margin-bottom: 10px">Member's Home Request</div>      
+
+        <div class="ui grid">
+          <div class="three wide column">
+
+            <div class="ui card">
+              <div class="content">
+                <div class="ui center aligned header">{{request_data.requested_date.strftime("%A")}}</div>
+              </div>
+              <div class="extra content">
+                <div class="ui center aligned header">{{request_data.requested_date.strftime("%m"+"/"+"%d")}}</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="twelve wide column">
+            <div class="row">
+              <span class="requesting-member-value" data-value="{{member_numbers}}" style="color:#6A23F9"><b>Requesting Member: </b>{{
+                member.first_name + " " + member.last_name }}</span>
+            </div>
+
+            <div class="row">
+              <div class="six wide column" style="float: left; width: 50%;">
+                <div>
+                  <p><span class='location-value'><b>Location: </b>{{ request_data.home_location }}</span></p>
+                </div>
+                <div>
+                  <p><span class='email-value'><b>Email: </b>{{ member.email_address }}</span></p>
+                </div>
+                <div>
+                  <p><span class='phone-value'><b>Phone: </b>{{ member.primary_phone_number }}</span></p>
+                </div>
+              </div>
+
+              <div class="six wide column" style="float: left; width: 50%;">
+                <div>
+                  <p><span class='appointment-time-value'><b>From: </b>{{ request_data.from_time.strftime("%I"+":"+"%M"+" %p") }}</span></p>
+                </div>
+                <div>
+                  <p><span class='drop-off-time-value'><b>Until: </b>{{ request_data.until_time.strftime("%I"+":"+"%M"+" %p") }}</span></p>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <b>Description: </b><span class='description-value' >{{ request_data.short_description }}</span>
+        </div>
+        <div style="margin-top:10px">
+          <b>Special Instructions: </b><span class='special-instructions-value' style="margin-top:10px">{{ request_data.special_instructions }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p style="margin-left:10px">Please let us know if you can help with this request. You can also 
+    contact the office at (607) 319-0162 or reply to this email if you have questions or concerns. </p>
+  <p style="margin-left:10px"> Thank you for all you do, <br>Love Living at Home</p>
+
+</body>
+</html>
+
+{% endif %}
