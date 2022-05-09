@@ -548,17 +548,27 @@
     const checkBoxArr = Array.prototype.slice.call(checkBoxStates);
     const volunteersToReq = checkBoxArr.filter(box => box.checked);
     let emails = ""
+    let ccEmail= document.getElementById("person_to_cc").value;
+    let regex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
+    if (regex.test(ccEmail) || ccEmail =="") {
+    if (ccEmail=="") {
+      ccEmail = "none";
+    }
     for (const vol of volunteersToReq)
       emails += vol.value.split("|")[1] + "&";
 
     emails = emails.substring(0, emails.length - 1);
     const req_id = {{ req_id | safe
      }}
-     fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&${req_id ? req_id : -1}&Transportation&${emails}`);
+    fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&${req_id ? req_id : -1}&Transportation&${ccEmail}&${emails}`);
 
     const buttonId = `${buttonType.replace('+', '-') + '-success-message'}`
     document.getElementById(buttonId).classList.remove('hidden');
     document.getElementById(buttonId).classList.add('visible');
+    }
+    else{
+      alert("Invalid CC Email Formatting")
+    }
   }
 </script>
 <!-- End service provider table logic -->

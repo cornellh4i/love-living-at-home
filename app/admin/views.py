@@ -1688,7 +1688,7 @@ def create_transportation_request(request_id=None):
             responsible_staffer=transportation_request.responsible_staffer_id,
             contact_log_priority=ContactLogPriorityType.query.filter_by(
                 id=transportation_request.contact_log_priority_id).first(),
-            cc_email=transportation_request.cc_email,
+            person_to_cc=transportation_request.cc_email,
             time_flexible=transportation_request.is_date_time_flexible
         )
 
@@ -1899,17 +1899,22 @@ def send_vols_emails():
     action_type -- type of action being done (send request, confirmation, etc)
     req_id -- the request id to pull data from
     req_type -- Transportation, Member's home, etc
-    Fourth param onwards: volunteer emails
+    req_cc_email -- cc recipient for email
+    Fifth param onwards: volunteer emails
     """
     params = list(request.args)
     # TODO: Determine email template based on this variable
     action_type = params[0]
-    req_id = int(params[1])
+    req_id = int(params[1]) 
     req_type = params[2]
+    if params[3] == 'none':
+        req_cc_email == ''
+    else:
+         req_cc_email = params[3]
     emails = []
     contain = ""
     string = ""
-    for i in range(3, len(params)):
+    for i in range(4, len(params)):
         emails.append(params[i])
     for i in params:
         string = string + str(i)
@@ -1921,8 +1926,9 @@ def send_vols_emails():
                 recipient=vol_email,
                 subject=string,
                 template="admin/email/not_needed",
-                member=Volunteer.query.all()[0],
-                volunteer=Volunteer.query.all()[0],
+                cc=req_cc_email,
+                member = Volunteer.query.all()[0],
+                volunteer = Volunteer.query.all()[0],
                 request_type=req_type,
                 request_data=req_data,
                 address=Address
@@ -1961,13 +1967,13 @@ def send_vols_emails():
                     recipient=vol_email,
                     subject=f"New {req_type} Request",
                     template="admin/email/"+contain,
+                    cc=req_cc_email,
                     volunteer=Volunteer.query.get(
                         RequestVolunteerRecord.query.get(req_id).volunteer_id),
                     member=Member.query.get(member_rec.member_id),
                     request_type=req_type,
                     request_data=req_data,
-                    address=Address.query.get(Member.query.get(
-                        member_rec.member_id).primary_address_id),
+                    address=Address.query.get(Member.query.get(member_rec.member_id).primary_address_id),
                     duration=RequestDurationType
                 )
     return jsonify("OK")
