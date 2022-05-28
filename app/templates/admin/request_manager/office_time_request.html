@@ -303,6 +303,10 @@
   var protocol = window.location.protocol;
 
   var filtered = false;
+  var selectedNames = [];
+  var selectedIds = [];
+
+  window.onload = changeProviders();
 
   // This function should be called whenever the checkbox clicked (onChange)
   function filterProviders() {
@@ -313,8 +317,8 @@
         payload = JSON.stringify({
           serviceProviders: selectedIds,
           requestedDate: document.getElementById("requested-date").valueAsDate.toUTCString(),
-          initialPickup: document.getElementById("start-time").valueAsDate.toUTCString(),
-          returnPickup: document.getElementById("end-time").valueAsDate.toUTCString()
+          initialPickup: document.getElementById("starting-time").valueAsDate.toUTCString(),
+          returnPickup: document.getElementById("ending-time").valueAsDate.toUTCString()
         })
       } catch (err) {
         alert("Please enter valid dates, times, and service providers before attempting to filter");
@@ -450,6 +454,8 @@
 <script>
   const memberSelect = document.getElementById("member");
   const dateSelect = document.getElementById("requested-date");
+
+  window.onload = updateMemberTable();
 
   function updateMemberTable() {
     const memberDiv = document.getElementById("members");

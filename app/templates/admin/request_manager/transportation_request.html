@@ -431,6 +431,10 @@
   var protocol = window.location.protocol;
 
   var filtered = false;
+  var selectedNames = [];
+  var selectedIds = [];
+
+  window.onload = changeProviders();
 
   // This function should be called whenever the checkbox clicked (onChange)
   function filterProviders() {
@@ -578,6 +582,8 @@
   const memberSelect = document.getElementById("member");
   const dateSelect = document.getElementById("requested-date");
   const timeSelect = document.getElementById('input[type="radio"]:checked');
+
+  window.onload = updateMemberTable();
 
   function updateMemberTable() {
     const memberDiv = document.getElementById("members");
