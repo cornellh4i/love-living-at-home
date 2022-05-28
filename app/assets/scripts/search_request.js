@@ -471,12 +471,21 @@ function cancelRequest(request_type_id, request_num) {
   request_type_id = $(this).attr('request_type_id');
   request_num = $(this).attr('request_num');
   const select = document.getElementById(`reasons-${request_type_id}-${request_num}`).value;
+  let checkboxId = '#cancel_email-'+request_type_id+"-"+request_num;
+  let check = $(checkboxId).is(":checked");
 
+  if (check == true) {
+    check = 1;
+    console.log("success");
+  }
+  else {
+    check = 0;
+    console.log("failure");
+  }
   queryJSON['reason'] = select;
-
   const protocol = window.location.protocol;
   const host = window.location.host;
-  fetch(`${protocol}//${host}/admin/cancel-request/${request_type_id}/${request_num}`, {
+  fetch(`${protocol}//${host}/admin/cancel-request/${request_type_id}/${request_num}/${check}`, {
     method: "POST",
     headers: {
       "Accept": "application/json",

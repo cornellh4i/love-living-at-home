@@ -113,6 +113,7 @@ def invite_user():
             recipient=user.email,
             subject='You Are Invited To Join',
             template='account/email/invite',
+            cc='',
             user=user,
             invite_link=invite_link,
         )
@@ -1367,7 +1368,7 @@ def delete_request(request_type_id, request_id):
         request = TransportationRequest.query.filter_by(id=request_id).first()
     # Office Request
     elif request_type_id == 1:
-        request_type = "Office"
+        request_type = "Office Time"
         request = OfficeRequest.query.filter_by(id=request_id).first()
     # Member's Home Request
     elif request_type_id == 2:
@@ -1486,10 +1487,10 @@ def filter_service_providers():
     return json.dumps(final_id_list)
 
 
-@ admin.route('/cancel-request/<int:request_type_id>/<int:request_id>', methods=['GET', 'POST'])
+@ admin.route('/cancel-request/<int:request_type_id>/<int:request_id>/<int:check>', methods=['GET', 'POST'])
 @ login_required
 @ admin_required
-def cancel_request(request_type_id, request_id):
+def cancel_request(request_type_id, request_id, check):
     """Cancel a request"""
     json = request.get_json()
     request_type = ""
@@ -1500,20 +1501,40 @@ def cancel_request(request_type_id, request_id):
             id=request_id).first()
     # Office Request
     elif request_type_id == 1:
-        request_type = "Office"
+        request_type = "Office Time"
         request_obj = OfficeRequest.query.filter_by(id=request_id).first()
     # Member's Home Request
     elif request_type_id == 2:
         request_type = "Member's Home"
         request_obj = MembersHomeRequest.query.filter_by(id=request_id).first()
-
+    prevStatus = request_obj.status_id
     # status id of cancel is 3
     request_obj.status_id = 3
     cancellation_reason = CancellationReason.query.filter_by(
         name=json['reason']).first()
     request_obj.cancellation_reason_id = cancellation_reason.id
-    flash('Successfully cancelled request {}'.format(
-        request_type + " #" + str(request_id)), 'success')
+    flash(
+        'Successfully cancelled request {}'.format(
+            request_type + " #" + str(request_id)), 'success')
+
+    if (check == 1 and prevStatus != 3):
+        for volunteer_rec in RequestVolunteerRecord.query.filter_by(request_id=request_id).filter_by(request_category_id=request_type_id):
+            for member_rec in RequestMemberRecord.query.filter_by(request_id=request_id).filter_by(request_category_id=request_type_id):
+                get_queue().enqueue(
+                    send_email,
+                    recipient=Volunteer.query.get(
+                        volunteer_rec.volunteer_id).email_address,
+                    subject=f"Cancel {request_type} Request",
+                    template="admin/email/not_needed",
+                    cc='',
+                    volunteer=Volunteer.query.get(volunteer_rec.volunteer_id),
+                    member=Member.query.get(member_rec.member_id),
+                    request_type=request_type,
+                    request_data=request_obj,
+                    address=Address,
+                    duration=RequestDurationType
+                )
+
     resp = jsonify(success=True)
     return resp
 
@@ -1554,7 +1575,7 @@ def confirm_request(request_type_id, request_id):
         end_time = request_obj.drop_off_time
     # Office Request
     elif request_type_id == 1:
-        request_type = "Office"
+        request_type = "Office Time"
         request_obj = OfficeRequest.query.filter_by(id=request_id).first()
         start_time = request_obj.start_time
         end_time = request_obj.end_time
@@ -1905,12 +1926,11 @@ def send_vols_emails():
     params = list(request.args)
     # TODO: Determine email template based on this variable
     action_type = params[0]
-    req_id = int(params[1]) 
+    req_id = int(params[1])
     req_type = params[2]
+    req_cc_email = params[3]
     if params[3] == 'none':
         req_cc_email == ''
-    else:
-         req_cc_email = params[3]
     emails = []
     contain = ""
     string = ""
@@ -1927,8 +1947,8 @@ def send_vols_emails():
                 subject=string,
                 template="admin/email/not_needed",
                 cc=req_cc_email,
-                member = Volunteer.query.all()[0],
-                volunteer = Volunteer.query.all()[0],
+                member=Volunteer.query.all()[0],
+                volunteer=Volunteer.query.all()[0],
                 request_type=req_type,
                 request_data=req_data,
                 address=Address
@@ -1973,7 +1993,8 @@ def send_vols_emails():
                     member=Member.query.get(member_rec.member_id),
                     request_type=req_type,
                     request_data=req_data,
-                    address=Address.query.get(Member.query.get(member_rec.member_id).primary_address_id),
+                    address=Address.query.get(Member.query.get(
+                        member_rec.member_id).primary_address_id),
                     duration=RequestDurationType
                 )
     return jsonify("OK")

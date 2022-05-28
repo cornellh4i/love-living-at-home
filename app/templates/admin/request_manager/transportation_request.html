@@ -547,13 +547,13 @@
     const checkBoxStates = document.getElementsByName("selectedVolunteersCheckBox");
     const checkBoxArr = Array.prototype.slice.call(checkBoxStates);
     const volunteersToReq = checkBoxArr.filter(box => box.checked);
-    let emails = ""
+    let emails = "";
     let ccEmail= document.getElementById("person_to_cc").value;
     let regex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
     if (regex.test(ccEmail) || ccEmail =="") {
-    if (ccEmail=="") {
-      ccEmail = "none";
-    }
+      if (ccEmail=="") {
+        ccEmail = "none";
+      }
     for (const vol of volunteersToReq)
       emails += vol.value.split("|")[1] + "&";
 

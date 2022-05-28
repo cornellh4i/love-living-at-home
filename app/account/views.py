@@ -45,6 +45,7 @@ def register():
                             recipient=user.email,
                             subject='Confirm Your Account',
                             template='account/email/confirm',
+                            cc='',
                             user=user,
                             confirm_link=confirm_link)
         flash('A confirmation link has been sent to {}.'.format(user.email),
@@ -86,6 +87,7 @@ def reset_password_request():
                                 recipient=user.email,
                                 subject='Reset Your Password',
                                 template='account/email/reset_password',
+                                cc='',
                                 user=user,
                                 reset_link=reset_link,
                                 next=request.args.get('next'))
@@ -151,8 +153,8 @@ def change_email_request():
                 recipient=new_email,
                 subject='Confirm Your New Email',
                 template='account/email/change_email',
-                # current_user is a LocalProxy, we want the underlying user
-                # object
+                cc='',
+                # current_user is a LocalProxy, we want the underlying user object
                 user=current_user._get_current_object(),
                 change_email_link=change_email_link)
             flash('A confirmation link has been sent to {}.'.format(new_email),
@@ -185,6 +187,7 @@ def confirm_request():
         recipient=current_user.email,
         subject='Confirm Your Account',
         template='account/email/confirm',
+        cc='',
         # current_user is a LocalProxy, we want the underlying user object
         user=current_user._get_current_object(),
         confirm_link=confirm_link)
@@ -251,6 +254,7 @@ def join_from_invite(user_id, token):
                             recipient=new_user.email,
                             subject='You Are Invited To Join',
                             template='account/email/invite',
+                            cc='',
                             user=new_user,
                             invite_link=invite_link)
     return redirect(url_for('main.index'))

@@ -127,13 +127,17 @@ modified_date, service_category, member_numbers, volunteer_ids, is_volunteer ) %
                     <option>Weather</option>
                   </select>
                 </div>
+                <div class="ui checkbox">
+                  <input type="checkbox" id="cancel_email-{{request_type_id}}-{{request_num}}">
+                  <label>Send cancellation emails to provider(s). Note provider(s) will not be emailed if the request is already cancelled.</label>
+                </div>
               </div>
             </div>
             <div class="actions">
               <div class="positive ui approve button" onclick='cancelRequest(request_type_id,request_num)'>
                 Save
               </div>
-              <div class="negative ui deny button">Cancel</div>
+              <div class="negative ui deny button">Exit</div>
             </div>
           </div>
         </div>

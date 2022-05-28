@@ -419,7 +419,8 @@
     const checkBoxStates = document.getElementsByName("selectedVolunteersCheckBox");
     const checkBoxArr = Array.prototype.slice.call(checkBoxStates);
     const volunteersToReq = checkBoxArr.filter(box => box.checked);
-    let ccEmail = document.getElementById("person_to_cc").value
+    let emails = "";
+    let ccEmail = document.getElementById("person_to_cc").value;
     let regex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
     if (regex.test(ccEmail) || ccEmail =="") {
       if (ccEmail == "") {
@@ -429,9 +430,6 @@
       emails += vol.value.split("|")[1] + "&";
 
     emails = emails.substring(0, emails.length - 1);
-
-    const websiteHost = window.location.host;
-    const protocol = window.location.protocol;
     const req_id = {{ req_id | safe
     }}
     fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&${req_id ? req_id : -1}&Office Time&${ccEmails}&${emails}`);
@@ -442,7 +440,7 @@
   }
   else {
     alert("Invalid CC Email Formatting")
-}
+  }
 }
 
 </script>
