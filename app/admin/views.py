@@ -1929,8 +1929,8 @@ def send_vols_emails():
     req_id = int(params[1])
     req_type = params[2]
     req_cc_email = params[3]
-    if params[3] == 'none':
-        req_cc_email == ''
+    if req_cc_email == 'none':
+        req_cc_email = ''
     emails = []
     contain = ""
     string = ""

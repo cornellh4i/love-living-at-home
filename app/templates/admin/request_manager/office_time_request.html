@@ -80,7 +80,7 @@
             <i class="close icon"></i>
             <div class="header">Are you sure you'd like to send this request?</div>
             <div class="content">
-              <h4>A blank email will be sent if you haven't yet created the request<h4>
+              <h4>No email will be sent if you haven't yet created the request<h4>
                   <button onclick="sendRequests('send+request')" class="ui purple basic button" type="button">
                     Send Request
                   </button>
@@ -102,7 +102,7 @@
             <i class="close icon"></i>
             <div class="header">Are you sure you'd like to send a confirmation email?</div>
             <div class="content">
-              <h4>A blank email will be sent if you haven't yet created the request<h4>
+              <h4>No email will be sent if you haven't yet created the request<h4>
                   <button onclick="sendRequests('confirmation')" class="ui purple basic button" type="button">
                     Confirmation
                   </button>
@@ -124,7 +124,7 @@
             <i class="close icon"></i>
             <div class="header">Are you sure you'd like to send a not needed email?</div>
             <div class="content">
-              <h4>A blank email will be sent if you haven't yet created the request<h4>
+              <h4>No email will be sent if you haven't yet created the request<h4>
                   <button onclick="sendRequests('not+needed')" class="ui purple basic button" type="button">
                     Not Needed
                   </button>
@@ -434,9 +434,8 @@
       emails += vol.value.split("|")[1] + "&";
 
     emails = emails.substring(0, emails.length - 1);
-    const req_id = {{ req_id | safe
-    }}
-    fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&${req_id ? req_id : -1}&Office Time&${ccEmails}&${emails}`);
+    const req_id = {{ req_id | safe }}
+    fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&${req_id ? req_id : -1}&Office Time&${ccEmail}&${emails}`);
 
     const buttonId = `${buttonType.replace('+', '-') + '-success-message'}`
     document.getElementById(buttonId).classList.remove('hidden');
