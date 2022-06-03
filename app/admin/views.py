@@ -1927,6 +1927,7 @@ def send_vols_emails():
     # TODO: Determine email template based on this variable
     action_type = params[0]
     req_id = int(params[1])
+    print(req_id)
     req_type = params[2]
     req_cc_email = params[3]
     if req_cc_email == 'none':
