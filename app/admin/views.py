@@ -1408,8 +1408,9 @@ def filter_service_providers():
 
     for id in id_list:
         # Compare each volunteer's availability on the requested day to the requested time
+        volunteer = Volunteer.query.filter_by(id=id).first()
         availability = Availability.query.filter_by(
-            id=id).first()
+            id=volunteer.availability_id).first()
 
         # Determine which availabilities we're looking at depending on req day
         vol_day_mapping = {
@@ -1479,11 +1480,10 @@ def filter_service_providers():
                         crequest_start = current_request.from_time
                         crequest_end = current_request.until_time
                     if crequest_date == requested_date:
-                        if (crequest_start >= initial_pickup and crequest_start <= return_pickup) or (crequest_end >= initial_pickup and crequest_end <= return_pickup):
+                        if (crequest_start > initial_pickup and crequest_start < return_pickup) or (crequest_end > initial_pickup and crequest_end < return_pickup) or (crequest_start < initial_pickup and crequest_end > return_pickup):
                             if no_conflicts:
                                 no_conflicts = False
                                 final_id_list.remove(id)
-
     return json.dumps(final_id_list)
 
 
