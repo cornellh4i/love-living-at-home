@@ -29,13 +29,13 @@
         </h2>
         <div class="field">
             <div class="ui styled fluid accordion">
-                {% for i in range(service_categories | length) %}
+                {% for key in service_categories %}
                 <div class="active title">
                 <i class="dropdown icon"></i>
-                {{ service_categories[i+1] }}
+                {{ service_categories[key] }}
                 </div>
                 <div class="active content">
-                {% for c in category_to_indices[i+1]%}
+                {% for c in category_to_indices[key]%}
                     {% for choice in form.provided_services %}
                     {% if loop.index == c %}
                         <div class="form-check">
