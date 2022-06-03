@@ -41,8 +41,6 @@ function providerChoices() {
             }
             num_selected_members = selected_members.length;
             let selected_people = document.getElementsByClassName("ui label");
-            console.log(selected_people)
-            console.log($('#service-provider').val())
             for (var i = selected_people.length - 1; i >= num_selected_members; i--) {
                 selected_people[i].remove();
             }
