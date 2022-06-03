@@ -39,17 +39,8 @@ function providerChoices() {
                 }
             }
             num_selected_members = selected_members.length;
-            var selected_locations = [];
-            if ($('#home_location').length) {
-                for (var option of document.getElementById('home_location').options) {
-                    if (option.selected) {
-                        selected_locations.push(option.value);
-                    }
-                }
-            }
-            num_selected_locations = selected_locations.length;
-            let selected_people = document.getElementsByClassName("ui label transition visible");
-            for (var i = selected_people.length - 1; i >= num_selected_members + num_selected_locations; i--) {
+            let selected_people = document.getElementsByClassName("ui label");
+            for (var i = selected_people.length - 1; i >= num_selected_members; i--) {
                 selected_people[i].remove();
             }
             let volunteer_table = document.getElementById("volunteerDataTable");
