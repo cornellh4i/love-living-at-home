@@ -24,7 +24,6 @@ function providerChoices() {
     fetch(`${protocol}//${host}/admin/create-request/service/${service}`, {
     }).then(function (response) {
         response.json().then(function (data) {
-            console.log($('#service-provider').val())
             let optionHTML = '';
             for (let volunteer of data.service_providers) {
                 optionHTML += '<option value="' + volunteer.id + '">' + volunteer.firstName + " " + volunteer.lastName + '</option>'

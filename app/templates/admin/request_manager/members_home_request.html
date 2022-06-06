@@ -318,7 +318,7 @@
   var selectedIds = [];
 
   window.onload = changeProviders();
-  
+
   // This function should be called whenever the checkbox clicked (onChange)
   function filterProviders() {
     if (!filtered) {
@@ -447,11 +447,17 @@
     emails = emails.substring(0, emails.length - 1);
 
     const req_id = {{ req_id | safe }}
-    fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&${req_id ? req_id : -1}&Member\'s Home&${ccEmail}&${emails}`);
-
-    const buttonId = `${buttonType.replace('+', '-') + '-success-message'}`
-    document.getElementById(buttonId).classList.remove('hidden');
-    document.getElementById(buttonId).classList.add('visible');
+    fetch(`${protocol}//${websiteHost}/admin/create-request/send-emails?${buttonType}&${req_id ? req_id : -1}&Member\'s Home&${ccEmail}&${emails}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        if (data == "OK"){
+          const buttonId = `${buttonType.replace('+', '-') + '-success-message'}`
+          document.getElementById(buttonId).classList.remove('hidden');
+          document.getElementById(buttonId).classList.add('visible');
+        }
+      })
     }
     else{
       alert("Invalid CC Email Formatting")

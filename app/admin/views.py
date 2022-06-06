@@ -1,5 +1,4 @@
 import json
-import sys
 from operator import __truediv__
 
 from flask import (Blueprint, abort, flash, redirect, render_template, request,
@@ -1205,7 +1204,7 @@ def make_yearly_repeating_copies(is_day_of_every_selected, make_yearly_repeating
                                           FR(yearly_week_choice) if yearly_weekday_choice == 4 else SA(yearly_week_choice) if yearly_weekday_choice == 5 else SU(yearly_week_choice)))
                     < end_by
 
-                ):
+                    ):
 
                 date += relativedelta(month=yearly_month_choice, day=1 if yearly_week_choice != -1 else 31,
                                       weekday=MO(yearly_week_choice) if yearly_weekday_choice == 0 else TU(yearly_week_choice) if yearly_weekday_choice == 1
@@ -1794,6 +1793,7 @@ def create_transportation_request(request_id=None):
                 transportation_request.short_description = form.description.data
                 transportation_request.created_date = form.date_created.data
                 transportation_request.requested_date = form.requested_date.data
+                transportation_request.modified_date = datetime.utcnow().date()
                 transportation_request.initial_pickup_time = form.initial_pickup.data
                 transportation_request.appointment_time = form.appointment.data
                 transportation_request.return_pickup_time = form.return_pickup.data
@@ -1924,80 +1924,59 @@ def send_vols_emails():
     Fifth param onwards: volunteer emails
     """
     params = list(request.args)
-    # TODO: Determine email template based on this variable
     action_type = params[0]
     req_id = int(params[1])
-    print(req_id)
     req_type = params[2]
     req_cc_email = params[3]
     if req_cc_email == 'none':
         req_cc_email = ''
     emails = []
-    contain = ""
-    string = ""
     for i in range(4, len(params)):
         emails.append(params[i])
-    for i in params:
-        string = string + str(i)
-    for vol_email in emails:
-        if RequestMemberRecord.query.filter_by(request_id=req_id).first() is None:
 
+    if req_type == "Transportation":
+        req_data = TransportationRequest.query.get(req_id)
+    elif req_type == "Member\'s Home":
+        req_data = MembersHomeRequest.query.get(req_id)
+    elif req_type == "Office Time":
+        req_data = OfficeRequest.query.get(req_id)
+
+    if emails == [] or req_data.requested_date is None:
+
+        return jsonify("INVALID_REQUEST")
+
+    for vol_email in emails:
+        req_type_mapping = {
+            "Transportation": 0,
+            "Member\'s Home": 2,
+            "Office Time": 1
+        }
+        contain = ""
+        if action_type == "send request":
+            contain = "send_request"
+
+        elif action_type == "confirmation":
+            contain = "confirmation"
+
+        elif action_type == "not needed":
+            contain = "not_needed"
+
+        for member_rec in RequestMemberRecord.query.filter_by(request_id=req_id).filter_by(request_category_id=req_type_mapping[req_type]):
             get_queue().enqueue(
                 send_email,
                 recipient=vol_email,
-                subject=string,
-                template="admin/email/not_needed",
+                subject=f"New {req_type} Request",
+                template="admin/email/"+contain,
                 cc=req_cc_email,
-                member=Volunteer.query.all()[0],
-                volunteer=Volunteer.query.all()[0],
+                volunteer=Volunteer.query.filter_by(
+                    email_address=vol_email).first(),
+                member=Member.query.get(member_rec.member_id),
                 request_type=req_type,
                 request_data=req_data,
-                address=Address
-
+                address=Address.query.get(Member.query.get(
+                    member_rec.member_id).primary_address_id),
+                duration=RequestDurationType
             )
-
-        else:
-            req_type_mapping = {
-                "Transportation": 0,
-                "Member\'s Home": 2,
-                "Office Time": 1
-            }
-            for member_rec in RequestMemberRecord.query.filter_by(request_id=req_id).filter_by(request_category_id=req_type_mapping[req_type]):
-                if req_type == "Transportation":
-                    req_data = TransportationRequest.query.get(req_id)
-                elif req_type == "Member\'s Home":
-                    req_data = MembersHomeRequest.query.get(req_id)
-                elif req_type == "Office Time":
-                    req_data = OfficeRequest.query.get(req_id)
-
-                if action_type == "send request":
-                    contain = "send_request"
-
-                elif action_type == "confirmation":
-                    contain = "confirmation"
-
-                elif action_type == "not needed":
-                    contain = "not_needed"
-                '''
-                In the future the get_queue function would be moved into each of the if statements above.
-
-                Within each function call a unique template would be supplied.
-                '''
-                get_queue().enqueue(
-                    send_email,
-                    recipient=vol_email,
-                    subject=f"New {req_type} Request",
-                    template="admin/email/"+contain,
-                    cc=req_cc_email,
-                    volunteer=Volunteer.query.get(
-                        RequestVolunteerRecord.query.get(req_id).volunteer_id),
-                    member=Member.query.get(member_rec.member_id),
-                    request_type=req_type,
-                    request_data=req_data,
-                    address=Address.query.get(Member.query.get(
-                        member_rec.member_id).primary_address_id),
-                    duration=RequestDurationType
-                )
     return jsonify("OK")
 
 
@@ -2105,6 +2084,7 @@ def create_office_time_request(request_id=None):
                 office_time_request.short_description = form.description.data
                 office_time_request.created_date = form.date_created.data
                 office_time_request.requested_date = form.requested_date.data
+                office_time_request.modified_date = datetime.utcnow().date()
                 office_time_request.start_time = form.start_time.data
                 office_time_request.end_time = form.end_time.data
                 office_time_request.is_high_priority = form.high_priority.data
@@ -2172,7 +2152,7 @@ def create_office_time_request(request_id=None):
                 flash('Successfully edited office time request # {}'.
                       format(request_id), 'success')
             else:
-                flash('Successfully submitted am office time request', 'success')
+                flash('Successfully submitted an office time request', 'success')
             return redirect(url_for('admin.search_request'))
 
     volunteer_info = []
@@ -2331,6 +2311,7 @@ def create_members_home_request(request_id=None):
                 members_home_request.short_description = form.description.data
                 members_home_request.created_date = form.date_created.data
                 members_home_request.requested_date = form.requested_date.data
+                members_home_request.modified_date = datetime.utcnow().date()
                 members_home_request.from_time = form.time_from.data
                 members_home_request.until_time = form.time_until.data
                 members_home_request.is_date_time_flexible = form.time_flexible.data
