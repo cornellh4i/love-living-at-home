@@ -11,7 +11,7 @@ from app.admin.forms import (AddAvailability,
                              AddVetting, AddReview, AddVacation, ChangeAccountTypeForm,
                              ChangeUserEmailForm, CompleteServiceRequestForm, LocalResourceManager,
                              EditMetroAreaForm, EditServiceForm, EditServiceCategoryForm,
-                             EditDestinationAddressForm,
+                             EditDestinationAddressForm, EditStafferForm,
                              InviteUserForm, MakeMonthlyRepeatingCopiesForm, MakeYearlyRepeatingCopiesForm, MemberManager, MembersHomeRequestForm,
                              NewUserForm, SearchRequestForm, TransportationRequestForm,
                              VolunteerManager, OfficeTimeRequestForm, GenerateCSVForm,
@@ -4003,9 +4003,77 @@ def delete_service_category(category_id):
 
     return redirect(url_for('admin.registered_service_categories'))
 
-####
-# Metro Areas
-####
+
+@admin.route('/staffers')
+@login_required
+@admin_required
+def registered_staffers():
+    """Manage staffers."""
+    staffers = Staffer.query.all()
+    return render_template('admin/system_manager/registered_staffers.html',
+                           staffers=staffers)
+
+
+@admin.route('/staffers/<int:staffer_id>/_delete')
+@login_required
+@admin_required
+def delete_staffer(staffer_id):
+    """Delete a staffer."""
+    staffer = Staffer.query.filter_by(id=staffer_id).first()
+    db.session.delete(staffer)
+    db.session.commit()
+    flash('Successfully deleted staffer ' +
+          staffer.first_name + " " + staffer.last_name, 'success')
+    return redirect(url_for('admin.registered_staffers'))
+
+
+@admin.route('/edit-staffers', methods=['GET', 'POST'])
+@admin.route('/edit-staffers/<int:staffer_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_staffers(staffer_id=None):
+    """Create a new staffer or edit existing staffers."""
+    staffer = None
+    form = EditStafferForm()
+
+    if staffer_id is not None:
+        staffer = Staffer.query.filter_by(id=staffer_id).first()
+        form = EditStafferForm(first_name=staffer.first_name,
+                               middle_initial=staffer.middle_initial,
+                               last_name=staffer.last_name,
+                               phone_number=staffer.phone_number,
+                               email_address=staffer.email_address)
+
+    if form.validate_on_submit():
+        if staffer is not None:
+            updated_staffer = staffer
+            updated_staffer.first_name = form.first_name.data
+            updated_staffer.last_name = form.last_name.data
+            updated_staffer.middle_initial = form.middle_initial.data
+            updated_staffer.phone_number = form.phone_number.data
+            updated_staffer.email_address = form.email_address.data
+            db.session.add(updated_staffer)
+            db.session.commit()
+            flash('Staffer {} successfully updated'.format(updated_staffer.first_name),
+                  'success')
+        else:
+            staffer = Staffer(first_name=form.first_name.data,
+                              last_name=form.last_name.data,
+                              middle_initial=form.middle_initial.data,
+                              phone_number=form.phone_number.data,
+                              email_address=form.email_address.data)
+            db.session.add(staffer)
+            db.session.commit()
+            flash('Staffer {} successfully created'.format(staffer.first_name),
+                  'success')
+        return redirect(url_for('admin.registered_staffers'))
+
+    if staffer is not None:
+        return render_template('admin/system_manager/manage_staffer.html',
+                               form=form, staffer=staffer)
+    else:
+        return render_template('admin/system_manager/manage_staffer.html',
+                               form=form)
 
 
 @admin.route('/metro-areas')
@@ -4059,7 +4127,7 @@ def edit_metro_areas(metro_area_id=None):
 @login_required
 @admin_required
 def delete_metro_area(metro_area_id):
-    """Delete a metro area.."""
+    """Delete a metro area."""
     metro_area = MetroArea.query.filter_by(id=metro_area_id).first()
     db.session.delete(metro_area)
     db.session.commit()
@@ -4072,7 +4140,6 @@ def delete_metro_area(metro_area_id):
 @admin_required
 def registered_destination_addresses():
     """Manage destination addresses."""
-    # TODO: Change addresses to be queried from standard destinations and not addresses table
     addresses = Address.query.all()
     return render_template('admin/system_manager/registered_destination_addresses.html',
                            addresses=addresses)

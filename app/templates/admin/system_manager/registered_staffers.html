@@ -8,16 +8,16 @@
       Back to dashboard
     </a>
     <h2 class="ui header">
-      Metro Areas
+      Staffers
       <div class="sub header">
-        View and manage metro areas.
+        View and manage staffers.
       </div>
     </h2>
 
     <div class="ui menu">
       <div class="ui search item" style="width: 100%">
         <div class="ui transparent icon input">
-          <input id="search-metro-areas" type="text" placeholder="Search metro areas...">
+          <input id="search-staffers" type="text" placeholder="Search staffers...">
           <i class="search icon"></i>
         </div>
       </div>
@@ -26,9 +26,9 @@
     {# Use overflow-x: scroll so that mobile views don't freak out
     # when the table is too wide #}
     <div style="overflow-x: scroll;">
-      <a class="ui basic compact button" href="{{ url_for('admin.edit_metro_areas') }}">
+      <a class="ui basic compact button" href="{{ url_for('admin.edit_staffers') }}">
         <i class="plus icon"></i>
-        Add a Metro Area
+        Add a Staffer
       </a>
       <table class="ui searchable sortable unstackable selectable celled table">
         <thead>
@@ -38,21 +38,20 @@
           </tr>
         </thead>
         <tbody>
-          {% for ma in metro_areas | sort(attribute='name') %}
+          {% for s in staffers | sort(attribute='first_name') %}
           <tr>
-            <td onclick="window.location.href = '{{ url_for('admin.edit_metro_areas', metro_area_id=ma.id) }}';">{{
-              ma.name }}
+            <td onclick="window.location.href = '{{ url_for('admin.edit_staffers', staffer_id=s.id) }}';">{{ s.first_name }} {{ s.last_name }}
             </td>
             <td>
-              <i class="trash alternate outline icon delete-metro-area" id={{ma.id}}></i>
+              <i class="trash alternate outline icon delete-staffer" id={{s.id}}></i>
             </td>
 
-            <div class="ui modal" id='modal-{{ma.id}}'>
-              <div class="header">Delete Metro Area</div>
-              <div class="content">Would you like to delete Metro Area [{{ma.name}}]?</div>
+            <div class="ui modal" id='modal-{{s.id}}'>
+              <div class="header">Delete Staffer</div>
+              <div class="content">Would you like to delete Staffer [{{ s.first_name }} {{ s.last_name }}]?</div>
               <div class="actions">
                 <div class="positive ui approve button"
-                  onclick="window.location.href = '{{ url_for('admin.delete_metro_area',  metro_area_id=ma.id) }}';">
+                  onclick="window.location.href = '{{ url_for('admin.delete_staffer', staffer_id=s.id) }}';">
                   Yes
                 </div>
                 <div class="negative ui deny button">No</div>
@@ -70,7 +69,7 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
-    $('#search-metro-areas').keyup(function () {
+    $('#search-staffers').keyup(function () {
       var searchText = $(this).val();
       if (searchText.length > 0) {
         $('tbody td:icontains(' + searchText + ')').addClass('positive');
@@ -84,9 +83,9 @@
     });
   });
 
-  $(document).on('click', '.delete-metro-area', function(){
-    metro_area_id = $(this).attr('id');
-    $(`#modal-${metro_area_id}`).modal('show');
+  $(document).on('click', '.delete-staffer', function(){
+    staffer_id = $(this).attr('id');
+    $(`#modal-${staffer_id}`).modal('show');
   });
 </script>
 {% endblock %}

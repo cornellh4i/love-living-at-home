@@ -899,6 +899,21 @@ class EditMetroAreaForm(FlaskForm):
     submit = SubmitField('Save Metro Area Information')
 
 
+class EditStafferForm(FlaskForm):
+    first_name = StringField('First Name', validators=[
+                             InputRequired(), Length(1, 64)])
+    middle_initial = StringField('Middle Initial',
+                                 validators=[Optional(), Length(min=0, max=1)])
+    last_name = StringField('Last Name', validators=[InputRequired(),
+                                                     Length(1, 64)])
+    phone_number = StringField('Phone Number',
+                               widget=widgets.Input(input_type="tel"),
+                               validators=[Optional()])
+    email_address = EmailField('Email', validators=[Optional(),
+                                                    Length(1, 64), Email()])
+    submit = SubmitField('Save Staffer Information')
+
+
 class EditDestinationAddressForm(FlaskForm):
     name = StringField('Destination Address Name',
                        validators=[InputRequired(),
