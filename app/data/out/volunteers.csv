@@ -1,129 +1,148 @@
-,First Name,Last Name,Primary Phone Number,Secondary Phone Number,Emergency Contact Phone Number,Email,Preferred Contact Method,Vetting,Address ID
-0,Paula,Amols,3.0,,,pamols54@gmail.com,Email,Yes,4
-1,Wendy,Aquadro,4.0,187.0,,gsa8@cornell.edu,Phone,Yes,5
-2,Eileen,Berlow,7.0,189.0,,eileenberlow@yahoo.com,Phone,No,8
-3,Deborah,Berman,297.0,,363.0,skaboooch@gmail.com,Email,Yes,267
-4,Cassie,Besemer,8.0,,,office@lovelivingathome.org,Phone,Yes,204
-5,Robert,Boynton,298.0,,,R.Boynton37@gmail.com,Email,Yes,268
-6,Lynn,Broquist Hoshino,12.0,190.0,,lbroquist@yahoo.com,Email,No,14
-7,Peter,Burford,15.0,192.0,,pburford@burfordbooks.com,Both,Yes,17
-8,Peter,Burford,299.0,193.0,,pburford@burfordbooks.com,Email,No,17
-9,Jay,Carter,300.0,300.0,339.0,jaywc88@aol.com,Email,Yes,269
-10,Julie,Carter,,339.0,300.0,juliec88@aol.com,Email,Yes,270
-11,Mary Helen,Cathles,16.0,194.0,16.0,maryhelenc711@gmail.com,Email,Yes,18
-12,Simon ,Catterall,301.0,340.0,364.0,smcatterall@gmail.com,Email,Yes,271
-13,Constance,Colbert,18.0,196.0,,cc1252@hotmail.com,Phone,Yes,20
-14,Carol,Colfer,19.0,197.0,,cjpcolfer@gmail.com,Email,No,131
-15,Ann,Colt,,198.0,365.0,amc82313@gmail.com,Email,Yes,22
-16,Wendy,Coolbaugh,21.0,,366.0,wendycoolbaugh@gmail.com,Email,Yes,24
-17,John,Costello,23.0,200.0,,jcostel2981@gmail.com,Phone,Yes,26
-18,Barbara,Cunningham,25.0,,,barbcunningham99@gmail.com,Phone,No,28
-19,Jim,Darnieder,26.0,26.0,212.0,darnatra@gmail.com,Email,Yes,29
-20,Barb,Davidson,302.0,302.0,,,Email,No,272
-21,Jeannine,Davis,303.0,,,laughingcrones@yahoo.com,Email,Yes,273
-22,Terry,Davis,304.0,341.0,367.0,TerryD68@aol.com,Email,Yes,274
-23,Michael,Delwiche,305.0,,368.0,mjdelwiche@ucdavis.edu,Email,Yes,275
-24,Sue,Dickinson,306.0,342.0,,dwsmdickinson@gmail.com,Email,Yes,276
-25,Persephone,Doliner,307.0,343.0,369.0,adoliner@gmail.com,Phone,No,277
-26,Persephone,Doliner,32.0,202.0,,persephone47@gmail.com,Phone,Yes,37
-27,Edward,Dubovi,34.0,204.0,205.0,ejd5@cornell.edu,Email,Yes,39
-28,Robin,Dubovi,34.0,205.0,370.0,robin.dubovi@gmail.com,Email,Yes,39
-29,Hank,Dullea,35.0,206.0,371.0,hnd1@cornell.edu,Email,Yes,40
-30,Sally,Dullea,35.0,207.0,372.0,sdullea@twcny.rr.com,Email,Yes,40
-31,Chris,Dunham,308.0,,308.0,C_J_Dunham@yahoo.com,Email,Yes,278
-32,Lisa,Eisenberg,37.0,209.0,373.0,eisenberglisa@yahoo.com,Email,Yes,43
-33,Dan,Evett,309.0,344.0,,dhe2@cornell.edu,Email,No,279
-34,Susan,Eyster,39.0,210.0,374.0,sueeyster20@gmail.com,Email,Yes,45
-35,Wendy,Fillmore,,345.0,375.0,wendylynnfillmore@gmail.com,Email,Yes,280
-36,Connie,Finlay,42.0,42.0,376.0,cf13@cornell.edu,Email,Yes,48
-37,Linda,Finlay,310.0,,377.0,lfinlay103@gmail.com,Email,Yes,281
-38,Deena,Freed,43.0,,,deenafreed110@gmail.com,Phone,Yes,282
-39,Renee,Freed,44.0,211.0,,reneefreed@msn.com,Phone,Yes,50
-40,William,Fry,311.0,311.0,,wef1@cornell.edu,Email,Yes,283
-41,Kathy,Garner,45.0,212.0,26.0,kjmgarner@gmail.com,Email,Yes,51
-42,Donna,George,46.0,,,dlgeorge105@gmail.com,Phone,Yes,52
-43,Rick,George,312.0,346.0,378.0,rick_geo@msn.com,Email,Yes,284
-44,Kent,Goetz,313.0,313.0,,kentgoetz@icloud.com,Email,Yes,285
-45,Peggy,Haine,54.0,217.0,,peggyhaine.1@gmail.com,Email,Yes,60
-46,Thomas,Hall,58.0,219.0,,tdhall2277@gmail.com,Email,Yes,65
-47,Michelle,Harlan,,,,mharlan@tompkinsfinancial.com,Email,Yes,286
-48,Betsy,Hillman,,220.0,,Eh87@cornell.edu,Email,Yes,68
-49,Robert,Hillman,62.0,221.0,,RAH16@cornell.edu,Email,Yes,68
-50,Anne,Hobbs,63.0,63.0,,withane66@gmail.com,Email,Yes,69
-51,Peter,Hobbs,64.0,222.0,,ph14@cornell.edu,Email,Yes,69
-52,Edward,Hower,314.0,347.0,,edwardhower@gmail.com,Email,No,287
-53,Joanne,Izbicki,65.0,,,jizbicki@twcny.rr.com,Phone,No,70
-54,John,Jaquette,70.0,225.0,70.0,jpj7@cornell.edu,Email,Yes,75
-55,Susan,Jaquette,70.0,70.0,379.0,susanjaq6@gmail.com,Phone,Yes,75
-56,Cheryl,Jewell,,,,executivedirector@lovelivingathome.org,Email,Yes,76
-57,Angela,Jin,,,,aj445@cornell.edu,Email,Yes,229
-58,James,Johnston,71.0,227.0,380.0,jimj14850@gmail.com,Email,Yes,77
-59,Audrey,Kahin,73.0,228.0,381.0,arkahin@gmail.com,Email,Yes,80
-60,Suzanne,Kates,315.0,,382.0,katesroni@gmail.com,Email,Yes,229
-61,Terry 'Tara',Kekaha,316.0,348.0,383.0,tkekaha@gmail.com,Email,Yes,288
-62,Marcia,Kepecs,75.0,229.0,75.0,mkepecs@msn.com,Email,Yes,82
-63,Michael,Koplinka-Loehr,,,,mak11@cornell.edu,Phone,Yes,204
-64,Dorothy,Kunz,80.0,231.0,,dodiekunz3@gmail.com,Phone,Yes,89
-65,Meredith,Kusch,52.0,215.0,,meredithk411@gmail.com,Phone,No,90
-66,Linda,Lavine,82.0,232.0,,linda.lavine@gmail.com,Email,No,92
-67,Mitchell,Lavine,82.0,233.0,,buzz@baka.com,Email,No,92
-68,Margaret,Lay-Dopyera,84.0,84.0,,margaret.dopyera@gmail.com,Phone,No,94
-69,Amy,Layton,317.0,349.0,361.0,AEL67@cornell.edu,Email,No,289
-70,Gail,Leibovich,85.0,234.0,,gbcl70@gmail.com,Phone,Yes,95
-71,Ann,Lemley,87.0,237.0,,atl2@cornell.edu,Email,Yes,98
-72,Ann,Levatich,89.0,238.0,,annagram@mindspring.com,Email,Yes,100
-73,Carol,Lewis,91.0,239.0,,ladyhornplayer@yahoo.com,Email,Yes,102
-74,Cheryl Testing,LLH,318.0,,,cheryljewelllynn@gmail.com,Email,No,76
-75,Jean,McPheeters,319.0,350.0,384.0,jeanmcpheeters@gmail.com,Email,Yes,290
-76,Rita,Melen,320.0,351.0,385.0,ritamelen@gmail.com,Email,No,291
-77,Malcolm,Mitchell,321.0,,,mlm57td@gmail.com,Email,No,292
-78,Suzanne,Motheral,106.0,,,coopbiz1@yahoo.com,Email,Yes,115
-79,Suzanne ,Motherel,322.0,,,coopbiz1@yahoo.com,Email,No,293
-80,Rosanne,Murphy,110.0,248.0,264.0,rem27@cornell.edu,Email,Yes,294
-81,Jan,Nigro,323.0,352.0,,jnigro29@yahoo.com,Email,Yes,295
-82,Barbara,Nosanchuk,113.0,250.0,,bnosan@twcny.rr.com,Phone,No,122
-83,Michelle,Ochs,324.0,,386.0,mbunner@tompkinsfinancial.com,Email,Yes,296
-84,Shaianne,Osterreich,325.0,325.0,387.0,sosterreich@ithaca.edu,Phone,Yes,297
-85,Linda,Pasto,326.0,353.0,388.0,Aummie53@gmail.com,Phone,No,298
-86,Sharon,Perkins,327.0,327.0,389.0,sharonjperkins2@gmail.com,Phone,Yes,299
-87,Caprice,Pierre,328.0,328.0,390.0,cmp264@cornell.edu,Email,No,300
-88,Jean,Poland,58.0,256.0,,jp126@cornell.edu,Phone,Yes,65
-89,James,Quest,127.0,257.0,128.0,JHQuest56@gmail.com,Email,Yes,135
-90,Leslie,Quest,128.0,128.0,257.0,LQuestLLH@gmail.com,Email,Yes,135
-91,Esther,Racoosin,329.0,354.0,391.0,elr605@verizon.net,Email,Yes,301
-92,Phyllis,Rappaport,129.0,258.0,,rappapent@gmail.com,Phone,Yes,136
-93,Carrie,Regenstein,131.0,259.0,392.0,carrie.regenstein@gmail.com,Email,Yes,138
-94,Barbara,Reynolds,134.0,,393.0,barbarareynolds35@gmail.com,Email,Yes,141
-95,Marissa,Richards,135.0,135.0,,marissa@blair-richards.com,Email,Yes,142
-96,Anne,Rodda,138.0,263.0,,rowboat@twcny.rr.com,Phone,Yes,144
-97,Betsy,Root,139.0,265.0,394.0,loveapoodle@yahoo.com,Email,Yes,145
-98,Paulette,Rosa,,355.0,,pauletterosa66@gmail.com,Email,Yes,302
-99,Elaine,Sapp,143.0,,,ESapp@twcny.rr.com,Email,Yes,151
-100,Carol,Scheele,145.0,269.0,395.0,csscheele@gmail.com,Email,Yes,153
-101,Deb,Schmidle,147.0,270.0,,dj13@cornell.edu,Email,Yes,155
-102,David,Shapiro,330.0,,,Daveshap24@gmail.com,Email,Yes,303
-103,Dorothy,Sholeen,331.0,,,dsholeen@gmail.com,Email,Yes,304
-104,Lynn,Shreve,151.0,275.0,151.0,lshreve@twcny.rr.com,Email,Yes,161
-105,Carol,Skinner,155.0,,,carolbskinner@yahoo.com,Phone,Yes,165
-106,Pennie,Small,157.0,277.0,,PJSMALL1@yahoo.com,Phone,No,167
-107,Fran,Spadafora Manzella,332.0,356.0,396.0,manzellafran@gmail.com,Email,Yes,305
-108,David,Sprague,165.0,283.0,,david@sprjac.com,Email,Yes,175
-109,Susie,Sragow,166.0,166.0,,sjptherapy@gmail.com,Email,Yes,176
-110,Beverly,Stockard,,284.0,,bevstockard@gmail.com,Phone,Yes,179
-111,Jae,Sullivan,169.0,,,blueheron555@yahoo.com,Email,Yes,180
-112,John,Svensson,333.0,357.0,,johnsven363@gmail.com,Email,Yes,306
-113,Yoram,Szekely,171.0,,,Yszekely@twcny.rr.com,Phone,Yes,181
-114,Kate,Turner,174.0,285.0,286.0,keeturn4@gmail.com,Email,Yes,184
-115,Lowell,Turner,174.0,286.0,397.0,lrt4@cornell.edu,Email,Yes,184
-116,Linda,Uhll,334.0,358.0,,luhll@yahoo.com,Email,No,307
-117,Barbara,VanDyk,335.0,,398.0,barbarasvandyk@gmail.com,Email,Yes,308
-118,Marian,VanSoest,336.0,,,mham.vansoest@gmail.com,Phone,Yes,309
-119,Tam,Warren,337.0,359.0,,Tam@warrenhomes.com,Email,Yes,310
-120,Mary,Weiss Andersson,,,,weissandersson@gmail.com,Phone,Yes,311
-121,Mark ,Wheeler,,,,mark.b.wheeler@gmail.com,Email,Yes,312
-122,Diane,Wiessinger,180.0,,,dwiessin@baka.com,Phone,No,190
-123,Haven,Wong,338.0,360.0,399.0,wonghaven1@gmail.com,Email,Yes,313
-124,Rochelle,Woods,101.0,290.0,,rewoods112@gmail.com,Phone,No,195
-125,Kevin,Workman,317.0,361.0,,AeL67@cornell.edu,Phone,No,289
-126,Marcie,Wyant,,362.0,,marcie.wyant@gmail.com,Phone,No,314
-127,Eugene,Yarussi,184.0,291.0,400.0,eyarussi@gmail.com,Email,Yes,196
+,First Name,Last Name,Address,City,State,Zip,Primary Phone Number,Secondary Phone Number,Emergency Contact Phone Number,Email,Preferred Contact Method,Vetting
+51,Paula,Amols,370 Snyder Hill Rd.,Ithaca,NY,14850,(607) 592-1166,,,pamols54@gmail.com,Email,Yes
+52,Wendy,Aquadro,283 ELLIS HOLLOW CREEK RD,ITHACA,NY,14850-9619,6072733049,6073516275,,gsa8@cornell.edu,Phone,Yes
+55,Jill,Baldwin,7619 POTTER MORGAN RD,INTERLAKEN,NY,14847-9665,3155214574,3155214574,,jmbaldwin211@gmail.com,Email,No
+57,Eileen,Berlow,2444 Perry City Road,Ithaca,NY,14850,(607) 379-3565,(607) 387-6890,,eileenberlow@yahoo.com,Phone,No
+58,Deborah,Berman,110 Hancock St,Ithaca,NY,14850,(607) 273-2901,,(607) 342-7841,skaboooch@gmail.com,Email,Yes
+59,Cassie,Besemer,,,NY,,6073192866,,,office@lovelivingathome.org,Phone,Yes
+60,Robert,Boynton,205 Tareyton Drive,Ithaca,NY,14850 ,(917) 741-5638,,,R.Boynton37@gmail.com,Email,Yes
+62,Lynn,Broquist Hoshino,1203 Dryden Road,Ithaca,NY,14850,(607) 319-0644,(607) 279-0993,,lbroquist@yahoo.com,Email,No
+63,David,Brown,207 W. Remingrton Rd.,Ithaca,NY,14850,,6073792989,,dlb17@cornell.edu,Email,Yes
+67,Peter,Burford,156 Autumn Ridge Circle,Ithaca,NY,14850,607-319-4982,201-341-1693,,pburford@burfordbooks.com,Both,Yes
+68,Peter,Burford,156 Autumn Ridge Circle,Ithaca,NY,14850,6073194373,201-341-1692,,pburford@burfordbooks.com,Email,No
+69,Stephanie,Burgess,220-1 Cypress Court,Ithaca,NY,14850,,607-220-9924,,Pleasantpeak@icloud.com,Email,No
+71,Jay,Carter,856 Snyder Hill Road,Ithaca,NY,14850,(908) 304-4313,(908) 304-4313,(908) 581-2516,jaywc88@aol.com,Email,Yes
+72,Julie,Carter,852 Snyder Hill Road,Ithaca,NY,14850,,(908) 581-2516,(908) 304-4313,juliec88@aol.com,Email,Yes
+73,Steve,Carver,,,-1,,,607-280-4843,,scpicnic@mac.com,Email,Yes
+75,Mary Helen,Cathles,59 Fiddlers Green,Lansing,NY,14882,(607) 533-7589,(607) 279-2977,(607) 533-7589,maryhelenc711@gmail.com,Email,Yes
+76,Katherine,Chiang,708 N. Tioga St.,Ithaca,NY,14850,6073422789,6073422789,6077930817,Katherine.s.chiang@gmail.com,Phone,No
+80,Aleta,Coggin,37 Uptown Road,Ithaca,NY,14850,6073791577,6073791577,,aleta_coggin@hotmail.com,Email,No
+81,Constance,Colbert,16 Whispering Pines Dr,Ithaca,NY,14850,(607) 257-4004,(770) 316-3248,,cc1252@hotmail.com,Phone,Yes
+82,Carol,Collyer,8 Leisure Lane,Freeville,NY,13068,,607-216-5775,,cac28@cornell.edu,Email,No
+83,Wendy,Coolbaugh,P.O.Box 32,Trumansburg,NY,14886,(607) 387-5497,,(607) 216-5618,wendycoolbaugh@gmail.com,Email,Yes
+84,John,Costello,8 Winthrop Place,Ithaca,NY,14850,(607) 257-0919,(607) 339-6781,,jcostel2981@gmail.com,Phone,Yes
+86,Sandra,Cuellar,156 Westview Lane,Ithaca,NY,14850,,6077931392,,src6@cornell.edu,Email,Yes
+87,Barbara,Cunningham,626 Cayuga Heights Rd,Ithaca,NY,14850,607-592-7640,,,barbcunningham99@gmail.com,Phone,No
+88,Jim,Darnieder,98 Cherry Rd,Ithaca,NY,14850,(315) 430-1475,(315) 430-1475,(607) 280-0388,darnatra@gmail.com,Email,Yes
+89,Barb,Davidson,2250 North Triphammer Rd.,Ithaca,NY,14850,608-217-1276,608-217-1276,,,Email,No
+90,Jeannine,Davis,407 Lake St. #B32,Ithaca,NY,14850,(607) 272-0131,,,laughingcrones@yahoo.com,Email,Yes
+91,Terry,Davis,15 Stone Haven Drive,Ithaca,NY,14850,(607) 257-8480,(607) 279-5823,(607) 220-9091,TerryD68@aol.com,Email,Yes
+92,Michael,Delwiche,50 Fiddlers Green,Lansing,NY,14882,(530) 795-3772,,(530) 219-7067,mjdelwiche@ucdavis.edu,Email,Yes
+94,Persephone,Doliner,202 Utica Street,,NY,14850,(607) 272-1620,(607) 262-6495,(650) 283-1324,adoliner@gmail.com,Phone,No
+95,Persephone,Doliner,202 Utica St,Ithaca,NY,14850,607-272-1620,607-262-6495,,persephone47@gmail.com,Phone,Yes
+98,Edward,Dubovi,33 Chelseas Walk,Ithaca,NY,14850,(607) 257-3688,(607) 592-0575,(607) 227-5550,ejd5@cornell.edu,Email,Yes
+99,Robin,Dubovi,33 Chelseas Walk,Ithaca,NY,14850,(607) 257-3688,(607) 227-5550,607-592-0575,robin.dubovi@gmail.com,Email,Yes
+100,Hank,Dullea,409 Warren Place,Ithaca,NY,14850,(607) 277-2488,(607) 227-2104,6072798286,hnd1@cornell.edu,Email,Yes
+101,Sally,Dullea,409 Warren Place,Ithaca,NY,14850,(607) 277-2488,(607) 279-8286,607-227-2104,sdullea@twcny.rr.com,Email,Yes
+102,Chris,Dunham,105 Dunmore Place,Ithaca,NY,14850,(607) 277-9599,,(607) 277-9599,C_J_Dunham@yahoo.com,Email,Yes
+103,Gwen,E Seaquist,299 Neimi Road,Ithaca,NY,14850,6075929792,6075929792,,gseaquist@ithaca.edu,Email,No
+104,Dan,Evett,1456 Coddington Road,Brooktondale,NY,14817,607-275-3558,607-708-0121,,dhe2@cornell.edu,Email,Yes
+105,Susan,Eyster,1 Fiddlers Green,Ithaca,NY,14850,(607) 342 1902,(607) 342-1902,(607) 592-5207,sueeyster20@gmail.com,Email,Yes
+107,Elena,Flash,204 Klinewoods Road,Ithaca,NY,14850,6075925833,6075925833,,elena@hub204.com,Email,Yes
+108,Deena,Freed,306 Rachel Carson Trail,Ithaca,NY,14850,(607) 277-4270,,,deenafreed110@gmail.com,Phone,Yes
+109,Renee,Freed,126 Homestead Circle,Ithaca,NY,14850,(607) 273-5325,(607) 227-2229,,reneefreed@msn.com,Phone,Yes
+110,William,Fry,821 BOSTWICK RD,ITHACA,NY,14850,6072206690,6072206690,,wef1@cornell.edu,Email,Yes
+111,Kathy,Garner,98 Cherry Road,Ithaca,NY,14850,(607) 280-0388 ,(607) 280-0388,(315) 430-1475,kjmgarner@gmail.com,Email,Yes
+112,Donna,George,106 Troy Road,Ithaca,NY,14850,6072720315,,,dlgeorge105@gmail.com,Phone,Yes
+113,Rick,George,106 Troy Rd.,Ithaca,NY,14850,607-272-0315,607-227-4703,607-229-5798,rick_geo@msn.com,Email,Yes
+114,Richard,Glabach,830 Hanshaw Road,Ithaca,NY,14850,3015149879,3015149879,,rickglabach@warrenhomes.com,Email,No
+115,Nina,Glasgow,207 W Remington Road,Ithaca,NY,14850,607-272-6971,607-279-1985,,ng14@cornell.edu,Email,Yes
+116,Kent,Goetz,22 Brooktree Lane,Ithaca,NY,14850,(607) 351-7849,(607) 351-7849,,kentgoetz@icloud.com,Email,Yes
+117,Peggy,Haine,5785 Rumsey Rd,Trumansburg,NY,14886,607-387-5171,607-227-6486,,peggyhaine.1@gmail.com,Email,Yes
+118,Thomas,Hall,523 The Parkway,Ithaca,NY,14850,(607) 266-8079,(607) 592-4913,,tdhall2277@gmail.com,Email,Yes
+120,Michelle,Harlan,202 S Main St,Groton,NY,13073,,,,mharlan@tompkinsfinancial.com,Email,Yes
+122,Betsy,Hillman,79 Eastlake Road,Ithaca,NY,14850,,(607) 351-3025,,Eh87@cornell.edu,Email,Yes
+123,Robert,Hillman,79 Eastlake Road,Ithaca,NY,14850,(607) 257-7443,(607) 592-0902 ,,RAH16@cornell.edu,Email,Yes
+125,Anne,Hobbs,29 Hunters Lane,Ithaca,NY,14850,(607) 279-9567,(607) 279-9567,,withane66@gmail.com,Email,Yes
+126,Peter,Hobbs,29 Hunters Lane,Ithaca,NY,14850,(607) 539-6198,(607) 216-7945,,ph14@cornell.edu,Email,Yes
+128,Edward,Hower,1409 HANSHAW ROAD,ITHACA,NY,14850,607 257-3576,607 220 7600,,edwardhower@gmail.com,Email,No
+129,Jon,Humphrey,133B Snyder Hill Road,Ithaca,NY,14850,607-379-1729,607-379-1729,,jon.h.humphrey1@gmail.com,Email,No
+130,Joanne,Izbicki,421 So. Titus Ave.,Ithaca,NY,14850,(607) 645-0385,,,jizbicki@twcny.rr.com,Phone,No
+131,John,Jaquette,41 Forest Acres Drive,Ithaca,NY,14850,(607) 257-4988,(607) 229-9523,(607) 257-4988,jpj7@cornell.edu,Email,Yes
+132,Susan,Jaquette,41 Forest Acres Drive,Ithaca,NY,14850,(607) 257-4988,(607) 257-4988,607-257-4988,,Phone,Yes
+133,Cheryl,Jewell,234 Pinckney Rd,Ithaca,NY,14850,,,,executivedirector@lovelivingathome.org,Email,Yes
+134,James,Johnston,109 Eastlake Road,Ithaca,NY,14850,(607) 272-7565,(607) 351-0936,607-351-6013,jimj14850@gmail.com,Email,Yes
+135,Audrey,Kahin,1017 Cayuga Heights Road,Ithaca,NY,14850,(607) 272-6581,(607) 339-7541,(307) 450-3017,arkahin@gmail.com,Email,Yes
+136,Mary,Kane,6 Hunter Lane,Ithaca,NY,14850,,,,mkane@conceptsystems.com,Email,No
+137,Suzanne,Kates,,,-1,,(607) 342-3892,,(607) 342-1581,katesroni@gmail.com,Email,Yes
+138,Robert,Keebler,720 Farnum Road,Lititz,PA,17543,7174710400,7174710400,,rsk235@cornell.edu,Email,No
+139,Terry 'Tara',Kekaha,118 Park Lane,Ithaca,NY,14850,(510)289-6343,(510) 289-6343,(510) 682-5981,tkekaha@gmail.com,Email,No
+140,Marcia,Kepecs,5 Leslie Lane,Ithaca,NY,14850,(607) 379-6113,(646) 898-7773,(607) 379-6113,mkepecs@msn.com,Email,Yes
+141,Polly,Kiely,37 Pease street,Trumansburg,NY,14886,6073875435,6073398022,,pollykiely@yahoo.com,Email,No
+142,Carol,Klepack,9 Coventry Walk,Ithaca,NY,14850,6072276317,6072276317,,cklepack@gmail.com,Email,No
+143,Michael,Koplinka-Loehr,,,NY,,,,,mak11@cornell.edu,Phone,Yes
+144,Dorothy,Kunz,5 Whispering Pines Dr.,Ithaca,NY,14850,(607) 274-7550,(518) 232-0149,,dodiekunz3@gmail.com,Phone,Yes
+145,Meredith,Kusch,309 St Catherines Cir,Ithaca,NY,14850,(607) 257-0170,(607) 275-1607,,meredithk411@gmail.com,Phone,No
+146,Linda,Lavine,719 Ringwood Rd,Ithaca,NY,14850,(607) 539-6166,(607) 351-1902,,linda.lavine@gmail.com,Email,No
+147,Mitchell,Lavine,719 Ringwood Rd,Ithaca,NY,14850,(607) 539-6166,(607) 351-1901,,buzz@baka.com,Email,No
+148,Margaret,Lay-Dopyera,215 N. Cayuga St. Apt. 310,Ithaca,NY,14850,(607) 220-6273,(607) 220-6273,,margaret.dopyera@gmail.com,Phone,No
+149,Amy,Layton,824 Goodrich Hill Road,Locke,NY,13092,(315) 497-0027,(609) 306-5961,(609) 273-4366,AEL67@cornell.edu,Email,No
+150,Gail,Leibovich,22 Smugglers Path,Ithaca,NY,14850,(607) 273-6820,(607) 351-0777,,gbcl70@gmail.com,Phone,Yes
+151,Ann,Lemley,301 Woodgate Lane,Ithaca,NY,14850,(607) 273-4649,(607) 227-1713,,atl2@cornell.edu,Email,Yes
+152,Ann,Levatich,90 Genung Road ,Ithaca,NY,14850,(607) 272-2361,(607) 351-4200,,annagram@mindspring.com,Email,Yes
+153,Carol,Lewis,630 W Dryden Road,Freeville,NY,13068,(607) 347-4518,(607) 216-9964,,ladyhornplayer@yahoo.com,Email,Yes
+155,Cheryl Testing,LLH,234 Pinckney Rd,Ithaca,NY,14850,607-342-1457,,,cheryljewelllynn@gmail.com,Email,No
+156,Wilson,Manik,309 The Parkway,Ithaca,NY,14850,6072626446,6072626446,,abigailccohn@me.com,Phone,No
+160,Kai,McKee,121 Terrace View Dr.,Ithaca,NY,14850,(607)768-7459,,(607) 768-7459,,Phone,No
+161,Jean,McPheeters,PO Box 93,Brooktondale,NY,14817,(607) 539-7752,(607) 592-6869,(607) 216-5215,jeanmcpheeters@gmail.com,Email,Yes
+162,Rita,Melen,19 Lisa Lane,Ithaca,NY,14850,607-257-0785,607-342-7841,607-351-8829,ritamelen@gmail.com,Email,No
+163,Malcolm,Mitchell,1405 Hanshaw Rd.,ITHACA,NY,14850,6072622514,,,mlm57td@gmail.com,Email,No
+166,Jacob,Morgan,348 Ferguson Rd.,Freeville,NY,13068,607-592-3482,,607-592-3482,,Phone,No
+167,Suzanne,Motheral,766 Elm Street Ext #1,Ithaca,NY,14850,6073515182,6073515182,,coopbiz1@yahoo.com,Email,Yes
+168,Suzanne ,Motherel,766 Elm Street ext #1,Ithaca,NY,14850,607-351-5182,,,coopbiz1@yahoo.com,Email,No
+169,Will,Musoff,111 Dryden Rd,Ithaca,NY,14850,9176018414,9176018414,,whm94@cornell.edu,Email,No
+171,Jan,Nigro,105 King St.,Ithaca,NY,14850,607-273-4175,607-351-6925,,jnigro29@yahoo.com,Email,Yes
+172,Barbara,Nosanchuk,964 Cayuga Heights  Road,Ithaca,NY,14850,(607) 277-2927,(607) 280-1186,,bnosan@twcny.rr.com,Phone,No
+174,Michelle,Ochs,116 W. Buffalo St. Apt. 2F,Ithaca,NY,14850,(724) 579-5244,,(878) 218-1166,mochs@marketstreettrust.com,Email,Yes
+175,Shaianne,Osterreich,101 Crescent Place,Ithaca,NY,14850,607-379-1074,607-379-1074,303-250-3318,sosterreich@ithaca.edu,Phone,Yes
+176,Linda,Pasto,24 Asbury Drive,Ithaca,NY,14850,(607) 257-3083,(607) 280-5309,(607) 280-2264,Aummie53@gmail.com,Phone,No
+177,Sharon,Perkins,61 Whitetail Drive,Ithaca,NY,14850,(540) 797-3814,(540) 797-3814,(570) 533-1048,sharonjperkins2@gmail.com,Phone,Yes
+178,Caprice,Pierre,10452 Low Rise 10; Cornell ,Ithaca,NY,14853,973-780-0701,973-780-0701,973-930-4873,cmp264@cornell.edu,Email,No
+180,James,Quest,428 Savage Farm Drive,Ithaca,NY,14850,(607) 257-0277,(607) 280-8033,(607) 280-4374,JHQuest56@gmail.com,Email,Yes
+181,Leslie,Quest,428 Savage Farm Drive,Ithaca,NY,14850,(607) 280-4374,(607) 280-4374,(607) 280-8033,LQuestLLH@gmail.com,Email,Yes
+182,Esther,Racoosin,112 Roat Street,Ithaca,NY,14850,6072573999,,,,Both,Yes
+183,Phyllis,Rappaport, 30 Horizon Drive,Ithaca,NY,14850,6072577969,6072162005,,rappapent@gmail.com,Both,Yes
+184,Wendy,Reeves,111 Hancock Street ,Ithaca ,NY,14850,6318271478,,,Wsbdreeves@gmail.com,Email,No
+185,Carrie,Regenstein,301 Muriel Street,Ithaca,NY,14850,607-592-9883,(607) 592-9880,(607) 592-9883,carrie.regenstein@gmail.com,Email,Yes
+186,Lita,Remsen,608 Hanshaw Rd,Ithaca,NY,14850,,6075922168,,litarem@gmail.com,Email,Yes
+187,Barbara,Reynolds,35 Buck Road,Lansing,NY,14882,(607) 533-7272,,(607) 280-5499,barbarareynolds35@gmail.com,Email,Yes
+188,Marissa,Richards,939 Dryden Road,Ithaca,NY,14850,(607) 379-9632,(607) 379-9632,,marissa@blair-richards.com,Email,Yes
+189,Jeffrey,Richardson,798 S. Plain St.,Ithaca,NY,14850,607-882-3513,,301-461-6987,,Phone,No
+190,Anne,Rodda,115 Park Lane,Ithaca,NY,14850,(607) 273-2094,(607) 229-9416 ,,rowboat@twcny.rr.com,Phone,Yes
+191,Betsy,Root,4545 Seneca Rd,Trumansburg,NY,14886,(607) 387-7082,(607) 342-1612,(607) 342-1459,loveapoodle@yahoo.com,Email,Yes
+192,Paulette,Rosa,300 Culver Rd,Ithaca,NY,14850,,607-342-0808,,pauletterosa66@gmail.com,Email,Yes
+193,Elaine,Sapp,152 Wood Road,Freeville,NY,13068,(607) 291-4185,,,ESapp@twcny.rr.com,Email,Yes
+194,Carol,Scheele,117 Randolph Road,Ithaca,NY,14850,(607) 257-2054,(607) 379-3231,(607) 319-4385,csscheele@gmail.com,Email,Yes
+196,Deb,Schmidle,702 Cayuga Heights  Road,Ithaca,NY,14850,(607) 272-0246,(607) 227-9157,,dj13@cornell.edu,Email,Yes
+197,Fred,Schwartz,303 Columbia St,Ithaca,NY,14850,6075920020,6075920020,,fes@twcny.rr.com,Email,Yes
+199,Jane,Segelken,,,NY,,,,,jbsegelken@gmail.com,Phone,No
+200,Neil,Shallish,120 Larchmont Dr,Trumansburg,NY,14886,6072295578,6072295578,,drshallish@aol.com,Email,Yes
+201,David,Shapiro,807 Mitchell Street,Ithaca ,NY,14850,(607) 592-9336,,,Daveshap24@gmail.com,Email,Yes
+203,Dorothy,Sholeen,735 Iradell Rd.,Trumansburg,NY,14886,(607) 387-6537,,,dsholeen@gmail.com,Email,Yes
+204,Lynn,Shreve,115 Pine Tree Road ,Ithaca,NY,14850,(607) 319-0938,(607) 342-2916,(607) 319-0938,lshreve@twcny.rr.com,Email,Yes
+207,Carol,Skinner,37 Whig Street,Trumansburg,NY,14886,(607) 387-3535,,,carolbskinner@yahoo.com,Phone,Yes
+208,Pennie,Small,268 Lower Creek Rd.,Ithaca,NY,14850,(607) 347-4398,(772) 214-8883,,PJSMALL1@yahoo.com,Phone,No
+209,Sandra,Sorensen,218 HUDSON ST,ITHACA,NY,14850,6072798190,,,sandra.sorensen@gmail.com,Email,No
+210,Fran,Spadafora Manzella,371 Teton Court,Ithaca,NY,14850,(607) 272-9456,(607) 379-2027,315-813-0296,manzellafran@gmail.com,Email,Yes
+211,David,Sprague,109 Queen St.,Ithaca,NY,14850,(607) 273-3681,(607) 279-6063,,david@sprjac.com,Email,Yes
+212,Susie,Sragow,528 Warren Road,Ithaca,NY,14850,(310) 892-7725,(310) 892-7725,,sjptherapy@gmail.com,Email,Yes
+215,David,Stipanuk,136 HOMESTEAD CIRCLE,ITHACA,NY,14850,6072736255,6072791859,,dms20@cornell.edu,Email,Yes
+216,Beverly,Stockard,458 Savage Farm Drive,Ithaca,NY,14850,,(440) 292-7180,,bevstockard@gmail.com,Phone,Yes
+218,Jae,Sullivan,601 N. Cayuga St.,Ithaca,NY,14850,(607) 272-6723,,,blueheron555@gmail.com,Email,Yes
+220,Yoram,Szekely,104 Klinewoods Road,Ithaca,NY,14850,(607) 257-5346,,,Yszekely@twcny.rr.com,Phone,Yes
+225,Kate,Turner,132 Burleigh Dr.,Ithaca,NY,14850,(607) 257-9957,(607) 592-2408,(607) 592-5851,keeturn4@gmail.com,Email,Yes
+226,Lowell,Turner,132 Burleigh Dr.,Ithaca,NY,14850,(607) 257-9957,(607) 592-5851,6075922408,lrt4@cornell.edu,Email,Yes
+227,Demetri,Tzivaeris,1082 Dryden Rd.,Ithaca,NY,14850,,607-327-1368,607-272-8990,demetrit@aboutchallenge.org,Phone,Yes
+228,Linda,Uhll,65 Hickory Rd,Ithaca,NY,14850,(607) 275-9982,(607) 351-2865,,luhll@yahoo.com,Email,No
+229,Maddie,Ulrich,"100 Graham Rd, Apt. 11E",Ithaca,NY,14850,6074229777,,,madalene@communiquedesign.com,Email,Yes
+230,Barbara,VanDyk,4217 Garrett Rd,Ithaca,NY,14850,607-256-1623,,603-653-2358,barbarasvandyk@gmail.com,Email,Yes
+231,Marian,VanSoest,311 Strawberry Hill Circle,Ithaca,NY,14850,(607) 273-9235,,,mham.vansoest@gmail.com,Phone,Yes
+232,Tam,Warren,1318 East Shore Drive,Ithaca,NY,14850,,,,tam@warrenhomes.com,Phone,No
+234,Diane,Wiessinger,136 Ellis Hollow Creek Road,Ithaca,NY,14850,607-269-6370,,,dwiessin@baka.com,Phone,No
+235,Diane,Wiessinger,136 Ellis Hollow Creek Road,Ithaca,NY,14850,607-269-6370,607-269-6370,,dwiessin@baka.com,Email,No
+236,John,Wiessinger,136 Ellis Hollow Creek Road,Ithaca,NY,14850,607-277-2116,,,,Phone,No
+238,Rochelle,Woods,114 Glenside Rd.,Ithaca,NY,14850,607-277-3497,607-339-1956,,rewoods112@gmail.com,Phone,No
+239,Kevin,Workman,824 Goodrich Hill Road,Locke,NY,13092,(315) 497-0027,(609) 273-4366,,AeL67@cornell.edu,Phone,No
+240,Marcie,Wyant,311 Richard Place ,Ithaca,NY,14850,,(607) 793-3274,,marcie.wyant@gmail.com,Phone,No
+241,Eugene,Yarussi,56 Waterview Heights Road,Ithaca,NY,14850,(607) 277-6520,(607) 279-6613,(607) 280-0437,eyarussi@gmail.com,Email,Yes
+242,Sofia,Yoon,211 Linden Avenue,Ithaca,NY,14850,2017499526,,,hy348@cornell.edu,Email,Yes

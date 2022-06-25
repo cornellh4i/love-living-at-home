@@ -1,81 +1,112 @@
-id,contact_first_name,contact_last_name,company_name,email_address,preferred_contact_method,website,address_id,primary_phone_number,secondary_phone_number,availability_id
-0,,,Ace Security,,Phone,,197,6072738840,,8
-1,,,ACME Pest Control,,Phone,,198,607-844-8689,,8
-2,,,Bailey Construction,,Phone,www.baileyconstruction.vpweb.com,199,607-209-4114,,9
-3,,,Bell's Auto Service,,Phone,www.bellsauto.com,200,607-273-9325,,1
-4,,,Bumblebee Painters,info@bumblebeepainters.com,Email,www.bumblebeepainters.com,201,607-273-6521,,4
-5,,,Campbell & Davies,campbellanddavies@yahoo.com,Phone,www.campbellanddaviesllc.com,202,607-216-0036,,6
-6,,,Cayuga Landscape Company,,Phone,www.cayugalandscape.com,203,6072573000,6072573000,2
-7,,,Classic Carpet Care Service,classiccarpetithaca@hotmail.com,Phone,www.classiccarpetithaca.com,204,607-277-4151,,5
-8,,,"Cortright Electric, Inc.",,Phone,,205,607-272-9404,,6
-9,,,Donohue Halveson,,Phone,,206,(607) 273-3393,,7
-10,,,Duthie Painting Company,,Email,,207,607-272-3531,,10
-11,,,"Gaggle Company, Inc.",,Phone,,208,607-539-7868,,7
-12,,,"Genson Overhead Door, Inc.",info@gensondoor.com,Phone,www.gensondoor.com,209,6072722494,6072722494,1
-13,,,Hick's Septic and Excavation,,Phone,,210,607-273-0867,,10
-14,,,Hired Hands Moving Company,,Phone,www.hiredhandsmoving.com,211,"607-272-2000, Ext. 2",,4
-15,,,Hull Heating and Plumbing,,Phone,www.hullheatingandplumbing.com,212,(607) 272-3550,,8
-16,,,Hunt's Auto Service,,Phone,www.huntsautoservice.com,213,607-273-9325,,10
-17,,,Ithaca Cremation Services,tfuller@hersonwagnerfuneralhome.com,Phone,www.ithacacremationservice.com,214,607-274-7544,,5
-18,,,Ithaca Piano Rebuilders,,Phone,,215,607-272-6547,,7
-19,,,Leonard Vacuum & Janitorial Supply,info@leonardsvacuumandjanitorialsupplies.com,Phone,www.leonardsvacuumandjanitorialsupplies.com,216,6072723434,,1
-20,,,"MacPherson Builders, Inc.",info@mcphersonbuilders.com,Phone,www.mcphersonbuilders.com,217,6072732373,,5
-21,,,Mimi's Attic,info@mimisatticithaca.com,Phone,www.mimisatticithaca.com,218,607-882-9038,,6
-22,,,Patterson's Service Station,,Phone,www.pattersonsservice.com,219,607-273-0322,,4
-23,,,Perfect Painters-Heritage Builders,customerservice@perfect-heritage.com,Email,,220,607-277-6260,,1
-24,,,Pleasant Valley Electrical,,Phone,www.pleasantvalleyelectric.com,221,607-272-6922,,6
-25,,,"Pro-Lawn Landscaping & Excavating, Inc.",sales@pro-lawn.com,Phone,www.prolawn-proseal-ithaca.com,222,607-277-5296,,2
-26,,,"Sparks Electric Company, Inc.",,Email,,223,607-273-0029,,7
-27,,,Superior Glass Service,spuperiorglass@frontier.com,Phone,,224,(607) 273-9100,(607) 279-5155,6
-28,,,Witty Appliance Repair,bwitty1@twcny.rr.com,Email,http://www.wittyapplianceservicerepair.com/,225,607-753-0407,,10
-29,,,Yaman Construction,,Phone,,226,607-697-0151,,10
-30,Brandon,,Gadget Repair Pro,service@gadgetrepairpro.com,Email,www.gadgetrepairpro.com,227,607-288-2266,,3
-31,Chris,,"Precision Builders, Inc.",stoscheckbldrs@aol.com,Phone,precisionbuildersithaca.com,228,6072727321,,5
-32,Dave,,JDog Junk Removal,,Phone,,229,,795-6336,6
-33,Garth,,McMillen Electric,,Phone,,230,607-273-8084,,3
-34,HPM TECH SERVICES,,,,Phone,http://www.hpmtechservices.com,229,,,3
-35,INHA,,Ithaca Neighborhood Housing,,Phone,https://www.ithacanhs.org/improve/small-home-repairs/,229,, (607) 277-4500,8
-36,Jeremy,,Terrasana Landscaping,jeremy@terrasanalandscaping.com,Phone,www.terrasanagardens.com,231,607-542-9016,,8
-37,Katie Thompson & Hea,,Crystal Clear Cleaning,,Phone,,229,,607-227-5574 ,2
-38,Keith,,Limbwalker Tree Care,keith@ithacatreecare.com,Phone,www.ithacatreecare.com,232,607-351-1838,,9
-39,Ken,Adams,ABC Oriental Rug & Carpet Cleaning Co.,info@abcclean.com,Phone,www.abc-oriental-rug.com,233,(607) 272-1566,,2
-40,,Alex Cole Paving Inc.,Alex Cole Paving Inc. (Masonry/Concrete),,Phone,,234,607-533-9274,,8
-41,Rose,Arena,Rose's Home Dish,roseshomedish@gmail.com,Email,www.roseshomedish.com,235,(607) 229-2416,,9
-42,Ann,Axtell,"Cascadilla Tree Care of Ithaca, LLC",cascadillatreecare@gmail.com,Email,www.cascadillatreecare.com,236,(607) 272-5447,(607) 279-5532,5
-43,Rick,Bayo ,Green Scene Lawn and Garden,rick@greenscenelg.com,Email,,229,(607) 327-0394.,,10
-44,John,Brazo,,,Phone,,237,(607) 342-5730,,9
-45,Gary,Bucci,Dave Long Appraisal Company,longapp@longappraisal.com,Phone,www.longappraisal.com,238,607-272-4040,,4
-46,Albert,Budd,KB Electric,,Phone,,239,607-319-0808,,6
-47,Fay,Bunnell,Elder Frontiers,elderfrontiers@gmail.com,Email,,240,(607) 592-2075,,9
-48,Levi,Carling,Clean Earth Septic Service,cleanearth09@yahoo.com,Email,www.cleanearthseptic.com,241,(607) 564-7931,(607) 738-4738,2
-49,Betsy,Cleveland,Broom Hilda Cleaning Service ,,Phone,,229,(607) 2734406,,1
-50,John,Cochran,,,Phone,,229,,607-347-4714,1
-51,Pat,Cozzarin,Pat Cozzarin Pest Management,,Email,,242,607-387-5552,,9
-52,Gvozden,Dokic,"XOrca, Inc",gvozden@xorca.com,Email,,243,(607) 539-3263,,1
-53,John,Dowd,Zolar Moving Company,,Phone,www.zolarmoving.com,244,607-272-7839,,9
-54,J.D.,Ferro,J.D. Ferro Roofing,,Email,www.jdferroroofing.com,245,607-273-0872,,3
-55,John,Hammond,"Austin Construction, Inc.",,Phone,,246,607-539-7564,,1
-56,Mary,Hirshfleld,Mary Hirshfeld Dog Training and Walking LLC,mary.hirshfeld@frontier.com,Email,,247,(607) 539-6814,(607) 227-8436,5
-57,Jack,Litzenberger,2 Pros Construction,jack@2prosconstruction.com,Email,,248,(607) 423-7322,,8
-58,John,Manuel,,,Phone,,229,,,1
-59,Greg,Marsted,"Overhead Door of Cortland, Inc.",,Phone,www.ohdcortland.com,249,607-7530201,,9
-60,Donald,McKechnie,,dmckech@ithaca.edu,Phone,,231,607-277-7112,,1
-61,Allyson,Mooney,lifestyleorganization@weebly.com,,Phone,,250,(315) 593-9611,,1
-62,N F,Nash Construction,,,Phone,,251,,(607) 347-4273,7
-63,Joseph,O Leary,HPM Tech Services,joleary1012@gmail.com,Email,http://www.hpmtechservices.com,252,(607) 319-4776,(607) 319-4776,1
-64,Dan,Quest,Antique Quest Estate Sales,antique_quest@yahoo.com,Email,www.theantiquequest.com,253,(607) 279-2685,,5
-65,,Schickel,Schickel Construction Co.,info@schickelconstruction.com,Phone,www.schickelconstruction.com,254,6078444780,,4
-66,Caleb,Scott,"Scott Land & Yard Services, Inc.",,Phone,www.scottscape.net,255,607-539-6858,,3
-67,Dean,Shea,Sunnybrook Builders,sunnybrookbuilders@gmail.com,Phone,www.sunnybrookbuilders.com,256,(607) 539-6286,,1
-68,Joseph,Sibley,"Bucket List Travel Attendant, LLC",bucketlistta@gmail.com,Email,www.bltravelattendant.com,257,(844) 332-3772,(607) 227-0160,10
-69,Mike,Skibinski,Mike's Complete Handyman Service,mskibin@gmail.com,Email,,258,(713) 292-3035,,9
-70,Mary,Stazi,The Computing Center,Rose@compcenter.com,Email,www.compcenter.com,259,(607) 257-3524,(607) 257-3524,10
-71,Wynnie,Stein,,wynniestein@hotmail.com,Email,,229,,,5
-72,Denise,Sullivan,,3denise3@gmail.com,Email,,260,,(607) 339-7903,4
-73,Jim,Sweasey,Sweasey Heating & Air Conditioning,,Phone,,261,607-273-6353,,8
-74,Ed,Szymanski,The Car Buyer's Advocate,autochopny@aol.com,Email,,262,(607) 539-6988,(607) 227-6488,2
-75,Michael,Taormina,House Doctor,,Phone,,263,(607) 273-0555,,1
-76,Dominic,Tarallo,East Shore Management,dtarallo1@gmail.com,Both,https://www.eastshoremanagement.com/,229,(607) 592-8069,,3
-77,Morgan,Thompson,"Thompson Tree and Crane Service, LLC",,Phone,,264,607-592-1686,,5
-78,Peter,Whitmore,Whitmore Fence Company,,Phone,www.whitmorefence.com,265,607-844-9011,,8
-79,Grant,Wilder,Window and Other Cleaner - Cayuga Commercial Cleaning,cayugaclean@gmail.com,Email,,266,(607) 227-7622,(607) 227-7622,4
+,Service Provider First Name,Service Provider Laast Name,Type,Company,Address,City,State,Zip,Phone,Cell Phone,Emergency Contact Phone #,Email,Preferred Contact Method,Website,Fully Vetted?,Visible?,Discount Notes
+0,,,Non-Member Contractor,AccuFab,232 Cherry St.,Ithaca,NY,14850,(607)273-3706,,,mike@accufabinc.com,Both,http://accufabinc.com/,No,No,
+1,,,Non-Member Contractor,Ace Security,720 W. Green St.,Ithaca,NY,14850,6072738840,,,,Phone,,No,No,
+2,,,Non-Member Contractor,ACME Pest Control,359 Dryden-Harford Rd.,Dryden,NY,13053,607-844-8689,,,,Phone,,No,No,
+3,,,Non-Member Contractor,Austin's Helping Hands LLC,225 S. Fulton St.,Ithaca,NY,14850,6073399321,,,,Phone,,No,No,
+4,,,Non-Member Contractor,Bailey Construction,5139 Jacksonville Road,Trumansburg,NY,14886,607-209-4114,,,,Phone,www.baileyconstruction.vpweb.com,No,No,
+5,,,Non-Member Contractor,Bell's Auto Service,945 Dryden Rd.,Ithaca,NY,14850,607-273-9325,,,,Phone,www.bellsauto.com,No,No,
+6,,,Non-Member Contractor,Bumblebee Painters,210 E. Falls St.,Ithaca,NY,14850,607-273-6521,,,info@bumblebeepainters.com,Email,www.bumblebeepainters.com,No,Yes,
+7,,,Non-Member Contractor,Campbell & Davies,"201 Dey St., Suite 211",Ithaca,NY,14850,607-216-0036,,,campbellanddavies@yahoo.com,Phone,www.campbellanddaviesllc.com,No,No,
+8,,,Non-Member Contractor,Cayuga Landscape Company,2712 N. Triphammer,Ithaca,NY,14850,6072573000,6072573000,,,Phone,www.cayugalandscape.com,No,No,
+9,,,Non-Member Contractor,Classic Carpet Care Service,,,NY,,607-277-4151,,,classiccarpetithaca@hotmail.com,Phone,www.classiccarpetithaca.com,No,No,
+10,,,Non-Member Contractor,"Cortright Electric, Inc.",653 Elmira Road,Ithaca,NY,14850,607-272-9404,,,,Phone,,No,No,
+11,,,Non-Member Contractor,"Crown Construction, Inc",176 Cortland Rd.,Dryden ,NY,13053,607-524-4157,,,,Both,https://www.crownconstructioninc.com/,No,No,
+12,,,Non-Member Contractor,Donohue Halveson,607 W Seneca St,Ithaca,NY,14850,(607) 273-3393,,,,Phone,,No,No,
+13,,,Non-Member Contractor,Duthie Painting Company,484 Ridge Road,Lansing,NY,14882,607-272-3531,,,,Email,,No,Yes,
+14,,,Non-Member Contractor,"Gaggle Company, Inc.",2935 Slaterville Road,Brooktondale,NY,14817,607-539-7868,,,,Phone,,No,No,
+15,,,Non-Member Contractor,"Genson Overhead Door, Inc.",11710 State Route 90,Locke,NY,13092,6072722494,6072722494,,info@gensondoor.com,Phone,www.gensondoor.com,No,No,
+16,,,Non-Member Contractor,Green Cleaning Pro,465 North Rd.,Freeville,NY,13065,607-444-5502,,,info@greencleaning-pro.com,Both,https://www.greencleaning-pro.com/,No,Yes,
+17,,,Non-Member Contractor,Hick's Septic and Excavation,13 Waterwagon Road,Ithaca,NY,14850,607-273-0867,,,,Phone,,No,No,
+18,,,Non-Member Contractor,Hired Hands Moving Company,"409 College Ave., Dept. 5",Ithaca,NY,14850,"607-272-2000, Ext. 2",,,,Phone,www.hiredhandsmoving.com,No,No,
+19,,,Non-Member Contractor,HPM Tech Services,"200 Pleasant Grove Rd #2a,",Ithaca,NY,14850,(607) 319-4776,,,,Phone,,No,No,
+20,,,Non-Member Contractor,Hunt's Auto Service,225 Elmira Road,Ithaca,NY,14850,607-273-9325,,,,Phone,www.huntsautoservice.com,No,No,
+21,,,Non-Member Contractor,Ian's Welding,422 Irish Settlement Rd.,Freeville,NY,13068,607-327-1192,607-327-1192,,iansfabricating@gmail.com,Both,https://www.iansfabricating.com/,No,No,
+22,,,Non-Member Contractor,Ithaca Cremation Services,P.O. Box 403,Ithaca,NY,14850,607-274-7544,,,tfuller@hersonwagnerfuneralhome.com,Phone,www.ithacacremationservice.com,No,No,
+23,,,Non-Member Contractor,Ithaca Piano Rebuilders,"950 Danby Rd., #26",Ithaca,NY,14850,607-272-6547,,,,Phone,,No,Yes,
+24,,,Non-Member Contractor,Jay's Cleaning Services,8306 Main St.,Interlaken ,NY,14847,607-592-7327,,,,Both,http://jayscleaning.xyz/,No,No,
+25,,,Non-Member Contractor,Leonard Vacuum & Janitorial Supply,211 Elmira Road,Ithaca,NY,14850,6072723434,,,info@leonardsvacuumandjanitorialsupplies.com,Phone,www.leonardsvacuumandjanitorialsupplies.com,No,No,
+26,,,Non-Member Contractor,Life Maid Heavenly ,27 Waterburg Rd.,Trumansburg,NY,14886,6072795770,,,info@ithacaclean.com,Both,https://ithacaclean.com,No,Yes,
+27,,,Non-Member Contractor,"MacPherson Builders, Inc.",129 West Falls Street,Ithaca,NY,14850,6072732373,,,info@mcphersonbuilders.com,Phone,www.mcphersonbuilders.com,No,No,
+28,,,Non-Member Contractor,Mancini-Ferrara and Sons,134 Ithaca Beer Dr.,Ithaca,NY,14850,(607) 272-3600,,,,Phone,https://www.mancini-ferrara.com/,No,No,
+29,,,Non-Member Contractor,Mimi's Attic,430 W. State St.,Ithaca,NY,14850,607-882-9038,,,info@mimisatticithaca.com,Phone,www.mimisatticithaca.com,No,No,
+30,,,Non-Member Contractor,Movers Etc LLC,,,NY,,6079721723,6073670047,,moveretcny@gmail.com,Both,,No,No,
+31,,,Non-Member Contractor,Patterson's Service Station,221 N. Aurora St.,Ithaca,NY,14850,607-273-0322,,,,Phone,www.pattersonsservice.com,No,No,
+32,,,Non-Member Contractor,Perfect Painters-Heritage Builders,308 Madison St.,Ithaca,NY,14850,607-277-6260,,,customerservice@perfect-heritage.com,Email,,No,Yes,
+33,,,Non-Member Contractor,Pleasant Valley Electrical,405 3rd St.,Ithaca,NY,14850,607-272-6922,,,,Phone,www.pleasantvalleyelectric.com,No,No,
+34,,,Non-Member Contractor,"Pro-Lawn Landscaping & Excavating, Inc.",41 Oak Brook Drive,Ithaca,NY,14850,607-277-5296,,,sales@pro-lawn.com,Phone,www.prolawn-proseal-ithaca.com,No,No,
+35,,,Non-Member Contractor,"Sparks Electric Company, Inc.",208 N. Titus Ave.,Ithaca,NY,14850,607-273-0029,,,,Email,,No,Yes,
+36,,,Non-Member Contractor,Superior Glass Service,205 Fulton Street,Ithaca,NY,14850,(607) 273-9100,(607) 279-5155,,spuperiorglass@frontier.com,Phone,,No,Yes,10% discount for LLH members
+37,,,Non-Member Contractor,Sweeney's Pest Elimination,210 S. Main St.,Homer,NY,13077,(607) 283-2772,,,,Phone,https://www.sweeneyspest.com,No,No,
+38,,,Non-Member Contractor,Witty Appliance Repair,788 MacBean Lane,Cortland,NY,13045,607-753-0407,,,bwitty1@twcny.rr.com,Email,http://www.wittyapplianceservicerepair.com/,No,No,
+39,,,Non-Member Contractor,Yaman Construction,222 S. Fulton St.,Ithaca,NY,14850,607-697-0151,,,,Phone,,No,No,
+40,Brandon,,Non-Member Contractor,Gadget Repair Pro,"222 Elmira Road, #10",Ithaca,NY,14850,607-288-2266,,,service@gadgetrepairpro.com,Email,www.gadgetrepairpro.com,No,No,
+41,Chris,,Non-Member Contractor,"Precision Builders, Inc.",207 W. Clinton St.,Ithaca,NY,14850,6072727321,,,stoscheckbldrs@aol.com,Phone,precisionbuildersithaca.com,No,No,
+42,Dave,,Non-Member Contractor,JDog Junk Removal,,,-1,,,795-6336,,,Phone,,No,No,
+43,Garth,,Non-Member Contractor,McMillen Electric,2008 E. Shore Drive,Ithaca,NY,14882,607-273-8084,,,,Phone,,No,No,
+44,HPM TECH SERVICES,,Non-Member Contractor,,,,-1,,,,,,Phone,http://www.hpmtechservices.com,No,No,
+45,INHA,,Non-Member Contractor,Ithaca Neighborhood Housing,,,-1,,, (607) 277-4500,,,Phone,https://www.ithacanhs.org/improve/small-home-repairs/,No,No,
+46,Jeremy,,Non-Member Contractor,Terrasana Landscaping,,Ithaca,NY,14850,607-542-9016,,,jeremy@terrasanalandscaping.com,Phone,www.terrasanagardens.com,No,No,
+47,Katie Thompson & Hea,,Non-Member Contractor,Crystal Clear Cleaning,,,-1,,,607-227-5574 ,,,Phone,,No,No,
+48,Keith,,Non-Member Contractor,Limbwalker Tree Care,5506 Grove Rd.,Trumansburg,NY,14886,607-351-1838,,,keith@ithacatreecare.com,Phone,www.ithacatreecare.com,No,No,
+49,Ken,Adams,Non-Member Contractor,ABC Oriental Rug & Carpet Cleaning Co.,130 Cecil Malone Drive,Ithaca,NY,14850,(607) 272-1566,,,info@abcclean.com,Phone,www.abc-oriental-rug.com,No,Yes,
+50,,Alex Cole Paving Inc.,Non-Member Contractor,Alex Cole Paving Inc. (Masonry/Concrete),390 Peruville rd. ,Freeville,NY,13068,607-533-9274,,,,Phone,,No,No,
+53,Rose,Arena,Non-Member Contractor,Rose's Home Dish,215 Wood Street,Ithaca,NY,14850,(607) 229-2416,,,roseshomedish@gmail.com,Email,www.roseshomedish.com,No,Yes,"Paypal is the preferred way to pay, but you can prepay by check or leave payment for the driver."
+54,Ann,Axtell,Non-Member Contractor,"Cascadilla Tree Care of Ithaca, LLC",80 Sharpsteen Rd,Locke,NY,13092,(607) 272-5447,(607) 279-5532,,cascadillatreecare@gmail.com,Email,www.cascadillatreecare.com,Yes,Yes,"We would offer members a discount of 10% for work over $200.
+Payment is due in 30 days from the date on the invoice."
+56,Rick,Bayo ,Non-Member Contractor,Green Scene Lawn and Garden,,,-1,,(607) 327-0394.,,,rick@greenscenelg.com,Email,,No,No,
+61,John,Brazo,Non-Member Contractor,,11 Ferris St,Spencer,-1,,(607) 342-5730,,,,Phone,,No,No,
+64,Gary,Bucci,Non-Member Contractor,Dave Long Appraisal Company,"309 N. Tioga St., Suite 204",Ithaca,NY,14850,607-272-4040,,,longapp@longappraisal.com,Phone,www.longappraisal.com,No,No,
+65,Albert,Budd,Non-Member Contractor,KB Electric,111 Collins Road,Freeville,NY,13068,607-319-0808,,,,Phone,,No,No,
+66,Fay,Bunnell,Non-Member Contractor,Elder Frontiers,33 James St,Dryden,NY,13053,(607) 592-2075,,,elderfrontiers@gmail.com,Email,,Yes,Yes,
+70,Levi,Carling,Non-Member Contractor,Clean Earth Septic Service,1051 State Route 224,Van Etten,NY,14889,(607) 564-7931,(607) 738-4738,,cleanearth09@yahoo.com,Email,www.cleanearthseptic.com,Yes,Yes,
+74,,Castle Services,Non-Member Contractor,Castle Services,950 Danby Rd.,Ithaca,NY,14850,607-279-2532,,,service.castle@gmail.com,Both,https://castleservicesithaca.com/,No,No,
+77,,Classen Home Health,Non-Member Contractor,Classen Home Health,222 Elmira Rd.,Ithaca,NY,14850,6072771342,,,,Phone,https://www.classenhomehealth.com/,No,No,
+78,Betsy,Cleveland,Non-Member Contractor,Broom Hilda Cleaning Service ,,,-1,,(607) 2734406,,,,Phone,,No,No,
+79,John,Cochran,Non-Member Contractor,,,,-1,,,607-347-4714,,,Phone,,No,No,
+85,Pat,Cozzarin,Non-Member Contractor,Pat Cozzarin Pest Management,9198 State Route 96,Interlaken,NY,14847,607-387-5552,,,,Email,,No,Yes,
+93,Gvozden,Dokic,Non-Member Contractor,"XOrca, Inc",185 Midline Road,Slaterville Springs ,NY,14881,(607) 539-3263,,,gvozden@xorca.com,Email,,Yes,Yes,$75/hour
+96,John,Dowd,Non-Member Contractor,Zolar Moving Company,"225 S. Fulton St., #3",Ithaca,NY,14850,607-272-7839,,,,Phone,www.zolarmoving.com,No,No,
+97,Jyl,Dowd,Non-Member Contractor,No Dowd About It,,,-1,,,(607) 327-1661,,nodowdaboutit2022@gmail.com,Both,,No,No,
+106,J.D.,Ferro,Non-Member Contractor,J.D. Ferro Roofing,390 State Route 13,Cortland,NY,13045-8500,607-273-0872,,,,Email,www.jdferroroofing.com,No,No,
+119,John,Hammond,Non-Member Contractor,"Austin Construction, Inc.",3168 Slaterville Road,Brooktondale,NY,14817,607-539-7564,,,,Phone,,No,No,
+121,Hull ,Heating & Plumbing,Non-Member Contractor,Hull Heating and Plumbing,425 Floral Ave.,Ithaca,NY,14850,(607) 272-3550,,,,Phone,www.hullheatingandplumbing.com,No,No,
+124,Mary,Hirshfleld,Non-Member Contractor,Mary Hirshfeld Dog Training and Walking LLC,595 Hammond Hill Road,Brooktondale,NY,14817,(607) 539-6814,(607) 227-8436,,mary.hirshfeld@frontier.com,Email,,Yes,Yes,$45/hour for training. $38 for walk and train. May be able to have a few clients on reduced rates.
+127,,Home Instead,Non-Member Contractor,Home Instead,840 Hanshaw Rd.,Ithaca,NY,14850,(607) 264-0285,,,,Phone,https://www.homeinstead.com/location/842,No,Yes,
+154,Jack,Litzenberger,Non-Member Contractor,2 Pros Construction,2 Pros Construction,Cortland ,NY,13045,(607) 423-7322,,,jack@2prosconstruction.com,Email,,Yes,Yes,"Our common projects are:
+Large scale home conversions with redesign of existing spaces.
+Kitchens, offering our selection of 5 lines of cabinetry.
+Baths
+Decks
+Multiple window.and door replacements.
+Additions
+Wood flooring and tile upgrades.
+Our projects are typically at a larger scale then most as we have 2 -3 man teams as well as mechanical technicians within our employee pool of 20 people.
+"
+157,John,Manuel,Non-Member Contractor,,,,-1,,,,,,Phone,,No,No,
+158,Greg,Marsted,Non-Member Contractor,"Overhead Door of Cortland, Inc.",33 Cleveland St.,Cortland,NY,13045,607-7530201,,,,Phone,www.ohdcortland.com,No,No,
+159,Donald,McKechnie,Non-Member Contractor,,,Ithaca,NY,14850,607-277-7112,,,dmckech@ithaca.edu,Phone,,No,Yes,
+164,Allyson,Mooney,Non-Member Contractor,lifestyleorganization@weebly.com,3 Glenn Street,Cortland,NY,13045,(315) 593-9611,,,,Phone,,No,No,"
+"
+165,Shannon ,Moravec,Non-Member Contractor,,,,-1,,607-210-9610,,,,Phone,,No,No,
+170,N F,Nash Construction,Non-Member Contractor,,111 Sheldon Rd,Freeville,NY,,,(607) 347-4273,,,Phone,,No,Yes,
+173,Joseph,O Leary,Non-Member Contractor,HPM Tech Services,903 Hanshaw Road,Ithaca,NY,14850,(607) 319-4776,(607) 319-4776,,joleary1012@gmail.com,Email,http://www.hpmtechservices.com,Yes,Yes,
+179,Dan,Quest,Non-Member Contractor,Antique Quest Estate Sales,,Lansing,NY,14882,(607) 279-2685,,,antique_quest@yahoo.com,Email,www.theantiquequest.com,No,Yes,
+195,,Schickel,Non-Member Contractor,Schickel Construction Co.,210 Schutt Road,Dryden,NY,13053,6078444780,,,info@schickelconstruction.com,Phone,www.schickelconstruction.com,No,No,
+198,Caleb,Scott,Non-Member Contractor,"Scott Land & Yard Services, Inc.",P.O. Box 13,Slaterville Springs,NY,14881,607-539-6858,,,,Phone,www.scottscape.net,No,No,
+202,Dean,Shea,Non-Member Contractor,Sunnybrook Builders,2147 Slaterville Road,Ithaca,NY,14850,(607) 539-6286,,,sunnybrookbuilders@gmail.com,Phone,www.sunnybrookbuilders.com,Yes,Yes,
+205,Joseph,Sibley,Non-Member Contractor,"Bucket List Travel Attendant, LLC",17 Prospect Street,Trumansburg,NY,14886,(844) 332-3772,(607) 227-0160,,bucketlistta@gmail.com,Email,www.bltravelattendant.com,Yes,Yes,"$10 per hour for all trips, except airport which is $15/hour. 
+Reduced fee and no cost services are available."
+206,Mike,Skibinski,Non-Member Contractor,Mike's Complete Handyman Service,25 Stormy View Dr,Ithaca,NY,14882,(713) 292-3035,,,mskibin@gmail.com,Email,,Yes,Yes,$35/hour
+213,Mary,Stazi,Non-Member Contractor,The Computing Center,The Computing Center,Ithaca,NY,14850,(607) 257-3524,(607) 257-3524,,Rose@compcenter.com,Email,www.compcenter.com,Yes,Yes,"Basic Training $70/hour (regular is $85)
+Advanced Training $95 (regular is $105)
+Printer Repair $80 (regular is $95)"
+214,Wynnie,Stein,Non-Member Contractor,,,,-1,,,,,wynniestein@hotmail.com,Email,,No,No,
+217,Denise,Sullivan,Non-Member Contractor,,122 Sunrise Road,Ithaca,NY,14850,,(607) 339-7903,,3denise3@gmail.com,Email,,Yes,Yes,$20.00/hr
+219,Jim,Sweasey,Non-Member Contractor,Sweasey Heating & Air Conditioning,10 Sperry Lane,Lansing,NY,14850,607-273-6353,,,,Phone,,No,No,
+221,Ed,Szymanski,Non-Member Contractor,The Car Buyer's Advocate,16 Hunter Lane,Ithaca,NY,14850,(607) 539-6988,(607) 227-6488,,autochopny@aol.com,Email,,Yes,Yes,"$175 for dealership visits to negotiate a purchase
+$300-$400- for clean- up, advertising and sale of an individual automobile"
+222,Michael,Taormina,Non-Member Contractor,House Doctor,PO Box 861,Ithaca,NY,14851,(607) 273-0555,,,,Phone,,No,Yes,
+223,Dominic,Tarallo,Non-Member Contractor,East Shore Management,,,-1,,(607) 592-8069,,,dtarallo1@gmail.com,Both,https://www.eastshoremanagement.com/,No,No,Will provide a discount to LLH Members.
+224,Morgan,Thompson,Non-Member Contractor,"Thompson Tree and Crane Service, LLC",107 E. Marshall St.,Ithaca,NY,14850,607-592-1686,,,,Phone,,No,No,
+233,Peter,Whitmore,Non-Member Contractor,Whitmore Fence Company,126 North Street,Dryden,NY,13053,607-844-9011,,,,Phone,www.whitmorefence.com,No,No,
+237,Grant,Wilder,Non-Member Contractor,Window and Other Cleaner - Cayuga Commercial Cleaning,96 Ridge Road,Lansing,NY,14822,(607) 227-7622,(607) 227-7622,,cayugaclean@gmail.com,Email,,Yes,Yes,"Typical minimum is $50, but he will offer LLH members a discout of $40.  Going rate for cleaning is $25/hour.  He will offer $20."
