@@ -81,7 +81,7 @@ def setup_general():
     Address.insert_addresses()
 
     # Create foreign key dependency first
-    Availability.generate_fake(count=300)
+    Availability.generate_fake(count=159)
 
     # Set up first admin user
     admin_query = Role.query.filter_by(name='Administrator')
