@@ -4,7 +4,6 @@ id,name,address1,city,zipcode
 2,William Aching,115 Eddy Street,Ithaca,14850
 3,Peggy Adams,417 Hector Street,Ithaca,14850
 4,Nancy Ahlers,2 Horizon Drive,Ithaca,14850
-5,Dilmeran Akgoze,215 North Cayuga Street-DeWitt Mall,,14850
 6,Paula Amols,370 Snyder Hill Rd.,Ithaca,14850
 7,Wendy Aquadro,283 ELLIS HOLLOW CREEK RD,ITHACA,14850-9619
 8,Ann Ashman,398 East Upland Rd.,Ithaca,14850
@@ -68,7 +67,6 @@ id,name,address1,city,zipcode
 71,Linda DeNoyer,755 Snyder Hill Rd.,Ithaca,14850
 72,Carol Devine,201 DeWitt Place,Ithaca,14850
 73,Linda Dicicco,719a. Hanshaw Rd,Ithaca,14850
-74,Jerry Dietz,143 Graham Rd,,14850
 75,Persephone Doliner,202 Utica St,Ithaca,14850
 76,Eileen Driscoll,125 valley view,Ithaca,14850
 77,Edward Dubovi,33 Chelseas Walk,Ithaca,14850
@@ -181,7 +179,6 @@ id,name,address1,city,zipcode
 186,Harriet London,23 Horizon Drive,Ithaca,14850
 187,Howard London,23 Horizon Drive,Ithaca,14850
 188,Janet London,323 Sunnyview Lane,Ithaca,14850
-189,Ron Lorusso,21 Horizon Drive,,
 190,Linda Mack,109 Eastlake Road,Ithaca,14850
 191,Jeanne Mackin,P.O. Box 849,Ithaca,14851
 192,Jeanne Mackin,306 Stone Quarry Road,Ithaca,14850
@@ -421,7 +418,6 @@ id,name,address1,city,zipcode
 446,Jeannine Davis,407 Lake St. #B32,Ithaca,14850
 447,Terry Davis,15 Stone Haven Drive,Ithaca,14850
 448,Michael Delwiche,50 Fiddlers Green,Lansing,14882
-449,Persephone Doliner,202 Utica Street,,14850
 450,Christina Dravis,148 Wood Road,Freeville,13068
 451,Chris Dunham,105 Dunmore Place,Ithaca,14850
 452,Gwen E Seaquist,299 Neimi Road,Ithaca,14850
