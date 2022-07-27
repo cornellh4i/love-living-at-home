@@ -47,26 +47,6 @@ def recreate_db():
     db.session.commit()
 
 
-@manager.option('-n',
-                '--number-users',
-                default=10,
-                type=int,
-                help='Number of each model type to create',
-                dest='number_users')
-def add_fake_data(number_users):
-    """
-    Adds fake data to the database.
-    """
-    User.generate_fake(count=number_users)
-    Address.generate_fake(count=400)
-    Member.generate_fake(count=10)
-    LocalResource.insert_local_resources(
-    )  # should move this to setup_general later, but depends on having addresses in the database.
-    print("Generating Fake Members")
-    Staffer.generate_fake(count=10)
-    Volunteer.generate_fake(count=10)
-
-
 @manager.command
 def setup_dev():
     """Runs the set-up needed for local development."""
@@ -95,9 +75,13 @@ def setup_general():
     # Service related
     Service.insert_services()
     MetroArea.insert_metro_areas()
+    Member.insert_members()
+    LocalResource.insert_local_resources()
+    Volunteer.insert_volunteers()
+    Address.insert_addresses()
 
     # Create foreign key dependency first
-    Availability.generate_fake(count=90)
+    Availability.generate_fake(count=159)
 
     # Set up first admin user
     admin_query = Role.query.filter_by(name='Administrator')

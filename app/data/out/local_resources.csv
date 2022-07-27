@@ -1,81 +1,98 @@
-id,contact_first_name,contact_last_name,company_name,email_address,preferred_contact_method,website,address_id,primary_phone_number,secondary_phone_number,availability_id
-0,,,Ace Security,,Phone,,197,6072738840,,8
-1,,,ACME Pest Control,,Phone,,198,607-844-8689,,8
-2,,,Bailey Construction,,Phone,www.baileyconstruction.vpweb.com,199,607-209-4114,,9
-3,,,Bell's Auto Service,,Phone,www.bellsauto.com,200,607-273-9325,,1
-4,,,Bumblebee Painters,info@bumblebeepainters.com,Email,www.bumblebeepainters.com,201,607-273-6521,,4
-5,,,Campbell & Davies,campbellanddavies@yahoo.com,Phone,www.campbellanddaviesllc.com,202,607-216-0036,,6
-6,,,Cayuga Landscape Company,,Phone,www.cayugalandscape.com,203,6072573000,6072573000,2
-7,,,Classic Carpet Care Service,classiccarpetithaca@hotmail.com,Phone,www.classiccarpetithaca.com,204,607-277-4151,,5
-8,,,"Cortright Electric, Inc.",,Phone,,205,607-272-9404,,6
-9,,,Donohue Halveson,,Phone,,206,(607) 273-3393,,7
-10,,,Duthie Painting Company,,Email,,207,607-272-3531,,10
-11,,,"Gaggle Company, Inc.",,Phone,,208,607-539-7868,,7
-12,,,"Genson Overhead Door, Inc.",info@gensondoor.com,Phone,www.gensondoor.com,209,6072722494,6072722494,1
-13,,,Hick's Septic and Excavation,,Phone,,210,607-273-0867,,10
-14,,,Hired Hands Moving Company,,Phone,www.hiredhandsmoving.com,211,"607-272-2000, Ext. 2",,4
-15,,,Hull Heating and Plumbing,,Phone,www.hullheatingandplumbing.com,212,(607) 272-3550,,8
-16,,,Hunt's Auto Service,,Phone,www.huntsautoservice.com,213,607-273-9325,,10
-17,,,Ithaca Cremation Services,tfuller@hersonwagnerfuneralhome.com,Phone,www.ithacacremationservice.com,214,607-274-7544,,5
-18,,,Ithaca Piano Rebuilders,,Phone,,215,607-272-6547,,7
-19,,,Leonard Vacuum & Janitorial Supply,info@leonardsvacuumandjanitorialsupplies.com,Phone,www.leonardsvacuumandjanitorialsupplies.com,216,6072723434,,1
-20,,,"MacPherson Builders, Inc.",info@mcphersonbuilders.com,Phone,www.mcphersonbuilders.com,217,6072732373,,5
-21,,,Mimi's Attic,info@mimisatticithaca.com,Phone,www.mimisatticithaca.com,218,607-882-9038,,6
-22,,,Patterson's Service Station,,Phone,www.pattersonsservice.com,219,607-273-0322,,4
-23,,,Perfect Painters-Heritage Builders,customerservice@perfect-heritage.com,Email,,220,607-277-6260,,1
-24,,,Pleasant Valley Electrical,,Phone,www.pleasantvalleyelectric.com,221,607-272-6922,,6
-25,,,"Pro-Lawn Landscaping & Excavating, Inc.",sales@pro-lawn.com,Phone,www.prolawn-proseal-ithaca.com,222,607-277-5296,,2
-26,,,"Sparks Electric Company, Inc.",,Email,,223,607-273-0029,,7
-27,,,Superior Glass Service,spuperiorglass@frontier.com,Phone,,224,(607) 273-9100,(607) 279-5155,6
-28,,,Witty Appliance Repair,bwitty1@twcny.rr.com,Email,http://www.wittyapplianceservicerepair.com/,225,607-753-0407,,10
-29,,,Yaman Construction,,Phone,,226,607-697-0151,,10
-30,Brandon,,Gadget Repair Pro,service@gadgetrepairpro.com,Email,www.gadgetrepairpro.com,227,607-288-2266,,3
-31,Chris,,"Precision Builders, Inc.",stoscheckbldrs@aol.com,Phone,precisionbuildersithaca.com,228,6072727321,,5
-32,Dave,,JDog Junk Removal,,Phone,,229,,795-6336,6
-33,Garth,,McMillen Electric,,Phone,,230,607-273-8084,,3
-34,HPM TECH SERVICES,,,,Phone,http://www.hpmtechservices.com,229,,,3
-35,INHA,,Ithaca Neighborhood Housing,,Phone,https://www.ithacanhs.org/improve/small-home-repairs/,229,, (607) 277-4500,8
-36,Jeremy,,Terrasana Landscaping,jeremy@terrasanalandscaping.com,Phone,www.terrasanagardens.com,231,607-542-9016,,8
-37,Katie Thompson & Hea,,Crystal Clear Cleaning,,Phone,,229,,607-227-5574 ,2
-38,Keith,,Limbwalker Tree Care,keith@ithacatreecare.com,Phone,www.ithacatreecare.com,232,607-351-1838,,9
-39,Ken,Adams,ABC Oriental Rug & Carpet Cleaning Co.,info@abcclean.com,Phone,www.abc-oriental-rug.com,233,(607) 272-1566,,2
-40,,Alex Cole Paving Inc.,Alex Cole Paving Inc. (Masonry/Concrete),,Phone,,234,607-533-9274,,8
-41,Rose,Arena,Rose's Home Dish,roseshomedish@gmail.com,Email,www.roseshomedish.com,235,(607) 229-2416,,9
-42,Ann,Axtell,"Cascadilla Tree Care of Ithaca, LLC",cascadillatreecare@gmail.com,Email,www.cascadillatreecare.com,236,(607) 272-5447,(607) 279-5532,5
-43,Rick,Bayo ,Green Scene Lawn and Garden,rick@greenscenelg.com,Email,,229,(607) 327-0394.,,10
-44,John,Brazo,,,Phone,,237,(607) 342-5730,,9
-45,Gary,Bucci,Dave Long Appraisal Company,longapp@longappraisal.com,Phone,www.longappraisal.com,238,607-272-4040,,4
-46,Albert,Budd,KB Electric,,Phone,,239,607-319-0808,,6
-47,Fay,Bunnell,Elder Frontiers,elderfrontiers@gmail.com,Email,,240,(607) 592-2075,,9
-48,Levi,Carling,Clean Earth Septic Service,cleanearth09@yahoo.com,Email,www.cleanearthseptic.com,241,(607) 564-7931,(607) 738-4738,2
-49,Betsy,Cleveland,Broom Hilda Cleaning Service ,,Phone,,229,(607) 2734406,,1
-50,John,Cochran,,,Phone,,229,,607-347-4714,1
-51,Pat,Cozzarin,Pat Cozzarin Pest Management,,Email,,242,607-387-5552,,9
-52,Gvozden,Dokic,"XOrca, Inc",gvozden@xorca.com,Email,,243,(607) 539-3263,,1
-53,John,Dowd,Zolar Moving Company,,Phone,www.zolarmoving.com,244,607-272-7839,,9
-54,J.D.,Ferro,J.D. Ferro Roofing,,Email,www.jdferroroofing.com,245,607-273-0872,,3
-55,John,Hammond,"Austin Construction, Inc.",,Phone,,246,607-539-7564,,1
-56,Mary,Hirshfleld,Mary Hirshfeld Dog Training and Walking LLC,mary.hirshfeld@frontier.com,Email,,247,(607) 539-6814,(607) 227-8436,5
-57,Jack,Litzenberger,2 Pros Construction,jack@2prosconstruction.com,Email,,248,(607) 423-7322,,8
-58,John,Manuel,,,Phone,,229,,,1
-59,Greg,Marsted,"Overhead Door of Cortland, Inc.",,Phone,www.ohdcortland.com,249,607-7530201,,9
-60,Donald,McKechnie,,dmckech@ithaca.edu,Phone,,231,607-277-7112,,1
-61,Allyson,Mooney,lifestyleorganization@weebly.com,,Phone,,250,(315) 593-9611,,1
-62,N F,Nash Construction,,,Phone,,251,,(607) 347-4273,7
-63,Joseph,O Leary,HPM Tech Services,joleary1012@gmail.com,Email,http://www.hpmtechservices.com,252,(607) 319-4776,(607) 319-4776,1
-64,Dan,Quest,Antique Quest Estate Sales,antique_quest@yahoo.com,Email,www.theantiquequest.com,253,(607) 279-2685,,5
-65,,Schickel,Schickel Construction Co.,info@schickelconstruction.com,Phone,www.schickelconstruction.com,254,6078444780,,4
-66,Caleb,Scott,"Scott Land & Yard Services, Inc.",,Phone,www.scottscape.net,255,607-539-6858,,3
-67,Dean,Shea,Sunnybrook Builders,sunnybrookbuilders@gmail.com,Phone,www.sunnybrookbuilders.com,256,(607) 539-6286,,1
-68,Joseph,Sibley,"Bucket List Travel Attendant, LLC",bucketlistta@gmail.com,Email,www.bltravelattendant.com,257,(844) 332-3772,(607) 227-0160,10
-69,Mike,Skibinski,Mike's Complete Handyman Service,mskibin@gmail.com,Email,,258,(713) 292-3035,,9
-70,Mary,Stazi,The Computing Center,Rose@compcenter.com,Email,www.compcenter.com,259,(607) 257-3524,(607) 257-3524,10
-71,Wynnie,Stein,,wynniestein@hotmail.com,Email,,229,,,5
-72,Denise,Sullivan,,3denise3@gmail.com,Email,,260,,(607) 339-7903,4
-73,Jim,Sweasey,Sweasey Heating & Air Conditioning,,Phone,,261,607-273-6353,,8
-74,Ed,Szymanski,The Car Buyer's Advocate,autochopny@aol.com,Email,,262,(607) 539-6988,(607) 227-6488,2
-75,Michael,Taormina,House Doctor,,Phone,,263,(607) 273-0555,,1
-76,Dominic,Tarallo,East Shore Management,dtarallo1@gmail.com,Both,https://www.eastshoremanagement.com/,229,(607) 592-8069,,3
-77,Morgan,Thompson,"Thompson Tree and Crane Service, LLC",,Phone,,264,607-592-1686,,5
-78,Peter,Whitmore,Whitmore Fence Company,,Phone,www.whitmorefence.com,265,607-844-9011,,8
-79,Grant,Wilder,Window and Other Cleaner - Cayuga Commercial Cleaning,cayugaclean@gmail.com,Email,,266,(607) 227-7622,(607) 227-7622,4
+id,contact_last_name,company_name,primary_phone_number,secondary_phone_number,email_address,availability_id,preferred_contact_method,website
+,,AccuFab,(607)273-3706,,mike@accufabinc.com,63,Both,http://accufabinc.com/
+,,Ace Security,6072738840,,,64,Phone,
+,,ACME Pest Control,607-844-8689,,,65,Phone,
+,,Austin's Helping Hands LLC,6073399321,,,66,Phone,
+,,Bailey Construction,607-209-4114,,,67,Phone,www.baileyconstruction.vpweb.com
+,,Bell's Auto Service,607-273-9325,,,68,Phone,www.bellsauto.com
+,,Bumblebee Painters,607-273-6521,,info@bumblebeepainters.com,69,Email,www.bumblebeepainters.com
+,,Campbell & Davies,607-216-0036,,campbellanddavies@yahoo.com,70,Phone,www.campbellanddaviesllc.com
+,,Cayuga Landscape Company,6072573000,6072573000,,71,Phone,www.cayugalandscape.com
+,,Classic Carpet Care Service,607-277-4151,,classiccarpetithaca@hotmail.com,72,Phone,www.classiccarpetithaca.com
+,,"Cortright Electric, Inc.",607-272-9404,,,73,Phone,
+,,"Crown Construction, Inc",607-524-4157,,,74,Both,https://www.crownconstructioninc.com/
+,,Donohue Halveson,(607) 273-3393,,,75,Phone,
+,,Duthie Painting Company,607-272-3531,,,76,Email,
+,,"Gaggle Company, Inc.",607-539-7868,,,77,Phone,
+,,"Genson Overhead Door, Inc.",6072722494,6072722494,info@gensondoor.com,78,Phone,www.gensondoor.com
+,,Green Cleaning Pro,607-444-5502,,info@greencleaning-pro.com,79,Both,https://www.greencleaning-pro.com/
+,,Hick's Septic and Excavation,607-273-0867,,,80,Phone,
+,,Hired Hands Moving Company,"607-272-2000, Ext. 2",,,81,Phone,www.hiredhandsmoving.com
+,,HPM Tech Services,(607) 319-4776,,,82,Phone,
+,,Hunt's Auto Service,607-273-9325,,,83,Phone,www.huntsautoservice.com
+,,Ian's Welding,607-327-1192,607-327-1192,iansfabricating@gmail.com,84,Both,https://www.iansfabricating.com/
+,,Ithaca Cremation Services,607-274-7544,,tfuller@hersonwagnerfuneralhome.com,85,Phone,www.ithacacremationservice.com
+,,Ithaca Piano Rebuilders,607-272-6547,,,86,Phone,
+,,Jay's Cleaning Services,607-592-7327,,,87,Both,http://jayscleaning.xyz/
+,,Leonard Vacuum & Janitorial Supply,6072723434,,info@leonardsvacuumandjanitorialsupplies.com,88,Phone,www.leonardsvacuumandjanitorialsupplies.com
+,,Life Maid Heavenly ,6072795770,,info@ithacaclean.com,89,Both,https://ithacaclean.com
+,,"MacPherson Builders, Inc.",6072732373,,info@mcphersonbuilders.com,90,Phone,www.mcphersonbuilders.com
+,,Mancini-Ferrara and Sons,(607) 272-3600,,,91,Phone,https://www.mancini-ferrara.com/
+,,Mimi's Attic,607-882-9038,,info@mimisatticithaca.com,92,Phone,www.mimisatticithaca.com
+,,Movers Etc LLC,6079721723,6073670047,moveretcny@gmail.com,93,Both,
+,,Patterson's Service Station,607-273-0322,,,94,Phone,www.pattersonsservice.com
+,,Perfect Painters-Heritage Builders,607-277-6260,,customerservice@perfect-heritage.com,95,Email,
+,,Pleasant Valley Electrical,607-272-6922,,,96,Phone,www.pleasantvalleyelectric.com
+,,"Pro-Lawn Landscaping & Excavating, Inc.",607-277-5296,,sales@pro-lawn.com,97,Phone,www.prolawn-proseal-ithaca.com
+,,"Sparks Electric Company, Inc.",607-273-0029,,,98,Email,
+,,Superior Glass Service,(607) 273-9100,(607) 279-5155,spuperiorglass@frontier.com,99,Phone,
+,,Sweeney's Pest Elimination,(607) 283-2772,,,100,Phone,https://www.sweeneyspest.com
+,,Witty Appliance Repair,607-753-0407,,bwitty1@twcny.rr.com,101,Email,http://www.wittyapplianceservicerepair.com/
+,,Yaman Construction,607-697-0151,,,102,Phone,
+Brandon,,Gadget Repair Pro,607-288-2266,,service@gadgetrepairpro.com,103,Email,www.gadgetrepairpro.com
+Chris,,"Precision Builders, Inc.",6072727321,,stoscheckbldrs@aol.com,104,Phone,precisionbuildersithaca.com
+Dave,,JDog Junk Removal,,795-6336,,105,Phone,
+Garth,,McMillen Electric,607-273-8084,,,106,Phone,
+HPM TECH SERVICES,,,,,,107,Phone,http://www.hpmtechservices.com
+INHA,,Ithaca Neighborhood Housing,, (607) 277-4500,,108,Phone,https://www.ithacanhs.org/improve/small-home-repairs/
+Jeremy,,Terrasana Landscaping,607-542-9016,,jeremy@terrasanalandscaping.com,109,Phone,www.terrasanagardens.com
+Katie Thompson & Hea,,Crystal Clear Cleaning,,607-227-5574 ,,110,Phone,
+Keith,,Limbwalker Tree Care,607-351-1838,,keith@ithacatreecare.com,111,Phone,www.ithacatreecare.com
+Ken,Adams,ABC Oriental Rug & Carpet Cleaning Co.,(607) 272-1566,,info@abcclean.com,112,Phone,www.abc-oriental-rug.com
+,Alex Cole Paving Inc.,Alex Cole Paving Inc. (Masonry/Concrete),607-533-9274,,,113,Phone,
+Rose,Arena,Rose's Home Dish,(607) 229-2416,,roseshomedish@gmail.com,114,Email,www.roseshomedish.com
+Ann,Axtell,"Cascadilla Tree Care of Ithaca, LLC",(607) 272-5447,(607) 279-5532,cascadillatreecare@gmail.com,115,Email,www.cascadillatreecare.com
+Rick,Bayo ,Green Scene Lawn and Garden,(607) 327-0394.,,rick@greenscenelg.com,116,Email,
+John,Brazo,,(607) 342-5730,,,117,Phone,
+Gary,Bucci,Dave Long Appraisal Company,607-272-4040,,longapp@longappraisal.com,118,Phone,www.longappraisal.com
+Albert,Budd,KB Electric,607-319-0808,,,119,Phone,
+Fay,Bunnell,Elder Frontiers,(607) 592-2075,,elderfrontiers@gmail.com,120,Email,
+Levi,Carling,Clean Earth Septic Service,(607) 564-7931,(607) 738-4738,cleanearth09@yahoo.com,121,Email,www.cleanearthseptic.com
+,Castle Services,Castle Services,607-279-2532,,service.castle@gmail.com,122,Both,https://castleservicesithaca.com/
+,Classen Home Health,Classen Home Health,6072771342,,,123,Phone,https://www.classenhomehealth.com/
+Betsy,Cleveland,Broom Hilda Cleaning Service ,(607) 2734406,,,124,Phone,
+John,Cochran,,,607-347-4714,,125,Phone,
+Pat,Cozzarin,Pat Cozzarin Pest Management,607-387-5552,,,126,Email,
+Gvozden,Dokic,"XOrca, Inc",(607) 539-3263,,gvozden@xorca.com,127,Email,
+John,Dowd,Zolar Moving Company,607-272-7839,,,128,Phone,www.zolarmoving.com
+Jyl,Dowd,No Dowd About It,,(607) 327-1661,nodowdaboutit2022@gmail.com,129,Both,
+J.D.,Ferro,J.D. Ferro Roofing,607-273-0872,,,130,Email,www.jdferroroofing.com
+John,Hammond,"Austin Construction, Inc.",607-539-7564,,,131,Phone,
+Hull ,Heating & Plumbing,Hull Heating and Plumbing,(607) 272-3550,,,132,Phone,www.hullheatingandplumbing.com
+Mary,Hirshfleld,Mary Hirshfeld Dog Training and Walking LLC,(607) 539-6814,(607) 227-8436,mary.hirshfeld@frontier.com,133,Email,
+,Home Instead,Home Instead,(607) 264-0285,,,134,Phone,https://www.homeinstead.com/location/842
+Jack,Litzenberger,2 Pros Construction,(607) 423-7322,,jack@2prosconstruction.com,135,Email,
+John,Manuel,,,,,136,Phone,
+Greg,Marsted,"Overhead Door of Cortland, Inc.",607-7530201,,,137,Phone,www.ohdcortland.com
+Donald,McKechnie,,607-277-7112,,dmckech@ithaca.edu,138,Phone,
+Allyson,Mooney,lifestyleorganization@weebly.com,(315) 593-9611,,,139,Phone,
+Shannon ,Moravec,,607-210-9610,,,140,Phone,
+Tom,Myers,,6072793582,607-279-3582,robiniatom@gmail.com,141,Email,
+N F,Nash Construction,,,(607) 347-4273,,142,Phone,
+Joseph,O Leary,HPM Tech Services,(607) 319-4776,(607) 319-4776,joleary1012@gmail.com,143,Email,http://www.hpmtechservices.com
+Dan,Quest,Antique Quest Estate Sales,(607) 279-2685,,antique_quest@yahoo.com,144,Email,www.theantiquequest.com
+,Schickel,Schickel Construction Co.,6078444780,,info@schickelconstruction.com,145,Phone,www.schickelconstruction.com
+Caleb,Scott,"Scott Land & Yard Services, Inc.",607-539-6858,,,146,Phone,www.scottscape.net
+Dean,Shea,Sunnybrook Builders,(607) 539-6286,,sunnybrookbuilders@gmail.com,147,Phone,www.sunnybrookbuilders.com
+Joseph,Sibley,"Bucket List Travel Attendant, LLC",(844) 332-3772,(607) 227-0160,bucketlistta@gmail.com,148,Email,www.bltravelattendant.com
+Mike,Skibinski,Mike's Complete Handyman Service,(713) 292-3035,,mskibin@gmail.com,149,Email,
+Mary,Stazi,The Computing Center,(607) 257-3524,(607) 257-3524,Rose@compcenter.com,150,Email,www.compcenter.com
+Wynnie,Stein,,,,wynniestein@hotmail.com,151,Email,
+Denise,Sullivan,,,(607) 339-7903,3denise3@gmail.com,152,Email,
+Jim,Sweasey,Sweasey Heating & Air Conditioning,607-273-6353,,,153,Phone,
+Ed,Szymanski,The Car Buyer's Advocate,(607) 539-6988,(607) 227-6488,autochopny@aol.com,154,Email,
+Michael,Taormina,House Doctor,(607) 273-0555,,,155,Phone,
+Dominic,Tarallo,East Shore Management,(607) 592-8069,,dtarallo1@gmail.com,156,Both,https://www.eastshoremanagement.com/
+Morgan,Thompson,"Thompson Tree and Crane Service, LLC",607-592-1686,,,157,Phone,
+Peter,Whitmore,Whitmore Fence Company,607-844-9011,,,158,Phone,www.whitmorefence.com
+Grant,Wilder,Window and Other Cleaner - Cayuga Commercial Cleaning,(607) 227-7622,(607) 227-7622,cayugaclean@gmail.com,159,Email,
