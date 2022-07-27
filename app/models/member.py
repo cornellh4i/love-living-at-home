@@ -7,7 +7,7 @@ class Member(db.Model):
     # General Information
     salutation = db.Column(db.String(20))
     first_name = db.Column(db.String(64), nullable=False)
-    middle_initial = db.Column(db.String(1))
+    middle_initial = db.Column(db.String(5))
     last_name = db.Column(db.String(64), nullable=False)
     preferred_name = db.Column(db.String(64))
     gender = db.Column(db.String(64), nullable=False)
