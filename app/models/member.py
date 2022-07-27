@@ -17,7 +17,7 @@ class Member(db.Model):
     volunteer_id = db.Column(db.Integer(), db.ForeignKey("volunteer.id"))
 
     # Membership Information
-    member_number = db.Column(db.Integer, nullable=False)
+    member_number = db.Column(db.Integer)
     membership_expiration_date = db.Column(db.Date)
 
     # Location Information
