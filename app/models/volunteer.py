@@ -11,19 +11,18 @@ class Volunteer(db.Model):
     last_name = db.Column(db.String(80), nullable=False)
     preferred_name = db.Column(db.String(80))
     gender = db.Column(db.String(80))
-    birthdate = db.Column(db.Date, nullable=False)
+    birthdate = db.Column(db.Date)
 
     # Member ID infomration for member volunteers
     member_id = db.Column(db.Integer(), db.ForeignKey("member.id"))
 
     # Location Information
     primary_address_id = db.Column(db.Integer(),
-                                   db.ForeignKey("address.id"),
-                                   nullable=False)
+                                   db.ForeignKey("address.id"))
     secondary_address_id = db.Column(db.Integer(), db.ForeignKey("address.id"))
 
     # Concat Information
-    primary_phone_number = db.Column(db.String(64), nullable=False)
+    primary_phone_number = db.Column(db.String(64))
     secondary_phone_number = db.Column(db.String(10))
     email_address = db.Column(db.String(80))
     preferred_contact_method = db.Column(db.String(80), nullable=False)
@@ -41,39 +40,28 @@ class Volunteer(db.Model):
     vetting_notes = db.Column(db.Text, default='')
     availability_id = db.Column(db.Integer(), db.ForeignKey("availability.id"))
 
-    general_notes = db.Column(db.String(255), nullable=False)
+    general_notes = db.Column(db.String(255))
 
-    @staticmethod
-    def generate_fake(count=100, **kwargs):
-        """Generate a number of fake users for testing."""
-        from sqlalchemy.exc import IntegrityError
-        from random import seed, choice, randint
-        from faker import Faker
-        from datetime import datetime
+    @ staticmethod
+    def get_volunteers():
+        import pandas as pd
+        volunteers = []
+        volunteer_df = pd.read_csv('./app/data/out/volunteers.csv')
+        for row in volunteer_df.iterrows():
+            volunteers.append(dict(row[1]))
+        return volunteers
 
-        fake = Faker()
-
-        seed()
-        for i in range(count):
-            v = Volunteer(first_name=fake.first_name(),
-                          last_name=fake.last_name(),
-                          birthdate=datetime.strptime(fake.date(),
-                                                      "%Y-%m-%d").date(),
-                          primary_address_id=randint(1, 200),
-                          primary_phone_number=fake.phone_number(),
-                          email_address=choice([fake.email(), None]),
-                          is_member_volunteer=False,
-                          preferred_contact_method=choice(
-                              ['phone', 'email', 'phone and email']),
-                          availability_id=i+1,
-                          general_notes=fake.text(),
-                          **kwargs)
-            db.session.add(v)
-            try:
-                db.session.commit()
-            except IntegrityError as e:
-                print(f"ERROR MAKING VOLUNTEERS: {e}")
-                db.session.rollback()
+    @ staticmethod
+    def insert_volunteers():
+        volunteers = Volunteer.get_volunteers()
+        for volunteer_dict in volunteers:
+            volunteer = Volunteer.query.filter_by(
+                id=volunteer_dict['id']).first()
+            if volunteer is None:
+                volunteer_dict.pop('id', None)
+                volunteer = Volunteer(**volunteer_dict)
+            db.session.add(volunteer)
+        db.session.commit()
 
     def __repr__(self):
         return f"Volunteer('{self.first_name} {self.last_name}')"

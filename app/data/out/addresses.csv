@@ -1,316 +1,459 @@
-,Address ID,Address,City,State,Zip
-0,0,115 Eddy Street,Ithaca,NY,14850
-1,1,417 Hector Street,Ithaca,NY,14850
-2,2,814 Handshaw Rd,Ithaca,NY,14850
-3,3,"215 North Cayuga Street-DeWitt Mall,Apt. 233",,NY,14850
-4,4,370 Snyder Hill Rd.,Ithaca,NY,14850
-5,5,283 ELLIS HOLLOW CREEK RD,ITHACA,NY,14850-9619
-6,6,4 Bolton Point Road,Ithaca,NY,14850
-7,7,6 Horizon Drive,Ithaca,NY,14850
-8,8,2444 Perry City Road,Ithaca,NY,14850
-9,9,,,NY,
-10,10,474 Bailor Road extension,Brooktondale,NY,14817
-11,11,,,-1,
-12,12,121 West Hill Circle Apt. 7,Ithaca,NY,14850
-13,13,207 IRADELL RD,ITHACA,NY,14850-9284
-14,14,1203 Dryden Road,Ithaca,NY,14850
-15,15,"14 Keats Way, Apt F",Dryden,NY,13053-2722
-16,16,14 Lisa Lane,Ithaca,NY,14850
-17,17,156 Autumn Ridge Circle,Ithaca,NY,14850
-18,18,59 Fiddlers Green,Lansing,NY,14882
-19,19,333 Black Oak Road,Ithaca ,NY,14850
-20,20,16 Whispering Pines Dr,Ithaca,NY,14850
-21,21,"21 Etna Lane,PO Box 280",Etna,NY,13062
-22,22,29 Horvath Drive,Ithaca,NY,14850
-23,23,420 McGraw House,Ithaca,NY,14850
-24,24,P.O.Box 32,Trumansburg,NY,14886
-25,25,144 Hidden Pines Dr,Newfield,NY,14867
-26,26,8 Winthrop Place,Ithaca,NY,14850
-27,27,113 Park Street,Ithaca,NY,14850
-28,28,626 Cayuga Heights Rd,Ithaca,NY,14850
-29,29,98 Cherry Rd,Ithaca,NY,14850
-30,30,112 Park Lane,Ithaca,NY,
-31,31,112 Park Lane,Ithaca,NY,14850
-32,32,407 Lake Street  #B32,Ithaca,NY,14850
-33,33,29 Whig Street,Trumansburg,NY,14886-9169
-34,34,201 DeWitt Place,Ithaca,NY,14850
-35,35,719a. Hanshaw Rd,Ithaca,NY,14850
-36,36,143 Graham Rd,,NY,14850
-37,37,202 Utica St,Ithaca,NY,14850
-38,38,125 valley view,Ithaca,NY,14850
-39,39,33 Chelseas Walk,Ithaca,NY,14850
-40,40,409 Warren Place,Ithaca,NY,14850
-41,41,103 Comstock Rd.,Ithaca,NY,14850
-42,42,Comstock,Ithaca,NY,14850
-43,43,203 Highgate Road,Ithaca ,NY,14850
-44,44,206 Bella Vista Dr,Ithaca,NY,14850
-45,45,1 Fiddlers Green,Ithaca,NY,14850
-46,46,800 South Plain St. Apt 1007,Ithaca,NY,14850
-47,47,McGraw House #619,Ithaca,NY,14850
-48,48,100 Penny Lane,Ithaca,NY,14850
-49,49,"306 Rachel Carson Trail,Apt 2D",Ithaca,NY,14850
-50,50,126 Homestead Circle,Ithaca,NY,14850
-51,51,98 Cherry Road,Ithaca,NY,14850
-52,52,106 Troy Road,Ithaca,NY,14850
-53,53,2 Fairway Drive,Ithaca,NY,14850
-54,54,831 North Aurora Street,Ithaca,NY,14850
-55,55,1709 Taughannock Blvd,Trumansburg,NY,14886
-56,56,"700 Warren Road,Apt. 13-1F",Ithaca,NY,14850
-57,57,429 warren rd.,ithaca,NY,14850
-58,58,309 St. Catherine's Circle,Ithaca,NY,14850
-59,59,"129 Eastlake Road,129 Eastlake Rd",Ithaca,NY,14850
-60,60,5785 Rumsey Rd,Trumansburg,NY,14886
-61,61,25 Horizon Drive,Ithaca,NY,14850
-62,62,908 N Cayuga Street,Ithaca,NY,14850
-63,63,3 Horizon Drive,Ithaca,NY,14850
-64,64,3 Horizon Drive,Ithaca,NY,
-65,65,523 The Parkway,Ithaca,NY,14850
-66,66,201 Christopher Ln,Ithaca,NY,14850
-67,67,119 Rachel Carson Way,Ithaca,NY,14850
-68,68,79 Eastlake Road,Ithaca,NY,14850
-69,69,29 Hunters Lane,Ithaca,NY,14850
-70,70,421 So. Titus Ave.,Ithaca,NY,14850
-71,71,"925 Mitchell St., Apt.3",ITHACA,NY,14850
-72,72,22 Horizon Drive,Ithaca,NY,14850
-73,73,119 East Upland Road,Ithaca,NY,14850
-74,74,119 E Upland Road ,Ithaca,NY,14850
-75,75,41 Forest Acres Drive,Ithaca,NY,14850
-76,76,234 Pinckney Rd,Ithaca,NY,14850
-77,77,109 Eastlake Road,Ithaca,NY,14850
-78,78,1025 Bostwick Road,Ithaca,NY,14850
-79,79,137 Westview Lane,Ithaca,NY,14850
-80,80,1017 Cayuga Heights Road,Ithaca,NY,14850
-81,81,136 East State Street Apt. 4F,Ithaca,NY,14850
-82,82,5 Leslie Lane,Ithaca,NY,14850
-83,83,28 Horizon Drive,Ithaca,NY,14850
-84,84,225 Cliff Park Road,Ithaca,NY,14850
-85,85,31 Horizon Drive,Ithaa,NY,14850
-86,86,31 Horizon Drive,Ithaca,NY,14850
-87,87,521 Strawberry Hill Circle #4,Ithaca ,NY,14850
-88,88,521 Strawberry Hill Circle #4,Ithaca,NY,14850
-89,89,5 Whispering Pines Dr.,Ithaca,NY,14850
-90,90,309 St Catherines Cir,Ithaca,NY,14850
-91,91,1009 Trumansburg Rd,Ithaca,NY,14850
-92,92,719 Ringwood Rd,Ithaca,NY,14850
-93,93,"925 Mitchell Street,#2",Ithaca,NY,14850
-94,94,215 N. Cayuga St. Apt. 310,Ithaca,NY,14850
-95,95,22 Smugglers Path,Ithaca,NY,14850
-96,96,223 Savage Farm Drive - KENDAL,Ithaca,NY,14850
-97,97,62 Janivar Drive,Ithaca,NY,14850
-98,98,301 Woodgate Lane,Ithaca,NY,14850
-99,99,14 Cedar Lane ,Ithaca,NY,14850
-100,100,90 Genung Road ,Ithaca,NY,14850
-101,101,211 Strawberry Hill Circle #3,Ithaca,NY, 14850
-102,102,630 W Dryden Road,Freeville,NY,13068
-103,103,215 Muriel St.,Ithaca,NY,14850
-104,104,23 Horizon Drive,Ithaca,NY,14850
-105,105,306 Stone Quarry Road,Ithaca,NY,14850
-106,106,137 Bank Street,Newfield,NY,14867
-107,107,214 W. Northview Road,Ithaca,NY,14850-6042
-108,108,PO Box 520 ,Ithaca,NY,14851
-109,109,201 E. Marshall Street,Ithaca,NY,14850
-110,110,114 Glenside Rd,Ithaca,NY,14850
-111,111,313 Roat Street,Ithaca,NY,14850
-112,112,1159 Ellis Hollow Rd,Ithaca,NY,14850
-113,113,10 Saunders Rd,Ithaca,NY,14850
-114,114,1405 Hanshaw Rd. ,Ithaca,NY,14850
-115,115,766 Elm Street EXT #1,Ithaca,NY,14850
-116,116,604 Mitchell Street ,Ithaca,NY,14850
-117,117,693 Coddington Road,Ithaca,NY,14850
-118,118,6273 Curry Rd,Trumansburg,NY,14886
-119,119,"PO Box 114,282 Burns Rd",Brooktondale,NY,14817
-120,120,"P.O. Box 133,2760 Slaterville Rd. ",Slaterville Springs,NY,14881
-121,121,38 Horizon Drive,Ithaca,NY,14850
-122,122,964 Cayuga Heights  Road,Ithaca,NY,14850
-123,123,206 University Ave,Ithaca,NY,14850
-124,124,"826 Bostwick,Apt. 2",Ithaca,NY,14850
-125,125,533 Linn St.,Ithaca,NY,14850
-126,126,68 E. Seneca Rd.,Trumansburg,NY,14886
-127,127,111 West Hill Circle,Ithaca,NY,14850
-128,128,101 Devon Road,Ithaca,NY,14850
-129,129,515 Caswell Road,Freeville,NY,13068
-130,130,129 Eastlake Rd,Ithaca,NY,14850
-131,131,21 Etna Lane,Etna,NY,13062
-132,132,47 Wedgewood Dr,Ithaca,NY,14850
-133,133,47 Wedgewood Dr,Ithaca,NY,14850-1064
-134,134,150 Scofield Rd.,Freeville,NY,13068
-135,135,12 Stone Creek Drive,Ithaca,NY,14850
-136,136, 30 Horizon Drive,Ithaca,NY,14850
-137,137,406 South Geneva Street ,Ithaca,NY,14850
-138,138,301 Muriel Street,Ithaca,NY,14850
-139,139,6A2 Candlewyck Park,Ithaca,NY,14850
-140,140,35 Horizon Drive,Ithaca,NY,14850
-141,141,35 Buck Road,Lansing,NY,14882
-142,142,939 Dryden Road,Ithaca,NY,14850
-143,143,346 Warren Road,Ithaca,NY,14850
-144,144,115 Park Lane,Ithaca,NY,14850
-145,145,4545 Seneca Rd,Trumansburg,NY,14886
-146,146,603 Willow Ave,Ithaca,NY,14850
-147,147,208 East Lincoln St.,Ithaca,NY,14850
-148,148,221 Valley Road,Ithaca,NY,14850
-149,149,304 McGraw House,Ithaca,NY,14850
-150,150,"14 Salo Drive,PO Box 804",Trumanburg,NY,14886
-151,151,152 Wood Road,Freeville,NY,13068
-152,152,1025 Highland Rd,Ithaca,NY,14850
-153,153,117 Randolph Road,Ithaca,NY,14850
-154,154,"26 Lewis St.,P. O. Box 480",Dryden,NY,13053
-155,155,702 Cayuga Heights  Road,Ithaca,NY,14850
-156,156,3317 Swamp College Road ,Trumansburg ,NY,14886
-157,157,114 Texas Ln,Ithaca,NY,14850
-158,158,,,,
-159,159,302 Lake Ave,Ithaca,NY,14850
-160,160,306 North Cayuga Street Apt. 2,Ithaca,NY,14850
-161,161,115 Pine Tree Road ,Ithaca,NY,14850
-162,162,321 Rachel Carson Trail,Ithaca,NY,14850
-163,163,"215 N.Cayuga St., Apt. 344",Ithaca,NY,14850
-164,164,826 N Aurora St,Ithaca,NY,14850
-165,165,37 Whig Street,Trumansburg,NY,14886
-166,166,130 Bella Vista Cir,Ithaca,NY,14850
-167,167,268 Lower Creek Rd.,Ithaca,NY,14850
-168,168,821 North Aurora Street,Ithaca,NY,14850
-169,169,692 Coddington Rd,ithaca,NY,14850
-170,170,107 Treva Avenue ,Ithaca,NY,14850
-171,171,111 Treva Ave,Ithaca,NY,14850
-172,172,20 Horizon Drive,Ithaca,NY,14850
-173,173,2 Sunny Slope Road,Ithaca,NY,14850
-174,174,3299 Swamp College Rd.,Trumansburg,NY,14886
-175,175,109 Queen St.,Ithaca,NY,14850
-176,176,528 Warren Road,Ithaca,NY,14850
-177,177,"121 E. Seneca St. ,1st Floor",Ithaca,NY,14850
-178,178,373 Conlon Road,Lansing,NY,14882
-179,179,203A Pine Tree Rd.,Ithaca,NY,14850
-180,180,601 N. Cayuga St.,Ithaca,NY,14850
-181,181,104 Klinewoods Road,Ithaca,NY,14850
-182,182,414 W. Court Street,Ithaca,NY,14850
-183,183,202 Winston Drive ,Ithaca ,NY,14850
-184,184,132 Burleigh Dr.,Ithaca,NY,14850
-185,185,84 Besemer Hill Rd.,Ithaca,NY,14850
-186,186,McGraw House #210,Ithaca,NY,14850
-187,187,221 McGraw House,Ithaca,NY,14850-5412
-188,188,311 Linn Street,Ithaca,NY,14850
-189,189,529 Linn St.,Ithaca,NY,14850
-190,190,136 Ellis Hollow Creek Road,Ithaca,NY,14850
-191,191,300 Hayts,Ithaca,NY,14850
-192,192,232 Troy Rd,Ithaca,NY,14850
-193,193,40 Horizon Drive,Ithaca,NY,14850
-194,194,9 Horizon Drive,Ithaca,NY,14850
-195,195,114 Glenside Rd.,Ithaca,NY,14850
-196,196,56 Waterview Heights Road,Ithaca,NY,14850
-197,197,720 W. Green St.,Ithaca,NY,14850
-198,198,359 Dryden-Harford Rd.,Dryden,NY,13053
-199,199,5139 Jacksonville Road,Trumansburg,NY,14886
-200,200,945 Dryden Rd.,Ithaca,NY,14850
-201,201,210 E. Falls St.,Ithaca,NY,14850
-202,202,"201 Dey St., Suite 211",Ithaca,NY,14850
-203,203,2712 N. Triphammer,Ithaca,NY,14850
-204,204,,,NY,
-205,205,653 Elmira Road,Ithaca,NY,14850
-206,206,607 W Seneca St,Ithaca,NY,14850
-207,207,484 Ridge Road,Lansing,NY,14882
-208,208,2935 Slaterville Road,Brooktondale,NY,14817
-209,209,11710 State Route 90,Locke,NY,13092
-210,210,13 Waterwagon Road,Ithaca,NY,14850
-211,211,"409 College Ave., Dept. 5",Ithaca,NY,14850
-212,212,425 Floral Ave.,Ithaca,NY,14850
-213,213,225 Elmira Road,Ithaca,NY,14850
-214,214,P.O. Box 403,Ithaca,NY,14850
-215,215,"950 Danby Rd., #26",Ithaca,NY,14850
-216,216,211 Elmira Road,Ithaca,NY,14850
-217,217,129 West Falls Street,Ithaca,NY,14850
-218,218,430 W. State St.,Ithaca,NY,14850
-219,219,221 N. Aurora St.,Ithaca,NY,14850
-220,220,308 Madison St.,Ithaca,NY,14850
-221,221,405 3rd St.,Ithaca,NY,14850
-222,222,41 Oak Brook Drive,Ithaca,NY,14850
-223,223,208 N. Titus Ave.,Ithaca,NY,14850
-224,224,205 Fulton Street,Ithaca,NY,14850
-225,225,788 MacBean Lane,Cortland,NY,13045
-226,226,222 S. Fulton St.,Ithaca,NY,14850
-227,227,"222 Elmira Road, #10",Ithaca,NY,14850
-228,228,207 W. Clinton St.,Ithaca,NY,14850
-229,229,,,-1,
-230,230,2008 E. Shore Drive,Ithaca,NY,14882
-231,231,,Ithaca,NY,14850
-232,232,5506 Grove Rd.,Trumansburg,NY,14886
-233,233,130 Cecil Malone Drive,Ithaca,NY,14850
-234,234,390 Peruville rd. ,Freeville,NY,13068
-235,235,215 Wood Street,Ithaca,NY,14850
-236,236,80 Sharpsteen Rd,Locke,NY,13092
-237,237,11 Ferris St,Spencer,-1,
-238,238,"309 N. Tioga St., Suite 204",Ithaca,NY,14850
-239,239,111 Collins Road,Freeville,NY,13068
-240,240,33 James St,Dryden,NY,13053
-241,241,1051 State Route 224,Van Etten,NY,14889
-242,242,9198 State Route 96,Interlaken,NY,14847
-243,243,185 Midline Road,Slaterville Springs ,NY,14881
-244,244,"225 S. Fulton St., #3",Ithaca,NY,14850
-245,245,390 State Route 13,Cortland,NY,13045-8500
-246,246,3168 Slaterville Road,Brooktondale,NY,14817
-247,247,595 Hammond Hill Road,Brooktondale,NY,14817
-248,248,2 Pros Construction,Cortland ,NY,13045
-249,249,33 Cleveland St.,Cortland,NY,13045
-250,250,3 Glenn Street,Cortland,NY,13045
-251,251,111 Sheldon Rd,Freeville,NY,
-252,252,903 Hanshaw Road,Ithaca,NY,14850
-253,253,,Lansing,NY,14882
-254,254,210 Schutt Road,Dryden,NY,13053
-255,255,P.O. Box 13,Slaterville Springs,NY,14881
-256,256,2147 Slaterville Road,Ithaca,NY,14850
-257,257,17 Prospect Street,Trumansburg,NY,14886
-258,258,25 Stormy View Dr,Ithaca,NY,14882
-259,259,The Computing Center,Ithaca,NY,14850
-260,260,122 Sunrise Road,Ithaca,NY,14850
-261,261,10 Sperry Lane,Lansing,NY,14850
-262,262,16 Hunter Lane,Ithaca,NY,14850
-263,263,PO Box 861,Ithaca,NY,14851
-264,264,107 E. Marshall St.,Ithaca,NY,14850
-265,265,126 North Street,Dryden,NY,13053
-266,266,96 Ridge Road,Lansing,NY,14822
-267,267,110 Hancock St,Ithaca,NY,14850
-268,268,205 Tareyton Drive,Ithaca,NY,14850 
-269,269,856 Snyder Hill Road,Ithaca,NY,14850
-270,270,852 Snyder Hill Road,Ithaca,NY,14850
-271,271,68 Mount Pleasant Road,Ithaca,NY,14850
-272,272,2250 North Triphammer Rd.,Ithaca,NY,14850
-273,273,407 Lake St. #B32,Ithaca,NY,14850
-274,274,15 Stone Haven Drive,Ithaca,NY,14850
-275,275,50 Fiddlers Green,Lansing,NY,14882
-276,276,2 Tyler Road,Ithaca,NY,14850
-277,277,202 Utica Street,,NY,14850
-278,278,105 Dunmore Place,Ithaca,NY,14850
-279,279,1456 Coddington Road,Brooktondale,NY,14817
-280,280,305 Esty Street,Ithaca,NY,14850
-281,281,211 Westview Lane ,Ithaca ,NY,14850
-282,282,306 Rachel Carson Trail,Ithaca,NY,14850
-283,283,821 BOSTWICK RD,ITHACA,NY,14850
-284,284,106 Troy Rd.,Ithaca,NY,14850
-285,285,22 Brooktree Lane,Ithaca,NY,14850
-286,286,202 S Main St,Groton,NY,13073
-287,287,1409 HANSHAW ROAD,ITHACA,NY,14850
-288,288,118 Park Lane,Ithaca,NY,14850
-289,289,824 Goodrich Hill Road,Locke,NY,13092
-290,290,PO Box 93,Brooktondale,NY,14817
-291,291,19 Lisa Lane,Ithaca,NY,14850
-292,292,1405 Hanshaw Rd.,ITHACA,NY,14850
-293,293,766 Elm Street ext #1,Ithaca,NY,14850
-294,294,PO Box 114,Brooktondale,NY,14817
-295,295,105 King St.,Ithaca,NY,14850
-296,296,116 W. Buffalo St. Apt. 2F,Ithaca,NY,14850
-297,297,101 Crescent Place,Ithaca,NY,14850
-298,298,24 Asbury Drive,Ithaca,NY,14850
-299,299,61 Whitetail Drive,Ithaca,NY,14850
-300,300,10452 Low Rise 10; Cornell ,Ithaca,NY,14853
-301,301,112 Roat Street,Ithaca,-1,14850
-302,302,300 Culver Rd,Ithaca,NY,14850
-303,303,807 Mitchell Street,Ithaca ,NY,14850
-304,304,735 Iradell Rd.,Trumansburg,NY,14886
-305,305,371 Teton Court,Ithaca,NY,14850
-306,306,516 Ellis Hollow Creek Road,Ithaca,NY,14850
-307,307,65 Hickory Rd,Ithaca,NY,14850
-308,308,4217 Garrett Rd,Ithaca,NY,14850
-309,309,311 Strawberry Hill Circle,Ithaca,NY,14850
-310,310,Warren Real Estate,Ithaca,NY,
-311,311,476 Brooktondale Rd.,Brooktondale,NY,14817
-312,312,102 Wolf Lane,Ithaca,NY,14850
-313,313,2 Penny Lane,Ithaca,NY,14850
-314,314,311 Richard Place ,Ithaca,NY,14850
+id,name,address1,city,zipcode
+0,Andrea Aching,115 Eddy Street,Ithaca,14850
+1,Gerard Aching,115 Eddy Street,Ithaca,14850
+2,William Aching,115 Eddy Street,Ithaca,14850
+3,Peggy Adams,417 Hector Street,Ithaca,14850
+4,Nancy Ahlers,2 Horizon Drive,Ithaca,14850
+5,Dilmeran Akgoze,215 North Cayuga Street-DeWitt Mall,,14850
+6,Paula Amols,370 Snyder Hill Rd.,Ithaca,14850
+7,Wendy Aquadro,283 ELLIS HOLLOW CREEK RD,ITHACA,14850-9619
+8,Ann Ashman,398 East Upland Rd.,Ithaca,14850
+9,Curt Ashman,398 East Upland Rd.,Ithaca,14850
+10,Susan E. Backstrom,4 Bolton Point Road,Ithaca,14850
+11,Tamam Baida,6 Horizon Drive,Ithaca,14850
+12,Fred Balfour,177 Scofield Rd,Freeville,13068
+13,Sharon Balfour,177 Scofield Rd,Freeville,13068
+14,Pennee Barresi,65 Buck Rd.,Lansing,14882
+15,Larry Baum,101 Maplewood Rd,Ithaca,14850
+16,Trudy Baum,101 Maplewood Rd,Ithaca,14850-9505
+17,Mary Berens,105 Devon Rd,Ithaca,14850
+18,Eileen Berlow,2444 Perry City Road,Ithaca,14850
+20,Nanette Blakely,332 Forest Home Drive,Ithaca,14850
+21,Susan Blumenthal,305 Mitchell St,Ithaca,14850
+22,Christine Bobrowich,122 Fayette Street,Ithaca,14850
+23,Ann Boehm,474 Bailor Road extension,Brooktondale,14817
+25,jean bong,111 GRACE BLVD,PAINTED POST,14870
+26,Jean Bong,57 spring run rd ,Freeville ,13068
+27,William Bong,57 spring run rd ,Freeville ,13068
+28,Karen Bower,54 Station Rd.,West Danby,14883
+29,Diane Bradac,17 Besemer Lane,Ithaca,14850
+30,John Bradac,17 Besemer Lane,Ithaca,14850
+31,Amy Brill,207 IRADELL RD,ITHACA,14850-9284
+32,Lynn Broquist Hoshino,1203 Dryden Road,Ithaca,14850
+33,David Brown,"207 W Remington Rd,",Ithaca,14850
+34,Ruthanne Bruen,"14 Keats Way, Apt F",Dryden,13053-2722
+35,David Brumberg,14 Lisa Lane,Ithaca,14850
+36,Joan Brumberg,14 Lisa Lane,Ithaca,14850
+37,Peter Burford,156 Autumn Ridge Circle,Ithaca,14850
+38,Sherry Burford,156 Autumn Ridge Circle,Ithaca,14850
+39,Stephanie Burgess,220-1 Cypress Court,Ithaca,14850
+40,Krys Cail,3110 DuBois Rd.,Ithaca,14850
+41,Mary Helen Cathles,59 Fiddlers Green,Lansing,14882
+42,Barbara Chase,333 Black Oak Road,Ithaca ,14850
+43,Katherine Chiang,708 N. Tioga St.,Ithaca,14850
+44,Frederic Clark,1695 Taughannock Blvd,Trumansburg,14886
+45,Abby  Cohn,309 The Parkway,Ithaca,14850
+46,Constance Colbert,16 Whispering Pines Dr,Ithaca,14850
+47,Carol Colfer,21 Etna Lane,Etna,13062
+48,Ann Colt,29 Horvath Drive,Ithaca,14850
+49,Angela Conway,420 McGraw House,Ithaca,14850
+50,Nancy Cool,1695 Taughannock Blvd,Trumansburg,14886
+51,Wendy Coolbaugh,P.O.Box 32,Trumansburg,14886
+52,Jack Corgel,16 Whispering Pines Dr,Ithaca,14850
+53,Steven Cornelius,144 Hidden Pines Dr,Newfield,14867
+54,Ann Costello,8 Winthrop Place,Ithaca,14850
+55,John Costello,8 Winthrop Place,Ithaca,14850
+58,Russ Cuatt,113 Park Street,Ithaca,14850
+59,Barbara Cunningham,626 Cayuga Heights Rd,Ithaca,14850
+60,David Daly,110 North Quary Street,Ithaca,14850
+61,Jim Darnieder,98 Cherry Rd,Ithaca,14850
+62,Kusum Dave,112 Park Lane,Ithaca,
+63,Radhekant Dave,112 Park Lane,Ithaca,14850
+64,Peter Davies,755 Snyder Hill Rd,Ithaca,14850
+65,Jane Davis,Titus Towers,Ithaca,14850
+66,Jeannine Davis,407 Lake Street  #B32,Ithaca,14850
+67,Ann Day,29 Whig Street,Trumansburg,14886-9169
+69,Linda DeNoyer,755 Snyder Hill Rd.,Ithaca,14850
+70,Carol Devine,201 DeWitt Place,Ithaca,14850
+71,Linda Dicicco,719a. Hanshaw Rd,Ithaca,14850
+72,Jerry Dietz,143 Graham Rd,,14850
+73,Persephone Doliner,202 Utica St,Ithaca,14850
+74,Eileen Driscoll,125 valley view,Ithaca,14850
+75,Edward Dubovi,33 Chelseas Walk,Ithaca,14850
+76,Robin Dubovi,33 Chelseas Walk,Ithaca,14850
+77,Richard Dudley,21 Etna Lane,Etna,13062
+78,Hank Dullea,409 Warren Place,Ithaca,14850
+79,Sally Dullea,409 Warren Place,Ithaca,14850
+80,Randy Ehrenberg,125 Eastwood Terrace ,Ithaca,14850
+81,Ron Ehrenberg,125 Eastwood Terrace ,Ithaca,14850
+82,Leslie Ehrlich,103 Comstock Rd.,Ithaca,14850
+83,RIchard Ehrlich,Comstock,Ithaca,14850
+84,Lisa Eisenberg,203 Highgate Road,Ithaca ,14850
+85,Thomas Every,30 Janivar Drive,Ithaca,14850
+86,Susan Eyster,1 Fiddlers Green,Ithaca,14850
+87,Eniko Farkas,156 Crescent Place,Ithaca,14859
+88,Paul Feeny,105 Devon Road,Ithaca,14850
+89,Myra Fincher,McGraw House #619,Ithaca,14850
+90,Elena Flash,204 Klinewoods Road,Ithaca,14850
+91,Stephen Flash,204 Klinewoods Road,Ithaca,14850
+92,Deena Freed,306 Rachel Carson Trail,Ithaca,14850
+93,Jack Freed,126 Homestead Circle,Ithaca,14850
+94,Renee Freed,126 Homestead Circle,Ithaca,14850
+95,Kathy Garner,98 Cherry Road,Ithaca,14850
+96,Donna George,106 Troy Road,Ithaca,14850
+97,David Gersh,1052 E Shore Dr,Ithaca,14850-1028
+98,Laurene Gilbert,656 Five Mile Dr,Ithaca,14850
+99,Riccardo Giovanelli,2 Fairway Drive,Ithaca,14850
+100,Nina Glasgow,"207 W Remington Rd,",Ithaca,14850
+101,Priscilla Glenn,831 North Aurora Street,Ithaca,14850
+103,Nancy Goldberg,1709 Taughannock Blvd,Trumansburg,14886
+104,J. Margo Graf,700 Warren Road,Ithaca,14850
+106,Eileen Gravani,203 Salem Drive,Ithaca,14850
+107,Robert Gravani,203 Salem Drive,Ithaca,14850
+108,charlotte greenspan,429 warren rd.,ithaca,14850
+109,John Guckenheimer,309 St. Catherine's Circle,Ithaca,14850
+110,Sanford Gutman,48 Woodcrest Avenue,Ithaca,14850
+111,Jean-Pierre Habicht,129 Eastlake Road,Ithaca,14850
+112,Peggy Haine,5785 Rumsey Rd,Trumansburg,14886
+113,James Haldeman,25 Horizon Drive,Ithaca,14850
+114,Janet Haldeman,25 Horizon Drive,Ithaca,14850
+115,Elizabeth Hales,908 N Cayuga Street,Ithaca,14850
+116,Patricia Haley,3 Horizon Drive,Ithaca,14850
+117,Robert Haley,3 Horizon Drive,Ithaca,
+118,Thomas Hall,523 The Parkway,Ithaca,14850
+119,Sue Hamilton,201 Christopher Ln,Ithaca,14850
+120,Martha Haynes,2 Fairway Drive,Ithaca,14850
+121,Lisa Hens,"14 Keats Way, Apt F",Dryden,13053-2722
+122,Petra Hepburn,119 Rachel Carson Way,Ithaca,14850
+123,Richard Hepburn,119 Rachel Carson Way,Ithaca,14850
+124,Betsy Hillman,79 Eastlake Road,Ithaca,14850
+125,Robert Hillman,79 Eastlake Road,Ithaca,14850
+126,Anne Hobbs,29 Hunters Lane,Ithaca,14850
+127,Peter Hobbs,29 Hunters Lane,Ithaca,14850
+128,Margaret Hohenstein,106 Winston Drive,Ithaca,14850
+129,Becky Howe,4209 Garrett Road,Ithaca,14850
+130,Joanne Izbicki,421 So. Titus Ave.,Ithaca,14850
+131,Marcia Jacobson,"925 Mitchell St., Apt.3",ITHACA,14850
+132,Rudolf Jander,22 Horizon Drive,Ithaca,14850
+133,Ursula Jander,22 Horizon Drive,Ithaca,14850
+134,Ralph Janis,119 East Upland Road,Ithaca,14850
+135,Rhoda Janis,119 East Upland Road,Ithaca,14850
+136,Rhoda Janis,119 E Upland Road ,Ithaca,14850
+137,John Jaquette,41 Forest Acres Drive,Ithaca,14850
+138,Susan Jaquette,41 Forest Acres Drive,Ithaca,14850
+139,Francine Jasper,216 Washington St,Ithaca,14850
+140,Cheryl Jewell,234 Pinckney Rd,Ithaca,14850
+141,Buck Johnson,908 N Cayuga Street,Ithaca,14850
+142,Lorraine Johnson,60 Wedgewood Drive,Ithaca,14850
+143,Stephen Johnson,60 Wedgewood Drive,Ithaca,14850
+144,James Johnston,109 Eastlake Road,Ithaca,14850
+145,Joan Johnston,1025 Bostwick Road,Ithaca,14850
+146,Laura Joseph,137 Westview Lane,Ithaca,14850
+147,Audrey Kahin,1017 Cayuga Heights Road,Ithaca,14850
+148,Mary Kane,136 East State Street Apt. 4F,Ithaca,14850
+149,Marcia Kepecs,5 Leslie Lane,Ithaca,14850
+150,Martin Kepecs,5 Leslie Lane,Ithaca,14850
+151,Irene Kiely,28 Horizon Drive,Ithaca,14850
+152,Ruth Kiraly-Eyburg,2107 North Triphammer Rd,Ithaca,14850
+153,Angela Klausner,31 Horizon Drive,Ithaa,14850
+154,Milton Klausner,31 Horizon Drive,Ithaca,14850
+155,David Kreinick,305 Mitchell St,Ithaca,14850
+156,Diana Kreutzer,521 Strawberry Hill Circle #4,Ithaca ,14850
+157,Diana Kreutzer,521 Strawberry Hill Circle #4,Ithaca,14850
+158,Dorothy Kunz,5 Whispering Pines Dr.,Ithaca,14850
+159,Meredith Kusch,309 St Catherines Cir,Ithaca,14850
+160,Rachel Lampert,1009 Trumansburg Rd,Ithaca,14850
+161,Linda Lavine,719 Ringwood Rd,Ithaca,14850
+162,Mitchell Lavine,719 Ringwood Rd,Ithaca,14850
+163,Edward Lawler,925 Mitchell Street,Ithaca,14850
+164,Joan Lawler,925 Mitchell Street,Ithaca,14850
+165,Jonathan Lawrence,247 Middaugh Road,Brooktondale,14817
+166,Wilma Lawrence,247 Middaugh Road,Brooktondale,14817
+167,Margaret Lay-Dopyera,215 N. Cayuga St. Apt. 310,Ithaca,14850
+168,Gail Leibovich,22 Smugglers Path,Ithaca,14850
+169,Sidney Leibovich,22 Smugglers Path,Ithaca,14850
+170,Donald Lein,223 Savage Farm Drive - KENDAL,Ithaca,14850
+171,Janet Lein,62 Janivar Drive,Ithaca,14850
+172,Ann Lemley,301 Woodgate Lane,Ithaca,14850
+173,John Lemley,301 Woodgate Lane,Ithaca,14850
+174,Lesly Lempert,14 Cedar Lane ,Ithaca,14850
+175,Ann Levatich,90 Genung Road ,Ithaca,14850
+176,Deborah Levin,211 Strawberry Hill Circle #3,Ithaca, 14850
+177,Carol Lewis,630 W Dryden Road,Freeville,13068
+178,June Locke,215 Muriel St.,Ithaca,14850
+179,Harriet London,23 Horizon Drive,Ithaca,14850
+180,Howard London,23 Horizon Drive,Ithaca,14850
+181,Ron Lorusso,21 Horizon Drive,,
+182,Linda Mack,109 Eastlake Road,Ithaca,14850
+183,Jeanne Mackin,306 Stone Quarry Road,Ithaca,14850
+184,Jeanne Mackin,P.O. Box 849,Ithaca,14851
+185,Ruth Mahr,103 Judd Fall Rd,ithaca,14850
+186,Carol Mallison,137 Bank Street,Newfield,14867
+187,Sue Maloy,214 W. Northview Road,Ithaca,14850-6042
+188,Wilson Manik,309 The Parkway,Ithaca,14850
+189,Eva Marques,PO Box 520 ,Ithaca,14851
+190,Joyce McAllister,201 E. Marshall Street,Ithaca,14850
+191,Elaina McCartney,845 Taughannock Blvd.,Ithaca,14850
+192,Kenneth McClane,114 Glenside Rd,Ithaca,14850
+193,Clare McMillan,135 Hudson Street,Ithaca,14850
+194,Jean McPheeters,PO Box 93,Brooktondale,14817
+195,John Melski,7 1/2 Dodge Rd.,Ithaca,14850
+196,Linda Melski,7 1/2 Dodge Rd.,Ithaca,14850
+197,Tyson Merrill,313 Roat Street,Ithaca,14850
+198,Jon Minikes,4 Bolton Point Road,Ithaca,14850
+199,Nari Mistry,1159 Ellis Hollow Rd,Ithaca,14850
+201,Virginia Mistry,1159 Ellis Hollow Rd,Ithaca,14850
+202,Cheryl Mitchell,10 Saunders Rd,Ithaca,14850
+203,John Mitchell,10 Saunders Rd,Ithaca,14850
+204,Malcolm Mitchell,1405 Hanshaw Rd. ,Ithaca,14850
+205,Suzanne Motheral,766 Elm Street Ext #1,Ithaca,14850
+206,Jane Mt.Pleasant,604 Mitchell Street ,Ithaca,14850
+207,Louise Mudrak,693 Coddington Road,Ithaca,14850
+208,Joan Munich,6273 Curry Rd,Trumansburg,14886
+209,Bill Mutch,2760 Slaterville Rd,Slaterville Springs,14881
+210,William Mutch,P.O. Box 133,Slaterville Springs,14881
+211,Linda Myers,48 Woodcrest Avenue,Ithaca,14850
+212,Thomas Myers,3110 DuBois Rd.,Ithaca,14850
+213,Jane Nichols,38 Horizon Drive,Ithaca,14850
+214,Barbara Nosanchuk,964 Cayuga Heights  Road,Ithaca,14850
+215,Jerome Nosanchuk,964 Cayuga Heights  Road,Ithaca,14850
+216,Mary Nygaard,206 University Ave,Ithaca,14850
+217,Kathleen O'Neil,826 Bostwick,Ithaca,14850
+218,Madeleine Oakley,533 Linn St.,Ithaca,14850
+219,Juanita Odell,68 E. Seneca Rd.,Trumansburg,14886
+220,Suzanne Palmer,111 West Hill Circle,Ithaca,14850
+221,Sonya Pancaldo,101 Devon Road,Ithaca,14850
+222,LAURENCE PARKER,2905 SLATERVILLE RD.,BROOKTONDALE,14817
+223,Laurence Parker,2905 Slaterville Rd. ,Brooktondale ,14817
+224,Cindy Pataki,515 Caswell Road,Freeville,13068
+226,Gretel Pelto,129 Eastlake Rd,Ithaca,14850
+227,Nat Peuly,623 University Ave,Ithaca,14850
+228,Gwen Pierce,21 Etna Lane,Etna,13062
+229,Francis Piliero,47 Wedgewood Dr,Ithaca,14850
+230,Susan Piliero,47 Wedgewood Dr,Ithaca,14850-1064
+231,Karl Pillemer,135 Hudson,Ithaca,14850
+232,Jean Poland,523 The Parkway,Ithaca,14850
+233,Stephen Poleskie,306 Stone Quarry Road,Ithaca,14850
+234,Patricia (Pat) Pryor,150 Scofield Rd.,Freeville,13068
+235,James Quest,428 Savage Farm Drive,Ithaca,14850
+236,Leslie Quest,428 Savage Farm Drive,Ithaca,14850
+237,Phyllis Rappaport, 30 Horizon Drive,Ithaca,14850
+238,Wendy Reeves,111 Hancock Street,Ithaca,14850
+239,Carrie Regenstein,301 Muriel Street,Ithaca,14850
+240,Joe Regenstein,301 Muriel Street,Ithaca,14850
+241,'Sally'  (Sarah) Reimer,6A2 Candlewyck Park,Ithaca,14850
+242,J. Alan Renwick,35 Horizon Drive,Ithaca,14850
+243,Barbara Reynolds,35 Buck Road,Lansing,14882
+244,Marissa Richards,939 Dryden Road,Ithaca,14850
+245,Nancy Ridenour,346 Warren Road,Ithaca,14850
+246,Anne Rodda,115 Park Lane,Ithaca,14850
+247,Betsy Root,4545 Seneca Rd,Trumansburg,14886
+248,Mary Russo,603 Willow Ave,Ithaca,14850
+249,Jeffrey Rusten,319 E UPLAND RD,ITHACA,14850
+250,Lois Rutt,208 East Lincoln St.,Ithaca,14850
+251,Mary Salton,221 Valley Road,Ithaca,14850
+252,Ellie Santoro,304 McGraw House,Ithaca,14850
+253,Carol Santucci,14 Salo Drive,Trumanburg,14886
+254,Elaine Sapp,152 Wood Road,Freeville,13068
+255,Karen Sass,1025 Highland Rd,Ithaca,14850
+256,Wendy Schaerer,"700 Warren Road, Buld#21 Apt. 1A",Ithaca,14850
+257,Carol Scheele,117 Randolph Road,Ithaca,14850
+258,Elizabeth Schermerhorn,26 Lewis St.,Dryden,13053
+259,Deb Schmidle,702 Cayuga Heights  Road,Ithaca,14850
+260,Tim Schmidle,702 Cayuga Heights  Road,Ithaca,14850
+261,George Schuler,221 Strawberry Hill Circle #3,Ithaca,14850
+262,Nancy Schuler,221 Strawberry Hill Circle #3,Ithaca,14850
+263,Jean Schurman,3317 Swamp College Road ,Trumansburg ,14886
+264,Daniel Schwarz,"925 Mitchell St., Apt.3",ITHACA,14850
+265,H. Roger Segelken,114 Texas Ln,Ithaca,14850
+267,Jane and Roger Segelken,114 Texas Lane,Ithaca,14850
+268,Joan Serra,302 Lake Ave,Ithaca,14850
+269,Jim Sethna,201 DeWitt Place,Ithaca,14850
+270,Barbara Shew,306 North Cayuga Street Apt. 2,Ithaca,14850
+271,Kevin Shreve,115 Pine Tree Road ,Ithaca,14850
+272,Lynn Shreve,115 Pine Tree Road ,Ithaca,14850
+273,Mary Sichel,321 Rachel Carson Trail,Ithaca,14850
+274,Sandra Siegel,"215 N.Cayuga St., Apt. 344",Ithaca,14850
+275,Gwyn Singer,826 N Aurora St,Ithaca,14850
+276,Bhuvan Singla,206 W Lincoln Street,Ithaca,14850
+277,Rekha Singla,206 W Lincoln Street,Ithaca,14850
+278,Carol Skinner,37 Whig Street,Trumansburg,14886
+279,Alexander Skutt,116 Dearborn Place,Ithaca,14850
+280,Pennie Small,268 Lower Creek Rd.,Ithaca,14850
+281,Barbara Smith,821 North Aurora Street,Ithaca,14850
+282,Jerald Smith,101 Juniper Drive,Ithaca,14850
+283,Martha Smith,101 Juniper Drive,Ithaca,14850
+284,Kim Snow,107 Treva Avenue ,Ithaca,14850
+285,Lee Snow,111 Treva Ave,Ithaca,14850
+286,Barbara Soderblom,20 Horizon Drive,Ithaca,14850
+287,Robert Soderblom,20 Horizon Drive,Ithaca,14850
+288,Donna Sokol,2 Sunny Slope Road,Ithaca,14850
+289,Daphne Sola,3299 Swamp College Rd.,Trumansburg,14886
+290,David Sprague,109 Queen St.,Ithaca,14850
+291,Sara Squier,64 Buck Road,Lansing,14882
+292,Sheila Squier,110 Columbia Street,Ithaca,14850
+293,David Squires,1009 Trumansburg Rd,Ithaca,14850
+294,Susie Sragow,528 Warren Road,Ithaca,14850
+295,Office Staff,121 E. Seneca St. ,Ithaca,14850
+296,Evelyn Stevens,373 Conlon Road,Lansing,14882
+297,Beverly Stockard,458 Savage Farm Drive,Ithaca,14850
+298,Jae Sullivan,601 N. Cayuga St.,Ithaca,14850
+299,Beatrice Szekely,104 Klinewoods Road,Ithaca,14850
+300,Yoram Szekely,104 Klinewoods Road,Ithaca,14850
+301,Natasha Tall,414 W. Court Street,Ithaca,14850
+302,CHERYL TEST TEST,757 Warren Road #4836,Ithaca,14852
+303,TEst TEst,234 Pinckney Rd,Ithaca,14850
+304,Sandy True,4 Alessandro Drive,Ithaca,14850
+305,Yohko Tsuji,202 Winston Drive ,Ithaca ,14850
+306,Kate Turner,132 Burleigh Dr.,Ithaca,14850
+307,Lowell Turner,132 Burleigh Dr.,Ithaca,14850
+308,Charles Walcott,84 Besemer Hill Rd.,Ithaca,14850
+309,Jane Walcott,84 Besemer Hill Rd.,Ithaca,14850
+310,Randy Warden,McGraw House #210,Ithaca,14850
+311,Virginia Waters,400 E Upland Rd,Ithaca,14850
+312,Linda Weaver,221 McGraw House,Ithaca,14850-5412
+313,Amalia Weinberg,311 Linn Street,Ithaca,14850
+314,Melanie Weymer,111 OAKWOOD LN,ITHACA,14850
+315,Nancy Whitmore,529 Linn St.,Ithaca,14850
+316,Diane Wiessinger,136 Ellis Hollow Creek Road,Ithaca,14850
+317,John Wiessinger,136 Ellis Hollow Creek Road,Ithaca,14850
+318,Sylvia Williams,101 Bundy Rd.,Ithaca,14850
+319,Nancy Wilson,232 Troy Rd,Ithaca,14850
+320,John Wishart,40 Horizon Drive,Ithaca,14850
+321,Tori Wishart,40 Horizon Drive,Ithaca,14850
+322,Frances Withiam,9 Horizon Drive,Ithaca,14850
+323,Linda Woodard,300 Iroquois Rd,Ithaca,14850
+324,Rochelle Woods,114 Glenside Rd.,Ithaca,14850
+325,Eugene Yarussi,56 Waterview Heights Road,Ithaca,14850
+326,Jeanne Yarussi,56 Waterview Heights Road,Ithaca,14850
+327,Sofia Yoon,211 Linden Avenue,Ithaca,14850
+328,AccuFab,232 Cherry St.,Ithaca,14850
+329,Ace Security,720 W. Green St.,Ithaca,14850
+330,ACME Pest Control,359 Dryden-Harford Rd.,Dryden,13053
+331,Austin's Helping Hands LLC,225 S. Fulton St.,Ithaca,14850
+332,Bailey Construction,5139 Jacksonville Road,Trumansburg,14886
+333,Bell's Auto Service,945 Dryden Rd.,Ithaca,14850
+334,Bumblebee Painters,210 E. Falls St.,Ithaca,14850
+335,Campbell & Davies,"201 Dey St., Suite 211",Ithaca,14850
+336,Cayuga Landscape Company,2712 N. Triphammer,Ithaca,14850
+338,"Cortright Electric, Inc.",653 Elmira Road,Ithaca,14850
+339,"Crown Construction, Inc",176 Cortland Rd.,Dryden ,13053
+340,Donohue Halveson,607 W Seneca St,Ithaca,14850
+341,Duthie Painting Company,484 Ridge Road,Lansing,14882
+342,"Gaggle Company, Inc.",2935 Slaterville Road,Brooktondale,14817
+343,"Genson Overhead Door, Inc.",11710 State Route 90,Locke,13092
+344,Green Cleaning Pro,465 North Rd.,Freeville,13065
+345,Hick's Septic and Excavation,13 Waterwagon Road,Ithaca,14850
+346,Hired Hands Moving Company,"409 College Ave., Dept. 5",Ithaca,14850
+347,HPM Tech Services,"200 Pleasant Grove Rd #2a,",Ithaca,14850
+348,Hunt's Auto Service,225 Elmira Road,Ithaca,14850
+349,Ian's Welding,422 Irish Settlement Rd.,Freeville,13068
+350,Ithaca Cremation Services,P.O. Box 403,Ithaca,14850
+351,Ithaca Piano Rebuilders,"950 Danby Rd., #26",Ithaca,14850
+352,Jay's Cleaning Services,8306 Main St.,Interlaken ,14847
+353,Leonard Vacuum & Janitorial Supply,211 Elmira Road,Ithaca,14850
+354,Life Maid Heavenly ,27 Waterburg Rd.,Trumansburg,14886
+355,"MacPherson Builders, Inc.",129 West Falls Street,Ithaca,14850
+356,Mancini-Ferrara and Sons,134 Ithaca Beer Dr.,Ithaca,14850
+357,Mimi's Attic,430 W. State St.,Ithaca,14850
+359,Patterson's Service Station,221 N. Aurora St.,Ithaca,14850
+360,Perfect Painters-Heritage Builders,308 Madison St.,Ithaca,14850
+361,Pleasant Valley Electrical,405 3rd St.,Ithaca,14850
+362,"Pro-Lawn Landscaping & Excavating, Inc.",41 Oak Brook Drive,Ithaca,14850
+363,"Sparks Electric Company, Inc.",208 N. Titus Ave.,Ithaca,14850
+364,Superior Glass Service,205 Fulton Street,Ithaca,14850
+365,Sweeney's Pest Elimination,210 S. Main St.,Homer,13077
+366,Witty Appliance Repair,788 MacBean Lane,Cortland,13045
+367,Yaman Construction,222 S. Fulton St.,Ithaca,14850
+368,Gadget Repair Pro,"222 Elmira Road, #10",Ithaca,14850
+369,"Precision Builders, Inc.",207 W. Clinton St.,Ithaca,14850
+371,McMillen Electric,2008 E. Shore Drive,Ithaca,14882
+376,Limbwalker Tree Care,5506 Grove Rd.,Trumansburg,14886
+377,ABC Oriental Rug & Carpet Cleaning Co.,130 Cecil Malone Drive,Ithaca,14850
+378,Alex Cole Paving Inc. (Masonry/Concrete),390 Peruville rd. ,Freeville,13068
+379,Rose's Home Dish,215 Wood Street,Ithaca,14850
+380,"Cascadilla Tree Care of Ithaca, LLC",80 Sharpsteen Rd,Locke,13092
+383,Dave Long Appraisal Company,"309 N. Tioga St., Suite 204",Ithaca,14850
+384,KB Electric,111 Collins Road,Freeville,13068
+385,Elder Frontiers,33 James St,Dryden,13053
+386,Clean Earth Septic Service,1051 State Route 224,Van Etten,14889
+387,Castle Services,950 Danby Rd.,Ithaca,14850
+388,Classen Home Health,222 Elmira Rd.,Ithaca,14850
+390,Pat Cozzarin Pest Management,9198 State Route 96,Interlaken,14847
+391,"XOrca, Inc",185 Midline Road,Slaterville Springs ,14881
+392,Zolar Moving Company,"225 S. Fulton St., #3",Ithaca,14850
+394,J.D. Ferro Roofing,390 State Route 13,Cortland,13045-8500
+395,"Austin Construction, Inc.",3168 Slaterville Road,Brooktondale,14817
+396,Hull Heating and Plumbing,425 Floral Ave.,Ithaca,14850
+397,Mary Hirshfeld Dog Training and Walking LLC,595 Hammond Hill Road,Brooktondale,14817
+398,Home Instead,840 Hanshaw Rd.,Ithaca,14850
+399,2 Pros Construction,2 Pros Construction,Cortland ,13045
+400,"Overhead Door of Cortland, Inc.",33 Cleveland St.,Cortland,13045
+402,lifestyleorganization@weebly.com,3 Glenn Street,Cortland,13045
+404,HPM Tech Services,903 Hanshaw Road,Ithaca,14850
+406,Schickel Construction Co.,210 Schutt Road,Dryden,13053
+407,"Scott Land & Yard Services, Inc.",P.O. Box 13,Slaterville Springs,14881
+408,Sunnybrook Builders,2147 Slaterville Road,Ithaca,14850
+409,"Bucket List Travel Attendant, LLC",17 Prospect Street,Trumansburg,14886
+410,Mike's Complete Handyman Service,25 Stormy View Dr,Ithaca,14882
+411,The Computing Center,The Computing Center,Ithaca,14850
+413,Sweasey Heating & Air Conditioning,10 Sperry Lane,Lansing,14850
+414,The Car Buyer's Advocate,16 Hunter Lane,Ithaca,14850
+415,House Doctor,PO Box 861,Ithaca,14851
+417,"Thompson Tree and Crane Service, LLC",107 E. Marshall St.,Ithaca,14850
+418,Whitmore Fence Company,126 North Street,Dryden,13053
+419,Window and Other Cleaner - Cayuga Commercial Cleaning,96 Ridge Road,Lansing,14822
+420,Jill Baldwin,7619 POTTER MORGAN RD,INTERLAKEN,14847-9665
+421,Deborah Berman,110 Hancock St,Ithaca,14850
+422,Robert Boynton,205 Tareyton Drive,Ithaca,14850 
+423,David Brown,207 W. Remingrton Rd.,Ithaca,14850
+424,Jay Carter,856 Snyder Hill Road,Ithaca,14850
+425,Julie Carter,852 Snyder Hill Road,Ithaca,14850
+427,Aleta Coggin,37 Uptown Road,Ithaca,14850
+428,Carol Collyer,8 Leisure Lane,Freeville,13068
+429,Sandra Cuellar,156 Westview Lane,Ithaca,14850
+430,Barb Davidson,2250 North Triphammer Rd.,Ithaca,14850
+431,Jeannine Davis,407 Lake St. #B32,Ithaca,14850
+432,Terry Davis,15 Stone Haven Drive,Ithaca,14850
+433,Michael Delwiche,50 Fiddlers Green,Lansing,14882
+434,Persephone Doliner,202 Utica Street,,14850
+435,Chris Dunham,105 Dunmore Place,Ithaca,14850
+436,Gwen E Seaquist,299 Neimi Road,Ithaca,14850
+437,Dan Evett,1456 Coddington Road,Brooktondale,14817
+438,William Fry,821 BOSTWICK RD,ITHACA,14850
+439,Rick George,106 Troy Rd.,Ithaca,14850
+440,Richard Glabach,830 Hanshaw Road,Ithaca,14850
+441,Nina Glasgow,207 W Remington Road,Ithaca,14850
+442,Kent Goetz,22 Brooktree Lane,Ithaca,14850
+443,Michelle Harlan,202 S Main St,Groton,13073
+444,Edward Hower,1409 HANSHAW ROAD,ITHACA,14850
+445,Jon Humphrey,133B Snyder Hill Road,Ithaca,14850
+446,Mary Kane,6 Hunter Lane,Ithaca,14850
+448,Robert Keebler,720 Farnum Road,Lititz,17543
+449,Terry 'Tara' Kekaha,118 Park Lane,Ithaca,14850
+450,Polly Kiely,37 Pease street,Trumansburg,14886
+451,Carol Klepack,9 Coventry Walk,Ithaca,14850
+453,Amy Layton,824 Goodrich Hill Road,Locke,13092
+454,Cheryl Testing LLH,234 Pinckney Rd,Ithaca,14850
+455,Kai McKee,121 Terrace View Dr.,Ithaca,14850
+456,Rita Melen,19 Lisa Lane,Ithaca,14850
+457,Malcolm Mitchell,1405 Hanshaw Rd.,ITHACA,14850
+458,Jacob Morgan,348 Ferguson Rd.,Freeville,13068
+459,Suzanne  Motherel,766 Elm Street ext #1,Ithaca,14850
+460,Will Musoff,111 Dryden Rd,Ithaca,14850
+461,Jan Nigro,105 King St.,Ithaca,14850
+462,Michelle Ochs,116 W. Buffalo St. Apt. 2F,Ithaca,14850
+463,Shaianne Osterreich,101 Crescent Place,Ithaca,14850
+464,Linda Pasto,24 Asbury Drive,Ithaca,14850
+465,Sharon Perkins,61 Whitetail Drive,Ithaca,14850
+466,Caprice Pierre,10452 Low Rise 10; Cornell ,Ithaca,14853
+467,Esther Racoosin,112 Roat Street,Ithaca,14850
+468,Wendy Reeves,111 Hancock Street ,Ithaca ,14850
+469,Lita Remsen,608 Hanshaw Rd,Ithaca,14850
+470,Jeffrey Richardson,798 S. Plain St.,Ithaca,14850
+471,Paulette Rosa,300 Culver Rd,Ithaca,14850
+472,Fred Schwartz,303 Columbia St,Ithaca,14850
+473,Neil Shallish,120 Larchmont Dr,Trumansburg,14886
+474,David Shapiro,807 Mitchell Street,Ithaca ,14850
+475,Dorothy Sholeen,735 Iradell Rd.,Trumansburg,14886
+476,Sandra Sorensen,218 HUDSON ST,ITHACA,14850
+477,Fran Spadafora Manzella,371 Teton Court,Ithaca,14850
+478,David Stipanuk,136 HOMESTEAD CIRCLE,ITHACA,14850
+479,Demetri Tzivaeris,1082 Dryden Rd.,Ithaca,14850
+480,Linda Uhll,65 Hickory Rd,Ithaca,14850
+481,Maddie Ulrich,"100 Graham Rd, Apt. 11E",Ithaca,14850
+482,Barbara VanDyk,4217 Garrett Rd,Ithaca,14850
+483,Marian VanSoest,311 Strawberry Hill Circle,Ithaca,14850
+484,Tam Warren,1318 East Shore Drive,Ithaca,14850
+485,Kevin Workman,824 Goodrich Hill Road,Locke,13092
+486,Marcie Wyant,311 Richard Place ,Ithaca,14850

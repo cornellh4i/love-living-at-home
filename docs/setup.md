@@ -16,11 +16,13 @@ $ source env/bin/activate
 ```
 
 For mac users it will most likely be
+
 ```
 $ pip install virtualenv
 $ virtualenv -p python3 env
 $ source env/bin/activate
 ```
+
 Note: if you are using a python2.x version, point the -p value towards your python2.x path
 
 ## (If you're on a mac) Make sure xcode tools are installed
@@ -35,6 +37,7 @@ Create a file called `config.env` that contains environment variables in the fol
 You may also wrap values in double quotes like `ENVIRONMENT_VARIABLE="value with spaces"`.
 For example, the mailing environment variables can be set as the following.
 We recommend using Sendgrid for a mailing SMTP server, but anything else will work as well.
+
 ```
 MAIL_USERNAME=example@domain.com
 MAIL_PASSWORD=SuperSecretPassword
@@ -43,12 +46,12 @@ SECRET_KEY=SuperRandomStringToBeUsedForEncryption
 
 Other Key value pairs:
 
-* `ADMIN_EMAIL`: set to the default email for your first admin account (default is `flask-base-admin@example.com`)
-* `ADMIN_PASSWORD`: set to the default password for your first admin account (default is `password`)
-* `DATABASE_URL`: set to a postgresql database url (default is `data-dev.sqlite`)
-* `REDISTOGO_URL`: set to Redis To Go URL or any redis server url (default is `http://localhost:6379`)
-* `RAYGUN_APIKEY`: api key for raygun (default is `None`)
-* `FLASK_CONFIG`: can be `development`, `production`, `default`, `heroku`, `unix`, or `testing`. Most of the time you will use `development` or `production`.
+- `ADMIN_EMAIL`: set to the default email for your first admin account (default is `flask-base-admin@example.com`)
+- `ADMIN_PASSWORD`: set to the default password for your first admin account (default is `password`)
+- `DATABASE_URL`: set to a postgresql database url (default is `data-dev.sqlite`)
+- `REDISTOGO_URL`: set to Redis To Go URL or any redis server url (default is `http://localhost:6379`)
+- `RAYGUN_APIKEY`: api key for raygun (default is `None`)
+- `FLASK_CONFIG`: can be `development`, `production`, `default`, `heroku`, `unix`, or `testing`. Most of the time you will use `development` or `production`.
 
 **Note: do not include the `.env` file in any commits. This should remain private.**
 
@@ -61,7 +64,6 @@ $ pip install -r requirements.txt
 ## Other dependencies for running locally
 
 You need [Redis](http://redis.io/), and [Sass](http://sass-lang.com/). Chances are, these commands will work:
-
 
 **Sass:**
 
@@ -110,12 +112,6 @@ $ python manage.py setup_dev
 ```
 
 Note that this will create an admin user with email and password specified by the `ADMIN_EMAIL` and `ADMIN_PASSWORD` config variables. If not specified, they are both `flask-base-admin@example.com` and `password` respectively.
-
-## [Optional] Add fake data to the database
-
-```
-$ python manage.py add_fake_data
-```
 
 ## Running the app
 

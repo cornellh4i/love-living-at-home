@@ -2,7 +2,7 @@
   "name": "flask-base",
   "description": "",
   "scripts": {
-    "postdeploy": "python manage.py recreate_db && python manage.py setup_prod && python manage.py add_fake_data"
+    "postdeploy": "python manage.py recreate_db && python manage.py setup_prod && python manage.py"
   },
   "env": {
     "FLASK_CONFIG": {

@@ -42,16 +42,7 @@ class Availability(db.Model):
         from sqlalchemy.exc import IntegrityError
 
         for i in range(count):
-            a = Availability(availability_monday_start=time(10, 0, 0, 0),
-                             availability_monday_end=time(13, 30, 0, 0),
-                             availability_wednesday_start=time(
-                                 11, 0, 0, 0),
-                             availability_wednesday_end=time(
-                                 12, 30, 0, 0),
-                             availability_thursday_start=time(
-                                 8, 0, 0, 0),
-                             availability_thursday_end=time(19, 0, 0, 0),
-                             **kwargs)
+            a = Availability(**kwargs)
             db.session.add(a)
             try:
                 db.session.commit()
