@@ -21,9 +21,8 @@ class Member(db.Model):
     membership_expiration_date = db.Column(db.Date)
 
     # Location Information
-    primary_address_id = db.Column(db.Integer,
-                                   db.ForeignKey('address.id'))
-    secondary_address_id = db.Column(db.Integer, db.ForeignKey('address.id'))
+    primary_address_id = db.Column(db.Integer, db.ForeignKey("address.id"))
+    secondary_address_id = db.Column(db.Integer, db.ForeignKey("address.id"))
 
     # Contact Information
     primary_phone_number = db.Column(db.String(80))
@@ -43,23 +42,24 @@ class Member(db.Model):
     # Notes about this member that only the staffers can see.
     staffer_notes = db.Column(db.Text)
 
-    @ staticmethod
+    @staticmethod
     def get_members():
         import pandas as pd
+
         members = []
-        members_df = pd.read_csv('./app/data/out/members.csv')
+        members_df = pd.read_csv("./app/data/out/members.csv")
         for row in members_df.iterrows():
             members.append(dict(row[1]))
         return members
 
-    @ staticmethod
+    @staticmethod
     def insert_members():
         members = Member.get_members()
         for member_dict in members:
-            member = Member.query.filter_by(
-                id=member_dict['id']).first()
+            print(member_dict["id"])
+            member = Member.query.filter_by(id=member_dict["id"]).first()
             if member is None:
-                member_dict.pop('id', None)
+                member_dict.pop("id", None)
                 member = Member(**member_dict)
             db.session.add(member)
         db.session.commit()
