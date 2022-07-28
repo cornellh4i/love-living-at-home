@@ -1,3 +1,5 @@
+from math import isnan
+
 from .. import db
 
 
@@ -56,7 +58,13 @@ class Member(db.Model):
     def insert_members():
         members = Member.get_members()
         for member_dict in members:
-            print(member_dict["id"])
+            print(member_dict)
+            for key in member_dict:
+                try:
+                    if isnan(member_dict[key]):
+                        member_dict[key] = None
+                except:
+                    pass
             member = Member.query.filter_by(id=member_dict["id"]).first()
             if member is None:
                 member_dict.pop("id", None)
