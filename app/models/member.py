@@ -58,7 +58,6 @@ class Member(db.Model):
     def insert_members():
         members = Member.get_members()
         for member_dict in members:
-            print(member_dict)
             for key in member_dict:
                 try:
                     if isnan(member_dict[key]):
