@@ -24,7 +24,7 @@ class Volunteer(db.Model):
 
     # Concat Information
     primary_phone_number = db.Column(db.String(64))
-    secondary_phone_number = db.Column(db.String(10))
+    secondary_phone_number = db.Column(db.String(64))
     email_address = db.Column(db.String(80))
     preferred_contact_method = db.Column(db.String(80), nullable=False)
 
