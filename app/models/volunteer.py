@@ -1,3 +1,5 @@
+from math import isnan
+
 from .. import db
 
 
@@ -17,8 +19,7 @@ class Volunteer(db.Model):
     member_id = db.Column(db.Integer(), db.ForeignKey("member.id"))
 
     # Location Information
-    primary_address_id = db.Column(db.Integer(),
-                                   db.ForeignKey("address.id"))
+    primary_address_id = db.Column(db.Integer(), db.ForeignKey("address.id"))
     secondary_address_id = db.Column(db.Integer(), db.ForeignKey("address.id"))
 
     # Concat Information
@@ -34,31 +35,36 @@ class Volunteer(db.Model):
     emergency_contact_relationship = db.Column(db.String(64))
 
     # Volunteer-Specific Information
-    is_member_volunteer = db.Column(
-        db.Boolean(), nullable=False, default=False)
+    is_member_volunteer = db.Column(db.Boolean(), nullable=False, default=False)
     is_fully_vetted = db.Column(db.Boolean(), nullable=False, default=False)
-    vetting_notes = db.Column(db.Text, default='')
+    vetting_notes = db.Column(db.Text, default="")
     availability_id = db.Column(db.Integer(), db.ForeignKey("availability.id"))
 
     general_notes = db.Column(db.String(255))
 
-    @ staticmethod
+    @staticmethod
     def get_volunteers():
         import pandas as pd
+
         volunteers = []
-        volunteer_df = pd.read_csv('./app/data/out/volunteers.csv')
+        volunteer_df = pd.read_csv("./app/data/out/volunteers.csv")
         for row in volunteer_df.iterrows():
             volunteers.append(dict(row[1]))
         return volunteers
 
-    @ staticmethod
+    @staticmethod
     def insert_volunteers():
         volunteers = Volunteer.get_volunteers()
         for volunteer_dict in volunteers:
-            volunteer = Volunteer.query.filter_by(
-                id=volunteer_dict['id']).first()
+            for key in volunteer_dict:
+                try:
+                    if isnan(volunteer_dict[key]):
+                        volunteer_dict[key] = None
+                except:
+                    pass
+            volunteer = Volunteer.query.filter_by(id=volunteer_dict["id"]).first()
             if volunteer is None:
-                volunteer_dict.pop('id', None)
+                volunteer_dict.pop("id", None)
                 volunteer = Volunteer(**volunteer_dict)
             db.session.add(volunteer)
         db.session.commit()
